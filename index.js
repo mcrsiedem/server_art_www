@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const {port} = require('./config');
 const connection = require('./db/mysql');
-const apiRouter = require('./routes/api');
+const apiRouter = require('./routes/routes');
 const bodyParser = require('body-parser');
 
 //database
@@ -10,7 +10,6 @@ const bodyParser = require('body-parser');
 
  //parsery
  //Content-type: application/json
-
  app.use(bodyParser.json());
 
 
@@ -24,15 +23,3 @@ app.listen(port, function(){
 });
 
 
- 
-// config.js
-// eksportuje objekt
-// module.exports = {
-//    port:  process.env.PORT || 3000
-// }
-
-// const config = require('./config');
-// console.log(config.port);
-// albo
-// const {port} = require('./config');
-// console.log(port);
