@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const testActions = require('../actions/api/test');
+const noteActions = require('../actions/api/notes');
 
 //routing
-router.get('/',testActions.homepage);
+// router.get('/',noteActions.homepage);
+// router.get('/sel',testActions.sel);
+router.get('/',noteActions.saveNote);
+
 
 module.exports = router;
