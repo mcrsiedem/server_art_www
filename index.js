@@ -3,12 +3,19 @@ const app = express();
 const {port} = require('./config');
 const connection = require('./db/mysql');
 const apiRouter = require('./routes/api');
+const bodyParser = require('body-parser');
 
-
+//database
  require('./db/mysql');
-// //routes
- app.use('/', apiRouter);
 
+ //parsery
+ //Content-type: application/json
+
+ app.use(bodyParser.json());
+
+
+//routes
+ app.use('/api', apiRouter);
 
 
 // server
