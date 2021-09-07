@@ -1,6 +1,6 @@
 // eksportuje objekt
 module.exports = {
-    port:  process.env.PORT || 3000,
+    port:  process.env.PORT || 3001,
     database : process.env.DATABASES || {
         host: "localhost",
         port:"3307",
