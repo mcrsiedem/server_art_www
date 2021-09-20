@@ -4,6 +4,7 @@ const noteActions = require('../actions/noteActions');
 
 //routing
 
+router.get('/zlecenia',noteActions.getAllZlecenia);
 router.get('/notes',noteActions.getAllNotes);
 router.get('/notes/:id',noteActions.getNote);
 router.post('/notes',noteActions.saveNote);

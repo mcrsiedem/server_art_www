@@ -8,6 +8,19 @@ class NoteActions {
         //     res.send('Strona główna działa!');
         // }
 
+
+      
+        getAllZlecenia(req,res){
+            var sql = "SELECT id,utworzono,klient,praca FROM ctp21.zlecenia";
+
+           var sql2 =" SELECT  ID ,  utworzono ,  Zmodyfikowano ,  Kolejnosc , ifnull(NrZlecenia,'') as NrZlecenia, ifnull(RokZlecenia,'') as RokZlecenia, ifnull(Klient,'') as Klient, ifnull(Praca,'') as Praca,  Naklad ,  FormatPapieru ,  Oprawa ,  OprawaCzas ,  OprawaPredkosc ,  Folia ,  Spedycja ,  Arkusze ,  Legi ,  LegiRodzaj ,  Przeloty ,  Status ,  Uwagi ,  FalcPredkosc ,  FalcCzas ,  KolejnoscOprawa ,  Srodek ,  Okladka FROM ctp21.zlecenia ORDER BY Utworzono ASC;";
+
+            connection.query(sql, function (err, doc) {
+            if (err) throw err;
+            //sconsole.log(doc);
+            res.status(200).json(doc);
+        });}
+
         getAllNotes(req,res){
             var sql = "SELECT * FROM ctp21.m";
             connection.query(sql, function (err, doc) {
@@ -56,6 +69,11 @@ class NoteActions {
             console.log("1 record delete ");
             res.status(204).json(result);
         });}
+
+
+
+
+
 
 
 
