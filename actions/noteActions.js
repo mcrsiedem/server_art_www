@@ -2,29 +2,18 @@ const connection = require("../db/mysql");
 
 
 class NoteActions {
-    
 
         // homepage(req,res){
         //     res.send('Strona główna działa!');
         // }
 
-
-      
         getAllZlecenia(req,res){
-            var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad ,ifnull(formatPapieru,'') as formatPapieru ,  oprawa ,  oprawaCzas ,  ifnull(oprawaPredkosc,'') as oprawaPredkosc ,  folia ,  spedycja ,  ifnull(arkusze,'') as arkusze , ifnull(legi,'') as legi , ifnull(legiRodzaj,'') as legiRodzaj ,  przeloty ,  status , ifnull(uwagi,'') as uwagi , ifnull(falcPredkosc,'') as falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM ctp21.zlecenia ORDER BY Utworzono ASC;";
-
-           var sql2 =" SELECT  ID ,  utworzono ,  Zmodyfikowano ,  Kolejnosc , ifnull(NrZlecenia,'') as NrZlecenia, ifnull(RokZlecenia,'') as RokZlecenia, ifnull(Klient,'') as Klient, ifnull(Praca,'') as Praca,  Naklad ,  FormatPapieru ,  Oprawa ,  OprawaCzas ,  OprawaPredkosc ,  Folia ,  Spedycja ,  Arkusze ,  Legi ,  LegiRodzaj ,  Przeloty ,  Status ,  Uwagi ,  FalcPredkosc ,  FalcCzas ,  KolejnoscOprawa ,  Srodek ,  Okladka FROM ctp21.zlecenia ORDER BY Utworzono ASC;";
-
+            var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  spedycja , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM ctp21.zlecenia ORDER BY Utworzono ASC;";
             connection.query(sql, function (err, doc) {
             if (err) throw err;
             //sconsole.log(doc);
             res.status(200).json(doc);
         });}
-
-
-
-
-
 
         getAllNotes(req,res){
             var sql = "SELECT * FROM ctp21.m";
@@ -42,7 +31,6 @@ class NoteActions {
             //sconsole.log(doc);
             res.status(200).json(doc);
         });}
-
 
         saveNote(req,res){
             const title = req.body.title;
@@ -74,14 +62,6 @@ class NoteActions {
             console.log("1 record delete ");
             res.status(204).json(result);
         });}
-
-
-
-
-
-
-
-
 }
 
 module.exports = new NoteActions();
