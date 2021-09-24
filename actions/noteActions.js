@@ -11,7 +11,7 @@ class NoteActions {
 
       
         getAllZlecenia(req,res){
-            var sql = "SELECT id,utworzono,klient,praca FROM ctp21.zlecenia";
+            var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad ,ifnull(formatPapieru,'') as formatPapieru ,  oprawa ,  oprawaCzas ,  ifnull(oprawaPredkosc,'') as oprawaPredkosc ,  folia ,  spedycja ,  ifnull(arkusze,'') as arkusze , ifnull(legi,'') as legi , ifnull(legiRodzaj,'') as legiRodzaj ,  przeloty ,  status , ifnull(uwagi,'') as uwagi , ifnull(falcPredkosc,'') as falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM ctp21.zlecenia ORDER BY Utworzono ASC;";
 
            var sql2 =" SELECT  ID ,  utworzono ,  Zmodyfikowano ,  Kolejnosc , ifnull(NrZlecenia,'') as NrZlecenia, ifnull(RokZlecenia,'') as RokZlecenia, ifnull(Klient,'') as Klient, ifnull(Praca,'') as Praca,  Naklad ,  FormatPapieru ,  Oprawa ,  OprawaCzas ,  OprawaPredkosc ,  Folia ,  Spedycja ,  Arkusze ,  Legi ,  LegiRodzaj ,  Przeloty ,  Status ,  Uwagi ,  FalcPredkosc ,  FalcCzas ,  KolejnoscOprawa ,  Srodek ,  Okladka FROM ctp21.zlecenia ORDER BY Utworzono ASC;";
 
@@ -20,6 +20,11 @@ class NoteActions {
             //sconsole.log(doc);
             res.status(200).json(doc);
         });}
+
+
+
+
+
 
         getAllNotes(req,res){
             var sql = "SELECT * FROM ctp21.m";
