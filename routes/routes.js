@@ -5,7 +5,7 @@ const noteActions = require('../actions/noteActions');
 //routing
 
 router.get('/zlecenia',noteActions.getZlecenia);
-router.get('/zlecbystatus',noteActions.getZleceniaByStatus);
+
 
 router.get('/produktybymaszyna/:maszyna',noteActions.getProduktyByMaszyna);
 router.get('/ctp',noteActions.getCTP);
