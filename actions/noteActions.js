@@ -7,13 +7,35 @@ class NoteActions {
         //     res.send('Strona główna działa!');
         // }
 
-        getAllZlecenia(req,res){
-            var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  spedycja , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM ctp21.zlecenia ORDER BY Utworzono ASC;";
+        getZlecenia(req,res){
+            var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM ctp21.zlecenia ORDER BY Utworzono ASC;";
             connection.query(sql, function (err, doc) {
             if (err) throw err;
             //sconsole.log(doc);
             res.status(200).json(doc);
         });}
+
+        getProduktyByMaszyna(req,res){
+            const maszyna = req.params['maszyna']
+            var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,status,id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi from ctp21.produkty where maszyna='" + maszyna + "' ORDER BY PoczatekDruku";
+            connection.query(sql, function (err, doc) {
+            if (err) throw err;
+            console.log(maszyna);
+            res.status(200).json(doc);
+        });}
+
+
+        getCTP(req,res){
+            var sql = "SELECT id,utworzono, kolejnosc,praca,  status , uwagi FROM ctp21.ctp ORDER BY Utworzono ASC;";
+            connection.query(sql, function (err, doc) {
+            if (err) throw err;
+            //sconsole.log(doc);
+            res.status(200).json(doc);
+        });}
+
+
+        //--------------------
+
 
         getAllNotes(req,res){
             var sql = "SELECT * FROM ctp21.m";
@@ -42,6 +64,9 @@ class NoteActions {
             console.log(" 1 record inserted "+result.insertId);
             res.status(201).json(result);
         });}
+
+        
+
 
         updateNote(req,res){
             const id = req.body.id;
