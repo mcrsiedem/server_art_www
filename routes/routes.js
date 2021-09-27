@@ -1,22 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const noteActions = require('../actions/noteActions');
+const note = require('../actions/note');
+const ctp = require('../actions/ctp');
+const zlecenia = require('../actions/zlecenia');
+const produkty = require('../actions/produkty');
+
 
 //routing
 
-router.get('/zlecenia',noteActions.getZlecenia);
+router.get('/zlecenia',zlecenia.getZlecenia);
+router.get('/produkty/:maszyna',produkty.getProduktyByMaszyna);
+router.put('/produkty',produkty.dragDropDruk);
+
+router.get('/ctp',ctp.getCTP);
+router.post('/ctp',ctp.postCTP);
+router.delete('/ctp',ctp.deleteCTP);
+router.put('/ctp',ctp.updateCTP);
 
 
-router.get('/produktybymaszyna/:maszyna',noteActions.getProduktyByMaszyna);
-router.get('/ctp',noteActions.getCTP);
-
-
-
-
-router.get('/notes',noteActions.getAllNotes);
-router.get('/notes/:id',noteActions.getNote);
-router.post('/notes',noteActions.saveNote);
-router.put('/notes',noteActions.updateNote);
-router.delete('/notes',noteActions.deleteNote);
+router.get('/notes',note.getAllNotes);
+router.get('/notes/:id',note.getNote);
+router.post('/notes',note.saveNote);
+router.put('/notes',note.updateNote);
+router.delete('/notes',note.deleteNote);
 
 module.exports = router;

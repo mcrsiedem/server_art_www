@@ -5,7 +5,8 @@ module.exports = {
         host: "localhost",
         port:"3306",
         user:"root",
-        password:"Art123druk_"
-      //nooo jprd!!!
+        password:"Art123druk_",
+        database : 'ctp21'
+      //nooo jprd!!!!
     }
 }
