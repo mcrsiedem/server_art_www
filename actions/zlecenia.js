@@ -11,6 +11,19 @@ class ZleceniaActions {
         res.status(200).json(doc);
     });}
 
+    updateZlecenieOneValue(req,res){
+        const id = req.body.id;
+        const kolumna = req.body.kolumna;
+        const value = req.body.value;
+        var sql = "update zlecenia set " + kolumna + " = '" + value + "' where id="+id;
+    
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update ");
+        res.status(201).json(result);
+    });}
+
+
 }
 
 module.exports = new ZleceniaActions();
