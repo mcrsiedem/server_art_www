@@ -81,5 +81,202 @@ class DrukActions {
             });
             }
 }
+
+
+updateCzasDruk(req,res){
+
+    const id = req.body.id;
+    const czas = req.body.czas;
+    const koniecDruku= req.body.koniecDruku;
+    const maszyna= req.body.maszyna;
+    const zmiana= req.body.zmiana;
+    const typ= req.body.typ;
+    const SumaNowegoCzasu= req.body.SumaNowegoCzasu;
+
+    var sql = "start transaction";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
+    if(typ == "Przerwa"){
+
+        if(zmiana == "dodaj"){
+
+           var sql = "update produkty set CzasDruku = CzasDruku + '" + czas + "', KoniecDruku = KoniecDruku + interval '" + czas + "' minute  where id='" + id + "'";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
+            var sql = "update produkty set PoczatekDruku = PoczatekDruku + interval '" + czas + "' minute, KoniecDruku = KoniecDruku + interval '" + czas + "' minute  where PoczatekDruku >= '" + koniecDruku+ "' and Maszyna = '" + maszyna+ "'  ";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
+        }
+
+        if(zmiana == "odejmij"){
+            var sql = "update produkty set CzasDruku = CzasDruku - '" + czas + "', KoniecDruku = KoniecDruku - interval '" + czas + "' minute  where id='" + id + "'";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
+            var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + czas + "' minute, KoniecDruku = KoniecDruku - interval '" + czas + "' minute  where PoczatekDruku >= '" + koniecDruku+ "' and Maszyna = '" + maszyna+ "'  ";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
+         }}
+
+
+         if(typ != "Przerwa"){
+
+            if(zmiana == "dodaj"){
+    
+               var sql = "update produkty set CzasDruku = CzasDruku + '" + czas + "', KoniecDruku = KoniecDruku + interval '" + czas + "' minute, PredkoscDruku = Przeloty/(  '" + SumaNowegoCzasu + "' - (Arkusze * Narzad) )*60  where id='" + id + "'";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+    
+                var sql = "update produkty set PoczatekDruku = PoczatekDruku + interval '" + czas + "' minute, KoniecDruku = KoniecDruku + interval '" + czas + "' minute  where PoczatekDruku >= '" + koniecDruku+ "' and Maszyna = '" + maszyna+ "'  ";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+    
+            }
+    
+            if(zmiana == "odejmij"){
+                var sql = "update produkty set CzasDruku = CzasDruku - '" + czas + "', KoniecDruku = KoniecDruku - interval '" + czas + "' minute, PredkoscDruku = Przeloty/(  '" + SumaNowegoCzasu + "' - (Arkusze * Narzad) )*60   where id='" + id + "'";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+    
+                var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + czas + "' minute, KoniecDruku = KoniecDruku - interval '" + czas + "' minute  where PoczatekDruku >= '" + koniecDruku+ "' and Maszyna = '" + maszyna+ "'  ";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+    
+             }
+
+
+
+            
+    }
+
+   
+
+    var sql = "commit";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update ");
+        res.status(201).json(result);
+        });
 }
+
+insertPrzerwaDruk(req,res){
+
+    const maszyna = req.body.maszyna;
+    const koniecDruku = req.body.koniecDruku;
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    var sql = "update produkty set PoczatekDruku = PoczatekDruku + interval 60 minute, KoniecDruku = KoniecDruku + interval 60 minute  where  PoczatekDruku >= '" + koniecDruku+ "' and Maszyna = '" + maszyna+ "'  ";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    var sql = "INSERT INTO produkty  (ID,Kolejnosc,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku)  SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" + maszyna + "','Przerwa','" + koniecDruku + "','60','" + koniecDruku + "' + interval 60 minute from produkty";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(" 1 record inserted "+result.insertId);
+
+    });
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record update ");
+    res.status(201).json(result);
+    });
+}
+
+deleteProduktSelectOne(req,res){
+    const id = req.body.id;
+    const kolejnosc = req.body.kolejnosc;
+    const maszyna = req.body.maszyna;
+    const poczatekdruku = req.body.poczatekdruku;
+    const czasdruku = req.body.czasdruku;
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    var sql = "DELETE FROM produkty WHERE ID =" +id+ "";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    res.status(201).json(result);
+    });
+
+    var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + czasdruku + "' minute, KoniecDruku = KoniecDruku - interval '" + czasdruku + "' minute  where PoczatekDruku > '" + poczatekdruku+ "' and Maszyna = '" + maszyna+ "'  ";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record update ");
+    
+    });
+}
+
+duplikujDruk(req,res){
+    const id = req.body.id;
+    const maszyna = req.body.maszyna;
+    const koniecdruku = req.body.koniecdruku;
+    const czasdruku = req.body.czasdruku;
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    var sql = "update produkty set PoczatekDruku = PoczatekDruku + interval '"+czasdruku+"' minute, KoniecDruku = KoniecDruku + interval '"+czasdruku+"' minute  where  PoczatekDruku >= '" + koniecdruku+ "' and Maszyna = '" + maszyna+ "'  ";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    var sql = "insert into produkty (ID,ID_zlecenia,Kolejnosc,Klient,Praca,PoczatekDruku,CzasDruku,KoniecDruku,Maszyna,Typ,PredkoscDruku,Narzad,NrZlecenia,RokZlecenia,Naklad,FormatPapieru,Oprawa,OprawaCzas,OprawaPredkosc,Folia,Spedycja,Arkusze,Legi,LegiRodzaj,Przeloty,Status,Uwagi,SM_ok,SM_dmg,XL_ok,XL_dmg,FalcPredkosc,FalcCzas)\n" +
+    "\n" +
+    "select (select MAX(ID)+1 from produkty),ID_zlecenia, (select MAX(Kolejnosc)+1 from produkty),Klient,Praca,\n" +
+    "'"+koniecdruku+"',\n" +
+    "CzasDruku,\n" +
+    "'"+koniecdruku+"' + interval CzasDruku Minute,\n" +
+    "Maszyna,Typ,PredkoscDruku,Narzad,NrZlecenia,RokZlecenia,Naklad,FormatPapieru,Oprawa,OprawaCzas,OprawaPredkosc,Folia,Spedycja,Arkusze,Legi,LegiRodzaj,Przeloty,Status,Uwagi,SM_ok,SM_dmg,XL_ok,XL_dmg,FalcPredkosc,FalcCzas \n" +
+    "from produkty\n" +
+    " where id ='"+id+"'";
+
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(" 1 record inserted "+result.insertId);
+    res.status(201).json(result);
+    });
+
+
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record update ");
+
+
+});}
+
+
+
+}
+
 module.exports = new DrukActions();
