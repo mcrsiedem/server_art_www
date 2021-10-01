@@ -12,6 +12,7 @@ const users = require('../actions/users');
 
 router.get('/zlecenia',zlecenia.getZlecenia);
 router.put('/zlecenia',zlecenia.updateZlecenieOneValue);
+router.post('/zlecenia',zlecenia.postZlecenie);
 
 router.get('/users/:login/:haslo',users.getUser);
 router.get('/druk/:maszyna',druk.getProduktyByMaszyna);
