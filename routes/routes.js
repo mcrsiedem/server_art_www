@@ -11,12 +11,15 @@ const users = require('../actions/users');
 //routing
 
 router.get('/zlecenia',zlecenia.getZlecenia);
+router.get('/zleceniabyid/:id',zlecenia.getZlecenieById);
 router.put('/zlecenia',zlecenia.updateZlecenieOneValue);
+router.put('/zleceniaAllValue',zlecenia.updateZlecenieAllValue);
 router.post('/zlecenia',zlecenia.postZlecenie);
 
 router.get('/users/:login/:haslo',users.getUser);
 router.get('/druk/:maszyna',druk.getProduktyByMaszyna);
 router.put('/druk',druk.dragDropDruk);
+router.put('/drukzmienmaszyne',druk.zmienMaszyne);
 router.post('/drukduplikuj',druk.duplikujDruk);
 router.put('/drukczas',druk.updateCzasDruk);
 router.post('/drukprzerwa',druk.insertPrzerwaDruk);
@@ -30,6 +33,9 @@ router.delete('/ctp',ctp.deleteCTP);
 router.put('/ctp',ctp.updateCTP);
 
 router.put('/produkty',produkty.updateProdukty);
+router.put('/produktybyidandtyp',produkty.updateProduktyByIdZleceniaAndTyp);
+router.get('/produkty/:idzlecenia',produkty.getProduktyById);
+router.put('/produktyczasdruku',produkty.updateProduktyCzasDruk);
 
 
 router.post('/historia',historia.postHistoria);

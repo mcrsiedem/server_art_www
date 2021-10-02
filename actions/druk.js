@@ -276,6 +276,85 @@ duplikujDruk(req,res){
 });}
 
 
+zmienMaszyne(req,res){
+    const id = req.body.id;
+    const czasdruku = req.body.czasdruku;
+    const koniecdruku = req.body.koniecdruku;
+    const staraMaszyna = req.body.staraMaszyna;
+    const nowaMaszyna = req.body.nowaMaszyna;
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '"+czasdruku+"' minute, KoniecDruku = KoniecDruku - interval '"+czasdruku+"' minute  where  PoczatekDruku >= '" + koniecdruku+ "' and Maszyna = '" + staraMaszyna+ "'  ";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    if((nowaMaszyna == "H1" || nowaMaszyna == "H3") && (staraMaszyna == "H1" ||staraMaszyna == "H3") ){
+
+        console.log("z SM na SM");
+        var sql =   "update produkty SET \n"+
+        "PoczatekDruku = (SELECT * FROM (SELECT MAX(KoniecDruku) FROM produkty WHERE  maszyna='" + nowaMaszyna + "') AS PoczatekDruku), \n" +
+        "Maszyna = '" + nowaMaszyna + "',\n" +
+        "KoniecDruku = ( SELECT * FROM (SELECT MAX(KoniecDruku) FROM produkty WHERE  maszyna='" + nowaMaszyna + "') AS PoczatekDruku) + interval '" + czasdruku + "' minute where id='" + id + "'";
+
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        });
+
+    }
+
+
+    if((staraMaszyna == "H1" || staraMaszyna == "H3") && (nowaMaszyna == "XL") ){
+
+        console.log("z SM na SM");
+        var sql =   "update produkty SET \n"+
+        "PoczatekDruku = (SELECT * FROM (SELECT MAX(KoniecDruku) FROM produkty WHERE  maszyna='" + nowaMaszyna + "') AS PoczatekDruku), \n" +
+        "Maszyna = '" + nowaMaszyna + "',\n" +
+        "Narzad = Narzad /2 ,\n" +
+        "CzasDruku = '" + czasdruku + "' /2,    \n" +
+        "PredkoscDruku = PredkoscDruku *2,\n" +
+        "KoniecDruku = ( SELECT * FROM (SELECT MAX(KoniecDruku) FROM produkty WHERE  maszyna='" + nowaMaszyna + "') AS PoczatekDruku) + interval ('" + czasdruku + "' /2 ) minute where id='" + id + "'";
+
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        });
+
+    }
+
+    
+    if((staraMaszyna == "XL") && (nowaMaszyna == "H1" || nowaMaszyna == "H3") ){
+
+        console.log("z SM na SM");
+        var sql =   "update produkty SET \n"+
+        "PoczatekDruku = (SELECT * FROM (SELECT MAX(KoniecDruku) FROM produkty WHERE  maszyna='" + nowaMaszyna + "') AS PoczatekDruku), \n" +
+        "Maszyna = '" + nowaMaszyna + "',\n" +
+        "Narzad = Narzad *2 ,\n" +
+        "CzasDruku = '" + czasdruku + "' *2,    \n" +
+        "PredkoscDruku = PredkoscDruku /2,\n" +
+        "KoniecDruku = ( SELECT * FROM (SELECT MAX(KoniecDruku) FROM produkty WHERE  maszyna='" + nowaMaszyna + "') AS PoczatekDruku) + interval ('" + czasdruku + "' *2 ) minute where id='" + id + "'";
+
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        });
+
+    }
+
+
+
+
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record update ");
+    res.status(201).json(result);
+
+
+});}
 
 }
 

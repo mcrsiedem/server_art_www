@@ -11,6 +11,14 @@ class ZleceniaActions {
         res.status(200).json(doc);
     });}
 
+    getZlecenieById(req,res){
+        const id = req.params['id']
+        var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where id='"+id+"' ORDER BY Utworzono ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });}
+
     updateZlecenieOneValue(req,res){
         const id = req.body.id;
         const kolumna = req.body.kolumna;
@@ -22,6 +30,26 @@ class ZleceniaActions {
         console.log("1 record update ");
         res.status(201).json(result);
     });}
+
+    updateZlecenieAllValue(req,res){
+        const id = req.body.id;
+        const nr = req.body.nr;
+        const rok = req.body.rok;
+        const klient = req.body.klient;
+        const praca = req.body.praca;
+        const naklad = req.body.naklad;
+        const spedycja = req.body.spedycja;
+
+
+        var sql = "update zlecenia set  NrZlecenia='" + nr + "', RokZlecenia='" + rok + "', Klient='" + klient + "', Praca='" + praca + "', Naklad='" + naklad + "', Spedycja='" + spedycja + "'  where ID='"+id+"'";
+    
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update ");
+        res.status(201).json(result);
+    });}
+
+
 
     postZlecenie(req,res){
 
