@@ -13,7 +13,10 @@ class ZleceniaActions {
 
     getZlecenieById(req,res){
         const id = req.params['id']
-        var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where id='"+id+"' ORDER BY Utworzono ASC;";
+        var sql =   "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,"+
+                    "klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,"+
+                    "  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,"+
+                    "  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where id='"+id+"' ORDER BY Utworzono ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
@@ -90,8 +93,66 @@ class ZleceniaActions {
     res.status(200).json(result);
     });
         
-
+    
 }
+
+deleteZlecenie(req,res){
+        const idzlecenia = req.body.idzlecenia;
+        const kolejnosc = req.body.kolejnosc;
+        const kolejnoscoprawa = req.body.kolejnoscoprawa;
+   
+
+        var sql = "start transaction";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;  });
+
+        //----  pobieramy wszystkie podroduktu których idzlecenia = req.body.idzlecenia i kasujemy w pętli
+        var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3') and ID_zlecenia = '" + idzlecenia+ "' ORDER BY Typ ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+
+        for (let i = 0; i < Object.keys(doc).length; i++) {
+            // console.log(doc[i].typ);
+            var sql = "DELETE FROM produkty WHERE ID = '" + doc[i].id + "'";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
+            var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + doc[i].czasDruku + "' minute, KoniecDruku = KoniecDruku - interval '" + doc[i].czasDruku + "' minute  where PoczatekDruku > '" + doc[i].poczatekDruku+ "' and Maszyna = '" + doc[i].maszyna+ "'  ";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+          }
+        //console.log(doc);
+        });
+        //--------koniec kasowania pojedynczych produktów
+
+        var sql = "DELETE FROM zlecenia WHERE ID =" +idzlecenia+ "";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
+            var sql = "update zlecenia set  Kolejnosc=Kolejnosc -1  WHERE Kolejnosc >" +kolejnosc+ "";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });   
+
+            var sql = "update zlecenia set  KolejnoscOprawa=KolejnoscOprawa -1  WHERE KolejnoscOprawa >" +kolejnoscoprawa+ "";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });  
+        
+
+    
+
+        var sql = "commit";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("Zlecenie skasowane! ");
+    res.status(201).json(result);
+    });
+    }
+
 
    // res.status(201).json(req.body);
     

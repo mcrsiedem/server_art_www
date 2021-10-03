@@ -13,7 +13,30 @@ class HistoriaActions {
         console.log(" 1 record inserted "+result.insertId);
         res.status(201).json(result);
     });}
+
+
+   
+    getHistoria(req,res){
+        var sql = "SELECT id,data, user,kategoria,  event , id_target, ifnull(NrZlecenia,'') as nrZlecenia, ifnull(RokZlecenia,'') as rokZlecenia,"+
+        "ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(Typ,'') as typ,statusStary,statusNowy FROM historia ORDER BY Data ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
     
+
+    getRestore(req,res){
+        var sql = "SELECT id,DATE_FORMAT(`Utworzono`, '%Y-%m-%d %H:%i:%s') AS `utworzono`, aktualny, opis FROM backup ORDER BY Utworzono ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        console.log(doc);
+        res.status(200).json(doc);
+    });}
+    
+    
+
+
 
 }
 

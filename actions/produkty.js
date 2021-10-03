@@ -34,7 +34,8 @@ class ProduktyActions {
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
-    });}
+    });
+}
 
     updateProduktyCzasDruk(req,res){
 
