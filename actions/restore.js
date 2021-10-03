@@ -95,12 +95,12 @@ class RestoreActions {
         connection.query(sql, function (err, result) {
         if (err) throw err;                          });
 
-        var sql = "SELECT DATE_FORMAT(now() , '%Y-%m-%d %H:%i') AS `teraz` ;";
+        var sql = "SELECT DATE_FORMAT(now() , '%Y-%m-%d %H:%i:%s') AS `teraz` ;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
 
         //doc[0].teraz
-
+        console.log("zlecenia_"+doc[0].teraz);
         var sql= "CREATE TABLE `zlecenia_"+doc[0].teraz+"` (\n" +
         "  `ID` int NOT NULL,\n" +
         "  `Utworzono` datetime DEFAULT CURRENT_TIMESTAMP,\n" +
