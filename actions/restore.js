@@ -40,7 +40,7 @@ class RestoreActions {
             var sql = "commit";
             connection.query(sql, function (err, result) {
             if (err) throw err;
-            console.log("Zlecenie skasowane! ");
+            console.log("Backup skasowany! ");
             res.status(201).json(result);
 
         });

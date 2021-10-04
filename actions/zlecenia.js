@@ -11,6 +11,14 @@ class ZleceniaActions {
         res.status(200).json(doc);
     });}
 
+    getMaxNrZlecenia(req,res){
+        var sql  = "SELECT  max(NrZlecenia)+1 as klient FROM zlecenia where RokZlecenia = YEAR(now()) ;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
     getZlecenieById(req,res){
         const id = req.params['id']
         var sql =   "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,"+
@@ -152,7 +160,35 @@ deleteZlecenie(req,res){
     res.status(201).json(result);
     });
     }
+    //---------Oprawa
+    loadOprawa(req,res){
+        const view = req.params['view']
 
+        if(view == "Wszystko"){
+        var sql  = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where OprawaCzas > 0 ORDER BY KolejnoscOprawa ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+                                                });
+        }
+
+        if(view == "Gotowe do oprawy"){
+            var sql  = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where OprawaCzas > 0 and Srodek = 'Sfalcowane' and Okladka = 'Uszlachetnione' ORDER BY KolejnoscOprawa ASC;";
+            connection.query(sql, function (err, doc) {
+            if (err) throw err;
+            res.status(200).json(doc);
+                                                    });
+            }
+        
+            if(view == "Nieoprawione"){
+                var sql  = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where OprawaCzas > 0 and Status != 'Oddane' and Status != 'Oprawione' ORDER BY KolejnoscOprawa ASC;";
+                connection.query(sql, function (err, doc) {
+                if (err) throw err;
+                res.status(200).json(doc);
+                                                        });
+                }
+
+    }
 
    // res.status(201).json(req.body);
     
