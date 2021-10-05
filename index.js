@@ -14,10 +14,13 @@ const cors = require('cors');
  app.use(bodyParser.json());
 
 //fix cors
-app.use(cors());
+//app.use(cors());
+app.use(cors({ origin: true }));
 
 //routes
  app.use('/api', apiRouter);
+
+
 
 
 // server

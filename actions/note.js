@@ -1,8 +1,9 @@
 const connection = require("../db/mysql");
-
+const baza="ctp21";
 
 class NoteActions {
 
+    
         getAllNotes(req,res){
             var sql = "SELECT * FROM "+baza+".m";
             connection.query(sql, function (err, doc) {
