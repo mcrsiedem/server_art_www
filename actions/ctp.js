@@ -32,7 +32,8 @@ deleteCTP(req,res){
       //  res.status(204).json(result);
     });
 
-    var sql = "update ctp set  Kolejnosc=Kolejnosc -1  WHERE Kolejnosc >"+kolejnosc;
+  
+    var sql = "update ctp set  Kolejnosc=Kolejnosc -1  WHERE Kolejnosc > '"+kolejnosc+"'";
             connection.query(sql, function (err, result) {
             if (err) throw err;
             res.status(201).json(result);
