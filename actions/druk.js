@@ -4,7 +4,7 @@ class DrukActions {
 
     getProduktyByMaszyna(req,res){
         const maszyna = req.params['maszyna']
-        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,status,id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi from produkty where maszyna='" + maszyna + "' ORDER BY PoczatekDruku";
+        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,status,id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi,nazwa from produkty where maszyna='" + maszyna + "' ORDER BY PoczatekDruku";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         console.log(maszyna);

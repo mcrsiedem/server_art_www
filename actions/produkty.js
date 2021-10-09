@@ -78,13 +78,8 @@ class ProduktyActions {
                                             });
             }
 
-        
-
-
-
-
-
     }
+
 
     updateProduktyCzasDruk(req,res){
 
