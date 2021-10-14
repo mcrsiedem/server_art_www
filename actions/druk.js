@@ -11,6 +11,9 @@ class DrukActions {
         res.status(200).json(doc);
     });}
 
+
+
+
     dragDropDruk(req,res){
 
         const kierunek = req.body.kierunek;

@@ -15,6 +15,22 @@ class ProduktyActions {
         res.status(201).json(result);
     });}
 
+    updateNaprawCzas(req,res){
+        const id = req.body.id;
+        const poczatekdruku = req.body.poczatekdruku;
+        const koniecdruku = req.body.koniecdruku;
+
+        var sql = "update produkty set PoczatekDruku = '" + poczatekdruku + "', KoniecDruku = '" + koniecdruku + "'  where id='" + id + "'";
+    
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update ");
+        res.status(201).json(result);
+    });}
+
+
+
+    
     updateProduktyByIdZleceniaAndTyp(req,res){
         const idzlecenie = req.body.idzlecenie;
         const kolumna = req.body.kolumna;
@@ -91,7 +107,7 @@ class ProduktyActions {
         const zmianaczasu= req.body.zmianaczasu;
         const kierunek= req.body.kierunek;
 
-        console.log("poczatek druku "+poczatekDruku);
+      //  console.log("poczatek druku "+maszyna);
     
         var sql = "start transaction";
                 connection.query(sql, function (err, result) {
@@ -108,7 +124,7 @@ class ProduktyActions {
                 if (err) throw err;
                 });  
 
-
+             
     
         if(kierunek == "zmniejszamy"){
                var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + zmianaczasu + "' minute, KoniecDruku = KoniecDruku - interval '" + zmianaczasu + "' minute  where PoczatekDruku > '" + poczatekDruku+ "' and Maszyna = '" + maszyna+ "'  ";

@@ -29,6 +29,8 @@ router.post('/drukduplikuj',druk.duplikujDruk);
 router.put('/drukczas',druk.updateCzasDruk);
 router.post('/drukprzerwa',druk.insertPrzerwaDruk);
 router.delete('/drukprzerwa',druk.deleteProduktSelectOne);
+router.put('/naprawczasdruku',produkty.updateNaprawCzas);
+
 //------------------------------
 router.get('/ctp',ctp.getCTP);
 router.post('/ctp',ctp.postCTP);
