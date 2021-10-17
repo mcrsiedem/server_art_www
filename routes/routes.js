@@ -22,7 +22,7 @@ router.delete('/zlecenia',zlecenia.deleteZlecenie);
 router.get('/oprawa/:view',zlecenia.loadOprawa);
 //------------------------------
 router.get('/users/:login/:haslo',users.getUser);
-router.get('/druk/:maszyna',druk.getProduktyByMaszyna);
+router.get('/druk/:maszyna/:iloscdniwstecz',druk.getProduktyByMaszyna);
 router.put('/druk',druk.dragDropDruk);
 router.put('/drukzmienmaszyne',druk.zmienMaszyne);
 router.post('/drukduplikuj',druk.duplikujDruk);
