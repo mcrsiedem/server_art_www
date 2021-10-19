@@ -125,7 +125,7 @@ updateCzasDruk(req,res){
             if (err) throw err;
             });
 
-            var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + czas + "' minute, KoniecDruku = KoniecDruku - interval '" + czas + "' minute  where PoczatekDruku >= '" + koniecDruku+ "' and Maszyna = '" + maszyna+ "'  ";
+            var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + czas + "' minute, KoniecDruku = KoniecDruku - interval '" + czas + "' minute  where PoczatekDruku >= '" + koniecDruku+ "' - interval '" + SumaNowegoCzasu + "' minute and Maszyna = '" + maszyna+ "'  ";
             connection.query(sql, function (err, result) {
             if (err) throw err;
             });
@@ -154,10 +154,12 @@ updateCzasDruk(req,res){
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
                 });
-    
-                var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + czas + "' minute, KoniecDruku = KoniecDruku - interval '" + czas + "' minute  where PoczatekDruku >= '" + koniecDruku+ "' and Maszyna = '" + maszyna+ "'  ";
+                
+                console.log("koniecDruku1 ",koniecDruku);
+                var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + czas + "' minute, KoniecDruku = KoniecDruku - interval '" + czas + "' minute  where PoczatekDruku >= '" + koniecDruku+ "' - interval '" + SumaNowegoCzasu + "' minute and Maszyna = '" + maszyna+ "'  ";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
+                console.log("koniecDruku2 ",koniecDruku);
                 });
     
              }
