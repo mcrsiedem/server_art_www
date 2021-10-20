@@ -60,7 +60,7 @@ router.post('/restore',restore.restoreBackup);
 router.put('/restore',restore.updateRestore);
 router.post('/createbackup',restore.createBackup);
 //------------------------------
-router.get('/falcowanie/:view',produkty.loadFalcowanie);
+router.get('/falcowanie',produkty.loadFalcowanie);
 router.get('/okladki/:view',produkty.loadOkladki);
 //------------------------------
 router.get('/notes',note.getAllNotes);
