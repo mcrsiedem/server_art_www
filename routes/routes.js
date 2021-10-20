@@ -19,7 +19,7 @@ router.put('/zleceniaAllValue',zlecenia.updateZlecenieAllValue);
 router.post('/zlecenia',zlecenia.postZlecenie);
 router.delete('/zlecenia',zlecenia.deleteZlecenie);
 //------------------------------
-router.get('/oprawa/:view',zlecenia.loadOprawa);
+router.get('/oprawa',zlecenia.loadOprawa);
 //------------------------------
 router.get('/users/:login/:haslo',users.getUser);
 router.get('/druk/:maszyna/:iloscdniwstecz',druk.getProduktyByMaszyna);
