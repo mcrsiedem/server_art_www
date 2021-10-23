@@ -12,6 +12,7 @@ const restore = require('../actions/restore');
 
 
 router.get('/zlecenia',zlecenia.getZlecenia);
+router.get('/zlecenianieoddane',zlecenia.getZleceniaNieoddane);
 router.get('/zleceniamaxnr',zlecenia.getMaxNrZlecenia);
 router.get('/zleceniabyid/:id',zlecenia.getZlecenieById);
 router.put('/zlecenia',zlecenia.updateZlecenieOneValue);
@@ -42,6 +43,7 @@ router.put('/produktybyidandtyp',produkty.updateProduktyByIdZleceniaAndTyp);
 router.put('/produktybyidzlecenia',produkty.updateProduktyByIdZlecenia);
 router.get('/produkty/:idzlecenia',produkty.getProduktyById);
 router.get('/produktyAll',produkty.getProduktyAllH1XLH3);
+router.get('/produktyAllnieoddane',produkty.getProduktyAllnieoddane);
 router.put('/produktyczasdruku',produkty.updateProduktyCzasDruk);
 router.get('/produkty/:idzlecenia/:typ',produkty.getProduktyByIdZleceniAndTyp);
 router.get('/blachy/:view',produkty.loadBlachy);
