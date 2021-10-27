@@ -39,6 +39,7 @@ router.delete('/ctp',ctp.deleteCTP);
 router.put('/ctp',ctp.updateCTP);
 //------------------------------
 router.put('/produkty',produkty.updateProdukty);
+router.put('/produktydatactp',produkty.updateProduktyDataCTP);
 router.put('/produktybyidandtyp',produkty.updateProduktyByIdZleceniaAndTyp);
 router.put('/produktybyidzlecenia',produkty.updateProduktyByIdZlecenia);
 router.get('/produkty/:idzlecenia',produkty.getProduktyById);

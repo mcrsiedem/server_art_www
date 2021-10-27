@@ -15,6 +15,15 @@ class ProduktyActions {
         res.status(201).json(result);
     });}
 
+    updateProduktyDataCTP(req,res){
+        // wstawia wstawia now() do DataCTP przy dopisywaniu ilość zaświeconych blach
+        const id = req.body.id;
+        var sql = "update produkty set DataCTP = now() where id="+id;
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        res.status(201).json(result);
+    });}
+
     updateNaprawCzas(req,res){
         const id = req.body.id;
         const poczatekdruku = req.body.poczatekdruku;
@@ -193,7 +202,7 @@ class ProduktyActions {
         const view = req.params['view']
 
         if(view == "All"){
-        var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia ,    ifnull(Klient,'') as klient ,    ifnull(Praca,'') as praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where typ != 'Przerwa' ORDER BY Kolejnosc ASC;";
+        var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia ,    ifnull(Klient,'') as klient ,    ifnull(Praca,'') as praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    DATE_FORMAT(`DataCTP`, '%Y-%m-%d %H:%i:%s') AS `dataCtp` from produkty where typ != 'Przerwa' ORDER BY Kolejnosc ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
