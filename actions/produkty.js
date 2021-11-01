@@ -211,6 +211,15 @@ class ProduktyActions {
 
     }
 
+    loadListaKontrolna(req,res){
+      
+        var sql  = "select id, kolejnosc,nazwa , grupa  from listakontrolna ORDER BY Kolejnosc ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+                                                });
+    }
+
     postBlachyLicznik(req,res){
         const kolejnosc = req.body.kolejnosc;
 

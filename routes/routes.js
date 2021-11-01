@@ -48,6 +48,8 @@ router.get('/produktyAllnieoddane',produkty.getProduktyAllnieoddane);
 router.put('/produktyczasdruku',produkty.updateProduktyCzasDruk);
 router.get('/produkty/:idzlecenia/:typ',produkty.getProduktyByIdZleceniAndTyp);
 router.get('/blachy/:view',produkty.loadBlachy);
+router.get('/listakontrolna',produkty.loadListaKontrolna);
+
 router.post('/blachylicznik',produkty.postBlachyLicznik);
 router.post('/blachykopia',produkty.postBlachyKopia);
 router.delete('/blachy',produkty.deleteBlachy);
