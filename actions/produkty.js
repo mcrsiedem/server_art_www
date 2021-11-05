@@ -15,6 +15,31 @@ class ProduktyActions {
         res.status(201).json(result);
     });}
 
+    updateProduktyStatusFalcowanie(req,res){
+
+        const id = req.body.id;
+        const value = req.body.value;
+
+        var sql = "update produkty set Status= CASE WHEN  Status ='Wydrukowane' THEN '" + value + "' ELSE Status END  where id="+id;
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update ");
+        res.status(201).json(result);
+    }    );
+
+
+
+}
+
+loadtest(req,res){
+    const id = req.body.id; 
+    var sql  = "select status from produkty where id= '" + id+ "' ";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+    res.status(200).json(doc);
+                                            });
+}
+
     updateProduktyDataCTP(req,res){
         // wstawia wstawia now() do DataCTP przy dopisywaniu ilość zaświeconych blach
         const id = req.body.id;
@@ -72,7 +97,8 @@ class ProduktyActions {
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
-    });
+    }
+    );
     }
     getProduktyAllH1XLH3(req,res){
         const idzlecenia = req.params['idzlecenia']
