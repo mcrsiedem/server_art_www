@@ -16,9 +16,12 @@ router.get('/zlecenianieoddane',zlecenia.getZleceniaNieoddane);
 router.get('/zleceniamaxnr',zlecenia.getMaxNrZlecenia);
 router.get('/zleceniabyid/:id',zlecenia.getZlecenieById);
 router.put('/zlecenia',zlecenia.updateZlecenieOneValue);
+router.put('/updateStatus',zlecenia.updateStatus);
+
 router.put('/zleceniaAllValue',zlecenia.updateZlecenieAllValue);
 router.post('/zlecenia',zlecenia.postZlecenie);
 router.delete('/zlecenia',zlecenia.deleteZlecenie);
+router.get('/generujstatus',zlecenia.generujStusy);
 //------------------------------
 router.get('/oprawa',zlecenia.loadOprawa);
 //------------------------------
