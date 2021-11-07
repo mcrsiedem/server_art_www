@@ -11,6 +11,17 @@ class ZleceniaActions {
         res.status(200).json(doc);
     });}
 
+    getZlecenia2(req,res){
+        var sql = "SELECT zlecenia.id,zlecenia.utworzono, zlecenia.zmodyfikowano, zlecenia.kolejnosc,ifnull(zlecenia.NrZlecenia,'') as nrZlecenia,ifnull(zlecenia.RokZlecenia,'') as rokZlecenia,zlecenia.klient,zlecenia.praca,zlecenia.naklad , zlecenia.formatPapieru ,  zlecenia.oprawa ,  zlecenia.oprawaCzas , zlecenia.oprawaPredkosc ,  zlecenia.folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , zlecenia.arkusze , zlecenia.legi , zlecenia.legiRodzaj ,  zlecenia.przeloty , statusGlowny.nazwa as status , zlecenia.uwagi ,zlecenia.falcPredkosc ,  zlecenia.falcCzas ,  zlecenia.kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka from zlecenia "+
+       " left join status as statusGlowny on (select min(idstatusu) from produktystatus where idzlecenia =zlecenia.id)  = statusGlowny.id "+
+        "left join status as statusSrodek on (select min(idstatusu) from produktystatus join produkty on produktystatus.idproduktu = produkty.ID where idzlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
+        "left join status as statusOkladka on (select min(idstatusu) from produktystatus join produkty on produktystatus.idproduktu = produkty.ID where idzlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id ORDER BY Utworzono ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
     getZleceniaNieoddane(req,res){
         var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  ifnull(Oprawa,'') as oprawa ,  ifnull(OprawaCzas,'') as oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where Status != 'Oddane' ORDER BY Utworzono ASC;";
         connection.query(sql, function (err, doc) {
