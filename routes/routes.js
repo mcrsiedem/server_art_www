@@ -21,7 +21,8 @@ router.put('/updateStatus',zlecenia.updateStatus);
 router.put('/zleceniaAllValue',zlecenia.updateZlecenieAllValue);
 router.post('/zlecenia',zlecenia.postZlecenie);
 router.delete('/zlecenia',zlecenia.deleteZlecenie);
-router.get('/generujstatus',zlecenia.generujStusy);
+router.get('/generujstatusprodukotow',zlecenia.generujStusyProduktow);
+router.get('/generujstatuszlecen',zlecenia.generujStusyZlecen);
 //------------------------------
 router.get('/oprawa',zlecenia.loadOprawa);
 //------------------------------
