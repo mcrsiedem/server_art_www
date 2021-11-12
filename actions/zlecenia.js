@@ -3,19 +3,36 @@ const connection = require("../db/mysql");
 
 class ZleceniaActions {
 
-    getZlecenia(req,res){
-        var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia ORDER BY Utworzono ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+    // getZlecenia2(req,res){
+    //     var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia ORDER BY Utworzono ASC;";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     //sconsole.log(doc);
+    //     res.status(200).json(doc);
+    // });}
 
-    getZlecenia2(req,res){
-        var sql = "SELECT zlecenia.id,zlecenia.utworzono, zlecenia.zmodyfikowano, zlecenia.kolejnosc,ifnull(zlecenia.NrZlecenia,'') as nrZlecenia,ifnull(zlecenia.RokZlecenia,'') as rokZlecenia,zlecenia.klient,zlecenia.praca,zlecenia.naklad , zlecenia.formatPapieru ,  zlecenia.oprawa ,  zlecenia.oprawaCzas , zlecenia.oprawaPredkosc ,  zlecenia.folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , zlecenia.arkusze , zlecenia.legi , zlecenia.legiRodzaj ,  zlecenia.przeloty , statusGlowny.nazwa as status , zlecenia.uwagi ,zlecenia.falcPredkosc ,  zlecenia.falcCzas ,  zlecenia.kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka from zlecenia "+
-       " left join status as statusGlowny on (select min(idstatusu) from produktystatus where idzlecenia =zlecenia.id)  = statusGlowny.id "+
-        "left join status as statusSrodek on (select min(idstatusu) from produktystatus join produkty on produktystatus.idproduktu = produkty.ID where idzlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
-        "left join status as statusOkladka on (select min(idstatusu) from produktystatus join produkty on produktystatus.idproduktu = produkty.ID where idzlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id ORDER BY Utworzono ASC;";
+    getZlecenia(req,res){
+        var sql = "SELECT zlecenia.id,utworzono, zmodyfikowano,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia, "+
+        "klient,praca,naklad , "+
+        "(select oprawa from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as oprawa ,  "+
+        "(select sum(OprawaCzas) from produkty where id_zlecenia =zlecenia.id) as oprawaCzas , "+
+        "(select max(OprawaPredkosc) from produkty where id_zlecenia =zlecenia.id) as oprawaPredkosc , "+
+        "(select folia from produkty where id_zlecenia =zlecenia.id and typ='Okładka' limit 1) as folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , "+
+        // "(select sum(arkusze) from produkty where id_zlecenia =zlecenia.id) as arkusze , "+
+        // "(select sum(legi) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legi , "+
+        // "(select max(legiRodzaj) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legiRodzaj ,  "+
+        "(select sum(przeloty) from produkty where id_zlecenia =zlecenia.id) as przeloty , "+
+        "statusGlowny.nazwa as status , uwagi , "+
+        "(select max(FalcPredkosc) from produkty where id_zlecenia =zlecenia.id) as falcPredkosc , "+
+        "(select sum(FalcCzas) from produkty where id_zlecenia =zlecenia.id) as falcCzas , "+
+        "kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne "+
+        "from zlecenia "+
+        "left join statusy as statusGlowny on (select min(status) from produkty where id_zlecenia =zlecenia.id)  = statusGlowny.id "+
+        "left join statusy as statusSrodek on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
+        "left join statusy as statusOkladka on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id "+
+        "left join statusy as statusInne on (select min(status) from produkty where id_zlecenia =zlecenia.id and (produkty.Typ!='Okładka' and produkty.Typ!='Środek'))  = statusInne.id "+
+        "ORDER BY Utworzono ASC;";
+        
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
@@ -40,10 +57,10 @@ class ZleceniaActions {
 
     getZlecenieById(req,res){
         const id = req.params['id']
-        var sql =   "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,"+
-                    "klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,"+
-                    "  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,"+
-                    "  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where id='"+id+"' ORDER BY Utworzono ASC;";
+        var sql =   "SELECT id,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,"+
+                    "klient,praca,naklad , "+
+                    "  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,  uwagi "+
+                    "     FROM zlecenia where id='"+id+"' ORDER BY Utworzono ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
@@ -65,36 +82,30 @@ class ZleceniaActions {
         const id = req.body.id;
         const value = req.body.value;
 
-        const status = new Map();
-        status.set("Nieaktywne", "0");
-        status.set("Nowe", "1");
-        status.set("Pliki", "2");
-        status.set("Akcept", "3");
-        status.set("RIP", "4");
-        status.set("Zaświecone", "5");
-        status.set("Wydrukowane", "6");
-        status.set("Sfalcowane", "7");
-        status.set("Uszlachetnone", "8");
-        status.set("Oprawione", "9");
-        status.set("Oddane", "10");
-        status.set("Anulowane", "11");
+        // const status = new Map();
+        // status.set("Nieaktywne", "0");
+        // status.set("Nowe", "1");
+        // status.set("Pliki", "2");
+        // status.set("Akcept", "3");
+        // status.set("RIP", "4");
+        // status.set("Zaświecone", "5");
+        // status.set("Wydrukowane", "6");
+        // status.set("Sfalcowane", "7");
+        // status.set("Uszlachetnone", "8");
+        // status.set("Oprawione", "9");
+        // status.set("Oddane", "10");
+        // status.set("Anulowane", "11");
 
         var sql = "start transaction";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
                 });
 
-                var sql = "update produktystatus set idstatusu= '" + value + "' where idproduktu="+id;
+                var sql = "update produkty set status= '" + value + "' where id="+id;
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
 
                 });
-
-                //zmiania status zlecenia na najmniejszy status ze wszystkich produktów
-                // var sql = "update zlecenia set Status = ( select min(idstatusu) from produktystatus where idzlecenia = (select idzlecenia from produktystatus where idproduktu = '" + id + "' ))  where id= (select idzlecenia from produktystatus where idproduktu = '" + id + "' ); ";
-                // connection.query(sql, function (err, result) {
-                // if (err) throw err;
-                // });
 
 var sql = "commit";
 connection.query(sql, function (err, result) {
@@ -106,6 +117,22 @@ res.status(201).json(result);
 
 
 }
+
+//--- update wszstykie statusy produktów dla danego zlecenia
+updateStatusZlecenia(req,res){
+    const idzlecenia = req.body.idzlecenia;
+    const value = req.body.value;
+
+            var sql = "update produkty set status= '" + value + "' where ID_zlecenia="+idzlecenia;
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            res.status(201).json(result);
+            });
+
+
+
+}
+//---
 
 
 
@@ -144,7 +171,7 @@ res.status(201).json(result);
         connection.query(sql, function (err, result) {
         if (err) throw err;  });
 
-        var sql ="INSERT INTO zlecenia  (ID,Kolejnosc,KolejnoscOprawa,NrZlecenia,RokZlecenia,Klient,Praca,Naklad,Spedycja,Przeloty,OprawaCzas,FalcCzas,Status,Srodek,Okladka,Oprawa,Folia) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),(SELECT MAX(KolejnoscOprawa)+1),'" + jsonParsed[0].nr + "','" + jsonParsed[0].rok + "','"+ jsonParsed[0].klient + "','"+ jsonParsed[0].praca + "','"+ jsonParsed[0].naklad + "','"+ jsonParsed[0].spedycja + "','"+ jsonParsed[0].przeloty + "','"+ jsonParsed[0].czasoprawy + "','"+ jsonParsed[0].czasfalcowania + "','Nowe','Nowe','Nowe','"+ jsonParsed[0].oprawa + "','"+ jsonParsed[0].uszlachetnianie + "' FROM zlecenia";
+        var sql ="INSERT INTO zlecenia  (ID,KolejnoscOprawa,NrZlecenia,RokZlecenia,Klient,Praca,Naklad,Spedycja) SELECT MAX(ID)+1,(SELECT MAX(KolejnoscOprawa)+1),'" + jsonParsed[0].nr + "','" + jsonParsed[0].rok + "','"+ jsonParsed[0].klient + "','"+ jsonParsed[0].praca + "','"+ jsonParsed[0].naklad + "','"+ jsonParsed[0].spedycja + "' FROM zlecenia";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
@@ -154,20 +181,12 @@ res.status(201).json(result);
 
         for (let i = 0; i < Object.keys(jsonParsed[1]).length; i++) {
       
-            var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0].naklad+ "','" +jsonParsed[0].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0].nr + "','"+ jsonParsed[0].rok + "','"+ jsonParsed[0].klient + "','Nowe','"+ jsonParsed[1][i].praca + "','"+ jsonParsed[1][i].oprawa+ "','"+ jsonParsed[1][i].uwagi+ "','"+ jsonParsed[1][i].narzad+ "','"+ jsonParsed[1][i].folia+ "','"+ jsonParsed[1][i].przeloty+ "','"+ jsonParsed[1][i].predkoscDruku+ "','"+ jsonParsed[1][i].arkusze+ "','"+ jsonParsed[1][i].legi+ "','"+ jsonParsed[1][i].legiRodzaj+ "','"+ jsonParsed[1][i].falcCzas+ "','"+ jsonParsed[1][i].falcPredkosc+ "','"+ jsonParsed[1][i].oprawaCzas+ "','"+ jsonParsed[1][i].formatPapieru+ "','"+ jsonParsed[1][i].maszyna + "','"+ jsonParsed[1][i].typ + "', (select MAX(KoniecDruku) from produkty where maszyna='"+ jsonParsed[1][i].maszyna + "') as PoczatekDruku ,'"+ jsonParsed[1][i].czasDruku+ "',(select MAX(KoniecDruku) from produkty where maszyna='"+ jsonParsed[1][i].maszyna + "') + interval '"+ jsonParsed[1][i].czasDruku+ "' minute as KoniecDruku  FROM produkty";
-            connection.query(sql, function (err, result) {
-            if (err) throw err; });
-
-            // dodawanie statusu na nowych sposób do łączonej tabeli produktystatus
-         //   var sql = "INSERT INTO produktystatus  (idproduktu,idzlecenia,idstatusu) values (select MAX(ID) from produkty as idproduktu ,(select MAX(ID) from zlecenia) as idzlecenia,2);";
-           var sql = "INSERT INTO produktystatus  (idproduktu,idzlecenia,idstatusu) values ((select MAX(ID) from produkty as idproduktu),(select MAX(ID) from zlecenia as idzlecenia),1);";
+            var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0].naklad+ "','" +jsonParsed[0].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0].nr + "','"+ jsonParsed[0].rok + "','"+ jsonParsed[0].klient + "',1,'"+ jsonParsed[1][i].praca + "','"+ jsonParsed[1][i].oprawa+ "','"+ jsonParsed[1][i].uwagi+ "','"+ jsonParsed[1][i].narzad+ "','"+ jsonParsed[1][i].folia+ "','"+ jsonParsed[1][i].przeloty+ "','"+ jsonParsed[1][i].predkoscDruku+ "','"+ jsonParsed[1][i].arkusze+ "','"+ jsonParsed[1][i].legi+ "','"+ jsonParsed[1][i].legiRodzaj+ "','"+ jsonParsed[1][i].falcCzas+ "','"+ jsonParsed[1][i].falcPredkosc+ "','"+ jsonParsed[1][i].oprawaCzas+ "','"+ jsonParsed[1][i].formatPapieru+ "','"+ jsonParsed[1][i].maszyna + "','"+ jsonParsed[1][i].typ + "', (select MAX(KoniecDruku) from produkty where maszyna='"+ jsonParsed[1][i].maszyna + "') as PoczatekDruku ,'"+ jsonParsed[1][i].czasDruku+ "',(select MAX(KoniecDruku) from produkty where maszyna='"+ jsonParsed[1][i].maszyna + "') + interval '"+ jsonParsed[1][i].czasDruku+ "' minute as KoniecDruku  FROM produkty";
             connection.query(sql, function (err, result) {
             if (err) throw err; });
 
           }
-          var sql = "INSERT INTO zleceniastatus  (idzlecenia,idstatusu,idstatususrodek,idstatusuokladka,idstatusuinne) values ((select MAX(ID) from zlecenia as idzlecenia),1,1,1,1);";
-          connection.query(sql, function (err, result) {
-          if (err) throw err; });
+
          
 
         var sql = "commit";
@@ -191,7 +210,8 @@ deleteZlecenie(req,res){
         if (err) throw err;  });
 
         //----  pobieramy wszystkie podroduktu których idzlecenia = req.body.idzlecenia i kasujemy w pętli
-        var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3') and ID_zlecenia = '" + idzlecenia+ "' ORDER BY Typ ASC";
+          var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3') and ID_zlecenia = '" + idzlecenia+ "' ORDER BY Typ ASC";
+
         connection.query(sql, function (err, doc) {
         if (err) throw err;
 
@@ -216,26 +236,13 @@ deleteZlecenie(req,res){
             if (err) throw err;
             });
 
-            var sql = "update zlecenia set  Kolejnosc=Kolejnosc -1  WHERE Kolejnosc >" +kolejnosc+ "";
-            connection.query(sql, function (err, result) {
-            if (err) throw err;
-            });   
 
             var sql = "update zlecenia set  KolejnoscOprawa=KolejnoscOprawa -1  WHERE KolejnoscOprawa >" +kolejnoscoprawa+ "";
             connection.query(sql, function (err, result) {
             if (err) throw err;
             });  
         
-            var sql = "DELETE FROM produktystatus WHERE idzlecenia =" +idzlecenia+ "";
-            connection.query(sql, function (err, result) {
-            if (err) throw err;
-            });
 
-            var sql = "DELETE FROM zleceniastatus WHERE idzlecenia =" +idzlecenia+ "";
-            connection.query(sql, function (err, result) {
-            if (err) throw err;
-            });
-    
     
 
         var sql = "commit";
@@ -334,18 +341,32 @@ res.status(201).json(result);
 });
 }
 
-    //---------Oprawa
-    loadOprawa(req,res){
-        //const view = req.params['view']
-        var sql  = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  oprawa ,  oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia ORDER BY KolejnoscOprawa ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        res.status(200).json(doc);
-                                                });
 
-    }
+   loadOprawa(req,res){
+    var sql = "SELECT zlecenia.id,zlecenia.utworzono, zlecenia.zmodyfikowano,ifnull(zlecenia.NrZlecenia,'') as nrZlecenia,ifnull(zlecenia.RokZlecenia,'') as rokZlecenia, "+
+    "zlecenia.klient,zlecenia.praca,zlecenia.naklad  , "+
+    "(select oprawa from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as oprawa , "+
+    "(select sum(OprawaCzas) from produkty where id_zlecenia =zlecenia.id) as oprawaCzas , "+
+    "(select max(OprawaPredkosc) from produkty where id_zlecenia =zlecenia.id) as oprawaPredkosc ,  "+
+    "(select folia from produkty where id_zlecenia =zlecenia.id and typ='Okładka' limit 1) as folia ,  "+
+    "DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,   "+
+    "(select sum(przeloty) from produkty where id_zlecenia =zlecenia.id) as przeloty , statusGlowny.nazwa as status , zlecenia.uwagi , "+
+    "(select max(FalcPredkosc) from produkty where id_zlecenia =zlecenia.id) as falcPredkosc,  "+
+    "(select sum(legi) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legi , "+
+    "(select max(legiRodzaj) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legiRodzaj ,  "+
+    "(select sum(FalcCzas) from produkty where id_zlecenia =zlecenia.id) as falcCzas  ,  zlecenia.kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne from zlecenia "+
+   " left join statusy as statusGlowny on (select min(status) from produkty where id_zlecenia =zlecenia.id)  = statusGlowny.id "+
+    "left join statusy as statusSrodek on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
+    "left join statusy as statusOkladka on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id "+
+    "left join statusy as statusInne on (select min(status) from produkty where id_zlecenia =zlecenia.id and (produkty.Typ!='Okładka' and produkty.Typ!='Środek'))  = statusInne.id "+
+    "ORDER BY KolejnoscOprawa ASC;";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+    //sconsole.log(doc);
+    res.status(200).json(doc);
+});}
 
-   // res.status(201).json(req.body);
+
     
 }
 

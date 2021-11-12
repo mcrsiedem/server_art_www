@@ -17,6 +17,7 @@ router.get('/zleceniamaxnr',zlecenia.getMaxNrZlecenia);
 router.get('/zleceniabyid/:id',zlecenia.getZlecenieById);
 router.put('/zlecenia',zlecenia.updateZlecenieOneValue);
 router.put('/updateStatus',zlecenia.updateStatus);
+router.put('/updateStatusZlecenia',zlecenia.updateStatusZlecenia);
 
 router.put('/zleceniaAllValue',zlecenia.updateZlecenieAllValue);
 router.post('/zlecenia',zlecenia.postZlecenie);
@@ -27,7 +28,7 @@ router.get('/generujstatuszlecen',zlecenia.generujStusyZlecen);
 router.get('/oprawa',zlecenia.loadOprawa);
 //------------------------------
 router.get('/users/:login/:haslo',users.getUser);
-router.get('/druk/:maszyna/:iloscdniwstecz',druk.getProduktyByMaszyna);
+router.get('/druk/:maszyna/:iloscdniwstecz',druk.getProduktyByMaszyna);  // nowe statusy
 router.put('/druk',druk.dragDropDruk);
 router.put('/drukzmienmaszyne',druk.zmienMaszyne);
 router.post('/drukduplikuj',druk.duplikujDruk);
@@ -54,9 +55,9 @@ router.get('/produktyAll',produkty.getProduktyAllH1XLH3);
 router.get('/produktyAllnieoddane',produkty.getProduktyAllnieoddane);
 router.put('/produktyczasdruku',produkty.updateProduktyCzasDruk);
 router.get('/produkty/:idzlecenia/:typ',produkty.getProduktyByIdZleceniAndTyp);
-router.get('/blachy/:view',produkty.loadBlachy);
-router.get('/listakontrolna',produkty.loadListaKontrolna);
 
+router.get('/listakontrolna',produkty.loadListaKontrolna);
+router.get('/blachy',produkty.loadBlachy); // nowe statusy
 router.post('/blachylicznik',produkty.postBlachyLicznik);
 router.post('/blachykopia',produkty.postBlachyKopia);
 router.delete('/blachy',produkty.deleteBlachy);
@@ -72,8 +73,8 @@ router.post('/restore',restore.restoreBackup);
 router.put('/restore',restore.updateRestore);
 router.post('/createbackup',restore.createBackup);
 //------------------------------
-router.get('/falcowanie',produkty.loadFalcowanie);
-router.get('/okladki/:view',produkty.loadOkladki);
+router.get('/falcowanie',produkty.loadFalcowanie); // nowe statusy
+router.get('/okladki/:view',produkty.loadOkladki); // nowe statusy
 //------------------------------
 router.get('/notes',note.getAllNotes);
 router.get('/notes/:id',note.getNote);
