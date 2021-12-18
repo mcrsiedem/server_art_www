@@ -6,13 +6,33 @@ class DrukActions {
         const maszyna = req.params['maszyna']
         const iloscdniwstecz = req.params['iloscdniwstecz']
 
-        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,statusy.nazwa as status,produkty.id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi,produkty.nazwa,sm_ok,sm_dmg ,xl_ok ,xl_dmg,oprawa from produkty left join statusy on produkty.status = statusy.id where maszyna='" + maszyna + "' and (KoniecDruku > (SELECT max(KoniecDruku) - interval '" + iloscdniwstecz + "' day FROM ctp21.produkty where Maszyna='" + maszyna + "' and Status=7)) ORDER BY PoczatekDruku";
+        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,produkty.typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,statusy.nazwa as status,produkty.id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi,produkty.nazwa,naswietlenia.ilosc as sm_ok,sm_dmg ,naswietlenia.ilosc as xl_ok ,xl_dmg,oprawa from produkty left join statusy on produkty.status = statusy.id  left join naswietlenia on produkty.id = naswietlenia.produkt_id where maszyna='" + maszyna + "' and (KoniecDruku > (SELECT max(KoniecDruku) - interval '" + iloscdniwstecz + "' day FROM ctp21.produkty where Maszyna='" + maszyna + "' and Status=7)) ORDER BY PoczatekDruku";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         console.log(maszyna);
         res.status(200).json(doc);
     });}
 
+    getNaswietlenia(req,res){
+        var sql = "SELECT produkty.id,produkty.typ,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca, status,DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`, "+
+        "spedycja, maszyna,arkusze, naswietlenia.id as naswietlenia_id,blacha.typ as blacha_id, grupa_id,stan,ilosc,opis.nazwa as opis,data,kolej FROM produkty right join naswietlenia on produkty.id = naswietlenia.produkt_id left join blacha on naswietlenia.blacha_id = blacha.id left join opis on naswietlenia.opis = opis.id where produkty.typ !='Przerwa' ORDER BY data ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+    getProduktyByMaszyna_stare(req,res){
+        // kopia zapasowa wczytywania ilosci blach w druku z tabeli produkty z kolumn sm_ok i xl_ok
+        const maszyna = req.params['maszyna']
+        const iloscdniwstecz = req.params['iloscdniwstecz']
+
+        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,statusy.nazwa as status,produkty.id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi,produkty.nazwa,sm_ok,sm_dmg ,xl_ok ,xl_dmg,oprawa from produkty left join statusy on produkty.status = statusy.id where maszyna='" + maszyna + "' and (KoniecDruku > (SELECT max(KoniecDruku) - interval '" + iloscdniwstecz + "' day FROM ctp21.produkty where Maszyna='" + maszyna + "' and Status=7)) ORDER BY PoczatekDruku";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        console.log(maszyna);
+        res.status(200).json(doc);
+    });}
 
 
 
@@ -224,7 +244,7 @@ deleteProduktSelectOne(req,res){
     var sql = "DELETE FROM produkty WHERE ID =" +id+ "";
     connection.query(sql, function (err, result) {
     if (err) throw err;
-    res.status(201).json(result);
+
     });
 
     var sql = "update produkty set PoczatekDruku = PoczatekDruku - interval '" + czasdruku + "' minute, KoniecDruku = KoniecDruku - interval '" + czasdruku + "' minute  where PoczatekDruku > '" + poczatekdruku+ "' and Maszyna = '" + maszyna+ "'  ";
@@ -232,10 +252,17 @@ deleteProduktSelectOne(req,res){
     if (err) throw err;
     });
 
+    var sql = "DELETE FROM naswietlenia WHERE produkt_id =" +id+ "";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+  
+    });
+
     var sql = "commit";
     connection.query(sql, function (err, result) {
     if (err) throw err;
     console.log("1 record update ");
+    res.status(201).json(result);
     
     });
 }
@@ -267,9 +294,15 @@ duplikujDruk(req,res){
     " where id ='"+id+"'";
 
     connection.query(sql, function (err, result) {
+        if (err) throw err;
+        });
+
+
+    var sql = "insert into naswietlenia (produkt_id,blacha_id,typ,kolej) select (produkt_id+1),blacha_id,typ,(select MAX(kolej)+1) from naswietlenia where produkt_id ='"+id+"'";
+
+    connection.query(sql, function (err, result) {
     if (err) throw err;
     console.log(" 1 record inserted "+result.insertId);
-    res.status(201).json(result);
     });
 
 
@@ -278,9 +311,45 @@ duplikujDruk(req,res){
     connection.query(sql, function (err, result) {
     if (err) throw err;
     console.log("1 record update ");
+    res.status(201).json(result);
 
 
-});}
+});
+}
+
+//---
+updateZamknijGrupe(req,res){
+    const id = req.body.id;
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+   
+    var sql = "update grupa set stan = 'Closed', koniec= now() where id='" + id + "'";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;     });
+
+    var sql = "update naswietlenia set stan = 'Closed' where grupa_id='" + id + "'";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;     })
+
+    var sql = "INSERT INTO grupa  (id,poczatek,stan)  SELECT MAX(id)+1,now(),'Open' from grupa";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+                                                });
+
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record update ");
+    res.status(201).json(result);
+    });
+
+}
+//---
 
 
 zmienMaszyne(req,res){

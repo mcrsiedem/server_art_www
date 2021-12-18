@@ -24,6 +24,8 @@ router.post('/zlecenia',zlecenia.postZlecenie);
 router.delete('/zlecenia',zlecenia.deleteZlecenie);
 router.get('/generujstatusprodukotow',zlecenia.generujStusyProduktow);
 router.get('/generujstatuszlecen',zlecenia.generujStusyZlecen);
+router.get('/generujnaswietlenia',zlecenia.generujTabeleNaswietlenia_temp);
+
 //------------------------------
 router.get('/oprawa',zlecenia.loadOprawa);
 //------------------------------
@@ -48,6 +50,8 @@ router.put('/produkty',produkty.updateProdukty);
 router.put('/updateProduktyStatusFalcowanie',produkty.updateProduktyStatusFalcowanie);
 
 router.put('/produktydatactp',produkty.updateProduktyDataCTP);
+router.put('/updatenaswietlenieprime',produkty.updatenaswietlenieprime);
+
 router.put('/produktybyidandtyp',produkty.updateProduktyByIdZleceniaAndTyp);
 router.put('/produktybyidzlecenia',produkty.updateProduktyByIdZlecenia);
 router.get('/produkty/:idzlecenia',produkty.getProduktyById);
@@ -57,6 +61,7 @@ router.put('/produktyczasdruku',produkty.updateProduktyCzasDruk);
 router.get('/produkty/:idzlecenia/:typ',produkty.getProduktyByIdZleceniAndTyp);
 
 router.get('/listakontrolna',produkty.loadListaKontrolna);
+router.get('/grupy',produkty.loadGrupy);
 router.get('/blachy',produkty.loadBlachy); // nowe statusy
 router.post('/blachylicznik',produkty.postBlachyLicznik);
 router.post('/blachykopia',produkty.postBlachyKopia);
@@ -66,6 +71,10 @@ router.put('/produktyKolejnoscGD',produkty.updateKolejnoscZgoryNaDol);
 //------------------------------
 router.post('/historia',historia.postHistoria);
 router.get('/historia',historia.getHistoria);
+//------------------------------
+router.get('/naswietlenia',druk.getNaswietlenia);
+router.post('/zamknijgrupe',druk.updateZamknijGrupe);
+
 //------------------------------
 router.get('/restore',restore.getRestore);
 router.delete('/restore',restore.deleteBackup);

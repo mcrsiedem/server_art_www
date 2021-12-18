@@ -12,6 +12,7 @@ class ZleceniaActions {
     // });}
 
     getZlecenia(req,res){
+
         var sql = "SELECT zlecenia.id,utworzono, zmodyfikowano,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia, "+
         "klient,praca,naklad , "+
         "(select oprawa from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as oprawa ,  "+
@@ -31,13 +32,15 @@ class ZleceniaActions {
         "left join statusy as statusSrodek on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
         "left join statusy as statusOkladka on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id "+
         "left join statusy as statusInne on (select min(status) from produkty where id_zlecenia =zlecenia.id and (produkty.Typ!='Okładka' and produkty.Typ!='Środek'))  = statusInne.id "+
-        "ORDER BY Utworzono ASC;";
+        " ORDER BY Utworzono ASC;";
         
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
+
+
 
     getZleceniaNieoddane(req,res){
         var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  ifnull(Oprawa,'') as oprawa ,  ifnull(OprawaCzas,'') as oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where Status != 'Oddane' ORDER BY Utworzono ASC;";
@@ -185,6 +188,11 @@ updateStatusZlecenia(req,res){
             connection.query(sql, function (err, result) {
             if (err) throw err; });
 
+            var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
+            connection.query(sql, function (err, result) {
+            if (err) throw err; });
+
+
           }
 
          
@@ -226,6 +234,13 @@ deleteZlecenie(req,res){
             connection.query(sql, function (err, result) {
             if (err) throw err;
             });
+
+            var sql = "DELETE FROM naswietlenia WHERE produkt_id =" +doc[i].id + "";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+          
+            });
+
           }
         //console.log(doc);
         });
@@ -297,6 +312,42 @@ deleteZlecenie(req,res){
     res.status(201).json(result);
     });
     }
+
+
+  //---- generowanie naświetlen - funkcja tymczasowa do zbudowania tabeli naswietlenia
+
+    generujTabeleNaswietlenia_temp(req,res){
+        // tymczasowy tworca tabeli naswietlenia - aby przeniesc ilosc blach
+
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;  });
+
+
+    var sql  = "select id,ifnull(xl_ok,0) as xl_ok  from produkty where Maszyna='XL' and (typ != 'Przerwa' or typ !='Licznik') ";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+
+    for (let i = 0; i < Object.keys(doc).length; i++) {
+        // console.log(doc[i].typ);
+        var sql = "INSERT INTO naswietlenia  (produkt_id,ilosc,typ,blacha_id) values ('" + doc[i].id + "'," + doc[i].xl_ok + ",'prime',2);";
+        connection.query(sql, function (err, result) {
+        if (err) throw err; });
+
+      }
+    //console.log(doc);
+    });
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Naświetlenia skopiowane! ");
+res.status(201).json(result);
+});
+}
+    //---   koniec generowania naswietlen
+
     //---------generuj zlecenia
     generujStusyZlecen(req,res){
         // kopiuje staare statusy do tabeli zleceniastatus podając id statusu
@@ -317,6 +368,8 @@ deleteZlecenie(req,res){
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
     if (err) throw err;  });
+
+  
 
     //----  pobieramy wszystkie podroduktu których idzlecenia = req.body.idzlecenia i kasujemy w pętli
     var sql  = "select id,status,srodek,okladka  from zlecenia ";

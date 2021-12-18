@@ -17,13 +17,15 @@ class HistoriaActions {
 
    
     getHistoria(req,res){
-        var sql = "SELECT id,data, user,kategoria,  event , id_target, ifnull(NrZlecenia,'') as nrZlecenia, ifnull(RokZlecenia,'') as rokZlecenia,"+
+        var sql = "SELECT id,DATE_FORMAT(`data`, '%Y-%m-%d %H:%i') AS `data`, user,kategoria,  event , id_target, ifnull(NrZlecenia,'') as nrZlecenia, ifnull(RokZlecenia,'') as rokZlecenia,"+
         "ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(Typ,'') as typ,statusStary,statusNowy FROM historia ORDER BY Data ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
+
+
     
 
     getRestore(req,res){

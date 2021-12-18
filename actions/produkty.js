@@ -15,6 +15,18 @@ class ProduktyActions {
         res.status(201).json(result);
     });}
 
+    updatenaswietlenieprime(req,res){
+        const id = req.body.id;
+        const ilosc = req.body.ilosc;
+        const blacha_id = req.body.blacha_id;
+        var sql = "update naswietlenia set ilosc= " + ilosc + ", blacha_id = '" + blacha_id + "',opis=0, data = now(), grupa_id =(select max(id) from grupa) where produkt_id="+id;
+    
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update");
+        res.status(201).json(result);
+    });}
+
     updateProduktyStatusFalcowanie(req,res){
 
         const id = req.body.id;
@@ -244,6 +256,17 @@ loadtest(req,res){
         res.status(200).json(doc);
                                                 });
     }
+
+    loadGrupy(req,res){
+      
+        var sql  = "select id, DATE_FORMAT(`poczatek`, '%Y-%m-%d %H:%i') AS `poczatek`,DATE_FORMAT(`koniec`, '%Y-%m-%d %H:%i') AS `koniec`,stan from grupa ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+                                                });
+    }
+
+
 
     postBlachyLicznik(req,res){
         const kolejnosc = req.body.kolejnosc;
