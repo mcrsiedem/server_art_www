@@ -6,7 +6,7 @@ class DrukActions {
         const maszyna = req.params['maszyna']
         const iloscdniwstecz = req.params['iloscdniwstecz']
 
-        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,produkty.typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,statusy.nazwa as status,produkty.id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi,produkty.nazwa,naswietlenia.ilosc as sm_ok,sm_dmg ,naswietlenia.ilosc as xl_ok ,xl_dmg,oprawa from produkty left join statusy on produkty.status = statusy.id  left join naswietlenia on produkty.id = naswietlenia.produkt_id where maszyna='" + maszyna + "' and (KoniecDruku > (SELECT max(KoniecDruku) - interval '" + iloscdniwstecz + "' day FROM ctp21.produkty where Maszyna='" + maszyna + "' and Status=7)) ORDER BY PoczatekDruku";
+        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,produkty.typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,statusy.nazwa as status,produkty.id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi,produkty.nazwa,naswietlenia.ilosc as sm_ok,sm_dmg ,naswietlenia.ilosc as xl_ok ,xl_dmg,oprawa from produkty left join naswietlenia on  produkty.id = naswietlenia.produkt_id left join statusy on produkty.status = statusy.id    where (naswietlenia.typ = 'prime') and ( maszyna='" + maszyna + "') and (KoniecDruku > (SELECT max(KoniecDruku) - interval '" + iloscdniwstecz + "' day FROM ctp21.produkty where Maszyna='" + maszyna + "' and Status=7)) ORDER BY PoczatekDruku";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         console.log(maszyna);
@@ -15,7 +15,15 @@ class DrukActions {
 
     getNaswietlenia(req,res){
         var sql = "SELECT produkty.id,produkty.typ,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca, status,DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`, "+
-        "spedycja, maszyna,arkusze, naswietlenia.id as naswietlenia_id,blacha.typ as blacha_id, grupa_id,stan,ilosc,opis.nazwa as opis,data,kolej FROM produkty right join naswietlenia on produkty.id = naswietlenia.produkt_id left join blacha on naswietlenia.blacha_id = blacha.id left join opis on naswietlenia.opis = opis.id where produkty.typ !='Przerwa' ORDER BY data ASC;";
+        "spedycja, maszyna,arkusze, naswietlenia.id as naswietlenia_id,blacha.typ as blacha_id, grupa_id,stan,ilosc,opis.nazwa as opis,DATE_FORMAT(`data`, '%Y-%m-%d %H:%i') AS `data`,kolej,naswietlenia.typ as naswietlenia_typ FROM produkty right join naswietlenia on produkty.id = naswietlenia.produkt_id left join blacha on naswietlenia.blacha_id = blacha.id left join opis on naswietlenia.opis = opis.id where (produkty.typ !='Przerwa')  ORDER BY data ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+    getOpisNaswietlen(req,res){
+        var sql = "SELECT id,nazwa from opis  ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
@@ -297,15 +305,9 @@ duplikujDruk(req,res){
         if (err) throw err;
         });
 
-
-    var sql = "insert into naswietlenia (produkt_id,blacha_id,typ,kolej) select (produkt_id+1),blacha_id,typ,(select MAX(kolej)+1) from naswietlenia where produkt_id ='"+id+"'";
-
-    connection.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log(" 1 record inserted "+result.insertId);
-    });
-
-
+    var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
+            connection.query(sql, function (err, result) {
+            if (err) throw err; });
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
@@ -313,11 +315,41 @@ duplikujDruk(req,res){
     console.log("1 record update ");
     res.status(201).json(result);
 
+});
+}
+
+//--- duplikuj naświetlenie
+
+duplikujNaswietlenie(req,res){
+    const id = req.body.id;
+
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
+    var sql = "insert into naswietlenia (produkt_id,blacha_id,kolej,grupa_id,data)  (select produkt_id,blacha_id,(select max(kolej)+1 from naswietlenia),(select max(id) from grupa), now() from naswietlenia where id= '"+id+"');";
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        });
+
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Naswietlenie zduplikowane");
+    res.status(201).json(result);
+
 
 });
 }
 
 //---
+
+
+//----
+
 updateZamknijGrupe(req,res){
     const id = req.body.id;
 
@@ -327,11 +359,11 @@ updateZamknijGrupe(req,res){
     });
 
    
-    var sql = "update grupa set stan = 'Closed', koniec= now() where id='" + id + "'";
+    var sql = "update grupa set stan = 'Closed', koniec= now() where id=( select max(id))";
     connection.query(sql, function (err, result) {
     if (err) throw err;     });
 
-    var sql = "update naswietlenia set stan = 'Closed' where grupa_id='" + id + "'";
+    var sql = "update naswietlenia set stan = 'Closed' where grupa_id= (select max(id) from grupa)";
     connection.query(sql, function (err, result) {
     if (err) throw err;     })
 

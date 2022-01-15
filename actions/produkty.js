@@ -15,17 +15,66 @@ class ProduktyActions {
         res.status(201).json(result);
     });}
 
+    // updatenaswietlenieprime2(req,res){
+    //     const id = req.body.id;
+    //     const ilosc = req.body.ilosc;
+    //     const blacha_id = req.body.blacha_id;
+    //     var sql = "update naswietlenia set ilosc= " + ilosc + ", blacha_id = '" + blacha_id + "',opis=0, data = now(), grupa_id =(select max(id) from grupa) where typ='prime' and produkt_id="+id;
+    
+    //     connection.query(sql, function (err, result) {
+    //     if (err) throw err;
+    //     console.log("1 record update");
+    //     res.status(201).json(result);
+    // });}
     updatenaswietlenieprime(req,res){
         const id = req.body.id;
         const ilosc = req.body.ilosc;
         const blacha_id = req.body.blacha_id;
-        var sql = "update naswietlenia set ilosc= " + ilosc + ", blacha_id = '" + blacha_id + "',opis=0, data = now(), grupa_id =(select max(id) from grupa) where produkt_id="+id;
+        var sql = "update naswietlenia  set ilosc= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + ilosc + "'  ELSE ilosc END, blacha_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + blacha_id + "'  ELSE blacha_id  END, opis=0, data= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN now() ELSE data END, grupa_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN (select max(id) from grupa) ELSE grupa_id END where typ='prime' and produkt_id="+id;
     
         connection.query(sql, function (err, result) {
         if (err) throw err;
         console.log("1 record update");
         res.status(201).json(result);
     });}
+
+
+
+    updatenaswietlenie(req,res){
+        const id = req.body.id;
+        const ilosc = req.body.ilosc;
+        const blacha_id = req.body.blacha_id;
+        var sql = "update naswietlenia  set ilosc= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + ilosc + "'  ELSE ilosc END, blacha_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + blacha_id + "'  ELSE blacha_id  END, opis=0, data= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN now() ELSE data END, grupa_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN (select max(id) from grupa) ELSE grupa_id END where id="+id;
+
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update");
+        res.status(201).json(result);
+    });}
+
+
+    zmien_na_nowe_naswietlenie(req,res){
+        const id = req.body.id;
+        var sql = "update naswietlenia  set produkt_id = CASE WHEN (grupa_id =(select max(id) from grupa)) AND (typ is null) THEN 0 ELSE produkt_id END where id="+id;
+
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update");
+        res.status(201).json(result);
+    });}
+
+    updatenaswietlenie_opis(req,res){
+        const id = req.body.id;
+        const opis = req.body.opis;
+        var sql = "update naswietlenia  set opis= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + opis + "'  ELSE opis END where id="+id;
+
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update");
+        res.status(201).json(result);
+    });}
+
+
 
     updateProduktyStatusFalcowanie(req,res){
 

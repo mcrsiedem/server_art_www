@@ -34,6 +34,7 @@ router.get('/druk/:maszyna/:iloscdniwstecz',druk.getProduktyByMaszyna);  // nowe
 router.put('/druk',druk.dragDropDruk);
 router.put('/drukzmienmaszyne',druk.zmienMaszyne);
 router.post('/drukduplikuj',druk.duplikujDruk);
+
 router.put('/drukczas',druk.updateCzasDruk);
 router.post('/drukprzerwa',druk.insertPrzerwaDruk);
 router.delete('/drukprzerwa',druk.deleteProduktSelectOne);
@@ -50,7 +51,7 @@ router.put('/produkty',produkty.updateProdukty);
 router.put('/updateProduktyStatusFalcowanie',produkty.updateProduktyStatusFalcowanie);
 
 router.put('/produktydatactp',produkty.updateProduktyDataCTP);
-router.put('/updatenaswietlenieprime',produkty.updatenaswietlenieprime);
+
 
 router.put('/produktybyidandtyp',produkty.updateProduktyByIdZleceniaAndTyp);
 router.put('/produktybyidzlecenia',produkty.updateProduktyByIdZlecenia);
@@ -73,7 +74,15 @@ router.post('/historia',historia.postHistoria);
 router.get('/historia',historia.getHistoria);
 //------------------------------
 router.get('/naswietlenia',druk.getNaswietlenia);
+router.get('/opisnaswietlen',druk.getOpisNaswietlen);
 router.post('/zamknijgrupe',druk.updateZamknijGrupe);
+router.put('/updatenaswietlenieprime',produkty.updatenaswietlenieprime);
+router.put('/updatenaswietlenie',produkty.updatenaswietlenie);
+router.put('/zmiennanoweswietlenie',produkty.zmien_na_nowe_naswietlenie);
+
+router.put('/updatenaswietlenieopis',produkty.updatenaswietlenie_opis);
+router.post('/duplikujnaswietlenie',druk.duplikujNaswietlenie);
+
 
 //------------------------------
 router.get('/restore',restore.getRestore);
