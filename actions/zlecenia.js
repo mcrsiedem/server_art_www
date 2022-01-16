@@ -339,6 +339,23 @@ deleteZlecenie(req,res){
     //console.log(doc);
     });
 
+    var sql  = "select id,ifnull(sm_ok,0) as sm_ok  from produkty where (Maszyna='H1' or Maszyna='H3')  and (typ != 'Przerwa' or typ !='Licznik') ";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+
+    for (let i = 0; i < Object.keys(doc).length; i++) {
+        // console.log(doc[i].typ);
+        var sql = "INSERT INTO naswietlenia  (produkt_id,ilosc,typ,blacha_id) values ('" + doc[i].id + "'," + doc[i].sm_ok + ",'prime',1);";
+        connection.query(sql, function (err, result) {
+        if (err) throw err; });
+
+      }
+    //console.log(doc);
+    });
+
+
+
+
     var sql = "commit";
     connection.query(sql, function (err, result) {
     if (err) throw err;
