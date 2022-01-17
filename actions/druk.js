@@ -229,6 +229,10 @@ insertPrzerwaDruk(req,res){
 
     });
 
+    var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
+            connection.query(sql, function (err, result) {
+            if (err) throw err; });
+
     var sql = "commit";
     connection.query(sql, function (err, result) {
     if (err) throw err;
