@@ -13,6 +13,8 @@ class ZleceniaActions {
 
     getZlecenia(req,res){
 
+        const WHEREZLECENIA = req.params['WHEREZLECENIA']
+
         var sql = "SELECT zlecenia.id,utworzono, zmodyfikowano,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia, "+
         "klient,praca,naklad , "+
         "(select oprawa from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as oprawa ,  "+
@@ -32,7 +34,7 @@ class ZleceniaActions {
         "left join statusy as statusSrodek on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
         "left join statusy as statusOkladka on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id "+
         "left join statusy as statusInne on (select min(status) from produkty where id_zlecenia =zlecenia.id and (produkty.Typ!='Okładka' and produkty.Typ!='Środek'))  = statusInne.id "+
-        " ORDER BY Utworzono ASC;";
+        " "+WHEREZLECENIA+" ORDER BY Utworzono ASC;";
         
         connection.query(sql, function (err, doc) {
         if (err) throw err;

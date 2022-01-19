@@ -11,7 +11,7 @@ const restore = require('../actions/restore');
 
 
 
-router.get('/zlecenia',zlecenia.getZlecenia);
+router.get('/zlecenia/:WHEREZLECENIA',zlecenia.getZlecenia);
 router.get('/zlecenianieoddane',zlecenia.getZleceniaNieoddane);
 router.get('/zleceniamaxnr',zlecenia.getMaxNrZlecenia);
 router.get('/zleceniabyid/:id',zlecenia.getZlecenieById);
