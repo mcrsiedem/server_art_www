@@ -70,8 +70,8 @@ router.delete('/blachy',produkty.deleteBlachy);
 router.put('/produktyKolejnoscDG',produkty.updateKolejnoscZdoluNaGore);
 router.put('/produktyKolejnoscGD',produkty.updateKolejnoscZgoryNaDol);
 //------------------------------
-router.post('/historia',historia.postHistoria);
-router.get('/historia',historia.getHistoria);
+router.post('/historia',druk.postHistoria);
+router.get('/historia',druk.getHistoria);
 //------------------------------
 router.get('/naswietlenia',druk.getNaswietlenia);
 router.get('/opisnaswietlen',druk.getOpisNaswietlen);
