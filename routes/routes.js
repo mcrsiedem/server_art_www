@@ -2,6 +2,21 @@ const express = require('express');
 const router = express.Router();
 const druk = require('../actions/druk');
 
+router.get('/ctp',druk.getCTP);
+router.post('/ctp',druk.postCTP);
+router.delete('/ctp',druk.deleteCTP);
+router.put('/ctp',druk.updateCTP);
+
+router.put('/produktydatactp',druk.updateProduktyDataCTP);
+router.put('/produktybyidandtyp',druk.updateProduktyByIdZleceniaAndTyp);
+router.put('/produktybyidzlecenia',druk.updateProduktyByIdZlecenia);
+router.get('/produkty/:idzlecenia',druk.getProduktyById);
+router.get('/produktyAll',druk.getProduktyAllH1XLH3);
+router.get('/produktyAllnieoddane',druk.getProduktyAllnieoddane);
+router.put('/produktyczasdruku',druk.updateProduktyCzasDruk);
+router.get('/produkty/:idzlecenia/:typ',druk.getProduktyByIdZleceniAndTyp);
+
+
 
 router.get('/zlecenia/:WHEREZLECENIA',druk.getZlecenia);
 router.get('/zlecenianieoddane',druk.getZleceniaNieoddane);
@@ -10,7 +25,6 @@ router.get('/zleceniabyid/:id',druk.getZlecenieById);
 router.put('/zlecenia',druk.updateZlecenieOneValue);
 router.put('/updateStatus',druk.updateStatus);
 router.put('/updateStatusZlecenia',druk.updateStatusZlecenia);
-
 router.put('/zleceniaAllValue',druk.updateZlecenieAllValue);
 router.post('/zlecenia',druk.postZlecenie);
 router.delete('/zlecenia',druk.deleteZlecenie);
@@ -31,25 +45,13 @@ router.delete('/drukprzerwa',druk.deleteProduktSelectOne);
 router.put('/naprawczasdruku',druk.updateNaprawCzas);
 
 //------------------------------
-router.get('/ctp',druk.getCTP);
-router.post('/ctp',druk.postCTP);
-router.delete('/ctp',druk.deleteCTP);
-router.put('/ctp',druk.updateCTP);
+
 router.get('/loadtest',druk.loadtest);
 //------------------------------
 router.put('/produkty',druk.updateProdukty);
 router.put('/updateProduktyStatusFalcowanie',druk.updateProduktyStatusFalcowanie);
 
-router.put('/produktydatactp',druk.updateProduktyDataCTP);
 
-
-router.put('/produktybyidandtyp',druk.updateProduktyByIdZleceniaAndTyp);
-router.put('/produktybyidzlecenia',druk.updateProduktyByIdZlecenia);
-router.get('/produkty/:idzlecenia',druk.getProduktyById);
-router.get('/produktyAll',druk.getProduktyAllH1XLH3);
-router.get('/produktyAllnieoddane',druk.getProduktyAllnieoddane);
-router.put('/produktyczasdruku',druk.updateProduktyCzasDruk);
-router.get('/produkty/:idzlecenia/:typ',druk.getProduktyByIdZleceniAndTyp);
 
 router.get('/listakontrolna',druk.loadListaKontrolna);
 router.get('/grupy',druk.loadGrupy);
