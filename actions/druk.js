@@ -363,7 +363,7 @@ updateZamknijGrupe(req,res){
     });
 
    
-    var sql = "update grupa set stan = 'Closed', koniec= now() where id=( select max(id))";
+    var sql = "update grupa set stan = 'Closed', koniec= now() where stan='Open'";
     connection.query(sql, function (err, result) {
     if (err) throw err;     });
 
