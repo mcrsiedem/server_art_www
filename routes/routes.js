@@ -27,6 +27,7 @@ router.put('/updateStatus',druk.updateStatus);
 router.put('/updateStatusZlecenia',druk.updateStatusZlecenia);
 router.put('/zleceniaAllValue',druk.updateZlecenieAllValue);
 router.post('/zlecenia',druk.postZlecenie);
+router.post('/zlecenia_z_excela',druk.postZlecenia_z_EXCELA);
 router.delete('/zlecenia',druk.deleteZlecenie);
 router.get('/generujstatusprodukotow',druk.generujStusyProduktow);
 router.get('/generujstatuszlecen',druk.generujStusyZlecen);
