@@ -1737,6 +1737,7 @@ res.status(201).json(result);
     //"(select max(OprawaPredkosc) from produkty where id_zlecenia =zlecenia.id) as oprawaPredkosc ,  "+
     "uv as folia ,  "+
     "DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,   "+
+    "druk_przeloty as przeloty , "+
    //  "(select sum(przeloty) from produkty where id_zlecenia =zlecenia.id) as przeloty , "+
    " statusGlowny.nazwa as status , zlecenia.uwagi , "+
    // "(select max(FalcPredkosc) from produkty where id_zlecenia =zlecenia.id) as falcPredkosc,  "+
