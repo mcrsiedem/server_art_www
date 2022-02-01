@@ -1343,30 +1343,6 @@ getZlecenia(req,res){
         res.status(201).json(result);
     });}
 
-    zlecenia_update(req,res){
-
-        // update zlecen z produktow generowanie statusow, oprawy, czasow itp
-    
-        var sql = "SET SQL_SAFE_UPDATES = 0; "+
-        "update ctp21.zlecenia set status_srodek = (select min(status) from ctp21.produkty where produkty.id_zlecenia =zlecenia.ID and typ='Środek'); "+
-        "update ctp21.zlecenia set status_okladka = (select min(status) from ctp21.produkty where produkty.id_zlecenia =zlecenia.ID and typ='Okładka'); "+
-        "update ctp21.zlecenia set status_inne = (select min(status) from ctp21.produkty where produkty.id_zlecenia =zlecenia.ID and typ='Inne'); "+
-        "update ctp21.zlecenia set status_glowny = (select min(status) from ctp21.produkty where produkty.id_zlecenia =zlecenia.ID ); "+
-        "update ctp21.zlecenia set druk_przeloty = (select sum(przeloty) from ctp21.produkty where id_zlecenia =zlecenia.id) ; "+
-        "update ctp21.zlecenia set druk_czas = (select sum(czasdruku) from ctp21.produkty where id_zlecenia =zlecenia.id) ; "+
-        "update ctp21.zlecenia set oprawa = (select oprawa from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) ; "+
-        "update ctp21.zlecenia set oprawa_czas = (select sum(OprawaCzas) from produkty where id_zlecenia =zlecenia.id); "+
-        "update ctp21.zlecenia set falc_czas = (select sum(falcczas) from produkty where id_zlecenia =zlecenia.id); "+
-        "update ctp21.zlecenia set legi = (select sum(legi) from produkty where id_zlecenia =zlecenia.id and typ='Środek'); "+
-        "update ctp21.zlecenia set rodzaj_legi = (select legirodzaj from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) ; "+
-        "update ctp21.zlecenia set falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia =zlecenia.id) ; "+
-        "update ctp21.zlecenia set uv = (select folia from produkty where id_zlecenia =zlecenia.id and typ='Okładka' limit 1) ;";
-    
-        connection.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log("1 record update ");
-        res.status(201).json(result);
-    });}
 
 
 
