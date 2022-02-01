@@ -1278,6 +1278,39 @@ connection.query("commit", function (err, result) { if (err) throw err;  console
     });}
 
 
+getZlecenia2(req,res){
+
+        const WHEREZLECENIA = req.params['WHEREZLECENIA']
+
+        var sql = "SELECT zlecenia.id,utworzono, zmodyfikowano,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia, "+
+        "klient,praca,naklad , "+
+        "oprawa ,  "+
+        "oprawaCzas , "+
+        "oprawaPredkosc , "+
+        "folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , "+
+        // "(select sum(arkusze) from produkty where id_zlecenia =zlecenia.id) as arkusze , "+
+        // "(select sum(legi) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legi , "+
+        // "(select max(legiRodzaj) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legiRodzaj ,  "+
+        "przeloty , "+
+        "statusGlowny.nazwa as status , uwagi , "+
+      //  "(select max(FalcPredkosc) from produkty where id_zlecenia =zlecenia.id) as falcPredkosc , "+
+        "falcCzas , "+
+        "kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne "+
+        "from zlecenia "+
+        "left join statusy as statusGlowny on (select min(status) from produkty where id_zlecenia =zlecenia.id)  = statusGlowny.id "+
+        "left join statusy as statusSrodek on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
+        "left join statusy as statusOkladka on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id "+
+        "left join statusy as statusInne on (select min(status) from produkty where id_zlecenia =zlecenia.id and (produkty.Typ!='Okładka' and produkty.Typ!='Środek'))  = statusInne.id "+
+        " "+WHEREZLECENIA+" ORDER BY Utworzono ASC;";
+        
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+    
+
 
     getZleceniaNieoddane(req,res){
         var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  ifnull(Oprawa,'') as oprawa ,  ifnull(OprawaCzas,'') as oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where Status != 'Oddane' ORDER BY Utworzono ASC;";

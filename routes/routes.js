@@ -19,6 +19,8 @@ router.get('/produkty/:idzlecenia/:typ',druk.getProduktyByIdZleceniAndTyp);
 
 
 router.get('/zlecenia/:WHEREZLECENIA',druk.getZlecenia);
+router.get('/zlecenia2/:WHEREZLECENIA',druk.getZlecenia2);
+
 router.get('/zlecenianieoddane',druk.getZleceniaNieoddane);
 router.get('/zleceniamaxnr',druk.getMaxNrZlecenia);
 router.get('/zleceniabyid/:id',druk.getZlecenieById);
