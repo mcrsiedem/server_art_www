@@ -25,6 +25,9 @@ router.get('/zlecenianieoddane',druk.getZleceniaNieoddane);
 router.get('/zleceniamaxnr',druk.getMaxNrZlecenia);
 router.get('/zleceniabyid/:id',druk.getZlecenieById);
 router.put('/zlecenia',druk.updateZlecenieOneValue);
+
+router.put('/zlecenia_update',druk.zlecenia_update);
+
 router.put('/updateStatus',druk.updateStatus);
 router.put('/updateStatusZlecenia',druk.updateStatusZlecenia);
 router.put('/zleceniaAllValue',druk.updateZlecenieAllValue);
