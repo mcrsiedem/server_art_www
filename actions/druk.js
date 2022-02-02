@@ -1447,7 +1447,7 @@ updateStatusZlecenia(req,res){
         connection.query(sql, function (err, result) {
         if (err) throw err;  });
 
-        var sql ="INSERT INTO zlecenia  (ID,KolejnoscOprawa,NrZlecenia,RokZlecenia,Klient,Praca,Naklad,Spedycja) SELECT MAX(ID)+1,(SELECT MAX(KolejnoscOprawa)+1),'" + jsonParsed[0].nr + "','" + jsonParsed[0].rok + "','"+ jsonParsed[0].klient + "','"+ jsonParsed[0].praca + "','"+ jsonParsed[0].naklad + "','"+ jsonParsed[0].spedycja + "' FROM zlecenia";
+        var sql ="INSERT INTO zlecenia  (ID,KolejnoscOprawa,NrZlecenia,RokZlecenia,Klient,Praca,Naklad,Spedycja,status_glowny) SELECT MAX(ID)+1,(SELECT MAX(KolejnoscOprawa)+1),'" + jsonParsed[0].nr + "','" + jsonParsed[0].rok + "','"+ jsonParsed[0].klient + "','"+ jsonParsed[0].praca + "','"+ jsonParsed[0].naklad + "','"+ jsonParsed[0].spedycja + "', '1' FROM zlecenia";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
@@ -1466,6 +1466,19 @@ updateStatusZlecenia(req,res){
             if (err) throw err; });
 
           }
+
+    
+        var sql ="update ctp21.zlecenia set druk_przeloty = (select sum(przeloty) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)), "+
+        "druk_czas = (select sum(czasdruku) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)), "+
+        "oprawa = (select oprawa from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) and typ='Środek' limit 1), "+
+        "oprawa_czas = (select sum(OprawaCzas) from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) ), "+
+        "falc_czas = (select sum(falcczas) from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id) ), "+
+        "legi = (select sum(legi) from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id)  and typ='Środek'), "+
+        "rodzaj_legi = (select legirodzaj from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id)  and typ='Środek' limit 1), "+
+        "falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) ), "+
+        "uv = (select folia from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)  and typ='Okładka' limit 1) ;";
+        connection.query(sql, function (err, result) {
+        if (err) throw err; });
 
     
         var sql = "commit";
@@ -1495,13 +1508,13 @@ postZlecenia_z_EXCELA(req,res){
 
    for (let i = 0; i < Object.keys(jsonParsed[0]).length; i++) {
 
-        var sql ="INSERT INTO zlecenia  (ID,KolejnoscOprawa,NrZlecenia,RokZlecenia,Klient,Praca,Naklad,Spedycja) SELECT MAX(ID)+1,(SELECT MAX(KolejnoscOprawa)+1),'" + jsonParsed[0][i].nr + "','" + jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "','"+ jsonParsed[0][i].praca + "','"+ jsonParsed[0][i].naklad + "','"+ jsonParsed[0][i].spedycja + "' FROM zlecenia";
+        var sql ="INSERT INTO zlecenia  (ID,KolejnoscOprawa,NrZlecenia,RokZlecenia,Klient,Praca,Naklad,Spedycja,status_glowny) SELECT MAX(ID)+1,(SELECT MAX(KolejnoscOprawa)+1),'" + jsonParsed[0][i].nr + "','" + jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "','"+ jsonParsed[0][i].praca + "','"+ jsonParsed[0][i].naklad + "','"+ jsonParsed[0][i].spedycja + "','15' FROM zlecenia";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
 
             // okładka
-       var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0][i].naklad+ "','" +jsonParsed[0][i].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0][i].nr + "','"+ jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "',0,'"+ jsonParsed[0][i].praca + "','-',' ','10','"+ jsonParsed[0][i].lakier+ "','"+ jsonParsed[0][i].przelotydrukokladka+ "','12000','"+ jsonParsed[0][i].arkusze+ "','"+ jsonParsed[0][i].legi+ "','0','0','0','0',' ','XL','Okładka', (select MAX(KoniecDruku) from produkty where maszyna='XL') as PoczatekDruku ,'"+ jsonParsed[0][i].czasdrukuokladka+ "',(select MAX(KoniecDruku) from produkty where maszyna='XL') + interval '"+ jsonParsed[0][i].czasdrukuokladka+ "' minute as KoniecDruku  FROM produkty";
+       var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0][i].naklad+ "','" +jsonParsed[0][i].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0][i].nr + "','"+ jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "',15,'"+ jsonParsed[0][i].praca + "','-',' ','10','"+ jsonParsed[0][i].lakier+ "','"+ jsonParsed[0][i].przelotydrukokladka+ "','12000','"+ jsonParsed[0][i].arkusze+ "','"+ jsonParsed[0][i].legi+ "','0','0','0','0',' ','XL','Okładka', (select MAX(KoniecDruku) from produkty where maszyna='XL') as PoczatekDruku ,'"+ jsonParsed[0][i].czasdrukuokladka+ "',(select MAX(KoniecDruku) from produkty where maszyna='XL') + interval '"+ jsonParsed[0][i].czasdrukuokladka+ "' minute as KoniecDruku  FROM produkty";
        connection.query(sql, function (err, result) {
        if (err) throw err; });
 
@@ -1511,7 +1524,7 @@ postZlecenia_z_EXCELA(req,res){
 
         // srodek
 
-        var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0][i].naklad+ "','" +jsonParsed[0][i].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0][i].nr + "','"+ jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "',0,'"+ jsonParsed[0][i].praca + "','"+ jsonParsed[0][i].oprawa+ "',' ','22','-','"+ jsonParsed[0][i].przelotydruk+ "','6000','"+ jsonParsed[0][i].arkusze+ "','"+ jsonParsed[0][i].legi+ "','"+ jsonParsed[0][i].rodzajlegi+ "','"+ jsonParsed[0][i].czasfalcowania+ "','"+ jsonParsed[0][i].predkoscfalcowania+ "','"+ jsonParsed[0][i].czasoprawy+ "',' ','H3','Środek', (select MAX(KoniecDruku) from produkty where maszyna='H3') as PoczatekDruku ,'"+ jsonParsed[0][i].czasdruku+ "',(select MAX(KoniecDruku) from produkty where maszyna='H3') + interval '"+ jsonParsed[0][i].czasdruku+ "' minute as KoniecDruku  FROM produkty";
+        var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0][i].naklad+ "','" +jsonParsed[0][i].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0][i].nr + "','"+ jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "',15,'"+ jsonParsed[0][i].praca + "','"+ jsonParsed[0][i].oprawa+ "',' ','22','-','"+ jsonParsed[0][i].przelotydruk+ "','6000','"+ jsonParsed[0][i].arkusze+ "','"+ jsonParsed[0][i].legi+ "','"+ jsonParsed[0][i].rodzajlegi+ "','"+ jsonParsed[0][i].czasfalcowania+ "','"+ jsonParsed[0][i].predkoscfalcowania+ "','"+ jsonParsed[0][i].czasoprawy+ "',' ','H3','Środek', (select MAX(KoniecDruku) from produkty where maszyna='H3') as PoczatekDruku ,'"+ jsonParsed[0][i].czasdruku+ "',(select MAX(KoniecDruku) from produkty where maszyna='H3') + interval '"+ jsonParsed[0][i].czasdruku+ "' minute as KoniecDruku  FROM produkty";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
  
@@ -1519,7 +1532,17 @@ postZlecenia_z_EXCELA(req,res){
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
-
+        var sql ="update ctp21.zlecenia set druk_przeloty = (select sum(przeloty) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)), "+
+        "druk_czas = (select sum(czasdruku) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)), "+
+        "oprawa = (select oprawa from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) and typ='Środek' limit 1), "+
+        "oprawa_czas = (select sum(OprawaCzas) from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) ), "+
+        "falc_czas = (select sum(falcczas) from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id) ), "+
+        "legi = (select sum(legi) from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id)  and typ='Środek'), "+
+        "rodzaj_legi = (select legirodzaj from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id)  and typ='Środek' limit 1), "+
+        "falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) ), "+
+        "uv = (select folia from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)  and typ='Okładka' limit 1) ;";
+        connection.query(sql, function (err, result) {
+        if (err) throw err; });
 
      }
 
