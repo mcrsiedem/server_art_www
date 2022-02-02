@@ -775,25 +775,45 @@ updateProdukty(req,res){
     const id = req.body.id;
     const kolumna = req.body.kolumna;
     const value = req.body.value;
-    var sql = "update produkty set " + kolumna + " = '" + value + "' where id="+id;
+    const idzlecenia = req.body.idzlecenia;
 
+    var sql = "start transaction";
+connection.query(sql, function (err, result) {
+if (err) throw err;  });
+
+
+    var sql = "update produkty set " + kolumna + " = '" + value + "' where id="+id;
     connection.query(sql, function (err, result) {
     if (err) throw err;
     console.log("1 record update ");
-    res.status(201).json(result);
-});}
 
-// updatenaswietlenieprime2(req,res){
-//     const id = req.body.id;
-//     const ilosc = req.body.ilosc;
-//     const blacha_id = req.body.blacha_id;
-//     var sql = "update naswietlenia set ilosc= " + ilosc + ", blacha_id = '" + blacha_id + "',opis=0, data = now(), grupa_id =(select max(id) from grupa) where typ='prime' and produkt_id="+id;
 
-//     connection.query(sql, function (err, result) {
-//     if (err) throw err;
-//     console.log("1 record update");
-//     res.status(201).json(result);
-// });}
+});
+
+var sql ="update ctp21.zlecenia set druk_przeloty = (select sum(przeloty) from ctp21.produkty where id_zlecenia = '"+idzlecenia+"' ), "+
+        "druk_czas = (select sum(czasdruku) from ctp21.produkty where id_zlecenia = '"+idzlecenia+"'), "+
+        "oprawa = (select oprawa from produkty where id_zlecenia = '"+idzlecenia+"' and typ='Środek' limit 1), "+
+        "oprawa_czas = (select sum(OprawaCzas) from produkty where id_zlecenia = '"+idzlecenia+"' ), "+
+        "falc_czas = (select sum(falcczas) from produkty where id_zlecenia ='"+idzlecenia+"' ), "+
+        "legi = (select sum(legi) from produkty where id_zlecenia ='"+idzlecenia+"'  and typ='Środek'), "+
+        "rodzaj_legi = (select legirodzaj from produkty where id_zlecenia ='"+idzlecenia+"'  and typ='Środek' limit 1), "+
+        "falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia = '"+idzlecenia+"' ), "+
+        "uv = (select folia from produkty where id_zlecenia = '"+idzlecenia+"'  and typ='Okładka' limit 1) where id = '"+idzlecenia+"' ;";
+        connection.query(sql, function (err, result) {
+        if (err) throw err; });
+
+
+var sql = "commit";
+connection.query(sql, function (err, result) {
+if (err) throw err;
+console.log("Skasoway licznik albo coś doświecane! ");
+res.status(201).json(result);
+                    });
+
+
+}
+
+
 updatenaswietlenieprime(req,res){
     const id = req.body.id;
     const ilosc = req.body.ilosc;
