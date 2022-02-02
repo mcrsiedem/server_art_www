@@ -1349,20 +1349,7 @@ getZlecenia(req,res){
     updateStatus(req,res){
         const id = req.body.id;
         const value = req.body.value;
-
-        // const status = new Map();
-        // status.set("Nieaktywne", "0");
-        // status.set("Nowe", "1");
-        // status.set("Pliki", "2");
-        // status.set("Akcept", "3");
-        // status.set("RIP", "4");
-        // status.set("Zaświecone", "5");
-        // status.set("Wydrukowane", "6");
-        // status.set("Sfalcowane", "7");
-        // status.set("Uszlachetnone", "8");
-        // status.set("Oprawione", "9");
-        // status.set("Oddane", "10");
-        // status.set("Anulowane", "11");
+        const idzlecenia = req.body.idzlecenia;
 
         var sql = "start transaction";
                 connection.query(sql, function (err, result) {
@@ -1372,8 +1359,15 @@ getZlecenia(req,res){
                 var sql = "update produkty set status= '" + value + "' where id="+id;
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
-
                 });
+
+                var sql = "update ctp21.zlecenia set status_srodek = (select min(status) from ctp21.produkty where produkty.id_zlecenia = '" + idzlecenia + "' and typ='Środek') ,  status_okladka = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Okładka') , status_inne = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Inne') , status_glowny = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' ) where zlecenia.id = '" + idzlecenia + "';";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+
+
 
 var sql = "commit";
 connection.query(sql, function (err, result) {
@@ -1383,7 +1377,6 @@ res.status(201).json(result);
 });
 
 
-
 }
 
 //--- update wszstykie statusy produktów dla danego zlecenia
@@ -1391,13 +1384,28 @@ updateStatusZlecenia(req,res){
     const idzlecenia = req.body.idzlecenia;
     const value = req.body.value;
 
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
             var sql = "update produkty set status= '" + value + "' where ID_zlecenia="+idzlecenia;
             connection.query(sql, function (err, result) {
             if (err) throw err;
-            res.status(201).json(result);
+     
             });
 
 
+            var sql = "update ctp21.zlecenia set status_srodek = (select min(status) from ctp21.produkty where produkty.id_zlecenia = '" + idzlecenia + "' and typ='Środek') ,  status_okladka = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Okładka') , status_inne = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Inne') , status_glowny = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' ) where zlecenia.id = '" + idzlecenia + "';";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+                var sql = "commit";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                console.log("1 record update ");
+                res.status(201).json(result);
+                });
 
 }
 //---
