@@ -1256,40 +1256,7 @@ connection.query("commit", function (err, result) { if (err) throw err;  console
 
 }
 
-//---------
 
-
-
-    // getZlecenia_stare_temp(req,res){
-
-    //     const WHEREZLECENIA = req.params['WHEREZLECENIA']
-
-    //     var sql = "SELECT zlecenia.id,utworzono, zmodyfikowano,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia, "+
-    //     "klient,praca,naklad , "+
-    //     "(select oprawa from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as oprawa ,  "+
-    //     "(select sum(OprawaCzas) from produkty where id_zlecenia =zlecenia.id) as oprawaCzas , "+
-    //     "(select max(OprawaPredkosc) from produkty where id_zlecenia =zlecenia.id) as oprawaPredkosc , "+
-    //     "(select folia from produkty where id_zlecenia =zlecenia.id and typ='Okładka' limit 1) as folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , "+
-    //     // "(select sum(arkusze) from produkty where id_zlecenia =zlecenia.id) as arkusze , "+
-    //     // "(select sum(legi) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legi , "+
-    //     // "(select max(legiRodzaj) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legiRodzaj ,  "+
-    //     "(select sum(przeloty) from produkty where id_zlecenia =zlecenia.id) as przeloty , "+
-    //     "statusGlowny.nazwa as status , uwagi , "+
-    //     "(select max(FalcPredkosc) from produkty where id_zlecenia =zlecenia.id) as falcPredkosc , "+
-    //     "(select sum(FalcCzas) from produkty where id_zlecenia =zlecenia.id) as falcCzas , "+
-    //     "kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne "+
-    //     "from zlecenia "+
-    //     "left join statusy as statusGlowny on (select min(status) from produkty where id_zlecenia =zlecenia.id)  = statusGlowny.id "+
-    //     "left join statusy as statusSrodek on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
-    //     "left join statusy as statusOkladka on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id "+
-    //     "left join statusy as statusInne on (select min(status) from produkty where id_zlecenia =zlecenia.id and (produkty.Typ!='Okładka' and produkty.Typ!='Środek'))  = statusInne.id "+
-    //     " "+WHEREZLECENIA+" ORDER BY Utworzono ASC;";
-        
-    //     connection.query(sql, function (err, doc) {
-    //     if (err) throw err;
-    //     //sconsole.log(doc);
-    //     res.status(200).json(doc);
-    // });}
 
 
 getZlecenia(req,res){
@@ -1496,7 +1463,7 @@ updateStatusZlecenia(req,res){
         "legi = (select sum(legi) from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id)  and typ='Środek'), "+
         "rodzaj_legi = (select legirodzaj from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id)  and typ='Środek' limit 1), "+
         "falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) ), "+
-        "uv = (select folia from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)  and typ='Okładka' limit 1) ;";
+        "uv = (select folia from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)  and typ='Okładka' limit 1) where id =(select max(id) from (select id from zlecenia) as id);";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
@@ -1560,7 +1527,7 @@ postZlecenia_z_EXCELA(req,res){
         "legi = (select sum(legi) from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id)  and typ='Środek'), "+
         "rodzaj_legi = (select legirodzaj from produkty where id_zlecenia =(select max(id) from (select id from zlecenia) as id)  and typ='Środek' limit 1), "+
         "falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) ), "+
-        "uv = (select folia from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)  and typ='Okładka' limit 1) ;";
+        "uv = (select folia from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)  and typ='Okładka' limit 1) where id =(select max(id) from (select id from zlecenia) as id) ;";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
@@ -1810,33 +1777,6 @@ res.status(201).json(result);
     //sconsole.log(doc);
     res.status(200).json(doc);
 });}
-
-
-// loadOprawa_kopi_temp(req,res){
-//     var sql = "SELECT zlecenia.id,zlecenia.utworzono, zlecenia.zmodyfikowano,ifnull(zlecenia.NrZlecenia,'') as nrZlecenia,ifnull(zlecenia.RokZlecenia,'') as rokZlecenia, "+
-//     "zlecenia.klient,zlecenia.praca,zlecenia.naklad  , "+
-//     "(select oprawa from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as oprawa , "+
-//     "(select sum(OprawaCzas) from produkty where id_zlecenia =zlecenia.id) as oprawaCzas , "+
-//     "(select max(OprawaPredkosc) from produkty where id_zlecenia =zlecenia.id) as oprawaPredkosc ,  "+
-//     "(select folia from produkty where id_zlecenia =zlecenia.id and typ='Okładka' limit 1) as folia ,  "+
-//     "DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,   "+
-//     "(select sum(przeloty) from produkty where id_zlecenia =zlecenia.id) as przeloty , statusGlowny.nazwa as status , zlecenia.uwagi , "+
-//     "(select max(FalcPredkosc) from produkty where id_zlecenia =zlecenia.id) as falcPredkosc,  "+
-//     "(select sum(legi) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legi , "+
-//     "(select max(legiRodzaj) from produkty where id_zlecenia =zlecenia.id and typ='Środek' limit 1) as legiRodzaj ,  "+
-//     "(select sum(FalcCzas) from produkty where id_zlecenia =zlecenia.id) as falcCzas  ,  zlecenia.kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne from zlecenia "+
-//    " left join statusy as statusGlowny on (select min(status) from produkty where id_zlecenia =zlecenia.id)  = statusGlowny.id "+
-//     "left join statusy as statusSrodek on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Środek')  = statusSrodek.id "+
-//     "left join statusy as statusOkladka on (select min(status) from produkty where id_zlecenia =zlecenia.id and produkty.Typ='Okładka')  = statusOkladka.id "+
-//     "left join statusy as statusInne on (select min(status) from produkty where id_zlecenia =zlecenia.id and (produkty.Typ!='Okładka' and produkty.Typ!='Środek'))  = statusInne.id "+
-//     // "where spedycja > (now() - interval (select 2-1) month)  ORDER BY KolejnoscOprawa ASC;";
-//     //"where spedycja > (select max(spedycja) from produkty where status =12) - interval 31 day  ORDER BY KolejnoscOprawa ASC;";
-//     "ORDER BY KolejnoscOprawa ASC;";
-//     connection.query(sql, function (err, doc) {
-//     if (err) throw err;
-//     //sconsole.log(doc);
-//     res.status(200).json(doc);
-// });}
 
 
 
