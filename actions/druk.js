@@ -1292,10 +1292,33 @@ getZlecenia(req,res){
 
 
     getZleceniaNieoddane(req,res){
-        var sql = "SELECT id,utworzono, zmodyfikowano, kolejnosc,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca,naklad , formatPapieru ,  ifnull(Oprawa,'') as oprawa ,  ifnull(OprawaCzas,'') as oprawaCzas , oprawaPredkosc ,  folia ,  DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , arkusze , legi , legiRodzaj ,  przeloty ,  status , uwagi ,falcPredkosc ,  falcCzas ,  kolejnoscOprawa ,  srodek ,  okladka FROM zlecenia where Status != 'Oddane' ORDER BY Utworzono ASC;";
+
+
+        var sql = "SELECT zlecenia.id,utworzono, zmodyfikowano,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia, "+
+        "klient,praca,naklad , "+
+        "oprawa ,  "+
+        "oprawa_czas as oprawaCzas , "+
+        "uv as folia , "+
+        "DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` , "+
+        "druk_przeloty as przeloty , "+
+        "statusGlowny.nazwa as status ,"+
+        "uwagi , "+
+        "falc_czas as falcCzas , "+
+        "kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne "+
+
+        "from zlecenia "+
+        "left join statusy as statusGlowny on zlecenia.status_glowny  = statusGlowny.id "+
+        "left join statusy as statusSrodek on zlecenia.status_srodek = statusSrodek.id "+
+        "left join statusy as statusOkladka on zlecenia.status_okladka = statusOkladka.id "+
+        "left join statusy as statusInne on zlecenia.status_inne  = statusInne.id "+
+        " where statusGlowny.id < 13 ORDER BY Utworzono ASC;";
+        
         connection.query(sql, function (err, doc) {
         if (err) throw err;
+        //sconsole.log(doc);
         res.status(200).json(doc);
+
+   
     });}
 
 
