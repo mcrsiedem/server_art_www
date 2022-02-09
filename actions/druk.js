@@ -1801,6 +1801,14 @@ res.status(201).json(result);
     res.status(200).json(doc);
 });}
 
+getMagazynZamowienia(req,res){
+    var sql = "SELECT id,DATE_FORMAT(`data`, '%Y-%m-%d') AS `data`, id_blacha,ilosc,  DATE_FORMAT(`termin_dostawy`, '%Y-%m-%d') AS `termin_dostawy` , status FROM magazyn_zamowienia ORDER BY data ASC;";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+    //sconsole.log(doc);
+    res.status(200).json(doc);
+});}
+
 
 
 }

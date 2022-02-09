@@ -70,6 +70,9 @@ router.put('/produktyKolejnoscGD',druk.updateKolejnoscZgoryNaDol);
 router.post('/historia',druk.postHistoria);
 router.get('/historia',druk.getHistoria);
 //------------------------------
+
+router.get('/magazyn_zamowienia',druk.getMagazynZamowienia);
+
 router.get('/naswietlenia',druk.getNaswietlenia);
 router.get('/opisnaswietlen',druk.getOpisNaswietlen);
 router.post('/zamknijgrupe',druk.updateZamknijGrupe);
@@ -91,6 +94,8 @@ router.post('/createbackup',druk.createBackup);
 router.get('/falcowanie',druk.loadFalcowanie); // nowe statusy
 router.get('/okladki/:view',druk.loadOkladki); // nowe statusy
 //------------------------------
+
+
 
 
 module.exports = router;
