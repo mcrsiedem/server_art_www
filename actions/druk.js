@@ -1802,7 +1802,23 @@ res.status(201).json(result);
 });}
 
 getMagazynZamowienia(req,res){
-    var sql = "SELECT id,DATE_FORMAT(`data`, '%Y-%m-%d') AS `data`, id_blacha,ilosc,  DATE_FORMAT(`termin_dostawy`, '%Y-%m-%d') AS `termin_dostawy` , status FROM magazyn_zamowienia ORDER BY data ASC;";
+    var sql = "SELECT magazyn_zamowienia.id,DATE_FORMAT(`data`, '%Y-%m-%d') AS `data`, blacha.typ as id_blacha ,ilosc_sztuki,ilosc_opakowania,  DATE_FORMAT(`termin_dostawy`, '%Y-%m-%d') AS `termin_dostawy` , status FROM magazyn_zamowienia left join blacha on magazyn_zamowienia.id_blacha = blacha.id ORDER BY data ASC;";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+    //sconsole.log(doc);
+    res.status(200).json(doc);
+});}
+
+getMagazynDostawy(req,res){
+    var sql = "SELECT id,DATE_FORMAT(`data`, '%Y-%m-%d %H:%i:%s') AS `data`,  id_zamowienia  FROM magazyn_dostawy ORDER BY data ASC;";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+    //sconsole.log(doc);
+    res.status(200).json(doc);
+});}
+
+getMagazynListy(req,res){
+    var sql = "SELECT id,DATE_FORMAT(`data_zaladunku`, '%Y-%m-%d') AS `data_zaladunku`,  id_dostawa  FROM magazyn_list ORDER BY data_zaladunku ASC;";
     connection.query(sql, function (err, doc) {
     if (err) throw err;
     //sconsole.log(doc);

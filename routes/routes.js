@@ -72,6 +72,8 @@ router.get('/historia',druk.getHistoria);
 //------------------------------
 
 router.get('/magazyn_zamowienia',druk.getMagazynZamowienia);
+router.get('/magazyn_dostawy',druk.getMagazynDostawy);
+router.get('/magazyn_listy',druk.getMagazynListy);
 
 router.get('/naswietlenia',druk.getNaswietlenia);
 router.get('/opisnaswietlen',druk.getOpisNaswietlen);
