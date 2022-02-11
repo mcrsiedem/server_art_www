@@ -1818,12 +1818,22 @@ getMagazynDostawy(req,res){
 });}
 
 getMagazynListy(req,res){
-    var sql = "SELECT id,DATE_FORMAT(`data_zaladunku`, '%Y-%m-%d') AS `data_zaladunku`,  id_dostawa  FROM magazyn_list ORDER BY data_zaladunku ASC;";
+    var sql = "SELECT id,DATE_FORMAT(`data_zaladunku`, '%Y-%m-%d') AS `data_zaladunku`,  id_dostawa,id_zamowienia  FROM magazyn_list ORDER BY data_zaladunku ASC;";
     connection.query(sql, function (err, doc) {
     if (err) throw err;
     //sconsole.log(doc);
     res.status(200).json(doc);
 });}
+
+getMagazynZaladunki(req,res){
+    var sql = "SELECT id,id_blacha,id_list,ilosc_sztuki,ilosc_opakowania, DATE_FORMAT(`data_waznosci`, '%Y-%m-%d') AS `data_waznosci`,id_dostawa,id_zamowienie  FROM magazyn_zaladunki ORDER BY id ASC;";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+    //sconsole.log(doc);
+    res.status(200).json(doc);
+});}
+
+
 
 
 
