@@ -75,6 +75,7 @@ router.get('/magazyn_zamowienia',druk.getMagazynZamowienia);
 router.get('/magazyn_dostawy',druk.getMagazynDostawy);
 router.get('/magazyn_listy',druk.getMagazynListy);
 router.get('/magazyn_zaladunki',druk.getMagazynZaladunki);
+router.get('/magazyn_palety',druk.getMagazynPalety);
 
 router.get('/naswietlenia',druk.getNaswietlenia);
 router.get('/opisnaswietlen',druk.getOpisNaswietlen);
