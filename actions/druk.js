@@ -1836,7 +1836,7 @@ getMagazynZaladunki(req,res){
 
 
 getMagazynPalety(req,res){
-    var sql = "SELECT id, id_magazyn, id_blacha,id_dostawa,id_zamowienia,id_list, id_zaladunek,ilosc_sztuk,ilosc_opakowania, DATE_FORMAT(`data_waznosci`, '%Y-%m-%d') AS `data_waznosci`  FROM magazyn_palety ORDER BY id ASC;";
+    var sql = "SELECT id, id_magazyn, id_blacha,id_dostawa,id_zamowienia,id_list, id_zaladunek,ilosc_sztuk,ilosc_opakowania, DATE_FORMAT(`data_waznosci`, '%Y-%m-%d') AS `data_waznosci`  FROM magazyn_paleta ORDER BY id ASC;";
     connection.query(sql, function (err, doc) {
     if (err) throw err;
     //sconsole.log(doc);
