@@ -840,6 +840,32 @@ updatenaswietlenie(req,res){
     res.status(201).json(result);
 });}
 
+updatenaswietlenie_grupa(req,res){
+    const id = req.body.id;
+    const grupa = req.body.grupa;
+
+    var sql = "update naswietlenia  set grupa_id = '" + grupa + "', data = CASE WHEN (select max(data) from (select data from naswietlenia where grupa_id ='" + grupa + "') as data) is not null THEN (select max(data) + interval 1 minute from (select data from naswietlenia where grupa_id ='" + grupa + "') as data) ELSE (select max(data) + interval 1 minute from (select data from naswietlenia ) as data) END where id="+id;
+
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record update");
+    res.status(201).json(result);
+});}
+
+// updatenaswietlenie_grupa_temp_dziala(req,res){
+//     const id = req.body.id;
+//     const grupa = req.body.grupa;
+
+//     var sql = "update naswietlenia  set grupa_id = '" + grupa + "', data =(select max(data) from (select data from naswietlenia where grupa_id ='" + grupa + "') as data) where id="+id;
+
+//     connection.query(sql, function (err, result) {
+//     if (err) throw err;
+//     console.log("1 record update");
+//     res.status(201).json(result);
+// });}
+
+
+
 
 zmien_na_nowe_naswietlenie(req,res){
     const id = req.body.id;

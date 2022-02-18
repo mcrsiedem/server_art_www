@@ -82,6 +82,8 @@ router.get('/opisnaswietlen',druk.getOpisNaswietlen);
 router.post('/zamknijgrupe',druk.updateZamknijGrupe);
 router.put('/updatenaswietlenieprime',druk.updatenaswietlenieprime);
 router.put('/updatenaswietlenie',druk.updatenaswietlenie);
+router.put('/updatenaswietlenie_grupa',druk.updatenaswietlenie_grupa);
+
 router.put('/zmiennanoweswietlenie',druk.zmien_na_nowe_naswietlenie);
 
 router.put('/updatenaswietlenieopis',druk.updatenaswietlenie_opis);
