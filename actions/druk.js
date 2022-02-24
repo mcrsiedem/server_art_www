@@ -23,8 +23,8 @@ class DrukActions {
     });}
 
     getDostawyPapieru(req,res){
-        var sql = "SELECT dostawy_papieru.id as dostawy_papieru_id,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca, "+
-        "przeloty,dostawy_papieru.ilosc,dostawy_papieru.jednostka,dostawy_papieru.opis,DATE_FORMAT(`data_planowana`, '%Y-%m-%d %H:%i') AS `data_planowana`,DATE_FORMAT(`data_dostawy`, '%Y-%m-%d %H:%i') AS `data_dostawy`,dostawy_papieru.typ as typ FROM produkty right join dostawy_papieru on produkty.id = dostawy_papieru.produkt_id  where (produkty.typ !='Przerwa')  ORDER BY produkty.id ASC;";
+        var sql = "SELECT dostawy_papieru.id as id,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca, "+
+        "produkty.typ as typ_produktu,przeloty,dostawy_papieru.ilosc,dostawy_papieru.jednostka,dostawy_papieru.opis,DATE_FORMAT(`data_planowana`, '%Y-%m-%d %H:%i') AS `data_planowana`,DATE_FORMAT(`data_dostawy`, '%Y-%m-%d %H:%i') AS `data_dostawy`,dostawy_papieru.typ as typ FROM produkty right join dostawy_papieru on produkty.id = dostawy_papieru.produkt_id  where (produkty.typ !='Przerwa')  ORDER BY produkty.id ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
