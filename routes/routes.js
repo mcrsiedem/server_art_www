@@ -36,6 +36,9 @@ router.delete('/zlecenia',druk.deleteZlecenie);
 router.get('/generujstatusprodukotow',druk.generujStusyProduktow);
 router.get('/generujstatuszlecen',druk.generujStusyZlecen);
 router.get('/generujnaswietlenia',druk.generujTabeleNaswietlenia_temp);
+router.get('/generujDostawy_temp',druk.generujDostawy_temp);
+
+
 router.get('/oprawa',druk.loadOprawa);
 
 router.get('/users/:login/:haslo',druk.getUser);
@@ -78,6 +81,7 @@ router.get('/magazyn_zaladunki',druk.getMagazynZaladunki);
 router.get('/magazyn_palety',druk.getMagazynPalety);
 
 router.get('/naswietlenia',druk.getNaswietlenia);
+router.get('/dostawy_papieru',druk.getDostawyPapieru);
 router.get('/opisnaswietlen',druk.getOpisNaswietlen);
 router.post('/zamknijgrupe',druk.updateZamknijGrupe);
 router.put('/updatenaswietlenieprime',druk.updatenaswietlenieprime);

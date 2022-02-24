@@ -22,6 +22,17 @@ class DrukActions {
         res.status(200).json(doc);
     });}
 
+    getDostawyPapieru(req,res){
+        var sql = "SELECT dostawy_papieru.id as dostawy_papieru_id,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca, "+
+        "przeloty,dostawy_papieru.ilosc,dostawy_papieru.jednostka,dostawy_papieru.opis,DATE_FORMAT(`data_planowana`, '%Y-%m-%d %H:%i') AS `data_planowana`,DATE_FORMAT(`data_dostawy`, '%Y-%m-%d %H:%i') AS `data_dostawy`,dostawy_papieru.typ as typ FROM produkty right join dostawy_papieru on produkty.id = dostawy_papieru.produkt_id  where (produkty.typ !='Przerwa')  ORDER BY produkty.id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+
+
     getOpisNaswietlen(req,res){
         var sql = "SELECT id,nazwa from opis  ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
@@ -233,6 +244,7 @@ insertPrzerwaDruk(req,res){
             connection.query(sql, function (err, result) {
             if (err) throw err; });
 
+
     var sql = "commit";
     connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -269,6 +281,13 @@ deleteProduktSelectOne(req,res){
     if (err) throw err;
   
     });
+    
+    var sql = "DELETE FROM dostawy_papieru WHERE produkt_id =" +id+ "";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+  
+    });
+
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
@@ -310,6 +329,10 @@ duplikujDruk(req,res){
         });
 
     var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
+            connection.query(sql, function (err, result) {
+            if (err) throw err; });
+
+            var sql = "INSERT INTO dostawy_papieru  (produkt_id,typ) select (SELECT MAX(id) from produkty) as id,'prime' ;";
             connection.query(sql, function (err, result) {
             if (err) throw err; });
 
@@ -1501,6 +1524,12 @@ updateStatusZlecenia(req,res){
             connection.query(sql, function (err, result) {
             if (err) throw err; });
 
+            var sql = "INSERT INTO dostawy_papieru  (produkt_id,typ) select (SELECT MAX(id) from produkty) as id,'prime' ;";
+            connection.query(sql, function (err, result) {
+            if (err) throw err; });
+
+
+
           }
 
     
@@ -1568,6 +1597,11 @@ postZlecenia_z_EXCELA(req,res){
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
+        var sql = "INSERT INTO dostawy_papieru  (produkt_id,typ) select (SELECT MAX(id) from produkty) as id,'prime' ;";
+        connection.query(sql, function (err, result) {
+        if (err) throw err; });
+
+
         var sql ="update ctp21.zlecenia set druk_przeloty = (select sum(przeloty) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)), "+
         "druk_czas = (select sum(czasdruku) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)), "+
         "oprawa = (select oprawa from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) and typ='Środek' limit 1), "+
@@ -1627,6 +1661,14 @@ deleteZlecenie(req,res){
             if (err) throw err;
           
             });
+
+            var sql = "DELETE FROM dostawy_papieru WHERE produkt_id =" +doc[i].id + "";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+          
+            });
+
+
 
           }
         //console.log(doc);
@@ -1752,6 +1794,40 @@ res.status(201).json(result);
 }
     //---   koniec generowania naswietlen
 
+    //--- generowanie dostaw temp
+
+    generujDostawy_temp(req,res){
+        // tymczasowy tworca tabeli naswietlenia - aby przeniesc ilosc blach
+
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;  });
+
+
+    var sql  = "select id from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3' )and (typ != 'Przerwa' or typ !='Licznik') ";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+
+    for (let i = 0; i < Object.keys(doc).length; i++) {
+        // console.log(doc[i].typ);
+        var sql = "INSERT INTO dostawy_papieru  (produkt_id,typ) values ('" + doc[i].id + "','prime');";
+        connection.query(sql, function (err, result) {
+        if (err) throw err; });
+
+      }
+    //console.log(doc);
+    });
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Dostawy wygenerowane! ");
+res.status(201).json(result);
+});
+}
+
+//------
     //---------generuj zlecenia
     generujStusyZlecen(req,res){
         // kopiuje staare statusy do tabeli zleceniastatus podając id statusu
@@ -1797,6 +1873,8 @@ res.status(201).json(result);
 res.status(201).json(result);
 });
 }
+
+
 
 
    loadOprawa(req,res){
