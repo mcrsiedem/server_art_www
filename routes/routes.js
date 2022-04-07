@@ -2,6 +2,26 @@ const express = require('express');
 const router = express.Router();
 const druk = require('../actions/druk');
 
+
+
+// zlecenia
+router.post('/zlecenia',druk.postZlecenie);
+router.post('/zlecenia_z_excela',druk.postZlecenia_z_EXCELA);
+
+router.delete('/zlecenia',druk.deleteZlecenie);
+
+
+router.get('/zlecenia/:WHEREZLECENIA',druk.getZlecenia);
+router.get('/zlecenianieoddane',druk.getZleceniaNieoddane);
+router.get('/zleceniamaxnr',druk.getMaxNrZlecenia);
+router.get('/zleceniabyid/:id',druk.getZlecenieById);
+router.put('/zlecenia',druk.updateZlecenieOneValue);
+router.put('/zleceniaAllValue',druk.updateZlecenieAllValue);
+
+
+
+
+
 router.get('/ctp',druk.getCTP);
 router.post('/ctp',druk.postCTP);
 router.delete('/ctp',druk.deleteCTP);
@@ -18,21 +38,14 @@ router.get('/produkty/:idzlecenia/:typ',druk.getProduktyByIdZleceniAndTyp);
 
 
 
-router.get('/zlecenia/:WHEREZLECENIA',druk.getZlecenia);
 
-
-router.get('/zlecenianieoddane',druk.getZleceniaNieoddane);
-router.get('/zleceniamaxnr',druk.getMaxNrZlecenia);
-router.get('/zleceniabyid/:id',druk.getZlecenieById);
-router.put('/zlecenia',druk.updateZlecenieOneValue);
 
 
 router.put('/updateStatus',druk.updateStatus);
 router.put('/updateStatusZlecenia',druk.updateStatusZlecenia);
-router.put('/zleceniaAllValue',druk.updateZlecenieAllValue);
-router.post('/zlecenia',druk.postZlecenie);
-router.post('/zlecenia_z_excela',druk.postZlecenia_z_EXCELA);
-router.delete('/zlecenia',druk.deleteZlecenie);
+
+
+
 router.get('/generujstatusprodukotow',druk.generujStusyProduktow);
 router.get('/generujstatuszlecen',druk.generujStusyZlecen);
 router.get('/generujnaswietlenia',druk.generujTabeleNaswietlenia_temp);
