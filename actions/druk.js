@@ -6,7 +6,7 @@ class DrukActions {
         const maszyna = req.params['maszyna']
         const iloscdniwstecz = req.params['iloscdniwstecz']
 
-        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,produkty.typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,statusy.nazwa as status,produkty.id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi,produkty.nazwa,naswietlenia.ilosc as sm_ok,sm_dmg ,naswietlenia.ilosc as xl_ok ,xl_dmg,oprawa from produkty left join naswietlenia on  produkty.id = naswietlenia.produkt_id left join statusy on produkty.status = statusy.id    where (naswietlenia.typ = 'prime') and ( maszyna='" + maszyna + "') and (KoniecDruku > (SELECT max(KoniecDruku) - interval '" + iloscdniwstecz + "' day FROM ctp21.produkty where Maszyna='" + maszyna + "' and Status=7)) ORDER BY PoczatekDruku";
+        var sql = "select DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,czasDruku,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`,ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,produkty.typ,formatPapieru,DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,naklad,przeloty,arkusze,predkoscDruku,statusy.nazwa as status,produkty.id,id_zlecenia,maszyna,narzad,folia,kolejnosc,uwagi,produkty.nazwa,naswietlenia.ilosc as sm_ok,sm_dmg ,naswietlenia.ilosc as xl_ok ,xl_dmg,oprawa, papier_stan.czy_jest as czy_jest from produkty left join naswietlenia on  produkty.id = naswietlenia.produkt_id left join statusy on produkty.status = statusy.id  left join papier_stan on produkty.id = papier_stan.produkt_id  where (naswietlenia.typ = 'prime') and ( maszyna='" + maszyna + "') and (KoniecDruku > (SELECT max(KoniecDruku) - interval '" + iloscdniwstecz + "' day FROM ctp21.produkty where Maszyna='" + maszyna + "' and Status=7)) ORDER BY PoczatekDruku";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         console.log(maszyna);
@@ -252,6 +252,31 @@ insertPrzerwaDruk(req,res){
     res.status(201).json(result);
     });
 }
+
+insertPapierStan(req,res){
+
+    const maszyna = req.body.maszyna;
+    const koniecDruku = req.body.koniecDruku;
+
+    var sql = "INSERT INTO produkty  (ID,Kolejnosc,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku)  SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" + maszyna + "','Przerwa','" + koniecDruku + "','60','" + koniecDruku + "' + interval 60 minute from produkty";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(" 1 record inserted "+result.insertId);
+
+    });
+
+}
+
+// INSERT INTO subs
+//   (subs_name, subs_email, subs_birthday)
+// VALUES
+//   (?, ?, ?)
+// ON DUPLICATE KEY UPDATE
+//   subs_name     = VALUES(subs_name),
+//   subs_birthday = VALUES(subs_birthday)
+
+
+
 
 deleteProduktSelectOne(req,res){
     const id = req.body.id;
@@ -1401,6 +1426,8 @@ getZlecenia(req,res){
         console.log("1 record update ");
         res.status(201).json(result);
     });}
+
+
 
 
 
