@@ -1398,6 +1398,17 @@ getZlecenia(req,res){
         res.status(201).json(result);
     });}
 
+    updatePapierStanOneValue(req,res){
+        const id = req.body.id;
+        const kolumna = req.body.kolumna;
+        const value = req.body.value;
+        var sql = "update papier_stan set " + kolumna + " = '" + value + "' where produkt_id="+id;
+    
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record update papier stan");
+        res.status(201).json(result);
+    });}
 
 
 
