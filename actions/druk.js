@@ -22,14 +22,6 @@ class DrukActions {
         res.status(200).json(doc);
     });}
 
-    getDostawyPapieru(req,res){
-        var sql = "SELECT dostawy_papieru.id as id_dostawy,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca, "+
-        "produkty.typ as typ_produktu,przeloty,dostawy_papieru.ilosc,dostawy_papieru.jednostka,dostawy_papieru.opis,DATE_FORMAT(`data_planowana`, '%Y-%m-%d %H:%i') AS `data_planowana`,DATE_FORMAT(`data_dostawy`, '%Y-%m-%d %H:%i') AS `data_dostawy`,dostawy_papieru.typ as typ FROM produkty right join dostawy_papieru on produkty.id = dostawy_papieru.produkt_id  where (produkty.typ !='Przerwa')  ORDER BY produkty.id ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
 
 
 
@@ -253,29 +245,6 @@ insertPrzerwaDruk(req,res){
     });
 }
 
-insertPapierStan(req,res){
-
-    const maszyna = req.body.maszyna;
-    const koniecDruku = req.body.koniecDruku;
-
-    var sql = "INSERT INTO produkty  (ID,Kolejnosc,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku)  SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" + maszyna + "','Przerwa','" + koniecDruku + "','60','" + koniecDruku + "' + interval 60 minute from produkty";
-    connection.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log(" 1 record inserted "+result.insertId);
-
-    });
-
-}
-
-// INSERT INTO subs
-//   (subs_name, subs_email, subs_birthday)
-// VALUES
-//   (?, ?, ?)
-// ON DUPLICATE KEY UPDATE
-//   subs_name     = VALUES(subs_name),
-//   subs_birthday = VALUES(subs_birthday)
-
-
 
 
 deleteProduktSelectOne(req,res){
@@ -307,7 +276,7 @@ deleteProduktSelectOne(req,res){
   
     });
     
-    var sql = "DELETE FROM dostawy_papieru WHERE produkt_id =" +id+ "";
+    var sql = "DELETE FROM papier_stan WHERE produkt_id =" +id+ "";
     connection.query(sql, function (err, result) {
     if (err) throw err;
   
@@ -357,9 +326,11 @@ duplikujDruk(req,res){
             connection.query(sql, function (err, result) {
             if (err) throw err; });
 
-            var sql = "INSERT INTO dostawy_papieru  (produkt_id,typ) select (SELECT MAX(id) from produkty) as id,'prime' ;";
+
+            var sql = "INSERT INTO papier_stan  (produkt_id,info) select (SELECT MAX(id) from produkty) as id,'kopia' ;";
             connection.query(sql, function (err, result) {
             if (err) throw err; });
+
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
@@ -1551,7 +1522,7 @@ updateStatusZlecenia(req,res){
             connection.query(sql, function (err, result) {
             if (err) throw err; });
 
-            var sql = "INSERT INTO dostawy_papieru  (produkt_id,typ) select (SELECT MAX(id) from produkty) as id,'prime' ;";
+            var sql = "INSERT INTO papier_stan  (produkt_id) select (SELECT MAX(id) from produkty) as id ;";
             connection.query(sql, function (err, result) {
             if (err) throw err; });
 
@@ -1624,7 +1595,7 @@ postZlecenia_z_EXCELA(req,res){
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
-        var sql = "INSERT INTO dostawy_papieru  (produkt_id,typ) select (SELECT MAX(id) from produkty) as id,'prime' ;";
+        var sql = "INSERT INTO papier_stan  (produkt_id) select (SELECT MAX(id) from produkty) as id ;";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 
@@ -1689,7 +1660,7 @@ deleteZlecenie(req,res){
           
             });
 
-            var sql = "DELETE FROM dostawy_papieru WHERE produkt_id =" +doc[i].id + "";
+            var sql = "DELETE FROM papier_stan WHERE produkt_id =" +doc[i].id + "";
             connection.query(sql, function (err, result) {
             if (err) throw err;
           
@@ -1838,7 +1809,8 @@ res.status(201).json(result);
 
     for (let i = 0; i < Object.keys(doc).length; i++) {
         // console.log(doc[i].typ);
-        var sql = "INSERT INTO dostawy_papieru  (produkt_id,typ) values ('" + doc[i].id + "','prime');";
+
+        var sql = "INSERT INTO papier_stan  (produkt_id) values ('" + doc[i].id + "');";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
 

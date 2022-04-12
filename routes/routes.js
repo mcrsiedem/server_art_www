@@ -19,6 +19,8 @@ router.put('/zlecenia',druk.updateZlecenieOneValue);
 router.put('/zleceniaAllValue',druk.updateZlecenieAllValue);
 
 
+// papier_stan
+
 
 
 
@@ -94,7 +96,7 @@ router.get('/magazyn_zaladunki',druk.getMagazynZaladunki);
 router.get('/magazyn_palety',druk.getMagazynPalety);
 
 router.get('/naswietlenia',druk.getNaswietlenia);
-router.get('/dostawy_papieru',druk.getDostawyPapieru);
+
 router.get('/opisnaswietlen',druk.getOpisNaswietlen);
 router.post('/zamknijgrupe',druk.updateZamknijGrupe);
 router.put('/updatenaswietlenieprime',druk.updatenaswietlenieprime);
