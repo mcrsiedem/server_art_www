@@ -22,6 +22,7 @@ router.put('/zleceniaAllValue',druk.updateZlecenieAllValue);
 // papier_stan
 
 router.put('/updatePapierStanOneValue',druk.updatePapierStanOneValue);
+router.get('/getPapierStan',druk.getPapierStan);
 
 
 router.get('/ctp',druk.getCTP);

@@ -22,7 +22,13 @@ class DrukActions {
         res.status(200).json(doc);
     });}
 
-
+    getPapierStan(req,res){
+        var sql = "select produkty.id, typ, NrZlecenia, RokZlecenia, Klient, Praca, FormatPapieru, papier_stan.czy_jest as czy_jest from produkty left join papier_stan on produkty.id = papier_stan.produkt_id where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3' )and (typ != 'Przerwa' or typ !='Licznik') and (Status < 6 or Status > 12) ;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
 
 
     getOpisNaswietlen(req,res){
