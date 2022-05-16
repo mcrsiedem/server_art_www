@@ -1362,7 +1362,7 @@ getZlecenia(req,res){
         "left join statusy as statusSrodek on zlecenia.status_srodek = statusSrodek.id "+
         "left join statusy as statusOkladka on zlecenia.status_okladka = statusOkladka.id "+
         "left join statusy as statusInne on zlecenia.status_inne  = statusInne.id "+
-        " where statusGlowny.id < 13 ORDER BY Utworzono ASC;";
+        " where statusGlowny.id < 12 ORDER BY Utworzono ASC;";
         
         connection.query(sql, function (err, doc) {
         if (err) throw err;
