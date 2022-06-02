@@ -1010,7 +1010,7 @@ getProduktyAllH1XLH3(req,res){
 }
 
 getProduktyAllnieoddane(req,res){
-    var sql  = "select produkty.id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    ifnull(produkty.nazwa,'') as nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,  ifnull(Arkusze,'0') as  arkusze ,    legi ,  ifnull(LegiRodzaj,'0') as legiRodzaj , ifnull(Przeloty,'0') as   przeloty ,    statusy.nazwa as status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty left join statusy on produkty.status = statusy.id where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3') and (Status !=12 or Status !=13 or Status !=14 ) ORDER BY Typ ASC";
+    var sql  = "select produkty.id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    ifnull(produkty.nazwa,'') as nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,  ifnull(  oprawaCzas,'') as oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,  ifnull(Arkusze,'0') as  arkusze ,    legi ,  ifnull(LegiRodzaj,'0') as legiRodzaj , ifnull(Przeloty,'0') as   przeloty ,    statusy.nazwa as status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty left join statusy on produkty.status = statusy.id where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3') and (Status !=12 or Status !=13 or Status !=14 ) ORDER BY Typ ASC";
     connection.query(sql, function (err, doc) {
     if (err) throw err;
     res.status(200).json(doc);
@@ -1355,7 +1355,7 @@ getZlecenia(req,res){
         "statusGlowny.nazwa as status ,"+
         "uwagi , "+
         "falc_czas as falcCzas , "+
-        "kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne "+
+        "kolejnoscOprawa ,  ifnull(statusSrodek.nazwa,'') as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne "+
 
         "from zlecenia "+
         "left join statusy as statusGlowny on zlecenia.status_glowny  = statusGlowny.id "+
