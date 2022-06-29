@@ -88,6 +88,8 @@ router.put('/produktyKolejnoscGD',druk.updateKolejnoscZgoryNaDol);
 //------------------------------
 router.post('/historia',druk.postHistoria);
 router.get('/historia',druk.getHistoria);
+router.get('/historia_short',druk.getHistoria_short);
+
 //------------------------------
 
 router.get('/magazyn_zamowienia',druk.getMagazynZamowienia);

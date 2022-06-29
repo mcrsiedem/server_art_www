@@ -519,7 +519,19 @@ getHistoria(req,res){
     res.status(200).json(doc);
 });}
 
-    
+getHistoria_short(req,res){
+    var sql = "SELECT id,DATE_FORMAT(`data`, '%Y-%m-%d %H:%i') AS `data`, user,kategoria,  event , id_target, ifnull(NrZlecenia,'') as nrZlecenia, ifnull(RokZlecenia,'') as rokZlecenia,"+
+    "ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(Typ,'') as typ,statusStary,statusNowy FROM historia where data > now() - interval 3 day ORDER BY Data ASC;";
+    connection.query(sql, function (err, doc) {
+    if (err) throw err;
+    //sconsole.log(doc);
+    res.status(200).json(doc);
+});}
+
+
+
+
+
 getUser(req,res){
 
     const login = req.params['login']
