@@ -1340,7 +1340,7 @@ getZlecenia(req,res){
         "statusGlowny.nazwa as status ,"+
         "uwagi , "+
         "falc_czas as falcCzas , "+
-        "kolejnoscOprawa ,  statusSrodek.nazwa as srodek , statusOkladka.nazwa as okladka,statusInne.nazwa as inne "+
+        "kolejnoscOprawa , ifnull( statusSrodek.nazwa,'-') as srodek , ifnull(statusOkladka.nazwa,'-') as okladka,statusInne.nazwa as inne "+
 
         "from zlecenia "+
         "left join statusy as statusGlowny on zlecenia.status_glowny  = statusGlowny.id "+
