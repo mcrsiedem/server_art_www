@@ -15,7 +15,7 @@ class DrukActions {
 
     getNaswietlenia(req,res){
         var sql = "SELECT produkty.id,produkty.typ,ifnull(NrZlecenia,'') as nrZlecenia,ifnull(RokZlecenia,'') as rokZlecenia,klient,praca, status,DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku`,DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku`, "+
-        "spedycja, maszyna,arkusze, naswietlenia.id as naswietlenia_id,blacha.typ as blacha_id, grupa_id,stan,ilosc,opis.nazwa as opis,DATE_FORMAT(`data`, '%Y-%m-%d %H:%i') AS `data`,kolej,naswietlenia.typ as naswietlenia_typ FROM produkty right join naswietlenia on produkty.id = naswietlenia.produkt_id left join blacha on naswietlenia.blacha_id = blacha.id left join opis on naswietlenia.opis = opis.id where (produkty.typ !='Przerwa')  ORDER BY data ASC;";
+        "spedycja, maszyna,arkusze, naswietlenia.id as naswietlenia_id,blacha.typ as blacha_id, grupa_id,stan,ilosc,opis.nazwa as opis,DATE_FORMAT(`data`, '%Y-%m-%d %H:%i') AS `data`,kolej,naswietlenia.typ as naswietlenia_typ,nas_user FROM produkty right join naswietlenia on produkty.id = naswietlenia.produkt_id left join blacha on naswietlenia.blacha_id = blacha.id left join opis on naswietlenia.opis = opis.id where (produkty.typ !='Przerwa')  ORDER BY data ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
@@ -859,7 +859,16 @@ updatenaswietlenieprime(req,res){
     const id = req.body.id;
     const ilosc = req.body.ilosc;
     const blacha_id = req.body.blacha_id;
-    var sql = "update naswietlenia  set ilosc= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + ilosc + "'  ELSE ilosc END, blacha_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + blacha_id + "'  ELSE blacha_id  END, opis=0, data= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN now() ELSE data END, grupa_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN (select max(id) from grupa) ELSE grupa_id END where typ='prime' and produkt_id="+id;
+    const user_id = req.body.user_id;
+
+    var sql = "update naswietlenia  set "+
+
+    "nas_naklad=(select naklad from ctp21.produkty where ID = '" + id + "'),"+
+    "nas_arkusze=(select arkusze from ctp21.produkty where ID = '" + id + "'),"+
+    "nas_legi=(select legi from ctp21.produkty where ID = '" + id + "'),"+
+    "nas_falc=(select legirodzaj from ctp21.produkty where ID = '" + id + "'),"+
+    "nas_user='" + user_id + "',"+
+    " ilosc= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + ilosc + "'  ELSE ilosc END, blacha_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + blacha_id + "'  ELSE blacha_id  END, opis=0, data= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN now() ELSE data END, grupa_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN (select max(id) from grupa) ELSE grupa_id END where typ='prime' and produkt_id="+id;
 
     connection.query(sql, function (err, result) {
     if (err) throw err;
