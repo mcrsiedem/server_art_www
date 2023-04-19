@@ -59,6 +59,9 @@ router.get('/oprawa',druk.loadOprawa);
 
 router.get('/users/:login/:haslo',druk.getUser);
 router.get('/druk/:maszyna/:iloscdniwstecz',druk.getProduktyByMaszyna);  // nowe statusy
+router.get('/druk_papier/:maszyna/:iloscdniwstecz',druk.getProdukty_do_wydania_papieru);  
+
+
 router.put('/druk',druk.dragDropDruk);
 router.put('/drukzmienmaszyne',druk.zmienMaszyne);
 router.post('/drukduplikuj',druk.duplikujDruk);
