@@ -550,9 +550,8 @@ getUser(req,res){
     const haslo = req.params['haslo']
 
 
-var sql =   "INSERT INTO historia (User,Kategoria,Event,ID_target,NrZlecenia,RokZlecenia,Klient,Praca,Typ,StatusStary,StatusNowy) "+
-"values ('" + login + "','Logowanie','" + haslo + "','" + req.body.ID_target + "','" + req.body.nrzlecenia + "','" + req.body.rokzlecenia + "',"+
-        "'" + req.body.klient + "','" + req.body.praca + "','" + req.body.typ + "','" + req.body.statusstary + "','" + req.body.statusnowy + "'); ";
+var sql =   "INSERT INTO historia (User,Kategoria,Event) "+
+"values ('" + login + "','Logowanie','" + haslo + "'); ";
 connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
