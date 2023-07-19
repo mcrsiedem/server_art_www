@@ -548,12 +548,35 @@ getUser(req,res){
 
     const login = req.params['login']
     const haslo = req.params['haslo']
+
+
+var sql =   "INSERT INTO historia (User,Kategoria,Event,ID_target,NrZlecenia,RokZlecenia,Klient,Praca,Typ,StatusStary,StatusNowy) "+
+"values ('" + login + "','Logowanie','" + haslo + "','" + req.body.ID_target + "','" + req.body.nrzlecenia + "','" + req.body.rokzlecenia + "',"+
+        "'" + req.body.klient + "','" + req.body.praca + "','" + req.body.typ + "','" + req.body.statusstary + "','" + req.body.statusnowy + "'); ";
+connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        // res.status(201).json(result);
+
+        })
+
+
+
+
     var sql = "select id,imie,nazwisko,login,haslo,dostep from users where login ='" + login + "' and haslo = '" + haslo + "';";
     connection.query(sql, function (err, doc) {
     if (err) throw err;
     //sconsole.log(doc);
     res.status(200).json(doc);
-});}
+});
+
+
+
+
+
+
+
+}
 
 getRestore(req,res){
     var sql = "SELECT id,DATE_FORMAT(`Utworzono`, '%Y-%m-%d %H:%i:%s') AS `utworzono`, aktualny, opis FROM backup ORDER BY Utworzono ASC;";
