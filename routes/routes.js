@@ -58,6 +58,8 @@ router.get('/generujDostawy_temp',druk.generujDostawy_temp);
 router.get('/oprawa',druk.loadOprawa);
 
 router.get('/users/:login/:haslo',druk.getUser);
+router.get('/usersjava/:login/:haslo',druk.getUserJava);
+
 router.get('/druk/:maszyna/:iloscdniwstecz',druk.getProduktyByMaszyna);  // nowe statusy
 router.get('/druk_papier/:maszyna/:iloscdniwstecz',druk.getProdukty_do_wydania_papieru);  
 
