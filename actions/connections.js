@@ -1,6 +1,36 @@
+//const Connection = require("mysql2/typings/mysql/lib/Connection");
 const connection = require("./mysql");
+// import connection from './mysql';
 
-class DrukActions {
+class Connections {
+
+    getUser(req,res){
+
+        const login = req.params['login']
+        const haslo = req.params['haslo']
+    
+    
+    var sql =   "INSERT INTO historia (User,Kategoria,Event,Klient) "+
+    "values ('" + login + "','Logowanie','" + haslo + "','www'); ";
+    connection.query(sql, function (err, result) {
+            if (err) throw err;
+            // console.log(" 1 record inserted "+result.insertId);
+            // res.status(201).json(result);
+    
+            })
+    
+    
+        var sql = "select id,imie,nazwisko,login,haslo,dostep from users where login ='" + login + "' and haslo = '" + haslo + "';";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });
+    
+    }
+
+
+
 
     getProduktyByMaszyna(req,res){
         const maszyna = req.params['maszyna']
@@ -544,30 +574,7 @@ getHistoria_short(req,res){
 
 
 
-getUser(req,res){
 
-    const login = req.params['login']
-    const haslo = req.params['haslo']
-
-
-var sql =   "INSERT INTO historia (User,Kategoria,Event,Klient) "+
-"values ('" + login + "','Logowanie','" + haslo + "','www'); ";
-connection.query(sql, function (err, result) {
-        if (err) throw err;
-        // console.log(" 1 record inserted "+result.insertId);
-        // res.status(201).json(result);
-
-        })
-
-
-    var sql = "select id,imie,nazwisko,login,haslo,dostep from users where login ='" + login + "' and haslo = '" + haslo + "';";
-    connection.query(sql, function (err, doc) {
-    if (err) throw err;
-    //sconsole.log(doc);
-    res.status(200).json(doc);
-});
-
-}
 
 getUserJava(req,res){
 
@@ -2041,4 +2048,4 @@ getMagazynPalety(req,res){
 
 }
 
-module.exports = new DrukActions();
+module.exports = new Connections();
