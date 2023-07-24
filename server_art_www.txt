@@ -1,1 +1,3 @@
-test2m
+nodemon:
+
+npm run server

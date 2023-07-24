@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 const {port} = require('./config');
-const connection = require('./db/mysql');
-const apiRouter = require('./routes/routes');
+const connection = require('./actions/mysql');
+const apiRouter = require('./actions/routes');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
 //database
- require('./db/mysql');
+ require('./actions/mysql');
 
  //parsery
  //Content-type: application/json
