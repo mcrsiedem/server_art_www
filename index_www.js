@@ -18,7 +18,7 @@ app.use(cors());
 //app.use(cors({ origin: true }));
 
 //routes
- app.use('/api', apiRouter);
+ app.use('/api_www', apiRouter);
 
  app.use(function (req, res, next) {
 
