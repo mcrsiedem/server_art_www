@@ -1,33 +1,58 @@
 //const Connection = require("mysql2/typings/mysql/lib/Connection");
 const connection = require("./mysql");
 // import connection from './mysql';
+const jwt = require("jsonwebtoken");
+const cookieParser =require("cookie-parser");
+const multer =require("multer");
+
+const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 class Connections {
 
-    getUser(req,res){
+    // getUser(req,res){
 
-        const login = req.params['login']
-        const haslo = req.params['haslo']
+    //     const login = req.params['login']
+    //     const haslo = req.params['haslo']
     
     
-    var sql =   "INSERT INTO historia (User,Kategoria,Event,Klient) "+
-    "values ('" + login + "','Logowanie','" + haslo + "','www'); ";
-    connection.query(sql, function (err, result) {
-            if (err) throw err;
-            // console.log(" 1 record inserted "+result.insertId);
-            // res.status(201).json(result);
+    // var sql =   "INSERT INTO historia (User,Kategoria,Event,Klient) "+
+    // "values ('" + login + "','Logowanie','" + haslo + "','www'); ";
+    // connection.query(sql, function (err, result) {
+    //         if (err) throw err;
+    //         // console.log(" 1 record inserted "+result.insertId);
+    //         // res.status(201).json(result);
+    //         })
     
-            })
     
+    //     var sql = "select id,imie,nazwisko,login,haslo,dostep from users where login ='" + login + "' and haslo = '" + haslo + "';";
+    //     connection.query(sql,  (err, result) => {
+
+    //         if(err) return res.json({Status: "Error", Error: "Error in running query"})
+    //         if(result.length >0 ){
+    //                     const id = result[0].id;
+    //                     const imie = result[0].imie;
+    //                     const dostep = result[0].dostep;
+    //                     const paylod = {
+    //                         id,
+    //                         imie,
+    //                         login,
+    //                         dostep
+    //                     }
+     
+    //            const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
+    //             return res.status(200).json(token)
+    //             res.cookie('token', token);
+    //         } else {
+    //             return res.json({Status: "Error", Error: "Wrong Email or Password"})
+    //         }
+
+    //     // connection.query(sql,  (err, doc) => { 
+    //     // if (err) throw err;
+    //     // res.status(200).json(result);
+    // }
+    // );
     
-        var sql = "select id,imie,nazwisko,login,haslo,dostep from users where login ='" + login + "' and haslo = '" + haslo + "';";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });
-    
-    }
+    // }  
 
 
 

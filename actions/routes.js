@@ -1,8 +1,76 @@
 const express = require('express');
 const router = express.Router();
 const connections = require('./connections');
+const connection = require("./mysql");
+const jwt = require("jsonwebtoken");
+const cookieParser =require("cookie-parser");
+const multer =require("multer");
+const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 
+
+
+const verifyUser=(req,res,next) =>{
+    const token = req.cookie.token;
+    console.log("token z cookie "+token)
+    if(!token){
+        return res.json({Error: "You are not Authenticated"});
+    }
+    console.log("next");
+next();
+}
+
+
+function getUser(req,res){
+
+    const login = req.params['login']
+    const haslo = req.params['haslo']
+
+
+var sql =   "INSERT INTO historia (User,Kategoria,Event,Klient) "+
+"values ('" + login + "','Logowanie','" + haslo + "','www'); ";
+connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        // res.status(201).json(result);
+        })
+
+
+    var sql = "select id,imie,nazwisko,login,haslo,dostep from users where login ='" + login + "' and haslo = '" + haslo + "';";
+    connection.query(sql,  (err, result) => {
+
+        if(err) return res.json({Status: "Error", Error: "Error in running query"})
+        if(result.length >0 ){
+                    const id = result[0].id;
+                    const imie = result[0].imie;
+                    const dostep = result[0].dostep;
+                    const paylod = {
+                        id,
+                        imie,
+                        login,
+                        dostep
+                    }
+ 
+           const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
+        //      res.cookie('token', token);
+        //   //   res.send("cooo")
+            return res.status(200).json(token)
+            
+    
+        } else {
+            return res.json({Status: "Error", Error: "Wrong Email or Password"})
+        }
+
+    // connection.query(sql,  (err, doc) => { 
+    // if (err) throw err;
+    // res.status(200).json(result);
+}
+);
+
+}  
+
+router.get('/users/:login/:haslo',getUser);
+// router.get('/users/:login/:haslo',connections.getUser);
 
 // zlecenia
 router.post('/zlecenia',connections.postZlecenie);
@@ -57,7 +125,7 @@ router.get('/generujDostawy_temp',connections.generujDostawy_temp);
 
 router.get('/oprawa',connections.loadOprawa);
 
-router.get('/users/:login/:haslo',connections.getUser);
+
 router.get('/usersjava/:login/:haslo',connections.getUserJava);
 
 router.get('/druk/:maszyna/:iloscdniwstecz',connections.getProduktyByMaszyna);  // nowe statusy

@@ -1,3 +1,10 @@
 nodemon:
 
 npm run server
+
+
+
+It's very simple in Node.js 13 and above. You need to either:
+
+Save the file with .mjs extension, or
+Add { "type": "module" } in the nearest package.json.
