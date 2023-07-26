@@ -142,13 +142,10 @@ router.delete('/drukprzerwa',connections.deleteProduktSelectOne);
 router.put('/naprawczasdruku',connections.updateNaprawCzas);
 
 //------------------------------
-
 router.get('/loadtest',connections.loadtest);
 //------------------------------
 router.put('/produkty',connections.updateProdukty);
 router.put('/updateProduktyStatusFalcowanie',connections.updateProduktyStatusFalcowanie);
-
-
 
 router.get('/listakontrolna',connections.loadListaKontrolna);
 router.get('/grupy',connections.loadGrupy);
@@ -184,7 +181,6 @@ router.put('/zmiennanoweswietlenie',connections.zmien_na_nowe_naswietlenie);
 router.put('/updatenaswietlenieopis',connections.updatenaswietlenie_opis);
 router.post('/duplikujnaswietlenie',connections.duplikujNaswietlenie);
 
-
 //------------------------------
 router.get('/restore',connections.getRestore);
 router.delete('/restore',connections.deleteBackup);
@@ -195,8 +191,6 @@ router.post('/createbackup',connections.createBackup);
 router.get('/falcowanie',connections.loadFalcowanie); // nowe statusy
 router.get('/okladki/:view',connections.loadOkladki); // nowe statusy
 //------------------------------
-
-
 
 
 module.exports = router;
