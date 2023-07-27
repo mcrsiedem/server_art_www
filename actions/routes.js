@@ -10,6 +10,13 @@ const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 
 
+function getVeryfiy(req,res){
+    const token = req.params['token']
+
+
+ return res.json({Status: "Success"});
+}
+
 const verifyUser=(req,res,next) =>{
     const token = req.cookie.token;
     console.log("token z cookie "+token)
@@ -71,6 +78,8 @@ connection.query(sql, function (err, result) {
 
 router.get('/users/:login/:haslo',getUser);
 // router.get('/users/:login/:haslo',connections.getUser);
+
+router.get('/veryfiy/:token',getVeryfiy);
 
 // zlecenia
 router.post('/zlecenia',connections.postZlecenie);
