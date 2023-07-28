@@ -10,21 +10,25 @@ const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 
 
-function getVeryfiy(req,res){
-    const token = req.params['token']
+function isLogged(req,res){
+  //  const token = req.params['token']
 
 
  return res.json({Status: "Success"});
 }
 
 const verifyUser=(req,res,next) =>{
-    const token = req.cookie.token;
+    const token = req.params['token']
     console.log("token z cookie "+token)
     if(!token){
         return res.json({Error: "You are not Authenticated"});
+    } else {
+        jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
+            if(err) return res.json({Error: "Wrong token"});
+            next();
+        })
     }
-    console.log("next");
-next();
+    //console.log("next");
 }
 
 
@@ -58,7 +62,7 @@ connection.query(sql, function (err, result) {
                         dostep
                     }
  
-           const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
+           const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'10s'});
         //      res.cookie('token', token);
         //   //   res.send("cooo")
             return res.status(200).json(token)
@@ -79,7 +83,7 @@ connection.query(sql, function (err, result) {
 router.get('/users/:login/:haslo',getUser);
 // router.get('/users/:login/:haslo',connections.getUser);
 
-router.get('/veryfiy/:token',getVeryfiy);
+router.get('/islogged/:token',verifyUser,isLogged);
 
 // zlecenia
 router.post('/zlecenia',connections.postZlecenie);
