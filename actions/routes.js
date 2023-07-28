@@ -62,7 +62,7 @@ connection.query(sql, function (err, result) {
                         dostep
                     }
  
-           const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'10s'});
+           const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'10m'});
         //      res.cookie('token', token);
         //   //   res.send("cooo")
             return res.status(200).json(token)
