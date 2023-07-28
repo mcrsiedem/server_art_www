@@ -17,7 +17,7 @@ function isLogged(req,res){
  return res.json({Status: "Success"});
 }
 
-const verifyUser=(req,res,next) =>{
+const verifyToken=(req,res,next) =>{
     const token = req.params['token']
     console.log("token z cookie "+token)
     if(!token){
@@ -83,7 +83,7 @@ connection.query(sql, function (err, result) {
 router.get('/users/:login/:haslo',getUser);
 // router.get('/users/:login/:haslo',connections.getUser);
 
-router.get('/islogged/:token',verifyUser,isLogged);
+router.get('/islogged/:token',verifyToken,isLogged);
 
 // zlecenia
 router.post('/zlecenia',connections.postZlecenie);
