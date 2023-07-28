@@ -19,7 +19,7 @@ function isLogged(req,res){
 
 const verifyToken=(req,res,next) =>{
     const token = req.params['token']
-    console.log("token z cookie "+token)
+   // console.log("token z cookie "+token)
     if(!token){
         return res.json({Error: "You are not Authenticated"});
     } else {
