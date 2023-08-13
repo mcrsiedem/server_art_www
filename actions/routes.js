@@ -19,7 +19,8 @@ function isLogged(req,res){
 
 const verifyToken=(req,res,next) =>{
     const token = req.params['token']
-   // console.log("token z cookie "+token)
+
+//    console.log("token z cookie! "+token)
     if(!token){
         return res.json({Error: "You are not Authenticated"});
     } else {
@@ -30,6 +31,26 @@ const verifyToken=(req,res,next) =>{
     }
     //console.log("next");
 }
+
+const verifyTokenBody=(req,res,next) =>{
+
+    const token= req.body.token;
+   //console.log("token z cookie! "+token)
+    if(!token){
+        return res.json({Error: "You are not Authenticated"});
+    } else {
+        jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
+            if(err) return res.json({Error: "Wrong token"});
+            next();
+        })
+    }
+    //console.log("next");
+}
+
+
+
+
+
 
 
 function getUser(req,res){
@@ -62,7 +83,7 @@ connection.query(sql, function (err, result) {
                         dostep
                     }
  
-           const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
+           const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'10m'});
         //      res.cookie('token', token);
         //   //   res.send("cooo")
             return res.status(200).json(token)
@@ -84,6 +105,10 @@ router.get('/users/:login/:haslo',getUser);
 // router.get('/users/:login/:haslo',connections.getUser);
 
 router.get('/islogged/:token',verifyToken,isLogged);
+router.put('/updatenaswietlenieprimewww',verifyTokenBody,connections.updatenaswietlenieprime);
+
+
+
 
 // zlecenia
 router.post('/zlecenia',connections.postZlecenie);
