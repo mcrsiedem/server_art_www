@@ -956,7 +956,13 @@ updatenaswietlenieprime(req,res){
     connection.query(sql, function (err, result) {
     if (err) throw err;
     console.log("1 record update: "+ id +" "+ilosc+" "+blacha_id+" "+user_id);
-    res.status(201).json(result);
+
+    // setTimeout(() => {
+    //  res.status(201).json(result);   
+    //   }, 3000);
+
+      res.status(201).json(result);   
+    
 });}
 
 
