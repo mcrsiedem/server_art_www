@@ -102,10 +102,17 @@ connection.query(sql, function (err, result) {
 }  
 
 router.get('/users/:login/:haslo',getUser);
-// router.get('/users/:login/:haslo',connections.getUser);
 
+
+
+// weryfikacja tokenu
 router.get('/islogged/:token',verifyToken,isLogged);
+
+// aktualizacja ilość blach w druku row.js
 router.put('/updatenaswietlenieprimewww',verifyTokenBody,connections.updatenaswietlenieprime);
+
+//  aktualizacja statusów druku w row.js
+router.put('/updateStatusWWW',verifyTokenBody,connections.updateStatusWWW);
 
 
 

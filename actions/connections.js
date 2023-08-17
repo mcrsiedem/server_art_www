@@ -9,51 +9,40 @@ const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 class Connections {
 
-    // getUser(req,res){
 
-    //     const login = req.params['login']
-    //     const haslo = req.params['haslo']
-    
-    
-    // var sql =   "INSERT INTO historia (User,Kategoria,Event,Klient) "+
-    // "values ('" + login + "','Logowanie','" + haslo + "','www'); ";
-    // connection.query(sql, function (err, result) {
-    //         if (err) throw err;
-    //         // console.log(" 1 record inserted "+result.insertId);
-    //         // res.status(201).json(result);
-    //         })
-    
-    
-    //     var sql = "select id,imie,nazwisko,login,haslo,dostep from users where login ='" + login + "' and haslo = '" + haslo + "';";
-    //     connection.query(sql,  (err, result) => {
 
-    //         if(err) return res.json({Status: "Error", Error: "Error in running query"})
-    //         if(result.length >0 ){
-    //                     const id = result[0].id;
-    //                     const imie = result[0].imie;
-    //                     const dostep = result[0].dostep;
-    //                     const paylod = {
-    //                         id,
-    //                         imie,
-    //                         login,
-    //                         dostep
-    //                     }
-     
-    //            const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
-    //             return res.status(200).json(token)
-    //             res.cookie('token', token);
-    //         } else {
-    //             return res.json({Status: "Error", Error: "Wrong Email or Password"})
-    //         }
+    updateStatusWWW(req,res){
+        const id = req.body.id;
+        const value = req.body.value;
+        const idzlecenia = req.body.idzlecenia;
 
-    //     // connection.query(sql,  (err, doc) => { 
-    //     // if (err) throw err;
-    //     // res.status(200).json(result);
-    // }
-    // );
-    
-    // }  
+        var sql = "start transaction";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
 
+                var sql = "update produkty set status= '" + value + "' where id="+id;
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+                var sql = "update ctp21.zlecenia set status_srodek = (select min(status) from ctp21.produkty where produkty.id_zlecenia = '" + idzlecenia + "' and typ='Środek') ,  status_okladka = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Okładka') , status_inne = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Inne') , status_glowny = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' ) where zlecenia.id = '" + idzlecenia + "';";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+
+
+
+var sql = "commit";
+connection.query(sql, function (err, result) {
+if (err) throw err;
+console.log("1 record update ");
+res.status(201).json(result);
+});
+
+
+}
 
 
 
