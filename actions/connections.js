@@ -14,7 +14,12 @@ class Connections {
     updateStatusWWW(req,res){
         const id = req.body.id;
         const value = req.body.value;
-        const idzlecenia = req.body.idzlecenia;
+        let idzlecenia = req.body.idzlecenia;
+
+        if (idzlecenia==null) {
+            idzlecenia = 0;
+        }
+
 
         var sql = "start transaction";
                 connection.query(sql, function (err, result) {
@@ -32,13 +37,19 @@ class Connections {
                 });
 
 
+               // console.log(`id: ${id} status: ${value} idzlecenia: ${idzlecenia}`);
 
+        
 
 var sql = "commit";
 connection.query(sql, function (err, result) {
 if (err) throw err;
 console.log("1 record update ");
-res.status(201).json(result);
+  res.status(201).json(result);
+// setTimeout(() => {
+  
+//   }, 3000);
+
 });
 
 
