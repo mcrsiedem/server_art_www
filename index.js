@@ -22,7 +22,7 @@ app.use(cors(
   }
   
 ));
-app.use(cors({ origin: true }));
+// app.use(cors({ origin: true }));
 
 //routes
  app.use('/api_www', apiRouter);
