@@ -2,10 +2,10 @@
   "name": "notatki",
   "version": "1.0.0",
   "description": "",
-  "main": "index_wwww.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon index_art_www.js",
+    "server": "nodemon index.js",
     "mr": "echo \"test mr\" && exit 1"
   },
   "author": "",
