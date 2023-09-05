@@ -1,4 +1,7 @@
 const express = require('express');
+const https = require('https');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const {port} = require('./config');
@@ -12,7 +15,7 @@ const cors = require('cors');
 
  //parsery
  //Content-type: application/json
- app.use(bodyParser.json());
+ app.use(bodyParser.json()); 
 
 //fix cors
 app.use(cors(
@@ -49,8 +52,13 @@ app.use(cors(
 
 
 // server
-app.listen(port, function(){
-    console.log('Waiting... http://localhost:'+ port);
-});
+// app.listen(port, function(){
+//     console.log('Waiting... http://localhost:'+ port);
+// });
 
+const sslServer = https.createServer({
+key: fs.readFileSync(path.join(__dirname,'cert','key.pem')),
+cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
+},app)
 
+sslServer.listen(3443, ()=> console.log('Secure server on port 3443'))
