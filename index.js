@@ -35,7 +35,9 @@ app.use(cors(
     
     // Website you wish to allow to connect
     //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
-    res.setHeader('Access-Control-Allow-Origin', '*');
+  //  res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'https://www.printforce.pl');
+    //https://www.printforce.pl/s
 
   // Request methods you wish to allow
   //  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -56,6 +58,8 @@ app.use(cors(
 //     console.log('Waiting... http://localhost:'+ port);
 // });
 
+
+// key.pem i cert.pem to klucz prywatny i certyfika wygenerowany dla apacha z Lets Encrypt
 const sslServer = https.createServer({
 key: fs.readFileSync(path.join(__dirname,'cert','key.pem')),
 cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
