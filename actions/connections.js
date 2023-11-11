@@ -1,16 +1,33 @@
-//const Connection = require("mysql2/typings/mysql/lib/Connection");
-const connection = require("./mysql");
-// import connection from './mysql';
-const jwt = require("jsonwebtoken");
-const cookieParser =require("cookie-parser");
-const multer =require("multer");
 
-const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
+const connection = require("./mysql");
+
+
 
 class Connections {
 
 
+    getZamowienia(req,res){
+        const idzlecenia = req.params['idzlecenia']
+        var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3')  ORDER BY Typ ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
 
+    postZamowienie(req,res){
+        const firma_id = req.body.firma_id;
+        const klient_id = req.body.klient_id;
+        var sql =   "INSERT INTO zamowienia (firma_id,klient_id) "+
+        "values ('" + firma_id+ "','" + klient_id + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+    });}
+
+
+//--------------- stare
     updateStatusWWW(req,res){
         const id = req.body.id;
         const value = req.body.value;

@@ -124,6 +124,10 @@ router.post('/zlecenia_z_excela',connections.postZlecenia_z_EXCELA);
 router.delete('/zlecenia',connections.deleteZlecenie);
 
 
+// zamaówienie
+router.post('/zamowienie',connections.postZamowienie);
+// end
+
 router.get('/zlecenia/:WHEREZLECENIA',connections.getZlecenia);
 router.get('/zlecenianieoddane',connections.getZleceniaNieoddane);
 router.get('/zleceniamaxnr',connections.getMaxNrZlecenia);
