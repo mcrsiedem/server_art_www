@@ -24,6 +24,7 @@ class Connections {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
         res.status(201).json(result);
+
     });}
 
 
