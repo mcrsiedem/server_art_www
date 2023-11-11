@@ -116,7 +116,7 @@ router.put('/updateStatusWWW',verifyTokenBody,connections.updateStatusWWW);
 
 
 
-
+// nie wiem czy sie udalo 
 // zlecenia
 router.post('/zlecenia',connections.postZlecenie);
 router.post('/zlecenia_z_excela',connections.postZlecenia_z_EXCELA);
