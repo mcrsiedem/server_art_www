@@ -19,7 +19,7 @@ class Connections {
         const tytul = req.body.tytul;
         const wersja = req.body.wersja;
         const zamowienie_id = req.body.zamowienie_id;
-        var sql =   "INSERT INTO zamowienia_produkty (tytul,wersja,zamowienia_id) "+
+        var sql =   "INSERT INTO artdruk.zamowienia_produkty (tytul,wersja,zamowienia_id) "+
         "values ('" + tytul+ "','" + wersja + "','" + zamowienie_id + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
@@ -32,7 +32,7 @@ class Connections {
         const firma_id = req.body.firma_id;
         const klient_id = req.body.klient_id;
     
-        var sql =   "INSERT INTO zamowienia (firma_id,klient_id) "+
+        var sql =   "INSERT INTO artdruk.zamowienia (firma_id,klient_id) "+
         "values ('" + firma_id+ "','" + klient_id + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
