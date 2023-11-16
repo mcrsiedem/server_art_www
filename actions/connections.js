@@ -28,6 +28,21 @@ class Connections {
 
     });}
 
+    postElementy(req,res){
+        const nazwa = req.body.nazwa;
+        const typ = req.body.typ;
+        const zamowienie_id = req.body.zamowienie_id;
+        const produkt_id = req.body.produkt_id;
+
+        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
+
     postZamowienie(req,res){
         const firma_id = req.body.firma_id;
         const klient_id = req.body.klient_id;
