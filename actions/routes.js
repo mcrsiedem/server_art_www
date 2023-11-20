@@ -128,6 +128,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
 router.post('/zamowienie',connections.postZamowienie);
 router.post('/produkty',connections.postProdukty);
 router.post('/elementy',connections.postElementy);
+router.post('/fragmenty',connections.postFragmenty);
 // end
 
 router.get('/zlecenia/:WHEREZLECENIA',connections.getZlecenia);
