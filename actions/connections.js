@@ -31,13 +31,13 @@ class Connections {
     postFragmenty(req,res){
         const naklad = req.body.naklad;
         const info = req.body.info;
-        const index = req.body.index;
+     
         const zamowienie_id = req.body.zamowienie_id;
         const element_id = req.body.element_id;
         const produkt_id = req.body.produkt_id;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,index) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + index + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
