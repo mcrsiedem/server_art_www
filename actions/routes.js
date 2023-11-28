@@ -129,6 +129,8 @@ router.post('/zamowienie',connections.postZamowienie);
 router.post('/produkty',connections.postProdukty);
 router.post('/elementy',connections.postElementy);
 router.post('/fragmenty',connections.postFragmenty);
+router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
+router.get('/lista-wykonczen',connections.getListaWykonczen);
 // end
 
 router.get('/zlecenia/:WHEREZLECENIA',connections.getZlecenia);

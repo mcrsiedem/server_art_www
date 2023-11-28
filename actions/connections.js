@@ -50,9 +50,11 @@ class Connections {
         const typ = req.body.typ;
         const zamowienie_id = req.body.zamowienie_id;
         const produkt_id = req.body.produkt_id;
+        const naklad = req.body.naklad;
+        const wykonczenie_id = req.body.wykonczenie_id;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,wykonczenie_id) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + wykonczenie_id + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
@@ -73,6 +75,20 @@ class Connections {
 
     });}
 
+    getListaUszlachetnien(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.uszlachetnienia ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+    getListaWykonczen(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.wykonczenia ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
 
 //--------------- stare
     updateStatusWWW(req,res){
