@@ -51,7 +51,7 @@ class Connections {
         const zamowienie_id = req.body.zamowienie_id;
         const produkt_id = req.body.produkt_id;
         const naklad = req.body.naklad;
-        const wykonczenie_id = req.body.wykonczenie_id;
+        const wykonczenie_id = req.body.wykonczenie;
 
         var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,wykonczenie_id) "+
         "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + wykonczenie_id + "'); ";
