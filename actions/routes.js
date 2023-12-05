@@ -131,6 +131,8 @@ router.post('/elementy',connections.postElementy);
 router.post('/fragmenty',connections.postFragmenty);
 router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
 router.get('/lista-wykonczen',connections.getListaWykonczen);
+router.get('/lista-papierow',connections.getListaPapierow);
+router.get('/lista-gramatur',connections.getListaGramatur);
 // end
 
 router.get('/zlecenia/:WHEREZLECENIA',connections.getZlecenia);

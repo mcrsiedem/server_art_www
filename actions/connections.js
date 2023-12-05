@@ -89,6 +89,27 @@ class Connections {
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
+    getListaPapierow(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+    getListaGramatur(req,res){
+        var sql = "SELECT id,user,papier_id,gramatura,wykonczenie_id,bul,info FROM artdruk.papier_gramatury ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+
+
+
+
+
+
 
 //--------------- stare
     updateStatusWWW(req,res){
