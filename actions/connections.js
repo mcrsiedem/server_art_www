@@ -51,10 +51,10 @@ class Connections {
         const zamowienie_id = req.body.zamowienie_id;
         const produkt_id = req.body.produkt_id;
         const naklad = req.body.naklad;
-        const wykonczenie_id = req.body.wykonczenie;
+        const papier_id = req.body.papier_id;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,wykonczenie_id) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + wykonczenie_id + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
