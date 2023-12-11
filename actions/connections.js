@@ -83,13 +83,13 @@ class Connections {
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
-    getListaWykonczen(req,res){
-        var sql = "SELECT id,nazwa FROM artdruk.wykonczenia ORDER BY id ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+    // getListaWykonczen(req,res){
+    //     var sql = "SELECT id,nazwa FROM artdruk.wykonczenia ORDER BY id ASC;";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     //sconsole.log(doc);
+    //     res.status(200).json(doc);
+    // });}
     getListaPapierow(req,res){
         var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
@@ -105,13 +105,13 @@ class Connections {
         res.status(200).json(doc);
     });}
 
-    getPapiery(req,res){
-        var sql = "SELECT id,user,nazwa,gramatura,wykonczenie,bulk,info FROM artdruk.papiery ORDER BY id ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+    // getPapiery(req,res){
+    //     var sql = "SELECT id,user,nazwa,gramatura,wykonczenie,bulk,info FROM artdruk.papiery ORDER BY id ASC;";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     //sconsole.log(doc);
+    //     res.status(200).json(doc);
+    // });}
 
 
 
