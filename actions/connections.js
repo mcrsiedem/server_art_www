@@ -105,6 +105,14 @@ class Connections {
         res.status(200).json(doc);
     });}
 
+    getListaProcesow(req,res){
+        var sql = "SELECT id,proces,typ,rodzaj FROM artdruk.lista_procesow ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
     // getPapiery(req,res){
     //     var sql = "SELECT id,user,nazwa,gramatura,wykonczenie,bulk,info FROM artdruk.papiery ORDER BY id ASC;";
     //     connection.query(sql, function (err, doc) {
