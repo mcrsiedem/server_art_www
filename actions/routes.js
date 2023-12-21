@@ -134,6 +134,7 @@ router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
 router.get('/lista-papierow',connections.getListaPapierow);
 router.get('/lista-gramatur',connections.getListaGramatur);
 router.get('/lista-procesow',connections.getListaProcesow);
+router.get('/procesyElementow',connections.getProcesyElementow);
 // router.get('/papiery',connections.getPapiery);
 // end
 
