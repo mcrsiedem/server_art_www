@@ -53,9 +53,12 @@ class Connections {
         const naklad = req.body.naklad;
         const papier_id = req.body.papier_id;
         const gramatura_id = req.body.gramatura_id;
+        const ilosc_stron = req.body.strony;
+        const format_x = req.body.format_x;
+        const format_y = req.body.format_y;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "'," + format_x + "," + format_y + "); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
