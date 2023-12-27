@@ -6,15 +6,27 @@ const connection = require("./mysql");
 class Connections {
 
 
+    // getZamowienia(req,res){
+    //     const idzlecenia = req.params['idzlecenia']
+    //     var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3')  ORDER BY Typ ASC";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     res.status(200).json(doc);
+    // });
+    // }
+
+    //pobierz zamowienia do głownego widoku
     getZamowienia(req,res){
         const idzlecenia = req.params['idzlecenia']
-        var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3')  ORDER BY Typ ASC";
+        // var sql  = "select id,   utworzono ,    zmodyfikowano ,   nr, kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3')  ORDER BY Typ ASC";
+        var sql  = "select * from artdruk.view_zamowienia ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
     });
     }
 
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postProdukty(req,res){
         const tytul = req.body.tytul;
         const wersja = req.body.wersja;
@@ -28,10 +40,10 @@ class Connections {
 
     });}
 
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postFragmenty(req,res){
         const naklad = req.body.naklad;
         const info = req.body.info;
-     
         const zamowienie_id = req.body.zamowienie_id;
         const element_id = req.body.element_id;
         const produkt_id = req.body.produkt_id;
@@ -40,11 +52,11 @@ class Connections {
         "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
-        // console.log(" 1 record inserted "+result.insertId);
         res.status(201).json(result);
 
     });}
 
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postElementy(req,res){
         const nazwa = req.body.nazwa;
         const typ = req.body.typ;
@@ -66,6 +78,7 @@ class Connections {
 
     });}
 
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postZamowienie(req,res){
         const firma_id = req.body.firma_id;
         const klient_id = req.body.klient_id;
@@ -86,13 +99,7 @@ class Connections {
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
-    // getListaWykonczen(req,res){
-    //     var sql = "SELECT id,nazwa FROM artdruk.wykonczenia ORDER BY id ASC;";
-    //     connection.query(sql, function (err, doc) {
-    //     if (err) throw err;
-    //     //sconsole.log(doc);
-    //     res.status(200).json(doc);
-    // });}
+
     getListaPapierow(req,res){
         var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
