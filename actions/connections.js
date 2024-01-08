@@ -48,8 +48,8 @@ class Connections {
         const produkt_id = req.body.produkt_id;
         const data_przyjecia = req.body.data_przyjecia;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,data_przyjecia) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + data_przyjecia + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         res.status(201).json(result);
@@ -82,9 +82,10 @@ class Connections {
     postZamowienie(req,res){
         const firma_id = req.body.firma_id;
         const klient_id = req.body.klient_id;
+        const data_przyjecia = req.body.data_przyjecia;
     
-        var sql =   "INSERT INTO artdruk.zamowienia (firma_id,klient_id) "+
-        "values ('" + firma_id+ "','" + klient_id + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia (firma_id,klient_id,data_przyjecia) "+
+        "values ('" + firma_id+ "','" + klient_id + "','" + data_przyjecia + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
