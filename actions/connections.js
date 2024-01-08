@@ -83,9 +83,11 @@ class Connections {
         const firma_id = req.body.firma_id;
         const klient_id = req.body.klient_id;
         const data_przyjecia = req.body.data_przyjecia;
+        const data_materialow = req.body.data_materialow;
+        const data_spedycji= req.body.data_spedycji;
     
-        var sql =   "INSERT INTO artdruk.zamowienia (firma_id,klient_id,data_przyjecia) "+
-        "values ('" + firma_id+ "','" + klient_id + "','" + data_przyjecia + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia (firma_id,klient_id,data_przyjecia,data_materialow,data_spedycji) "+
+        "values ('" + firma_id+ "','" + klient_id + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
