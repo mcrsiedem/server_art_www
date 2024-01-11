@@ -75,10 +75,12 @@ connection.query(sql, function (err, result) {
         if(result.length >0 ){
                     const id = result[0].id;
                     const imie = result[0].imie;
+                    const nazwisko = result[0].nazwisko;
                     const dostep = result[0].dostep;
                     const paylod = {
                         id,
                         imie,
+                        nazwisko,
                         login,
                         dostep
                     }

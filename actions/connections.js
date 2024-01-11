@@ -89,9 +89,10 @@ class Connections {
         const rok= req.body.rok;
         const tytul= req.body.tytul;
         const opiekun= req.body.opiekun;
+        const user= req.body.user;
     
-        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id) "+
-        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id,utworzyl_user_id) "+
+        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun + "','" + user + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
