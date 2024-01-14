@@ -27,11 +27,13 @@ class Connections {
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postProdukty(req,res){
-        const tytul = req.body.tytul;
+        const nazwa = req.body.nazwa;
         const wersja = req.body.wersja;
         const zamowienie_id = req.body.zamowienie_id;
-        var sql =   "INSERT INTO artdruk.zamowienia_produkty (tytul,wersja,zamowienia_id) "+
-        "values ('" + tytul+ "','" + wersja + "','" + zamowienie_id + "'); ";
+        const typ = req.body.typ;
+        const uwagi = req.body.uwagi;
+        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienia_id,typ,uwagi) "+
+        "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
