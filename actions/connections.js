@@ -70,9 +70,11 @@ class Connections {
         const ilosc_stron = req.body.strony;
         const format_x = req.body.format_x;
         const format_y = req.body.format_y;
+        const uwagi = req.body.uwagi;
+        const papier_info = req.body.papier_info;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "'," + format_x + "," + format_y + "); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y,uwagi,papier_info) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "'," + format_x + "," + format_y + ",'" + uwagi + "','" + papier_info + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
