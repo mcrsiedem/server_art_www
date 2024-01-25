@@ -107,6 +107,23 @@ class Connections {
 
     });}
 
+        // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
+        postOprawa(req,res){
+            const zamowienie_id = req.body.zamowienie_id;
+            const produkt_id = req.body.produkt_id;
+            const oprawa = req.body.oprawa;
+            const naklad = req.body.naklad;
+            const uwagi = req.body.uwagi;
+            const data_spedycji = req.body.data_spedycji;
+    
+            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji) "+
+            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "'); ";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            res.status(201).json(result);
+    
+        });}
+
     getListaUszlachetnien(req,res){
         var sql = "SELECT id,nazwa FROM artdruk.uszlachetnienia ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {

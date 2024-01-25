@@ -133,6 +133,7 @@ router.post('/zamowienie',connections.postZamowienie);
 router.post('/produkty',connections.postProdukty);
 router.post('/elementy',connections.postElementy);
 router.post('/fragmenty',connections.postFragmenty);
+router.post('/oprawa',connections.postOprawa);
 router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
 // router.get('/lista-wykonczen',connections.getListaWykonczen);
 router.get('/lista-papierow',connections.getListaPapierow);
