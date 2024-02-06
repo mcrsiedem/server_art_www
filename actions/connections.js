@@ -49,9 +49,11 @@ class Connections {
         const element_id = req.body.element_id;
         const produkt_id = req.body.produkt_id;
         const data_przyjecia = req.body.data_przyjecia;
+        const oprawa_id = req.body.oprawa_id;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "'); ";
+
+        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         res.status(201).json(result);
