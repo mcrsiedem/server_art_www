@@ -127,20 +127,22 @@ class Connections {
         });}
 
 
-        updateIdFragmentow(req,res){
-            //update id fragmentow przy zapisie zamowienia. 
-            // Najpierw zapisane fragmenty nie mają id oprawy do ktorej należą
-            // po zapisie oprawy można dopiero update
-            const idFragmentu = req.body.idFragmentu;
-            const oprawa_id_new = req.body.oprawa_id_new;
-            // const oprawa_id_prev = req.body.oprawa_id_prev;
-            var sql = "update artdruk.zamowienia_fragmenty set oprawa_id = '" + oprawa_id_new + "' where id="+idFragmentu;
+        // updateIdFragmentow(req,res){
+
+        //     // do skasowanie 
+        //     //update id fragmentow przy zapisie zamowienia. 
+        //     // Najpierw zapisane fragmenty nie mają id oprawy do ktorej należą
+        //     // po zapisie oprawy można dopiero update
+        //     const idFragmentu = req.body.idFragmentu;
+        //     const oprawa_id_new = req.body.oprawa_id_new;
+        //     // const oprawa_id_prev = req.body.oprawa_id_prev;
+        //     var sql = "update artdruk.zamowienia_fragmenty set oprawa_id = '" + oprawa_id_new + "' where id="+idFragmentu;
         
-            connection.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("update id fragmentow przy zapisie zamowienia ");
-            res.status(201).json(result);
-        });}
+        //     connection.query(sql, function (err, result) {
+        //     if (err) throw err;
+        //     console.log("update id fragmentow przy zapisie zamowienia ");
+        //     res.status(201).json(result);
+        // });}
         
 
     getListaUszlachetnien(req,res){
