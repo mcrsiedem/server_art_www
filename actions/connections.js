@@ -84,6 +84,50 @@ class Connections {
 
     });}
 
+//--
+postZamowienieObj(req,res){
+    const daneEdit = req.body.daneZamowienia;
+    const produktyEdit = req.body.produktyEdit;
+    const elementyEdit = req.body.elementyEdit;
+    const fragmentyEdit = req.body.fragmentyEdit;
+    const oprawaEdit = req.body.oprawaEdit;
+    const utworzyl_user_id = req.body.user;
+
+    console.log(utworzyl_user_id);
+   
+
+
+// console.log(`id: ${id} status: ${value} idzlecenia: ${idzlecenia}`);
+
+        var sql = "start transaction";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        });
+
+                var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id,utworzyl_user_id,stan,status,uwagi) "+
+                "values ('" + daneEdit.nr + "','" + daneEdit.rok + "','" + daneEdit.firma_id+ "','" + daneEdit.klient_id + "','" + daneEdit.tytul + "','" + daneEdit.dataPrzyjecia + "','" + daneEdit.dataMaterialow + "','" + daneEdit.dataSpedycji + "','" + daneEdit.opiekun_id + "','" + utworzyl_user_id + "','" + daneEdit.stan + "','" + daneEdit.status + "','" + daneEdit.uwagi + "'); ";
+                connection.query(sql, function (err, result) {
+                // if (err) throw err;
+                    if(err) console.log(err.sqlMessage + " --- " + err.sql)
+                });
+
+
+
+
+
+
+        var sql = "commit";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        //   console.log("1 record update ");
+        //   res.status(201).json(result);
+        });
+
+        res.status(201).json({ok: "ok"});
+}
+
+//--
+
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postZamowienie(req,res){
         const firma_id = req.body.firma_id;
@@ -123,8 +167,8 @@ class Connections {
             connection.query(sql, function (err, result) {
             if (err) throw err;
             res.status(201).json(result);
-    
-        });}
+            });
+        }
 
 
         // updateIdFragmentow(req,res){

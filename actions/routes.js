@@ -130,6 +130,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
 
 router.get('/zamowienia',connections.getZamowienia);
 router.post('/zamowienie',connections.postZamowienie);
+router.post('/zamowienieobj',connections.postZamowienieObj);
 router.post('/produkty',connections.postProdukty);
 router.post('/elementy',connections.postElementy);
 router.post('/fragmenty',connections.postFragmenty);
