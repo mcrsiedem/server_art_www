@@ -3,8 +3,8 @@ const connection = require("./mysql");
 
 
 
+var zamowienie_id= 30;
 class Connections {
-
 
     // getZamowienia(req,res){
     //     const idzlecenia = req.params['idzlecenia']
@@ -86,6 +86,7 @@ class Connections {
 
 //--
 postZamowienieObj(req,res){
+
     const daneEdit = req.body.daneZamowienia;
     const produktyEdit = req.body.produktyEdit;
     const elementyEdit = req.body.elementyEdit;
@@ -93,7 +94,15 @@ postZamowienieObj(req,res){
     const oprawaEdit = req.body.oprawaEdit;
     const utworzyl_user_id = req.body.user;
 
-    console.log(utworzyl_user_id);
+    // let zamowienie_id= 0;
+    // function set(x){
+    //   zamowienie_id = x;
+    // }
+    // function get(){
+    //     return zamowienie_id ;
+    // }
+    
+    // console.log(utworzyl_user_id);
    
 
 
@@ -103,15 +112,35 @@ postZamowienieObj(req,res){
         connection.query(sql, function (err, result) {
         if (err) throw err;
         });
-
+                
                 var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id,utworzyl_user_id,stan,status,uwagi) "+
                 "values ('" + daneEdit.nr + "','" + daneEdit.rok + "','" + daneEdit.firma_id+ "','" + daneEdit.klient_id + "','" + daneEdit.tytul + "','" + daneEdit.dataPrzyjecia + "','" + daneEdit.dataMaterialow + "','" + daneEdit.dataSpedycji + "','" + daneEdit.opiekun_id + "','" + utworzyl_user_id + "','" + daneEdit.stan + "','" + daneEdit.status + "','" + daneEdit.uwagi + "'); ";
                 connection.query(sql, function (err, result) {
-                // if (err) throw err;
-                    if(err) console.log(err.sqlMessage + " --- " + err.sql)
-                });
+                if(err) { console.clear(); console.log(err.sqlMessage + " --- " + err.sql)}else{
+                var zamowienie_id = result.insertId;
+                console.log("Zapisane zamówienie nr: " + zamowienie_id);
+                    }
 
 
+
+                                    produktyEdit.forEach(async (produkt, index) => {
+                                    var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienia_id,typ,uwagi) "+
+                                    "values ('" + produktyEdit[index].nazwa+ "','" + produktyEdit[index].wersja + "','" + zamowienie_id+ "','" + produktyEdit[index].typ + "','" + produktyEdit[index].uwagi + "'); ";
+                                    connection.query(sql, function (err, result) {
+                                        if(err) { console.clear(); console.log(err.sqlMessage + " --- " + err.sql)}else{
+                                        const   produkt_id = result.insertId;
+                                            console.log("Zapisany produkt nr: " + produkt_id);
+                                        }
+                                    });}
+
+                                    );
+
+                                    
+                                });
+                                console.log("test: " + zamowienie_id )
+            
+
+         
 
 
 
