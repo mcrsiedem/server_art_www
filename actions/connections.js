@@ -1,9 +1,22 @@
 
 const connection = require("./mysql");
+const { get } = require("./routes");
 
 
+class Bank{
+    
+      
+    constructor(s){
+       this.zamowienie_id = s; 
+    }
+    setId({x}){
+        zamowienie_id = x;
+    }
+    getId(){
+        return zamowienie_id
+    }
+}
 
-var zamowienie_id= 30;
 class Connections {
 
     // getZamowienia(req,res){
@@ -85,10 +98,12 @@ class Connections {
     });}
 
 //--
-postZamowienieObj(req,res){
 
+
+postZamowienieObj(req,res){
+   
     const daneEdit = req.body.daneZamowienia;
-    const produktyEdit = req.body.produktyEdit;
+    let produktyEdit = req.body.produktyEdit;
     const elementyEdit = req.body.elementyEdit;
     const fragmentyEdit = req.body.fragmentyEdit;
     const oprawaEdit = req.body.oprawaEdit;
@@ -112,12 +127,14 @@ postZamowienieObj(req,res){
         connection.query(sql, function (err, result) {
         if (err) throw err;
         });
-                
+             
                 var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id,utworzyl_user_id,stan,status,uwagi) "+
                 "values ('" + daneEdit.nr + "','" + daneEdit.rok + "','" + daneEdit.firma_id+ "','" + daneEdit.klient_id + "','" + daneEdit.tytul + "','" + daneEdit.dataPrzyjecia + "','" + daneEdit.dataMaterialow + "','" + daneEdit.dataSpedycji + "','" + daneEdit.opiekun_id + "','" + utworzyl_user_id + "','" + daneEdit.stan + "','" + daneEdit.status + "','" + daneEdit.uwagi + "'); ";
                 connection.query(sql, function (err, result) {
                 if(err) { console.clear(); console.log(err.sqlMessage + " --- " + err.sql)}else{
                 var zamowienie_id = result.insertId;
+                const bank = new Bank({zamowienie_id});
+                console.log(bank.getId())
                 console.log("Zapisane zamówienie nr: " + zamowienie_id);
                     }
 
@@ -130,6 +147,8 @@ postZamowienieObj(req,res){
                                         if(err) { console.clear(); console.log(err.sqlMessage + " --- " + err.sql)}else{
                                         const   produkt_id = result.insertId;
                                             console.log("Zapisany produkt nr: " + produkt_id);
+                                            produktyEdit[index].id = produkt_id;
+                                         
                                         }
                                     });}
 
@@ -137,9 +156,9 @@ postZamowienieObj(req,res){
 
                                     
                                 });
-                                console.log("test: " + zamowienie_id )
+                          
             
-
+                        
          
 
 
@@ -151,8 +170,8 @@ postZamowienieObj(req,res){
         //   console.log("1 record update ");
         //   res.status(201).json(result);
         });
-
-        res.status(201).json({ok: "ok"});
+        
+        res.status(201).json({produktyEdit});
 }
 
 //--
