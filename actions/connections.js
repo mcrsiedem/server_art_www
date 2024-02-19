@@ -1,16 +1,296 @@
-//const Connection = require("mysql2/typings/mysql/lib/Connection");
-const connection = require("./mysql");
-// import connection from './mysql';
-const jwt = require("jsonwebtoken");
-const cookieParser =require("cookie-parser");
-const multer =require("multer");
 
-const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
+const connection = require("./mysql");
+const { get } = require("./routes");
+
+
+class Bank{
+    
+      
+    constructor(s){
+       this.zamowienie_id = s; 
+    }
+    setId({x}){
+        zamowienie_id = x;
+    }
+    getId(){
+        return zamowienie_id
+    }
+}
 
 class Connections {
 
+    // getZamowienia(req,res){
+    //     const idzlecenia = req.params['idzlecenia']
+    //     var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3')  ORDER BY Typ ASC";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     res.status(200).json(doc);
+    // });
+    // }
+
+    //pobierz zamowienia do głownego widoku
+    getZamowienia(req,res){
+        const idzlecenia = req.params['idzlecenia']
+        var sql  = "select * from artdruk.view_zamowienia ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
+    postProdukty(req,res){
+        const nazwa = req.body.nazwa;
+        const wersja = req.body.wersja;
+        const zamowienie_id = req.body.zamowienie_id;
+        const typ = req.body.typ;
+        const uwagi = req.body.uwagi;
+        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienia_id,typ,uwagi) "+
+        "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
+
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
+    postFragmenty(req,res){
+        const naklad = req.body.naklad;
+        const info = req.body.info;
+        const zamowienie_id = req.body.zamowienie_id;
+        const element_id = req.body.element_id;
+        const produkt_id = req.body.produkt_id;
+        const data_przyjecia = req.body.data_przyjecia;
+        const oprawa_id = req.body.oprawa_id;
 
 
+        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        res.status(201).json(result);
+
+    });}
+
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
+    postElementy(req,res){
+        const nazwa = req.body.nazwa;
+        const typ = req.body.typ;
+        const zamowienie_id = req.body.zamowienie_id;
+        const produkt_id = req.body.produkt_id;
+        const naklad = req.body.naklad;
+        const papier_id = req.body.papier_id;
+        const gramatura_id = req.body.gramatura_id;
+        const ilosc_stron = req.body.strony;
+        const format_x = req.body.format_x;
+        const format_y = req.body.format_y;
+        const uwagi = req.body.uwagi;
+        const papier_info = req.body.papier_info;
+
+        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y,uwagi,papier_info) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "'," + format_x + "," + format_y + ",'" + uwagi + "','" + papier_info + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
+
+//--
+
+
+// postZamowienieObj(req,res){
+   
+//     const daneEdit = req.body.daneZamowienia;
+//     let produktyEdit = req.body.produktyEdit;
+//     const elementyEdit = req.body.elementyEdit;
+//     const fragmentyEdit = req.body.fragmentyEdit;
+//     const oprawaEdit = req.body.oprawaEdit;
+//     const utworzyl_user_id = req.body.user;
+
+//     // let zamowienie_id= 0;
+//     // function set(x){
+//     //   zamowienie_id = x;
+//     // }
+//     // function get(){
+//     //     return zamowienie_id ;
+//     // }
+    
+//     // console.log(utworzyl_user_id);
+   
+
+
+// // console.log(`id: ${id} status: ${value} idzlecenia: ${idzlecenia}`);
+
+//         var sql = "start transaction";
+//         connection.query(sql, function (err, result) {
+//         if (err) throw err;
+//         });
+             
+//                 var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id,utworzyl_user_id,stan,status,uwagi) "+
+//                 "values ('" + daneEdit.nr + "','" + daneEdit.rok + "','" + daneEdit.firma_id+ "','" + daneEdit.klient_id + "','" + daneEdit.tytul + "','" + daneEdit.dataPrzyjecia + "','" + daneEdit.dataMaterialow + "','" + daneEdit.dataSpedycji + "','" + daneEdit.opiekun_id + "','" + utworzyl_user_id + "','" + daneEdit.stan + "','" + daneEdit.status + "','" + daneEdit.uwagi + "'); ";
+//                 connection.query(sql, function (err, result) {
+//                 if(err) { console.clear(); console.log(err.sqlMessage + " --- " + err.sql)}else{
+//                 var zamowienie_id = result.insertId;
+//                 const bank = new Bank({zamowienie_id});
+//                 console.log(bank.getId())
+//                 console.log("Zapisane zamówienie nr: " + zamowienie_id);
+//                     }
+
+
+
+//                                     produktyEdit.forEach(async (produkt, index) => {
+//                                     var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienia_id,typ,uwagi) "+
+//                                     "values ('" + produktyEdit[index].nazwa+ "','" + produktyEdit[index].wersja + "','" + zamowienie_id+ "','" + produktyEdit[index].typ + "','" + produktyEdit[index].uwagi + "'); ";
+//                                     connection.query(sql, function (err, result) {
+//                                         if(err) { console.clear(); console.log(err.sqlMessage + " --- " + err.sql)}else{
+//                                         const   produkt_id = result.insertId;
+//                                             console.log("Zapisany produkt nr: " + produkt_id);
+//                                             produktyEdit[index].id = produkt_id;
+                                         
+//                                         }
+//                                     });}
+
+//                                     );
+
+                                    
+//                                 });
+                          
+            
+                        
+         
+
+
+
+
+//         var sql = "commit";
+//         connection.query(sql, function (err, result) {
+//           if (err) throw err;
+//         //   console.log("1 record update ");
+//         //   res.status(201).json(result);
+//         });
+        
+//         res.status(201).json({produktyEdit});
+// }
+
+//--
+
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
+    postZamowienie(req,res){
+        const firma_id = req.body.firma_id;
+        const klient_id = req.body.klient_id;
+        const data_przyjecia = req.body.data_przyjecia;
+        const data_materialow = req.body.data_materialow;
+        const data_spedycji= req.body.data_spedycji;
+        const nr= req.body.nr;
+        const rok= req.body.rok;
+        const tytul= req.body.tytul;
+        const opiekun= req.body.opiekun;
+        const user= req.body.user;
+        const stan= req.body.stan;
+        const status= req.body.status;
+        const uwagi= req.body.uwagi;
+    
+        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id,utworzyl_user_id,stan,status,uwagi) "+
+        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
+
+        // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
+        postOprawa(req,res){
+            const zamowienie_id = req.body.zamowienie_id;
+            const produkt_id = req.body.produkt_id;
+            const oprawa = req.body.oprawa;
+            const naklad = req.body.naklad;
+            const uwagi = req.body.uwagi;
+            const data_spedycji = req.body.data_spedycji;
+    
+            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji) "+
+            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "'); ";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            res.status(201).json(result);
+            });
+        }
+
+
+        // updateIdFragmentow(req,res){
+
+        //     // do skasowanie 
+        //     //update id fragmentow przy zapisie zamowienia. 
+        //     // Najpierw zapisane fragmenty nie mają id oprawy do ktorej należą
+        //     // po zapisie oprawy można dopiero update
+        //     const idFragmentu = req.body.idFragmentu;
+        //     const oprawa_id_new = req.body.oprawa_id_new;
+        //     // const oprawa_id_prev = req.body.oprawa_id_prev;
+        //     var sql = "update artdruk.zamowienia_fragmenty set oprawa_id = '" + oprawa_id_new + "' where id="+idFragmentu;
+        
+        //     connection.query(sql, function (err, result) {
+        //     if (err) throw err;
+        //     console.log("update id fragmentow przy zapisie zamowienia ");
+        //     res.status(201).json(result);
+        // });}
+        
+
+    getListaUszlachetnien(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.uszlachetnienia ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+    getListaPapierow(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+    getListaGramatur(req,res){
+        var sql = "SELECT id,user,papier_id,gramatura,wykonczenie,bulk,info FROM artdruk.papiery_gramatury ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+    getListaProcesow(req,res){
+        var sql = "SELECT id,proces,typ,rodzaj FROM artdruk.lista_procesow ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+    getProcesyElementow(req,res){
+        var sql = "SELECT artdruk.zamowienia_procesy.id,zamowienie_id,produkt_id,element_id,proces_id,front, front_info,back,back_info, uwagi,artdruk.lista_procesow.proces,artdruk.lista_procesow.typ,artdruk.lista_procesow.rodzaj FROM artdruk.zamowienia_procesy INNER JOIN artdruk.lista_procesow ON zamowienia_procesy.proces_id = lista_procesow.id ORDER BY id ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
+    // getPapiery(req,res){
+    //     var sql = "SELECT id,user,nazwa,gramatura,wykonczenie,bulk,info FROM artdruk.papiery ORDER BY id ASC;";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     //sconsole.log(doc);
+    //     res.status(200).json(doc);
+    // });}
+
+
+
+
+
+
+
+//--------------- stare
     updateStatusWWW(req,res){
         const id = req.body.id;
         const value = req.body.value;
