@@ -96,6 +96,25 @@ class Connections {
         res.status(201).json(result);
 
     });}
+    postPakowanie(req,res){
+        const zamowienie_id = req.body.zamowienie_id;
+        const produkt_id = req.body.produkt_id;
+        const nazwa = req.body.nazwa;
+        const naklad = req.body.naklad;
+        const uwagi = req.body.uwagi;
+
+        var sql =   "INSERT INTO artdruk.zamowienia_pakowanie(zamowienie_id,produkt_id,nazwa,naklad,uwagi) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + naklad + "','" + uwagi + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) {
+            console.log(err)
+            res.status(400).json(err);
+
+        };
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
 
 //--
 
