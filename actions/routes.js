@@ -127,7 +127,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
 
 
 // zamaówienie nowe
-
+router.get('/parametry/:idZamowienia/',connections.getParametry);
 router.get('/zamowienia',connections.getZamowienia);
 router.post('/zamowienie',connections.postZamowienie);
 // router.post('/zamowienieobj',connections.postZamowienieObj);
