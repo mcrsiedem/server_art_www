@@ -177,6 +177,19 @@ class Connections {
         }
 
 
+        updateSetOrderNotFinal(req,res){
+            // przy zapisie zamowienia zmiana final z 1 na 0, final = 1 to najnowsza wersja zamowienia, 0 to poprzednie wersje
+            const zamowienie_id = req.body.zamowienie_id;
+
+
+            var sql = "update artdruk.zamowienia set final = 0 where id = '" + zamowienie_id+ "' ";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            res.status(201).json(result);
+            });
+        }
+
+
         // updateIdFragmentow(req,res){
 
         //     // do skasowanie 
