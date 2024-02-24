@@ -36,8 +36,47 @@ class Connections {
         var sql  = "select * from artdruk.view_zamowienia_kopia where id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
-        res.status(200).json(doc);
-    });
+        dane.push(doc)
+        // res.status(200).json(dane);
+    
+        });
+
+        var sql = "select * from artdruk.zamowienia_produkty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+        
+        } );
+
+        var sql = "select * from artdruk.zamowienia_elementy where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+   
+        } );
+
+        var sql = "select * from artdruk.zamowienia_fragmenty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+     
+        } );
+
+        var sql = "select * from artdruk.zamowienia_oprawa where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+
+        } );
+
+        var sql = "select * from artdruk.zamowienia_pakowanie where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+        res.status(200).json(dane);
+        } );
+
+
     }
 
     //pobierz zamowienia do głownego widoku
@@ -57,7 +96,7 @@ class Connections {
         const zamowienie_id = req.body.zamowienie_id;
         const typ = req.body.typ;
         const uwagi = req.body.uwagi;
-        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienia_id,typ,uwagi) "+
+        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienie_id,typ,uwagi) "+
         "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
