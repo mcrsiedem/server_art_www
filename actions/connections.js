@@ -62,7 +62,7 @@ class Connections {
      
         } );
 
-        var sql = "select * from artdruk.zamowienia_oprawa where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        var sql = "select * from artdruk.view_zamowienia_oprawa where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         dane.push(doc)
@@ -73,6 +73,7 @@ class Connections {
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         dane.push(doc)
+   
         res.status(200).json(dane);
         } );
 
