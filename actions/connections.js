@@ -117,9 +117,11 @@ class Connections {
         const oprawa_id = req.body.oprawa_id;
         const typ = req.body.typ;
         const indeks = req.body.indeks;
+        const wersja = req.body.wersja;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id,typ,indeks) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "','" + typ + "','" + indeks + "'); ";
+
+        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id,typ,indeks,wersja) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "','" + typ + "','" + indeks + "','" + wersja + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         res.status(201).json(result);
