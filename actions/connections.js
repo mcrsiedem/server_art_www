@@ -92,13 +92,19 @@ class Connections {
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postProdukty(req,res){
-        const nazwa = req.body.nazwa;
-        const wersja = req.body.wersja;
         const zamowienie_id = req.body.zamowienie_id;
         const typ = req.body.typ;
+        const nazwa = req.body.nazwa;
+        const wersja = req.body.wersja;
+        const ilosc_stron = req.body.ilosc_stron;
+        const format_x = req.body.format_x;
+        const format_y = req.body.format_y;
+        const oprawa = req.body.oprawa;
+        const naklad = req.body.naklad;
+        const indeks = req.body.indeks;
         const uwagi = req.body.uwagi;
-        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienie_id,typ,uwagi) "+
-        "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienie_id,typ,uwagi,ilosc_stron,format_x,format_y,oprawa,naklad,indeks) "+
+        "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "','" + ilosc_stron + "','" + format_x + "','" + format_y + "','" + oprawa + "','" + naklad + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
