@@ -35,8 +35,8 @@ app.use(cors(
     
     // Website you wish to allow to connect
     //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    // res.setHeader('Access-Control-Allow-Origin', 'https://www.printforce.pl');
+    // res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'https://www.printforce.pl');
     //https://www.printforce.pl/s
 
   // Request methods you wish to allow
