@@ -127,23 +127,28 @@ router.delete('/zlecenia',connections.deleteZlecenie);
 
 
 // zamaówienie nowe
+    router.get('/parametry/:idZamowienia/',connections.getParametry);
+    router.get('/zamowienia',connections.getZamowienia);
+    router.post('/zamowienie',connections.postZamowienie);
+    // router.post('/zamowienieobj',connections.postZamowienieObj);
+    router.post('/produkty',connections.postProdukty);
+    router.post('/elementy',connections.postElementy);
+    router.post('/fragmenty',connections.postFragmenty);
+    router.post('/pakowanie',connections.postPakowanie);
+    router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);
+    router.post('/oprawa',connections.postOprawa);
+    router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
+    // router.get('/lista-wykonczen',connections.getListaWykonczen);
+    router.get('/lista-papierow',connections.getListaPapierow);
+    router.get('/lista-gramatur',connections.getListaGramatur);
+    router.get('/lista-procesow',connections.getListaProcesow);
+    router.get('/procesyElementow',connections.getProcesyElementow);
 
-router.get('/zamowienia',connections.getZamowienia);
-router.post('/zamowienie',connections.postZamowienie);
-// router.post('/zamowienieobj',connections.postZamowienieObj);
-router.post('/produkty',connections.postProdukty);
-router.post('/elementy',connections.postElementy);
-router.post('/fragmenty',connections.postFragmenty);
-// router.put('/fragmenty',connections.updateIdFragmentow);
-router.post('/oprawa',connections.postOprawa);
-router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
-// router.get('/lista-wykonczen',connections.getListaWykonczen);
-router.get('/lista-papierow',connections.getListaPapierow);
-router.get('/lista-gramatur',connections.getListaGramatur);
-router.get('/lista-procesow',connections.getListaProcesow);
-router.get('/procesyElementow',connections.getProcesyElementow);
-// router.get('/papiery',connections.getPapiery);
 // end
+
+// Technologie nowe
+router.get('/technologie',connections.getTechnologie);        
+// Technologie nowe end
 
 router.get('/zlecenia/:WHEREZLECENIA',connections.getZlecenia);
 router.get('/zlecenianieoddane',connections.getZleceniaNieoddane);

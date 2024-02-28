@@ -28,6 +28,68 @@ class Connections {
     // });
     // }
 
+      //pobierz wszystkie objekty do zamówienia nr...
+      getParametry(req,res){
+       let dane=[];
+        const idZamowienia = req.params['idZamowienia']
+
+        var sql  = "select * from artdruk.view_zamowienia_kopia where id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+        // res.status(200).json(dane);
+    
+        });
+
+        var sql = "select * from artdruk.zamowienia_produkty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+        
+        } );
+
+        var sql = "select * from artdruk.zamowienia_elementy where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+   
+        } );
+
+        var sql = "select * from artdruk.zamowienia_fragmenty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+     
+        } );
+
+        var sql = "select * from artdruk.view_zamowienia_oprawa where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+
+        } );
+
+        var sql = "select * from artdruk.zamowienia_pakowanie where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+   
+        res.status(200).json(dane);
+        } );
+
+
+    }
+
+    // pobie
+    getTechnologie(req,res){
+        const idzlecenia = req.params['idzlecenia']
+        var sql  = "select * from artdruk.view_technologie ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+
     //pobierz zamowienia do głownego widoku
     getZamowienia(req,res){
         const idzlecenia = req.params['idzlecenia']
@@ -40,13 +102,19 @@ class Connections {
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postProdukty(req,res){
-        const nazwa = req.body.nazwa;
-        const wersja = req.body.wersja;
         const zamowienie_id = req.body.zamowienie_id;
         const typ = req.body.typ;
+        const nazwa = req.body.nazwa;
+        const wersja = req.body.wersja;
+        const ilosc_stron = req.body.ilosc_stron;
+        const format_x = req.body.format_x;
+        const format_y = req.body.format_y;
+        const oprawa = req.body.oprawa;
+        const naklad = req.body.naklad;
+        const indeks = req.body.indeks;
         const uwagi = req.body.uwagi;
-        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienia_id,typ,uwagi) "+
-        "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienie_id,typ,uwagi,ilosc_stron,format_x,format_y,oprawa,naklad,indeks) "+
+        "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "','" + ilosc_stron + "','" + format_x + "','" + format_y + "','" + oprawa + "','" + naklad + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
@@ -63,10 +131,13 @@ class Connections {
         const produkt_id = req.body.produkt_id;
         const data_przyjecia = req.body.data_przyjecia;
         const oprawa_id = req.body.oprawa_id;
+        const typ = req.body.typ;
+        const indeks = req.body.indeks;
+        const wersja = req.body.wersja;
 
 
-        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id,typ,indeks,wersja) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "','" + typ + "','" + indeks + "','" + wersja + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         res.status(201).json(result);
@@ -87,11 +158,34 @@ class Connections {
         const format_y = req.body.format_y;
         const uwagi = req.body.uwagi;
         const papier_info = req.body.papier_info;
+        const indeks = req.body.indeks;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y,uwagi,papier_info) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "'," + format_x + "," + format_y + ",'" + uwagi + "','" + papier_info + "'); ";
+
+        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y,uwagi,papier_info,indeks) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "'," + format_x + "," + format_y + ",'" + uwagi + "','" + papier_info + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
+    postPakowanie(req,res){
+        const zamowienie_id = req.body.zamowienie_id;
+        const produkt_id = req.body.produkt_id;
+        const nazwa = req.body.nazwa;
+        const naklad = req.body.naklad;
+        const uwagi = req.body.uwagi;
+        const rodzaj_pakowania = req.body.rodzaj_pakowania;
+        const sztuki_w_paczce = req.body.sztuki_w_paczce;
+
+        var sql =   "INSERT INTO artdruk.zamowienia_pakowanie(zamowienie_id,produkt_id,nazwa,naklad,uwagi,sztuki_w_paczce,rodzaj_pakowania) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + naklad + "','" + uwagi + "','" + sztuki_w_paczce + "','" + rodzaj_pakowania + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) {
+            console.log(err)
+            res.status(400).json(err);
+
+        };
         // console.log(" 1 record inserted "+result.insertId);
         res.status(201).json(result);
 
@@ -100,83 +194,9 @@ class Connections {
 //--
 
 
-// postZamowienieObj(req,res){
-   
-//     const daneEdit = req.body.daneZamowienia;
-//     let produktyEdit = req.body.produktyEdit;
-//     const elementyEdit = req.body.elementyEdit;
-//     const fragmentyEdit = req.body.fragmentyEdit;
-//     const oprawaEdit = req.body.oprawaEdit;
-//     const utworzyl_user_id = req.body.user;
-
-//     // let zamowienie_id= 0;
-//     // function set(x){
-//     //   zamowienie_id = x;
-//     // }
-//     // function get(){
-//     //     return zamowienie_id ;
-//     // }
-    
-//     // console.log(utworzyl_user_id);
-   
 
 
-// // console.log(`id: ${id} status: ${value} idzlecenia: ${idzlecenia}`);
-
-//         var sql = "start transaction";
-//         connection.query(sql, function (err, result) {
-//         if (err) throw err;
-//         });
-             
-//                 var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id,utworzyl_user_id,stan,status,uwagi) "+
-//                 "values ('" + daneEdit.nr + "','" + daneEdit.rok + "','" + daneEdit.firma_id+ "','" + daneEdit.klient_id + "','" + daneEdit.tytul + "','" + daneEdit.dataPrzyjecia + "','" + daneEdit.dataMaterialow + "','" + daneEdit.dataSpedycji + "','" + daneEdit.opiekun_id + "','" + utworzyl_user_id + "','" + daneEdit.stan + "','" + daneEdit.status + "','" + daneEdit.uwagi + "'); ";
-//                 connection.query(sql, function (err, result) {
-//                 if(err) { console.clear(); console.log(err.sqlMessage + " --- " + err.sql)}else{
-//                 var zamowienie_id = result.insertId;
-//                 const bank = new Bank({zamowienie_id});
-//                 console.log(bank.getId())
-//                 console.log("Zapisane zamówienie nr: " + zamowienie_id);
-//                     }
-
-
-
-//                                     produktyEdit.forEach(async (produkt, index) => {
-//                                     var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienia_id,typ,uwagi) "+
-//                                     "values ('" + produktyEdit[index].nazwa+ "','" + produktyEdit[index].wersja + "','" + zamowienie_id+ "','" + produktyEdit[index].typ + "','" + produktyEdit[index].uwagi + "'); ";
-//                                     connection.query(sql, function (err, result) {
-//                                         if(err) { console.clear(); console.log(err.sqlMessage + " --- " + err.sql)}else{
-//                                         const   produkt_id = result.insertId;
-//                                             console.log("Zapisany produkt nr: " + produkt_id);
-//                                             produktyEdit[index].id = produkt_id;
-                                         
-//                                         }
-//                                     });}
-
-//                                     );
-
-                                    
-//                                 });
-                          
-            
-                        
-         
-
-
-
-
-//         var sql = "commit";
-//         connection.query(sql, function (err, result) {
-//           if (err) throw err;
-//         //   console.log("1 record update ");
-//         //   res.status(201).json(result);
-//         });
-        
-//         res.status(201).json({produktyEdit});
-// }
-
-//--
-
-    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
+    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)1
     postZamowienie(req,res){
         const firma_id = req.body.firma_id;
         const klient_id = req.body.klient_id;
@@ -186,14 +206,15 @@ class Connections {
         const nr= req.body.nr;
         const rok= req.body.rok;
         const tytul= req.body.tytul;
-        const opiekun= req.body.opiekun;
+        const opiekun_id= req.body.opiekun_id;
         const user= req.body.user;
         const stan= req.body.stan;
         const status= req.body.status;
         const uwagi= req.body.uwagi;
+        const final= req.body.final;
     
-        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_zamowienia_id,utworzyl_user_id,stan,status,uwagi) "+
-        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final) "+
+        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun_id + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "','" + final + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
@@ -212,6 +233,19 @@ class Connections {
     
             var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji) "+
             "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "'); ";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            res.status(201).json(result);
+            });
+        }
+
+
+        updateSetOrderNotFinal(req,res){
+            // przy zapisie zamowienia zmiana final z 1 na 0, final = 1 to najnowsza wersja zamowienia, 0 to poprzednie wersje
+            const zamowienie_id = req.body.zamowienie_id;
+
+
+            var sql = "update artdruk.zamowienia set final = 0 where id = '" + zamowienie_id+ "' ";
             connection.query(sql, function (err, result) {
             if (err) throw err;
             res.status(201).json(result);
