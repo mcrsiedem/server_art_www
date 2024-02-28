@@ -146,6 +146,10 @@ router.delete('/zlecenia',connections.deleteZlecenie);
 
 // end
 
+// Technologie nowe
+router.get('/technologie',connections.getTechnologie);        
+// Technologie nowe end
+
 router.get('/zlecenia/:WHEREZLECENIA',connections.getZlecenia);
 router.get('/zlecenianieoddane',connections.getZleceniaNieoddane);
 router.get('/zleceniamaxnr',connections.getMaxNrZlecenia);

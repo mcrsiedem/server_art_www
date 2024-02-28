@@ -80,6 +80,16 @@ class Connections {
 
     }
 
+    // pobie
+    getTechnologie(req,res){
+        const idzlecenia = req.params['idzlecenia']
+        var sql  = "select * from artdruk.view_technologie ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+
     //pobierz zamowienia do głownego widoku
     getZamowienia(req,res){
         const idzlecenia = req.params['idzlecenia']
