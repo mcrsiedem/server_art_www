@@ -59,16 +59,16 @@ app.use(cors(
 // });
 
 
-// key.pem i cert.pem to klucz prywatny i certyfika wygenerowany dla apacha z Lets Encrypt
-// const sslServer = https.createServer({
-// key: fs.readFileSync(path.join(__dirname,'cert','key.pem')),
-// cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
-// },app)
 
-//sslServer.listen(3443, ()=> console.log('Secure server on port 3443'))
+//Instalowanie ssl na froncie oraz na node
+// yotube pyrek sll cerbot letsencrypt - wygenerować certyfikat wg insrtukcji ( odnawia sie automatycznie co 90 dni)
+
+//na node zainstalować opensll a potem podmienić klucze na te powyzej - klucze musza być takie same na forncie i na node
+
+// privkey.pem  - klucz prywatny - latwo poznac po naglowku w pliku
+//cert.pem - certyfikat
 
 
-// key.pem i cert.pem to klucz prywatny i certyfika wygenerowany dla apacha z Lets Encrypt
 const sslServer = https.createServer({
 key: fs.readFileSync(path.join(__dirname,'cert','privkey.pem')),
 cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
@@ -76,4 +76,3 @@ cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 
 sslServer.listen(3443, ()=> console.log('Secure server on port 3443_')) 
 
-//teraz ok 2
