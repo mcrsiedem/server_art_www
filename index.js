@@ -76,4 +76,4 @@ cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 
 sslServer.listen(3443, ()=> console.log('Secure server on port 3443')) 
 
-//teraz ok
+//teraz ok 2
