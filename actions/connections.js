@@ -177,9 +177,10 @@ class Connections {
         const uwagi = req.body.uwagi;
         const rodzaj_pakowania = req.body.rodzaj_pakowania;
         const sztuki_w_paczce = req.body.sztuki_w_paczce;
+        const indeks = req.body.indeks;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_pakowanie(zamowienie_id,produkt_id,nazwa,naklad,uwagi,sztuki_w_paczce,rodzaj_pakowania) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + naklad + "','" + uwagi + "','" + sztuki_w_paczce + "','" + rodzaj_pakowania + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_pakowanie(zamowienie_id,produkt_id,nazwa,naklad,uwagi,sztuki_w_paczce,rodzaj_pakowania,indeks) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + naklad + "','" + uwagi + "','" + sztuki_w_paczce + "','" + rodzaj_pakowania + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
         if (err) {
             console.log(err)
