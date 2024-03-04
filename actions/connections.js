@@ -236,9 +236,10 @@ class Connections {
             const naklad = req.body.naklad;
             const uwagi = req.body.uwagi;
             const data_spedycji = req.body.data_spedycji;
+            const data_czystoddrukow = req.body.data_czystoddrukow;
     
-            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji) "+
-            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "'); ";
+            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji,data_czystoddrukow) "+
+            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "','" + data_czystoddrukow + "'); ";
             connection.query(sql, function (err, result) {
             if (err) throw err;
             res.status(201).json(result);
