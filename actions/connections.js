@@ -211,11 +211,16 @@ class Connections {
         const user= req.body.user;
         const stan= req.body.stan;
         const status= req.body.status;
+        const rodzaj= req.body.rodzaj;
         const uwagi= req.body.uwagi;
         const final= req.body.final;
+        const waluta_id= req.body.waluta_id;
+        const vat_id= req.body.vat_id;
+        const przedplata= req.body.przedplata;
+        const cena= req.body.cena;
     
-        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final) "+
-        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun_id + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "','" + final + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final,rodzaj,waluta_id,vat_id,przedplata,cena) "+
+        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun_id + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "','" + final + "','" + rodzaj + "','" + waluta_id + "','" + vat_id + "','" + przedplata + "','" + cena + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
