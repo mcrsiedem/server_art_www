@@ -99,6 +99,14 @@ class Connections {
         res.status(200).json(doc);
     });
     }
+    getKlienci(req,res){
+   
+        var sql  = "select * from artdruk.view_klienci ORDER BY firma ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postProdukty(req,res){
