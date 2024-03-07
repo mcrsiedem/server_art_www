@@ -108,6 +108,15 @@ class Connections {
     });
     }
 
+    getUsersM(req,res){
+   
+        var sql  = "select * from artdruk.users ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postProdukty(req,res){
         const zamowienie_id = req.body.zamowienie_id;
