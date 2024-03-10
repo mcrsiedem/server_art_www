@@ -143,8 +143,12 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.get('/lista-gramatur',connections.getListaGramatur);
     router.get('/lista-procesow',connections.getListaProcesow);
     router.get('/procesyElementow',connections.getProcesyElementow);
-
+    
+    router.get('/lista-userow',connections.getUsersM);
 // end
+router.get('/lista-klientow',connections.getKlienci);
+router.post('/klienci',connections.postKlient);
+router.put('/klient',connections.updateKlient);
 
 // Technologie nowe
 router.get('/technologie',connections.getTechnologie);        

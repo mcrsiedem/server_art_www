@@ -99,6 +99,23 @@ class Connections {
         res.status(200).json(doc);
     });
     }
+    getKlienci(req,res){
+   
+        var sql  = "select * from artdruk.view_klienci ORDER BY firma ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+
+    getUsersM(req,res){
+   
+        var sql  = "select * from artdruk.users ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postProdukty(req,res){
@@ -121,6 +138,37 @@ class Connections {
         res.status(201).json(result);
 
     });}
+
+    postKlient(req,res){
+        const firma = req.body.firma;
+        const adres = req.body.adres;
+        const kod = req.body.kod;
+        const nip = req.body.nip;
+        const opiekun_id = req.body.opiekun_id;
+        const utworzyl_user_id = req.body.utworzyl_user_id;
+
+        var sql =   "INSERT INTO artdruk.klienci (firma,adres,kod,nip,opiekun_id,utworzyl_user_id,deleted) "+
+        "values ('" + firma+ "','" + adres + "','" + kod + "','" + nip + "','" + opiekun_id + "','" + utworzyl_user_id + "',0); ";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
+
+;
+
+updateKlient(req,res){
+    const id = req.body.id;
+
+    var sql = "update artdruk.klienci set deleted = 1 where id = " + id+ "";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    // console.log("1 record delete ");
+    res.status(200).json(result);
+})
+}
+
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postFragmenty(req,res){
