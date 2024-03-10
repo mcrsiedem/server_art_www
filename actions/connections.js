@@ -167,7 +167,7 @@ putTokenZamowienie(req,res){
     const user = req.body.user;
 
 
-    var sql  = "select * from artdruk.zamowienia where id = '" + id+ "' ORDER BY id ASC ";
+    var sql  = "select * from artdruk.view_zamowienia where id = '" + id+ "' ORDER BY id ASC ";
     connection.query(sql, function (err, doc) {
 
         if (err) throw err;
@@ -181,12 +181,18 @@ putTokenZamowienie(req,res){
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
             
-                res.status(200).json("OK");
+                res.status(200).json(
+                    {stan:"OK",
+                    user:doc[0].open_user,
+                    data: doc[0].open_data
+                    });
                     })
 
             console.log("OK")
         }else{
-            res.status(200).json("error");
+            res.status(200).json({stan:"error",
+            user:doc[0].open_user,
+            data: doc[0].open_data});
             console.log("error")
         }
 
