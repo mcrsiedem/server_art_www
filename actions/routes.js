@@ -148,7 +148,9 @@ router.delete('/zlecenia',connections.deleteZlecenie);
 // end
 router.get('/lista-klientow',connections.getKlienci);
 router.post('/klienci',connections.postKlient);
-router.put('/klient',connections.updateKlient);
+router.put('/klient',connections.deleteKlient);
+router.put('/updateKlient',connections.updateKlient);
+router.put('/putTokenZamowienie',connections.putTokenZamowienie);
 
 // Technologie nowe
 router.get('/technologie',connections.getTechnologie);        
