@@ -171,7 +171,7 @@ putTokenZamowienie(req,res){
     connection.query(sql, function (err, doc) {
 
         if (err) throw err;
-        console.log("open_stan :" ,doc[0].open_stan)
+
         if(doc[0].open_stan != 1)
         {
 
@@ -187,13 +187,10 @@ putTokenZamowienie(req,res){
                     data: doc[0].open_data
                     });
                     })
-
-            console.log("OK")
         }else{
             res.status(200).json({stan:"error",
             user:doc[0].open_user,
             data: doc[0].open_data});
-            console.log("error")
         }
 
         });
