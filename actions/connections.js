@@ -109,7 +109,7 @@ class Connections {
     }
 
     getUsersM(req,res){
-   
+        // pobiera listę użytkowników  w App getUserList
         var sql  = "select * from artdruk.users ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
@@ -158,25 +158,20 @@ class Connections {
 
 ;
 
-putTokenZamowienie(req,res){
+setOrderOpen(req,res){
+    // sprawdza czy zamówienie jest już otwarte przez kogoś
     // dodaje token, id, i date do zamowienia aby zablokowac jego edytowanie
-
 
     const id = req.body.id;
     const token = req.body.token;
     const user = req.body.user;
 
-
     var sql  = "select * from artdruk.view_zamowienia where id = '" + id+ "' ORDER BY id ASC ";
     connection.query(sql, function (err, doc) {
 
         if (err) throw err;
-
         if(doc[0].open_stan != 1)
         {
-
-
-
                 var sql = "update artdruk.zamowienia set open_token = '" + token+ "', open_user = '" + user+ "', open_data = now(), open_stan = 1 where id = " + id+ "";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
@@ -192,17 +187,23 @@ putTokenZamowienie(req,res){
             user:doc[0].open_user,
             data: doc[0].open_data});
         }
-
         });
+}
 
+setOrderClosed(req,res){
+    // zmienia wartość open_stan na null przy zamknięciu zamówienia
+    const id = req.body.id;
+    // const token = req.body.token;
+    // const user = req.body.user;
 
-
-
-        
-    
-     
-
-
+                var sql = "update artdruk.zamowienia set open_stan = null, open_data = null, open_user = null where id = " + id+ "";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+            
+                res.status(200).json(
+                    {stan:"closed"
+                    });
+        });
 }
 
 
