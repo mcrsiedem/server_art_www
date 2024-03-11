@@ -151,6 +151,7 @@ router.post('/klienci',connections.postKlient);
 router.put('/klient',connections.deleteKlient);
 router.put('/updateKlient',connections.updateKlient);
 router.put('/putTokenZamowienie',connections.putTokenZamowienie);
+router.put('/setOrderClosed',connections.setOrderClosed);
 
 // Technologie nowe
 router.get('/technologie',connections.getTechnologie);        
