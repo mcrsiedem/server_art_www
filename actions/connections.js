@@ -158,7 +158,55 @@ class Connections {
 
 ;
 
-updateKlient(req,res){
+putTokenZamowienie(req,res){
+    // dodaje token, id, i date do zamowienia aby zablokowac jego edytowanie
+
+
+    const id = req.body.id;
+    const token = req.body.token;
+    const user = req.body.user;
+
+
+    var sql  = "select * from artdruk.view_zamowienia where id = '" + id+ "' ORDER BY id ASC ";
+    connection.query(sql, function (err, doc) {
+
+        if (err) throw err;
+
+        if(doc[0].open_stan != 1)
+        {
+
+
+
+                var sql = "update artdruk.zamowienia set open_token = '" + token+ "', open_user = '" + user+ "', open_data = now(), open_stan = 1 where id = " + id+ "";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+            
+                res.status(200).json(
+                    {stan:"OK",
+                    user:doc[0].open_user,
+                    data: doc[0].open_data
+                    });
+                    })
+        }else{
+            res.status(200).json({stan:"error",
+            user:doc[0].open_user,
+            data: doc[0].open_data});
+        }
+
+        });
+
+
+
+
+        
+    
+     
+
+
+}
+
+
+deleteKlient(req,res){
     const id = req.body.id;
 
     var sql = "update artdruk.klienci set deleted = 1 where id = " + id+ "";
@@ -169,6 +217,21 @@ updateKlient(req,res){
 })
 }
 
+updateKlient(req,res){
+    const id = req.body.id;
+    const firma= req.body.firma;
+    const adres= req.body.adres;
+    const kod= req.body.kod;
+    const nip= req.body.nip;
+    const opiekun_id= req.body.opiekun_id;
+
+    var sql = "update artdruk.klienci set firma = '" + firma+ "', adres = '" + adres+ "', kod = '" + kod+ "', nip = '" + nip+ "', opiekun_id = " + opiekun_id+ " where id = " + id+ "";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    // console.log("1 record delete ");
+    res.status(200).json(result);
+})
+}
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postFragmenty(req,res){
