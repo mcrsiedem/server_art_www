@@ -1,5 +1,6 @@
 const express = require('express');
 const https = require('https');
+const http = require('http');
 const path = require('path');
 const fs = require('fs');
 
@@ -9,6 +10,7 @@ const connection = require('./actions/mysql');
 const apiRouter = require('./actions/routes');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const {Server} = require("socket.io")
 
 //database
  require('./actions/mysql');
@@ -32,21 +34,9 @@ app.use(cors(
 
  app.use(function (req, res, next) {
 
-    
-    // Website you wish to allow to connect
-    //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
-    // res.setHeader('Access-Control-Allow-Origin', '*');
+  
     res.setHeader('Access-Control-Allow-Origin', 'https://www.printforce.pl');
-    //https://www.printforce.pl/s
 
-  // Request methods you wish to allow
-  //  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  // Request headers you wish to allow
-  //  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  //  res.setHeader('Access-Control-Allow-Credentials', true);
-  // Pass to next layer of middleware
     next();
 });
 
@@ -54,10 +44,9 @@ app.use(cors(
 
 
 // server
-app.listen(port, function(){
-    console.log('Waiting... http://localhost:'+ port);
-});
-
+// app.listen(port, function(){
+//   console.log('Waiting... http://localhost:'+ port);
+// });
 
 
 //Instalowanie ssl na froncie oraz na node
@@ -76,5 +65,20 @@ app.listen(port, function(){
 // cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 // },app)
 
+
+
+
 // sslServer.listen(3443, ()=> console.log('Secure server on port 3443_')) 
 
+const server = http.createServer(app)
+
+const io = new Server(server,{
+  cors:{
+    // origin:["https://www.printforce.pl"]
+    origin:["https://localhost/"+ port]
+  },
+})
+
+server.listen(port,()=>{
+  console.log("SERVER IS RUNNING")
+})
