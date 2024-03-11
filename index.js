@@ -73,12 +73,22 @@ app.use(cors(
 const server = http.createServer(app)
 
 const io = new Server(server,{
+  autoConnect: false,
+  withCredential: true,
   cors:{
+    
     // origin:["https://www.printforce.pl"]
-    origin:["https://localhost/"+ port]
+    origin:["http://localhost:3000"]
   },
 })
 
-server.listen(port,()=>{
+io.on("connection", (socket)=>{
+  console.log(`User Connected: ${socket.id}`)
+  socket.on("send_mesage", (data) => {
+    console.log(`Wiadomość: ${data.message}`)
+    socket.broadcast.emit("receive_message", data)
+  })
+})
+server.listen(port,()=>{ 
   console.log("SERVER IS RUNNING")
 })
