@@ -158,7 +158,7 @@ class Connections {
 
 ;
 
-putTokenZamowienie(req,res){
+setOrderOpen(req,res){
     // sprawdza czy zamówienie jest już otwarte przez kogoś
     // dodaje token, id, i date do zamowienia aby zablokowac jego edytowanie
 
@@ -196,7 +196,7 @@ setOrderClosed(req,res){
     // const token = req.body.token;
     // const user = req.body.user;
 
-                var sql = "update artdruk.zamowienia set open_stan = null where id = " + id+ "";
+                var sql = "update artdruk.zamowienia set open_stan = null, open_data = null, open_user = null where id = " + id+ "";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
             

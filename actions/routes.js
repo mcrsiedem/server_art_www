@@ -150,7 +150,7 @@ router.get('/lista-klientow',connections.getKlienci);
 router.post('/klienci',connections.postKlient);
 router.put('/klient',connections.deleteKlient);
 router.put('/updateKlient',connections.updateKlient);
-router.put('/putTokenZamowienie',connections.putTokenZamowienie);
+router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
 
 // Technologie nowe
