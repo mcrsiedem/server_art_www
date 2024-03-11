@@ -191,7 +191,7 @@ setOrderOpen(req,res){
 }
 
 setOrderClosed(req,res){
-    // zmienia wartość open_stan na null przy zamknięciu zamówienia
+    // zmienia wartość open_stan na null przy zamknięciu zamówienia!
     const id = req.body.id;
     // const token = req.body.token;
     // const user = req.body.user;
