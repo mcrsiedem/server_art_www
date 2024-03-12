@@ -60,23 +60,23 @@ app.use(cors(
 
 //--------------------------
 
-const server = https.createServer({
-key: fs.readFileSync(path.join(__dirname,'cert','privkey.pem')),
-cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
-},app)
+// const server = https.createServer({
+// key: fs.readFileSync(path.join(__dirname,'cert','privkey.pem')),
+// cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
+// },app)
 
 
 
 
-// const server = http.createServer(app)
+ const server = http.createServer(app)
 
 const io = new Server(server,{
-  autoConnect: false,
-  withCredential: true,
+   
+  // withCredential: true,
   cors:{
     
-     origin:["https://www.printforce.pl"]
-    // origin:["http://localhost:3000"]
+    // origin:["https://www.printforce.pl"]
+     origin:["http://localhost:3000"]
   },
 })
 
@@ -87,8 +87,8 @@ io.on("connection", (socket)=>{
     socket.broadcast.emit("receive_message", data)
   })
 })
-// server.listen(port,()=>{ 
-//   console.log("SERVER IS RUNNING")
-// })
+server.listen(port,()=>{ 
+  console.log("SERVER IS RUNNING")
+})
 
-server.listen(3443, ()=> console.log('Secure server on port 3443_')) 
+// server.listen(3443, ()=> console.log('Secure server on port 3443_')) 
