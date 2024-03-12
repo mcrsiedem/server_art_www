@@ -30,28 +30,14 @@ app.use(cors(
     next();
 });
 
-//Instalowanie ssl na froncie oraz na node
-// yotube pyrek sll cerbot letsencrypt - wygenerować certyfikat wg insrtukcji ( odnawia sie automatycznie co 90 dni)
-
-//na node zainstalować opensll a potem podmienić klucze na te powyzej - klucze musza być takie same na forncie i na node
-
-// privkey.pem  - klucz prywatny - latwo poznac po naglowku w pliku
-//cert.pem - certyfikat
-
-//--------------------------
-
-const serverSSL = https.createServer({
-key: fs.readFileSync(path.join(__dirname,'cert','privkey.pem')),
-cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
-},app)
 
 
 
+const server = http.createServer(app)
 const io = new Server(server,{
-  // withCredential: true,
   cors:{
-     origin:["https://www.printforce.pl"]
-    //  origin:["http://localhost:3000"]
+    // origin:["https://www.printforce.pl"]
+     origin:["http://localhost:3000"]
   },
 })
 
@@ -63,8 +49,9 @@ io.on("connection", (socket)=>{
   })
 })
 
+
 module.exports = {
-    serverSSL
-    
+    server
+
 }
  
