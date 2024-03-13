@@ -40,13 +40,31 @@ const io = new Server(server,{
      origin:["http://localhost:3000"]
   },
 })
+let onlineUsers =[]
 
 io.on("connection", (socket)=>{
+
   console.log(`User Connected: ${socket.id}`)
-  socket.on("send_mesage", (data) => {
+
+    socket.on("send_mesage", (data) => {
+
     console.log(`Wiadomość: ${data.message}`)
     socket.broadcast.emit("receive_message", data)
-  })
+
+    })
+
+    socket.on("addNewUser", (userId) => {
+      // jeśli istnieje w tablicy user to go nie dodawaj
+      // jeśli lewa strona && jest nieprawdziwa to zrób prawą
+      !onlineUsers.some(user=user.userId === userId) &&
+        onlineUsers.push({
+          userId,
+          socketId: socket.id
+        })
+  
+      })
+
+
 })
 
 
