@@ -1,8 +1,5 @@
 const express = require("express");
-const https = require("https");
 const http = require("http");
-const path = require("path");
-const fs = require("fs");
 const app = express();
 const { port } = require("../config");
 const connection = require("../actions/mysql");
@@ -31,7 +28,6 @@ const server = http.createServer(app);
 const io = new Server(server, {
   // ostatnio dodane na próbe
   connectionStateRecovery: {},
-
   cors: {
     origin: ["http://localhost:3000"],
   },
@@ -40,7 +36,7 @@ let onlineUsers = [];
 
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {
-    console.log(`User disconnected `, socket.id);
+  console.log(`User disconnected `, socket.id);
   });
   console.log(`User Connected: ${socket.id}`);
 
