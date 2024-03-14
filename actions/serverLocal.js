@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const app = express();
 const { port } = require("../config");
+const { sendMessage } = require("../actions/io_on/sendMesage");
 const connection = require("../actions/mysql");
 const apiRouter = require("../actions/routes");
 const bodyParser = require("body-parser");
@@ -39,6 +40,7 @@ io.on("connection", (socket) => {
   console.log(`User disconnected `, socket.id);
   });
   console.log(`User Connected: ${socket.id}`);
+
 
   socket.on("send_mesage", (data) => {
     console.log(`Wiadomość: ${data.message}`);
