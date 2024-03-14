@@ -44,6 +44,9 @@ let onlineUsers =[]
 
 io.on("connection", (socket)=>{
 
+  socket.on("disconnect", ()=>{
+    console.log(`User disconnected `, socket.id)
+  })
   console.log(`User Connected: ${socket.id}`)
 
     socket.on("send_mesage", (data) => {
