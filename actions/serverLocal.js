@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const app = express();
 const { port } = require("../config");
-const { sendMessage } = require("../actions/io_on/sendMesage");
+
 const connection = require("../actions/mysql");
 const apiRouter = require("../actions/routes");
 const bodyParser = require("body-parser");
