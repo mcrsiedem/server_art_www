@@ -137,7 +137,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.post('/pakowanie',connections.postPakowanie);
     router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);
     router.post('/oprawa',connections.postOprawa);
-    router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
+    // router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
     // router.get('/lista-wykonczen',connections.getListaWykonczen);
     router.get('/lista-papierow',connections.getListaPapierow);
     router.get('/lista-gramatur',connections.getListaGramatur);

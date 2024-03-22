@@ -393,13 +393,13 @@ updateKlient(req,res){
         // });}
         
 
-    getListaUszlachetnien(req,res){
-        var sql = "SELECT id,nazwa FROM artdruk.uszlachetnienia ORDER BY id ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+    // getListaUszlachetnien(req,res){
+    //     var sql = "SELECT id,nazwa FROM artdruk.uszlachetnienia ORDER BY id ASC;";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     //sconsole.log(doc);
+    //     res.status(200).json(doc);
+    // });}
 
     getListaPapierow(req,res){
         var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
