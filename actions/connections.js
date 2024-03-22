@@ -417,7 +417,7 @@ updateKlient(req,res){
     });}
 
     getListaProcesow(req,res){
-        var sql = "SELECT id,proces,typ,rodzaj FROM artdruk.lista_procesow ORDER BY id ASC;";
+        var sql = "SELECT id,proces,typ,rodzaj FROM artdruk.procesy ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
