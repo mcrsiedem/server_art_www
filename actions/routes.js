@@ -11,7 +11,7 @@ const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 
 function isLogged(req,res){
-  //  const token = req.params['token']
+  //  przed wywyłaniem tej fukncji sprawdzany jest verifyToken jako middleware w endpoincie
 
 
  return res.json({Status: "Success"});
