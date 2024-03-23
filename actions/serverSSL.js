@@ -51,6 +51,7 @@ const io = new Server(server,{
   // withCredential: true,
   cors:{
      origin:["https://www.printforce.pl"]
+     //ss
   },
 })
 
