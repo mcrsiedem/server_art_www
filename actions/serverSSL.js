@@ -18,7 +18,7 @@ require('../actions/mysql');
 app.use(bodyParser.json()); 
 app.use(cors(
   {
-    // origin:["https://www.printforce.pl"],
+    origin:["https://www.printforce.pl"],
     // credentials: true
   }
   

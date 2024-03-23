@@ -16,6 +16,7 @@ app.use(
   cors({
     // origin:["https://www.printforce.pl"],
     // credentials: true
+    origin: ["http://localhost:3000"],
   })
 );
 
