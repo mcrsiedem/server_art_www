@@ -107,6 +107,14 @@ class Connections {
         res.status(200).json(doc);
     });
     }
+    getOprawy(req,res){
+   
+        var sql  = "select * from artdruk.oprawy ORDER BY firma id";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
 
     getUsersM(req,res){
         // pobiera listę użytkowników  w App getUserList

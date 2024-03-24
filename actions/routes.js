@@ -147,6 +147,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.get('/lista-userow',connections.getUsersM);
 // end
 router.get('/lista-klientow',connections.getKlienci);
+router.get('/lista-opraw',connections.getOprawy);
 router.post('/klienci',connections.postKlient);
 router.put('/klient',connections.deleteKlient);
 router.put('/updateKlient',connections.updateKlient);
