@@ -11,7 +11,7 @@ const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 
 function isLogged(req,res){
-  //  const token = req.params['token']
+  //  przed wywyłaniem tej fukncji sprawdzany jest verifyToken jako middleware w endpoincie
 
 
  return res.json({Status: "Success"});
@@ -137,7 +137,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.post('/pakowanie',connections.postPakowanie);
     router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);
     router.post('/oprawa',connections.postOprawa);
-    router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
+    // router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
     // router.get('/lista-wykonczen',connections.getListaWykonczen);
     router.get('/lista-papierow',connections.getListaPapierow);
     router.get('/lista-gramatur',connections.getListaGramatur);
@@ -147,6 +147,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.get('/lista-userow',connections.getUsersM);
 // end
 router.get('/lista-klientow',connections.getKlienci);
+router.get('/lista-opraw',connections.getOprawy);
 router.post('/klienci',connections.postKlient);
 router.put('/klient',connections.deleteKlient);
 router.put('/updateKlient',connections.updateKlient);

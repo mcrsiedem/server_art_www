@@ -107,6 +107,14 @@ class Connections {
         res.status(200).json(doc);
     });
     }
+    getOprawy(req,res){
+   
+        var sql  = "select * from artdruk.oprawy ORDER BY id";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
 
     getUsersM(req,res){
         // pobiera listę użytkowników  w App getUserList
@@ -246,10 +254,11 @@ updateKlient(req,res){
         const typ = req.body.typ;
         const indeks = req.body.indeks;
         const wersja = req.body.wersja;
+        const ilosc_stron = req.body.ilosc_stron;
 
 
-        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id,typ,indeks,wersja) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "','" + typ + "','" + indeks + "','" + wersja + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id,typ,indeks,wersja,ilosc_stron) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "','" + typ + "','" + indeks + "','" + wersja + "','" + ilosc_stron + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         res.status(201).json(result);
@@ -392,13 +401,13 @@ updateKlient(req,res){
         // });}
         
 
-    getListaUszlachetnien(req,res){
-        var sql = "SELECT id,nazwa FROM artdruk.uszlachetnienia ORDER BY id ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+    // getListaUszlachetnien(req,res){
+    //     var sql = "SELECT id,nazwa FROM artdruk.uszlachetnienia ORDER BY id ASC;";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     //sconsole.log(doc);
+    //     res.status(200).json(doc);
+    // });}
 
     getListaPapierow(req,res){
         var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
@@ -416,7 +425,7 @@ updateKlient(req,res){
     });}
 
     getListaProcesow(req,res){
-        var sql = "SELECT id,proces,typ,rodzaj FROM artdruk.lista_procesow ORDER BY id ASC;";
+        var sql = "SELECT id,proces,typ,rodzaj FROM artdruk.procesy ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
