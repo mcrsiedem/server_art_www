@@ -47,7 +47,7 @@ cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 
 
 
-const io = new Server(server,{
+const io = new Server(serverSSL,{
   // withCredential: true,
   cors:{
      origin:["https://www.printforce.pl"]
