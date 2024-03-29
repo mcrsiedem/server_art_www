@@ -148,6 +148,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
 // end
 router.get('/lista-klientow',connections.getKlienci);
 router.get('/lista-opraw',connections.getOprawy);
+router.get('/lista-produktow',connections.getProdukty);
 router.post('/klienci',connections.postKlient);
 router.put('/klient',connections.deleteKlient);
 router.put('/updateKlient',connections.updateKlient);
