@@ -68,7 +68,7 @@ connection.query(sql, function (err, result) {
         })
 
 
-    var sql = "select id,imie,nazwisko,login,haslo,dostep from users where login ='" + login + "' and haslo = '" + haslo + "';";
+    var sql = "select id,imie,nazwisko,login,haslo,dostep from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
     connection.query(sql,  (err, result) => {
 
         if(err) return res.json({Status: "Error", Error: "Error in running query"})
