@@ -291,7 +291,7 @@ updateKlient(req,res){
 
 
         var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y,uwagi,papier_info,indeks) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "'," + format_x + "," + format_y + ",'" + uwagi + "','" + papier_info + "','" + indeks + "'); ";
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "','" + format_x + "','" + format_y + "','" + uwagi + "','" + papier_info + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
@@ -364,13 +364,16 @@ updateKlient(req,res){
             const produkt_id = req.body.produkt_id;
             const oprawa = req.body.oprawa;
             const naklad = req.body.naklad;
+            const bok_oprawy = req.body.bok_oprawy;
+            const wersja = req.body.wersja;
+
             const uwagi = req.body.uwagi;
             const data_spedycji = req.body.data_spedycji;
             const data_czystodrukow = req.body.data_czystodrukow;
             const indeks = req.body.indeks;
     
-            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji,data_czystodrukow,indeks) "+
-            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "','" + data_czystodrukow + "','" + indeks + "'); ";
+            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji,data_czystodrukow,indeks,bok_oprawy,wersja) "+
+            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "','" + data_czystodrukow + "','" + indeks + "','" + bok_oprawy + "','" + wersja + "'); ";
             connection.query(sql, function (err, result) {
             if (err) throw err;
             res.status(201).json(result);
