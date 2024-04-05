@@ -347,8 +347,8 @@ updateKlient(req,res){
         const vat_id= req.body.vat_id;
         const przedplata= req.body.przedplata;
         const cena= req.body.cena;
-        const termin_platnosci= req.body.fsc;
-        const fsc= req.body.termin_platnosci;
+        const termin_platnosci= req.body.termin_platnosci;
+        const fsc= req.body.fsc;
 
     
         var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final,rodzaj,waluta_id,vat_id,przedplata,cena,termin_platnosci,fsc) "+
