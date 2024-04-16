@@ -135,6 +135,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.post('/elementy',connections.postElementy);
     router.post('/fragmenty',connections.postFragmenty);
     router.post('/pakowanie',connections.postPakowanie);
+    router.post('/procesyElementow',connections.postProcesyElementow);
     router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);
     router.post('/oprawa',connections.postOprawa);
     // router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);

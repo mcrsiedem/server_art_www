@@ -327,6 +327,31 @@ updateKlient(req,res){
 
     });}
 
+    postProcesyElementow(req,res){
+        const zamowienie_id = req.body.zamowienie_id;
+        const produkt_id = req.body.produkt_id;
+        const element_id = req.body.element_id;
+        const proces_id = req.body.proces_id;
+        const front_ilosc = req.body.front_ilosc;
+        const back_ilosc = req.body.back_ilosc;
+        const front_kolor = req.body.front_kolor;
+        const back_kolor = req.body.back_kolor;
+        const info = req.body.info;
+        const indeks = req.body.indeks;
+
+        var sql =   "INSERT INTO artdruk.zamowienia_procesy(zamowienie_id,produkt_id,element_id,proces_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,indeks) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + proces_id + "','" + front_ilosc + "','" + back_ilosc + "','" + front_kolor + "','" + back_kolor + "','" + info + "','" + indeks + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) {
+            console.log(err)
+            res.status(400).json(err);
+
+        };
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
+
 //--
 
 
