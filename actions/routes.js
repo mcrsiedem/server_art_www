@@ -143,6 +143,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.get('/lista-papierow',connections.getListaPapierow);
     router.get('/lista-gramatur',connections.getListaGramatur);
     router.get('/lista-procesow',connections.getListaProcesow);
+    router.get('/lista-procesow-nazwa',connections.getListaProcesowNazwa);
     router.get('/procesyElementow',connections.getProcesyElementow);
     
     router.get('/lista-userow',connections.getUsersM);

@@ -475,6 +475,13 @@ updateKlient(req,res){
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
+    getListaProcesowNazwa(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.procesy_nazwa ;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
 
     getProcesyElementow(req,res){
         var sql = "SELECT artdruk.zamowienia_procesy.id,zamowienie_id,produkt_id,element_id,proces_id,front, front_info,back,back_info, uwagi,artdruk.lista_procesow.proces,artdruk.lista_procesow.typ,artdruk.lista_procesow.rodzaj FROM artdruk.zamowienia_procesy INNER JOIN artdruk.lista_procesow ON zamowienia_procesy.proces_id = lista_procesow.id ORDER BY id ASC;";
