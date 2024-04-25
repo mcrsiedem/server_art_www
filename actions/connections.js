@@ -76,7 +76,7 @@ class Connections {
         // res.status(200).json(dane);
         } );
 
-        var sql = "select * from artdruk.view_zamowienia_procesy where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        var sql = "select * from artdruk.view_zamowienia_procesy_elementow where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         dane.push(doc)
