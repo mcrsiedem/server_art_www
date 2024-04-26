@@ -341,7 +341,7 @@ updateKlient(req,res){
         const info = req.body.info;
         const indeks = req.body.indeks;
 
-        var sql =   "INSERT INTO artdruk.zamowienia_procesy(zamowienie_id,produkt_id,element_id,proces_id,nazwa_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,indeks) "+
+        var sql =   "INSERT INTO artdruk.zamowienia_procesy_elementow(zamowienie_id,produkt_id,element_id,proces_id,nazwa_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,indeks) "+
         "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + proces_id + "','" + nazwa_id + "','" + front_ilosc + "','" + back_ilosc + "','" + front_kolor + "','" + back_kolor + "','" + info + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
         if (err) {
