@@ -73,7 +73,13 @@ class Connections {
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         dane.push(doc)
-   
+        // res.status(200).json(dane);
+        } );
+
+        var sql = "select * from artdruk.view_zamowienia_procesy_elementow where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
         res.status(200).json(dane);
         } );
 
@@ -110,6 +116,14 @@ class Connections {
     getOprawy(req,res){
    
         var sql  = "select * from artdruk.oprawy ORDER BY id";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+    getProdukty(req,res){
+   
+        var sql  = "select * from artdruk.produkty ORDER BY id";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
@@ -283,7 +297,7 @@ updateKlient(req,res){
 
 
         var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y,uwagi,papier_info,indeks) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "'," + format_x + "," + format_y + ",'" + uwagi + "','" + papier_info + "','" + indeks + "'); ";
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "','" + format_x + "','" + format_y + "','" + uwagi + "','" + papier_info + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
@@ -302,6 +316,33 @@ updateKlient(req,res){
 
         var sql =   "INSERT INTO artdruk.zamowienia_pakowanie(zamowienie_id,produkt_id,nazwa,naklad,uwagi,sztuki_w_paczce,rodzaj_pakowania,indeks) "+
         "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + naklad + "','" + uwagi + "','" + sztuki_w_paczce + "','" + rodzaj_pakowania + "','" + indeks + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) {
+            console.log(err)
+            res.status(400).json(err);
+
+        };
+        // console.log(" 1 record inserted "+result.insertId);
+        res.status(201).json(result);
+
+    });}
+
+    postProcesyElementow(req,res){
+        const zamowienie_id = req.body.zamowienie_id;
+        const produkt_id = req.body.produkt_id;
+        const element_id = req.body.element_id;
+        const proces_id = req.body.proces_id;
+        const nazwa_id = req.body.nazwa_id;
+
+        const front_ilosc = req.body.front_ilosc;
+        const back_ilosc = req.body.back_ilosc;
+        const front_kolor = req.body.front_kolor;
+        const back_kolor = req.body.back_kolor;
+        const info = req.body.info;
+        const indeks = req.body.indeks;
+
+        var sql =   "INSERT INTO artdruk.zamowienia_procesy_elementow(zamowienie_id,produkt_id,element_id,proces_id,nazwa_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,indeks) "+
+        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + proces_id + "','" + nazwa_id + "','" + front_ilosc + "','" + back_ilosc + "','" + front_kolor + "','" + back_kolor + "','" + info + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
         if (err) {
             console.log(err)
@@ -340,9 +381,11 @@ updateKlient(req,res){
         const przedplata= req.body.przedplata;
         const cena= req.body.cena;
         const termin_platnosci= req.body.termin_platnosci;
+        const fsc= req.body.fsc;
+
     
-        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final,rodzaj,waluta_id,vat_id,przedplata,cena,termin_platnosci) "+
-        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun_id + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "','" + final + "','" + rodzaj + "','" + waluta_id + "','" + vat_id + "','" + przedplata + "','" + cena + "','" + termin_platnosci + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final,rodzaj,waluta_id,vat_id,przedplata,cena,termin_platnosci,fsc) "+
+        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun_id + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "','" + final + "','" + rodzaj + "','" + waluta_id + "','" + vat_id + "','" + przedplata + "','" + cena + "','" + termin_platnosci + "','" + fsc + "'); ";
         connection.query(sql, function (err, result) {
         // if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
@@ -356,13 +399,16 @@ updateKlient(req,res){
             const produkt_id = req.body.produkt_id;
             const oprawa = req.body.oprawa;
             const naklad = req.body.naklad;
+            const bok_oprawy = req.body.bok_oprawy;
+            const wersja = req.body.wersja;
+
             const uwagi = req.body.uwagi;
             const data_spedycji = req.body.data_spedycji;
             const data_czystodrukow = req.body.data_czystodrukow;
             const indeks = req.body.indeks;
     
-            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji,data_czystodrukow,indeks) "+
-            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "','" + data_czystodrukow + "','" + indeks + "'); ";
+            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji,data_czystodrukow,indeks,bok_oprawy,wersja) "+
+            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "','" + data_czystodrukow + "','" + indeks + "','" + bok_oprawy + "','" + wersja + "'); ";
             connection.query(sql, function (err, result) {
             if (err) throw err;
             res.status(201).json(result);
@@ -425,7 +471,14 @@ updateKlient(req,res){
     });}
 
     getListaProcesow(req,res){
-        var sql = "SELECT id,proces,typ,rodzaj FROM artdruk.procesy ORDER BY id ASC;";
+        var sql = "SELECT * FROM artdruk.view_procesy ;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+    getListaProcesowNazwa(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.procesy_nazwa ;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
