@@ -157,7 +157,7 @@ router.put('/updateKlient',connections.updateKlient);
 router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
 
-// Technologie nowe
+// Technologie nowe2
 router.get('/technologie',connections.getTechnologie);        
 // Technologie nowe end
 
