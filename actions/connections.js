@@ -390,17 +390,28 @@ updateKlient(req,res){
         connection.query(sql, function (err, result) {
         // if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
-                if(zamowienie_id == 1){
+                if(zamowienie_id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
 
                     var sql = "update artdruk.zamowienia  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
                     connection.query(sql, function (err, result) {
                     if (err) throw err;
                     });
 
+                    res.status(201).json([result,{prime_id:result.insertId}]);
+
+                }else{
+                    var sql = "update artdruk.zamowienia  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
+                    connection.query(sql, function (err, result) {
+                    if (err) throw err;
+                    });
+
+                    res.status(201).json([result,{prime_id:0}]);
 
                 }
 
-        res.status(201).json(result);
+
+
+        
 
     });}
 
