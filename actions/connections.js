@@ -361,6 +361,7 @@ updateKlient(req,res){
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)1
     postZamowienie(req,res){
+        const zamowienie_id = req.body.zamowienie_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać priem_id
         const firma_id = req.body.firma_id;
         const klient_id = req.body.klient_id;
         const data_przyjecia = req.body.data_przyjecia;
@@ -389,6 +390,16 @@ updateKlient(req,res){
         connection.query(sql, function (err, result) {
         // if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
+                if(zamowienie_id == 1){
+
+                    var sql = "update artdruk.zamowienia  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
+                    connection.query(sql, function (err, result) {
+                    if (err) throw err;
+                    });
+
+
+                }
+
         res.status(201).json(result);
 
     });}
