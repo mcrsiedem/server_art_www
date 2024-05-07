@@ -401,7 +401,7 @@ updateKlient(req,res){
 
                 }else{
  
-                    res.status(201).json([result,{prime_id:0}]);
+                    res.status(201).json([result,{prime_id:1}]);
                 }
 
     });}
