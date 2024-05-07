@@ -363,6 +363,8 @@ updateKlient(req,res){
     postZamowienie(req,res){
         const zamowienie_id = req.body.zamowienie_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać priem_id
         const firma_id = req.body.firma_id;
+        const prime_id = req.body.prime_id;
+
         const klient_id = req.body.klient_id;
         const data_przyjecia = req.body.data_przyjecia;
         const data_materialow = req.body.data_materialow;
@@ -385,8 +387,8 @@ updateKlient(req,res){
         const fsc= req.body.fsc;
 
     
-        var sql =   "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final,rodzaj,waluta_id,vat_id,przedplata,cena,termin_platnosci,fsc) "+
-        "values ('" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun_id + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "','" + final + "','" + rodzaj + "','" + waluta_id + "','" + vat_id + "','" + przedplata + "','" + cena + "','" + termin_platnosci + "','" + fsc + "'); ";
+        var sql =   "INSERT INTO artdruk.zamowienia (prime_id,nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final,rodzaj,waluta_id,vat_id,przedplata,cena,termin_platnosci,fsc) "+
+        "values ('" + prime_id + "','" + nr + "','" + rok + "','" + firma_id+ "','" + klient_id + "','" + tytul + "','" + data_przyjecia + "','" + data_materialow + "','" + data_spedycji + "','" + opiekun_id + "','" + user + "','" + stan + "','" + status + "','" + uwagi + "','" + final + "','" + rodzaj + "','" + waluta_id + "','" + vat_id + "','" + przedplata + "','" + cena + "','" + termin_platnosci + "','" + fsc + "'); ";
         connection.query(sql, function (err, result) {
         // if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
@@ -400,10 +402,7 @@ updateKlient(req,res){
                     res.status(201).json([result,{prime_id:result.insertId}]);
 
                 }else{
-                    var sql = "update artdruk.zamowienia  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
-                    connection.query(sql, function (err, result) {
-                    if (err) throw err;
-                    });
+ 
 
                     res.status(201).json([result,{prime_id:0}]);
 
