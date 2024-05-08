@@ -32,6 +32,8 @@ class Connections {
       getParametry(req,res){
        let dane=[];
         const idZamowienia = req.params['idZamowienia']
+        const zamowienie_prime_id = req.params['zamowienie_prime_id']
+
 
         var sql  = "select * from artdruk.view_zamowienia_kopia where id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
@@ -77,6 +79,12 @@ class Connections {
         } );
 
         var sql = "select * from artdruk.view_zamowienia_procesy_elementow where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+        } );
+
+        var sql = "select * from artdruk.view_zamowienia_koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         dane.push(doc)

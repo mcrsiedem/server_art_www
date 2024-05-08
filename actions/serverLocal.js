@@ -23,6 +23,8 @@ app.use(
 app.use("/api_www", apiRouter);
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "https://www.printforce.pl");
+  
+
   next();
 });
 
