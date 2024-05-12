@@ -459,6 +459,10 @@ updateKlient(req,res){
 
 //------------------------------------------------
         zapisKosztowDodatkowych(req,res){
+// * zapis kosztów dodatkowych:
+//     - update koszty_dodatkowe set final= 0 where zamowienie_prime_id = X 
+//     - insert wszystko z przesłanej tablicy koszty_dodatkowe
+//     - update kosztyDodatkoweZamowienia
 
 
              const kosztyDodatkoweTemporary = req.body.kosztyDodatkoweTemporary;
@@ -469,16 +473,23 @@ updateKlient(req,res){
                     connection.query(sql, function (err, result) {
                     if (err) throw err;
                     });
-            console.log("zapis ok"+req.body.kosztyDodatkoweZamowienia[0].suma)
-                    // var sql = "update produkty set status= '" + value + "' where id="+id;
-                    // connection.query(sql, function (err, result) {
-                    // if (err) throw err;
-                    // });
+            // console.log("zapis ok"+req.body.kosztyDodatkoweZamowienia[0].suma)
+                    var sql = "update artdruk.koszty_dodatkowe set final= 0 where zamowienie_prime_id="+kosztyDodatkoweZamowienia[0].zamowienie_prime_id;
+                    connection.query(sql, function (err, result) {
+                    if (err) throw err;
+                    });
     
-                    // var sql = "update ctp21.zlecenia set status_srodek = (select min(status) from ctp21.produkty where produkty.id_zlecenia = '" + idzlecenia + "' and typ='Środek') ,  status_okladka = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Okładka') , status_inne = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Inne') , status_glowny = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' ) where zlecenia.id = '" + idzlecenia + "';";
-                    // connection.query(sql, function (err, result) {
-                    // if (err) throw err;
-                    // });
+                    for(let koszt of kosztyDodatkoweTemporary){
+                    var sql =   "INSERT INTO artdruk.koszty_dodatkowe(indeks,nazwa,ilosc,cena,suma,info,zamowienia_koszty_id,autor_id,zamowienie_prime_id,final) "+
+                    "values ('" + koszt.indeks+ "','" + koszt.nazwa + "','" + koszt.ilosc + "','" + koszt.cena + "','" + koszt.suma + "','" + koszt.info + "','" + koszt.zamowienia_koszty_id + "','" + koszt.autor_id + "','" + koszt.zamowienie_prime_id + "',1); ";
+                    connection.query(sql, function (err, result) {
+                    if (err) console.log(err);
+              
+                    });
+                    }
+
+          
+         
     
     var sql = "commit";
     connection.query(sql, function (err, result) {
