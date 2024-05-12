@@ -130,6 +130,7 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.get('/parametry/:idZamowienia/:zamowienie_prime_id',connections.getParametry);
     router.get('/zamowienia',connections.getZamowienia);
     router.post('/zamowienie',connections.postZamowienie);
+    router.post('/zapis_kosztow_dodatkowych',connections.zapisKosztowDodatkowych);
     // router.post('/zamowienieobj',connections.postZamowienieObj);
     router.post('/produkty',connections.postProdukty);
     router.post('/elementy',connections.postElementy);

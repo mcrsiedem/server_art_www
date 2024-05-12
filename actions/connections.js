@@ -91,7 +91,7 @@ class Connections {
 
         } );
 
-        var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' ORDER BY id ASC";
+        var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' and final = 1 ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         dane.push(doc)
@@ -455,6 +455,43 @@ updateKlient(req,res){
             res.status(201).json(result);
             });
         }
+
+
+//------------------------------------------------
+        zapisKosztowDodatkowych(req,res){
+
+
+             const kosztyDodatkoweTemporary = req.body.kosztyDodatkoweTemporary;
+            const kosztyDodatkoweZamowienia = req.body.kosztyDodatkoweZamowienia;
+
+    
+            var sql = "start transaction";
+                    connection.query(sql, function (err, result) {
+                    if (err) throw err;
+                    });
+            console.log("zapis ok"+req.body.kosztyDodatkoweZamowienia[0].suma)
+                    // var sql = "update produkty set status= '" + value + "' where id="+id;
+                    // connection.query(sql, function (err, result) {
+                    // if (err) throw err;
+                    // });
+    
+                    // var sql = "update ctp21.zlecenia set status_srodek = (select min(status) from ctp21.produkty where produkty.id_zlecenia = '" + idzlecenia + "' and typ='Środek') ,  status_okladka = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Okładka') , status_inne = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' and typ='Inne') , status_glowny = (select min(status) from ctp21.produkty where produkty.id_zlecenia ='" + idzlecenia + "' ) where zlecenia.id = '" + idzlecenia + "';";
+                    // connection.query(sql, function (err, result) {
+                    // if (err) throw err;
+                    // });
+    
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    // console.log("1 record update ");
+      res.status(201).json(result);
+    });
+    
+    
+    }
+//--------- koniec zapisu kosztów dodatkowych
+
+
 
 
         // updateIdFragmentow(req,res){
