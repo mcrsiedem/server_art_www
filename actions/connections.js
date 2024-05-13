@@ -502,7 +502,10 @@ updateKlient(req,res){
                     });
                     }
 
-          
+                    var sql = "update artdruk.zamowienia_koszty_dodatkowe set suma= '" + kosztyDodatkoweZamowienia[0].suma + "' where id="+kosztyDodatkoweZamowienia[0].id;
+                    connection.query(sql, function (err, result) {
+                    if (err) throw err;
+                    });
          
     
     var sql = "commit";
