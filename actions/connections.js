@@ -522,9 +522,10 @@ updateKlient(req,res){
 zapisKosztowDodatkowychZamowienia(req,res){
     // zapis zmiany status kosztow dodatkowych zmaówienia
     
-                const kosztyDodatkoweZamowienia = req.body.kosztyDodatkoweZamowienia;
+                const id = req.body.id;
+                const value = req.body.value;
     
-                        var sql = "update artdruk.zamowienia_koszty_dodatkowe set status= '" + kosztyDodatkoweZamowienia[0].status + "' where id="+kosztyDodatkoweZamowienia[0].id;
+                        var sql = "update artdruk.zamowienia_koszty_dodatkowe set status= '" + value + "' where id="+id;
                         connection.query(sql, function (err, result) {
                         if (err) throw err;
                         res.status(201).json(result);
