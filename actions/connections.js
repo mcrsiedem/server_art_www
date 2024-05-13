@@ -517,8 +517,26 @@ updateKlient(req,res){
     
     
     }
-//--------- koniec zapisu kosztów dodatkowych
 
+//-----------
+zapisKosztowDodatkowychZamowienia(req,res){
+    // zapis zmiany status kosztow dodatkowych zmaówienia
+    
+                const kosztyDodatkoweZamowienia = req.body.kosztyDodatkoweZamowienia;
+    
+                        var sql = "update artdruk.zamowienia_koszty_dodatkowe set status= '" + kosztyDodatkoweZamowienia[0].status + "' where id="+kosztyDodatkoweZamowienia[0].id;
+                        connection.query(sql, function (err, result) {
+                        if (err) throw err;
+                        res.status(201).json(result);
+                        });
+             
+        
+
+        
+        }
+
+    
+//-----------
 
 
 
