@@ -341,6 +341,20 @@ updateKlient(req,res){
         res.status(201).json(result);
 
     });}
+    postKoszty(req,res){
+        // zajmuje dodatkowe id przy dodawaniu nowego kosztu na froncie - taka atrapa
+
+
+        var sql =   "INSERT INTO artdruk.koszty_dodatkowe(info) "+
+        "values ('atrapa'); ";
+        connection.query(sql, function (err, result) {
+        if (err) {
+            console.log(err)
+            res.status(400).json(err);
+        };
+        res.status(201).json(result);
+
+    });}
 
     postProcesyElementow(req,res){
         const zamowienie_id = req.body.zamowienie_id;
