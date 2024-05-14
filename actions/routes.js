@@ -139,6 +139,8 @@ router.delete('/zlecenia',connections.deleteZlecenie);
     router.post('/fragmenty',connections.postFragmenty);
     router.post('/pakowanie',connections.postPakowanie);
     router.post('/addKosztDodatkowy',connections.postKoszty);
+    router.post('/addKosztDodatkowyZamowienia',connections.postKosztyDodatkoweZamowienia);
+    
 
     router.post('/procesyElementow',connections.postProcesyElementow);
     router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);

@@ -356,6 +356,23 @@ updateKlient(req,res){
 
     });}
 
+    postKosztyDodatkoweZamowienia(req,res){
+        // dodanie kosztow do zamówienia - guzik " Dodaj koszty dodatkowe"
+        const status = req.body.status;
+        const zamowienia_id = req.body.zamowienie_id;
+        const zamowienie_prime_id = req.body.zamowienie_prime_id;
+
+        var sql =   "INSERT INTO artdruk.zamowienia_koszty_dodatkowe(status,zamowienie_id,zamowienie_prime_id) "+
+        "values ('" + status+ "','" + zamowienia_id + "','" + zamowienie_prime_id + "'); ";
+        connection.query(sql, function (err, result) {
+        if (err) {
+            console.log(err)
+            res.status(400).json(err);
+        };
+        res.status(201).json(result);
+
+    });}
+
     postProcesyElementow(req,res){
         const zamowienie_id = req.body.zamowienie_id;
         const produkt_id = req.body.produkt_id;
