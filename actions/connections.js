@@ -255,6 +255,48 @@ deleteKlient(req,res){
 })
 }
 
+deleteZamowienie(req,res){
+    const idzlecenia = req.body.idzlecenia;
+    const kolejnosc = req.body.kolejnosc;
+    const kolejnoscoprawa = req.body.kolejnoscoprawa;
+
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;  });
+
+
+    for (let i = 0; i < Object.keys(doc).length; i++) {
+        // console.log(doc[i].typ);
+        var sql = "DELETE FROM produkty WHERE ID = '" + doc[i].id + "'";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        });
+
+
+
+
+
+      }
+
+
+    //   delete from artdruk.zamowienia where id = 14;
+    //   delete from artdruk.zamowienia_produkty where zamowienie_id = 14;
+    //   delete from artdruk.zamowienia_elementy where zamowienie_id = 14;
+    //   delete from artdruk.zamowienia_fragmenty where zamowienie_id = 14;
+    //   delete from artdruk.zamowienia_koszty_dodatkowe where zamowienie_id = 14;
+    //   delete from artdruk.zamowienia_oprawa where zamowienie_id = 14;
+    //   delete from artdruk.zamowienia_pakowanie where zamowienie_id = 14;
+    //   delete from artdruk.zamowienia_procesy_elementow where zamowienie_id = 14;
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Zlecenie skasowane! ");
+res.status(201).json(result);
+});
+}
+
 updateKlient(req,res){
     const id = req.body.id;
     const firma= req.body.firma;

@@ -124,6 +124,7 @@ router.post('/zlecenia',connections.postZlecenie);
 router.post('/zlecenia_z_excela',connections.postZlecenia_z_EXCELA);
 
 router.delete('/zlecenia',connections.deleteZlecenie);
+router.delete('/delete_zamowienie',connections.deleteZamowienie);
 
 
 // zamaówienie nowe
