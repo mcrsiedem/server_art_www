@@ -256,38 +256,41 @@ deleteKlient(req,res){
 }
 
 deleteZamowienie(req,res){
-    const idzlecenia = req.body.idzlecenia;
-    const kolejnosc = req.body.kolejnosc;
-    const kolejnoscoprawa = req.body.kolejnoscoprawa;
+
+    //usun na zawsze
+    const rowsToDelete = req.body.row
 
 
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
     if (err) throw err;  });
 
+    for(let row of rowsToDelete){
 
-    // for (let i = 0; i < Object.keys(doc).length; i++) {
+        var sql =   "delete from artdruk.zamowienia where id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
-    //     var sql = "DELETE FROM produkty WHERE ID = '" + doc[i].id + "'";
-    //     connection.query(sql, function (err, result) {
-    //     if (err) throw err;
-    //     });
+        var sql =   "delete from artdruk.zamowienia_produkty where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
+        var sql =   "delete from artdruk.zamowienia_elementy where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
+        var sql =   "delete from artdruk.zamowienia_fragmenty where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
+        var sql =   "delete from artdruk.zamowienia_koszty_dodatkowe where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
+        var sql =   "delete from artdruk.zamowienia_oprawa where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_pakowanie where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_procesy_elementow where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
-    //   }
+        }
 
-
-    //   delete from artdruk.zamowienia where id = 14;
-    //   delete from artdruk.zamowienia_produkty where zamowienie_id = 14;
-    //   delete from artdruk.zamowienia_elementy where zamowienie_id = 14;
-    //   delete from artdruk.zamowienia_fragmenty where zamowienie_id = 14;
-    //   delete from artdruk.zamowienia_koszty_dodatkowe where zamowienie_id = 14;
-    //   delete from artdruk.zamowienia_oprawa where zamowienie_id = 14;
-    //   delete from artdruk.zamowienia_pakowanie where zamowienie_id = 14;
-    //   delete from artdruk.zamowienia_procesy_elementow where zamowienie_id = 14;
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
