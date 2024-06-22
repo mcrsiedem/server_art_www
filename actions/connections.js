@@ -266,18 +266,18 @@ deleteZamowienie(req,res){
     if (err) throw err;  });
 
 
-    for (let i = 0; i < Object.keys(doc).length; i++) {
-        // console.log(doc[i].typ);
-        var sql = "DELETE FROM produkty WHERE ID = '" + doc[i].id + "'";
-        connection.query(sql, function (err, result) {
-        if (err) throw err;
-        });
+    // for (let i = 0; i < Object.keys(doc).length; i++) {
+
+    //     var sql = "DELETE FROM produkty WHERE ID = '" + doc[i].id + "'";
+    //     connection.query(sql, function (err, result) {
+    //     if (err) throw err;
+    //     });
 
 
 
 
 
-      }
+    //   }
 
 
     //   delete from artdruk.zamowienia where id = 14;
