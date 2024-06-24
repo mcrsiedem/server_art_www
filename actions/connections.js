@@ -532,6 +532,33 @@ updateKlient(req,res){
             });
         }
 
+        updateSetOrderToDeleted(req,res){
+            
+            // zmiana final na 2 oznacza ukrycie zamowienia w kosztu - czyli skasowanie z możliwością przywrócenias
+
+            const rowsToDelete = req.body.rowsToDelete
+
+
+            var sql = "start transaction";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;  });
+        
+            for(let row of rowsToDelete){
+
+                var sql = "update artdruk.zamowienia set final = 2 where id = '" + row.id+ "' ";
+                connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        
+                }
+        
+        
+            var sql = "commit";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log("Zlecenie skasowane! ");
+        res.status(201).json(result);
+        });
+
+        }
 
 //------------------------------------------------
         zapisKosztowDodatkowych(req,res){
