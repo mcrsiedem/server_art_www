@@ -155,6 +155,7 @@ router.delete('/delete_zamowienie',connections.deleteZamowienie);
     router.get('/lista-procesow',connections.getListaProcesow);
     router.get('/lista-procesow-nazwa',connections.getListaProcesowNazwa);
     router.get('/procesyElementow',connections.getProcesyElementow);
+    router.get('/procesory',connections.getProcesory);
     
     router.get('/lista-userow',connections.getUsersM);
 // end

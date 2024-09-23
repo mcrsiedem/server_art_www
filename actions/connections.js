@@ -694,6 +694,14 @@ zapisKosztowDodatkowychZamowienia(req,res){
         res.status(200).json(doc);
     });}
 
+    getProcesory(req,res){
+        var sql = "SELECT * from artdruk.procesory ORDER BY indeks ASC;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
     // getPapiery(req,res){
     //     var sql = "SELECT id,user,nazwa,gramatura,wykonczenie,bulk,info FROM artdruk.papiery ORDER BY id ASC;";
     //     connection.query(sql, function (err, doc) {
