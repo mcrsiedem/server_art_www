@@ -627,7 +627,7 @@ zapisKosztowDodatkowychZamowienia(req,res){
 
     
 //-----------
-postTechnbologie(req,res){
+postTechnologie(req,res){
     const id = req.body.id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać priem_id
     const firma_id = req.body.firma_id;
     const prime_id = req.body.prime_id;
