@@ -627,7 +627,32 @@ zapisKosztowDodatkowychZamowienia(req,res){
 
     
 //-----------
+postTechnbologie(req,res){
+    const id = req.body.id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać priem_id
+    const firma_id = req.body.firma_id;
+    const prime_id = req.body.prime_id;
 
+
+    var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tutul,firma_id,klient_id,opiekun_id,autor_id,info,uwagi,stan,status,final) "+
+    "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul+ "','" + firma_id + "','" + klient_id + "','" + opiekun_id + "','" + autor_id + "','" + info + "','" + uwagi + "','" + stan + "','" + status + "','" + final + "'); ";
+    connection.query(sql, function (err, result) {
+
+            if(id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
+
+                var sql = "update artdruk.technologie  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+                res.status(201).json([result,{prime_id:result.insertId}]);
+
+            }else{
+
+                res.status(201).json([result,{prime_id:1}]);
+            }
+
+});}
+//-------------
 
 
         // updateIdFragmentow(req,res){

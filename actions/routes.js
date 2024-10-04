@@ -169,7 +169,8 @@ router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
 
 // Technologie nowe2
-router.get('/technologie',connections.getTechnologie);        
+router.get('/technologie',connections.getTechnologie);     
+router.post('/technologie',connections.postTechnologie);   
 // Technologie nowe end
 
 // router.get('/zlecenia/:WHEREZLECENIA',connections.getZlecenia);
