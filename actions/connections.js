@@ -676,7 +676,7 @@ updateSetTechNotFinal(req,res){
 //---------
 postTechnologieRest(req,res){
     // zapisuje wszystkie stany z technologii 
-    const technologia_id = req.body.technologia_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać prime_id
+    // const technologia_id = req.body.technologia_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać prime_id
    
     
 
@@ -690,27 +690,21 @@ postTechnologieRest(req,res){
     let arkuszeEdit = req.body[6]
     let grupaWykonanEdit = req.body[7]
     let wykonaniaEdit = req.body[8]
-    console.log(oprawaTechEdit)
-    // var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tytul,firma_id,klient_id,final) "+
-    // "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul + "','" + firma_id + "','" + klient_id + "','" + final + "'); ";
 
-//     connection.query(sql, function (err, result) {
 
-//             if(technologia_id == 1){  
+    for (let produkty of produktyTechEdit){
+        var sql =   "INSERT INTO artdruk.tech_produkty (technologia_id) "+
+        "values ('" + produkty.technologia_id + "'); ";
+        connection.query(sql, function (err, result) {
 
-//                 var sql = "update artdruk.technologie  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
-//                 connection.query(sql, function (err, result) {
-//                 if (err) throw err;
-//                 });
 
-//                 res.status(201).json([result,{prime_id:result.insertId}]);
-//                 console.log("zapis")
-//             }else{
+        });
 
-//                 res.status(201).json([result,{prime_id:prime_id}]);
-//             }
+    }
 
-// });
+
+    // res.status(201).json([result,{prime_id:prime_id}]);
+    res.status(201).json([{zapis:"OK"}]);
 
 }
 //-------------
