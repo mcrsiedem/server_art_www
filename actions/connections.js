@@ -628,16 +628,24 @@ zapisKosztowDodatkowychZamowienia(req,res){
     
 //-----------
 postTechnologie(req,res){
-    const id = req.body.id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać priem_id
+    const technologia_id = req.body.technologia_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać prime_id
     const firma_id = req.body.firma_id;
     const prime_id = req.body.prime_id;
+    const nr = req.body.nr;
+    const rok = req.body.rok;
+    const klient_id = req.body.klient_id;
+    const tytul = req.body.tytul;
+    const final = req.body.final;
 
 
-    var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tutul,firma_id,klient_id,opiekun_id,autor_id,info,uwagi,stan,status,final) "+
-    "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul+ "','" + firma_id + "','" + klient_id + "','" + opiekun_id + "','" + autor_id + "','" + info + "','" + uwagi + "','" + stan + "','" + status + "','" + final + "'); ";
+    // var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tutul,firma_id,klient_id,final) "+
+    // "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul+ "','" + firma_id + "','" + klient_id + "','" + final + "'); ";
+    var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tytul,firma_id,klient_id,final) "+
+    "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul + "','" + firma_id + "','" + klient_id + "','" + final + "'); ";
+
     connection.query(sql, function (err, result) {
 
-            if(id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
+            if(technologia_id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
 
                 var sql = "update artdruk.technologie  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
                 connection.query(sql, function (err, result) {
@@ -645,7 +653,7 @@ postTechnologie(req,res){
                 });
 
                 res.status(201).json([result,{prime_id:result.insertId}]);
-
+                console.log("zapis")
             }else{
 
                 res.status(201).json([result,{prime_id:1}]);
@@ -653,6 +661,18 @@ postTechnologie(req,res){
 
 });}
 //-------------
+updateSetTechNotFinal(req,res){
+    // przy zapisie zamowienia zmiana final z 1 na 0, final = 1 to najnowsza wersja zamowienia, 0 to poprzednie wersje
+    const technologia_id = req.body.technologia_id;
+
+
+    var sql = "update artdruk.technologie set final = 0 where id = '" + technologia_id+ "' ";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    res.status(201).json(result);
+    });
+}
+//---------
 
 
         // updateIdFragmentow(req,res){
