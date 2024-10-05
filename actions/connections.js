@@ -656,7 +656,7 @@ postTechnologie(req,res){
                 console.log("zapis")
             }else{
 
-                res.status(201).json([result,{prime_id:1}]);
+                res.status(201).json([result,{prime_id:prime_id}]);
             }
 
 });}
