@@ -793,6 +793,26 @@ postTechnologieRest(req,res){
         });
       }
 
+      for (let fragment of fragmentyTechEdit) {
+        var sql =
+          "INSERT INTO artdruk.technologie_fragmenty (id,indeks,technologia_id,zamowienie_id,produkt_id,element_id,oprawa_id,typ,ilosc_stron,wersja,naklad,info) " +
+          "values ('" +
+          fragment.id +  "','" +
+          fragment.indeks +        "','" +
+          fragment.technologia_id +        "','" +
+          fragment.zamowienie_id +        "','" +
+          fragment.produkt_id +        "','" +
+          fragment.element_id +        "','" +
+          fragment.oprawa_id +        "','" +
+          fragment.typ +        "','" +
+          fragment.ilosc_stron +        "','" +
+          fragment.wersja +        "','" +
+          fragment.naklad +        "','" +
+          fragment.info +        "'); ";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+      }
 
 
     // res.status(201).json([result,{prime_id:prime_id}]);
