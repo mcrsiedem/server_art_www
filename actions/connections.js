@@ -104,10 +104,12 @@ class Connections {
           //pobierz wszystkie objekty do TECHNOLOGI nr...
           getParametryTechnologii(req,res){
             let dane=[];
-             const idZamowienia = req.params['idZamowienia']
-             const zamowienie_prime_id = req.params['zamowienie_prime_id']
+
+            //idTechnologii/:technologia_prime_id
+             const idTechnologii = req.params['idTechnologii']
+             const technologia_prime_id = req.params['technologia_prime_id']
      
-             var sql  = "select * from artdruk.view_zamowienia_kopia where id = '" + idZamowienia + "' ORDER BY id ASC";
+             var sql  = "select * from artdruk.view_technologie where id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
@@ -115,19 +117,40 @@ class Connections {
          
              });
      
-             var sql = "select * from artdruk.zamowienia_produkty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
-             
              } );
-     
-             var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' and final = 1 ORDER BY id ASC";
+
+             var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             } );
+
+             var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             } );
+
+
+
+             var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
              res.status(200).json(dane);
              } );
+
+     
+            //  var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' and final = 1 ORDER BY id ASC";
+            //  connection.query(sql, function (err, doc) {
+            //  if (err) throw err;
+            //  dane.push(doc)
+            //  res.status(200).json(dane);
+            //  } );
      
      
          }
@@ -708,11 +731,6 @@ updateSetTechNotFinal(req,res){
 //---------
 postTechnologieRest(req,res){
     // zapisuje wszystkie stany z technologii 
-    // const technologia_id = req.body.technologia_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać prime_id
-   
-    
-
-
     let produktyTechEdit = req.body[0]
     let elementyTechEdit = req.body[1]
     let fragmentyTechEdit = req.body[2]
@@ -724,15 +742,57 @@ postTechnologieRest(req,res){
     let wykonaniaEdit = req.body[8]
 
 
-    for (let produkty of produktyTechEdit){
-        var sql =   "INSERT INTO artdruk.technologie_produkty (technologia_id,id,naklad,ilosc_stron,format_x,format_y,oprawa,wersja,uwagi,stan,status) "+
-        "values ('" + produkty.technologia_id + "','" + produkty.id + "','" + produkty.naklad + "','" + produkty.ilosc_stron + "','" + produkty.format_x + "','" + produkty.format_y + "','" + produkty.oprawa + "','" + produkty.wersja + "','" + produkty.uwagi + "','" + produkty.stan + "','" + produkty.status + "'); ";
-        connection.query(sql, function (err, result) {
-            if (err) throw err;
-
-        });
-
+    for (let produkty of produktyTechEdit) {
+      var sql =
+        "INSERT INTO artdruk.technologie_produkty (technologia_id,id,zamowienie_id,typ,indeks,naklad,nazwa,ilosc_stron,format_x,format_y,oprawa,uwagi,stan,status) " +
+        "values ('" +
+        produkty.technologia_id +  "','" +
+        produkty.id +        "','" +
+        produkty.zamowienie_id +        "','" +
+        produkty.typ +        "','" +
+        produkty.indeks +        "','" +
+        produkty.naklad +        "','" +
+        produkty.nazwa +        "','" +
+        produkty.ilosc_stron +        "','" +
+        produkty.format_x +        "','" +
+        produkty.format_y +        "','" +
+        produkty.oprawa +        "','" +
+        produkty.uwagi +        "','" +
+        produkty.stan +        "','" +
+        produkty.status +        "'); ";
+      connection.query(sql, function (err, result) {
+        if (err) throw err;
+      });
     }
+
+    for (let element of elementyTechEdit) {
+        var sql =
+          "INSERT INTO artdruk.technologie_elementy (id,indeks,technologia_id,zamowienie_id,produkt_id,nazwa,typ,lega,ilosc_leg,ilosc_stron,format_x,format_y,papier_id,gramatura_id,papier_info,naklad,uwagi,stan,status) " +
+          "values ('" +
+          element.id +  "','" +
+          element.indeks +        "','" +
+          element.technologia_id +        "','" +
+          element.zamowienie_id +        "','" +
+          element.produkt_id +        "','" +
+          element.nazwa +        "','" +
+          element.typ +        "','" +
+          element.lega +        "','" +
+          element.ilosc_leg +        "','" +
+          element.ilosc_stron +        "','" +
+          element.format_x +        "','" +
+          element.format_y +        "','" +
+          element.papier_id +        "','" +
+          element.gramatura_id +        "','" +
+          element.papier_info +        "','" +
+          element.naklad +        "','" +
+          element.uwagi +        "','" +
+          element.stan +        "','" +
+          element.status +        "'); ";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+      }
+
 
 
     // res.status(201).json([result,{prime_id:prime_id}]);
