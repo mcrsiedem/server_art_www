@@ -693,10 +693,10 @@ postTechnologieRest(req,res){
 
 
     for (let produkty of produktyTechEdit){
-        var sql =   "INSERT INTO artdruk.tech_produkty (technologia_id) "+
-        "values ('" + produkty.technologia_id + "'); ";
+        var sql =   "INSERT INTO artdruk.technologie_produkty (technologia_id,id,naklad,ilosc_stron,format_x,format_y,oprawa,wersja,uwagi,stan,status) "+
+        "values ('" + produkty.technologia_id + "','" + produkty.id + "','" + produkty.naklad + "','" + produkty.ilosc_stron + "','" + produkty.format_x + "','" + produkty.format_y + "','" + produkty.oprawa + "','" + produkty.wersja + "','" + produkty.uwagi + "','" + produkty.stan + "','" + produkty.status + "'); ";
         connection.query(sql, function (err, result) {
-
+            if (err) throw err;
 
         });
 
