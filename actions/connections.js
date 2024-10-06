@@ -100,6 +100,38 @@ class Connections {
 
 
     }
+    //---
+          //pobierz wszystkie objekty do TECHNOLOGI nr...
+          getParametryTechnologii(req,res){
+            let dane=[];
+             const idZamowienia = req.params['idZamowienia']
+             const zamowienie_prime_id = req.params['zamowienie_prime_id']
+     
+             var sql  = "select * from artdruk.view_zamowienia_kopia where id = '" + idZamowienia + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             // res.status(200).json(dane);
+         
+             });
+     
+             var sql = "select * from artdruk.zamowienia_produkty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             
+             } );
+     
+             var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' and final = 1 ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             res.status(200).json(dane);
+             } );
+     
+     
+         }
+    //-----
 
     // pobie
     getTechnologie(req,res){
