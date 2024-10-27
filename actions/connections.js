@@ -693,6 +693,12 @@ postTechnologie(req,res){
     const final = req.body.final;
 
 
+    let odpowiedz= []
+    var sql = "start transaction";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
     // var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tutul,firma_id,klient_id,final) "+
     // "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul+ "','" + firma_id + "','" + klient_id + "','" + final + "'); ";
     var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tytul,firma_id,klient_id,final) "+
@@ -707,14 +713,28 @@ postTechnologie(req,res){
                 if (err) throw err;
                 });
 
-                res.status(201).json([result,{prime_id:result.insertId}]);
+                odpowiedz = [result,{prime_id:result.insertId}]
+                // res.status(201).json([result,{prime_id:result.insertId}]);
                 console.log("zapis")
             }else{
 
-                res.status(201).json([result,{prime_id:prime_id}]);
+                odpowiedz = [result,{prime_id:prime_id}]
+                // res.status(201).json([result,{prime_id:prime_id}]);
             }
 
-});}
+});
+
+
+var sql = "commit";
+connection.query(sql, function (err, result) {
+if (err) throw err;
+console.log("1 record update ");
+res.status(201).json(odpowiedz);
+});
+
+
+
+}
 //-------------
 
 updateSetTechNotFinal(req,res){
