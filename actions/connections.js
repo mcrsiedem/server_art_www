@@ -762,6 +762,10 @@ postTechnologieRest(req,res){
     let wykonaniaEdit = req.body[8]
     let procesyElementowTech = req.body[9]
     
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
 
 
     for (let produkty of produktyTechEdit) {
@@ -866,9 +870,13 @@ postTechnologieRest(req,res){
       }
 
 
-    // res.status(201).json([result,{prime_id:prime_id}]);
-    res.status(201).json([{zapis:"OK"}]);
 
+      var sql = "commit";
+connection.query(sql, function (err, result) {
+if (err) throw err;
+console.log("zapis OK");
+    res.status(201).json([{zapis:"OK"}]);
+});
 }
 //-------------
 
