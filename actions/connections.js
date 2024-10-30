@@ -873,14 +873,14 @@ postTechnologieRest(req,res){
 
       for (let oprawa of oprawaTechEdit) {
         var sql =
-          "INSERT INTO artdruk.technologie_oprawa (id,indeks,technologia_id,zamowienie_id,produkt_id,bok_oprawa,naklad,data_czystodrukow,data_spedycji,oprawa,wersja,uwagi) " +
+          "INSERT INTO artdruk.technologie_oprawa (id,indeks,technologia_id,zamowienie_id,produkt_id,bok_oprawy,naklad,data_czystodrukow,data_spedycji,oprawa,wersja,uwagi) " +
           "values ('" +
           oprawa.id +  "','" +
           oprawa.indeks +        "','" +
           oprawa.technologia_id +        "','" +
           oprawa.zamowienie_id +        "','" +
           oprawa.produkt_id +        "','" +
-          oprawa.bok_oprawa +        "','" +
+          oprawa.bok_oprawy +        "','" +
           oprawa.naklad +        "','" +
           oprawa.data_czystodrukow +        "','" +
           oprawa.data_spedycji +        "','" +
@@ -894,8 +894,28 @@ postTechnologieRest(req,res){
 
 
 
+      for (let arkusz of arkuszeEdit) {
 
+        // console.log(arkusz.typ_elementu)
+        var sql =
+          "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,uwagi) " +
+          "values ('" +
+          arkusz.id +  "','" +
+          arkusz.indeks +        "','" +
+          arkusz.technologia_id +        "','" +
+          arkusz.typ_elementu +        "','" +
+          arkusz.rodzaj_arkusza +        "','" +
+          arkusz.element_id +        "','" +
+          arkusz.ilosc_stron +        "','" +
+          arkusz.ilosc_leg+        "','" +
+          arkusz.naklad +        "','" +
+          arkusz.uwagi +        "'); ";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+      }
 
+// console.log(arkuszeEdit)
 
 
       var sql = "commit";
