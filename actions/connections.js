@@ -699,8 +699,6 @@ postTechnologie(req,res){
             if (err) throw err;
             });
 
-    // var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tutul,firma_id,klient_id,final) "+
-    // "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul+ "','" + firma_id + "','" + klient_id + "','" + final + "'); ";
     var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tytul,firma_id,klient_id,final) "+
     "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul + "','" + firma_id + "','" + klient_id + "','" + final + "'); ";
 
@@ -750,6 +748,9 @@ updateSetTechNotFinal(req,res){
 }
 //---------
 postTechnologieRest(req,res){
+
+    // global_id - nr nadawany automatycznie przez mysql
+    // id - nr lokalny nadawany podczas tworzenia nowego zlecenia do komunikacji pomiedzy objektami np. okladka id=1, środek id=2
     // zapisuje wszystkie stany z technologii 
     let produktyTechEdit = req.body[0]
     let elementyTechEdit = req.body[1]
@@ -868,6 +869,32 @@ postTechnologieRest(req,res){
           if (err) throw err;
         });
       }
+
+
+      for (let oprawa of oprawaTechEdit) {
+        var sql =
+          "INSERT INTO artdruk.technologie_oprawa (id,indeks,technologia_id,zamowienie_id,produkt_id,bok_oprawa,naklad,data_czystodrukow,data_spedycji,oprawa,wersja,uwagi) " +
+          "values ('" +
+          oprawa.id +  "','" +
+          oprawa.indeks +        "','" +
+          oprawa.technologia_id +        "','" +
+          oprawa.zamowienie_id +        "','" +
+          oprawa.produkt_id +        "','" +
+          oprawa.bok_oprawa +        "','" +
+          oprawa.naklad +        "','" +
+          oprawa.data_czystodrukow +        "','" +
+          oprawa.data_spedycji +        "','" +
+          oprawa.oprawa+        "','" +
+          oprawa.wersja +        "','" +
+          oprawa.uwagi +        "'); ";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+      }
+
+
+
+
 
 
 
