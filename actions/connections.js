@@ -896,7 +896,6 @@ postTechnologieRest(req,res){
 
       for (let arkusz of arkuszeEdit) {
 
-        // console.log(arkusz.typ_elementu)
         var sql =
           "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,uwagi) " +
           "values ('" +
@@ -915,8 +914,99 @@ postTechnologieRest(req,res){
         });
       }
 
-// console.log(arkuszeEdit)
+      for (let lega of legiEdit) {
 
+        var sql =
+          "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,ilosc_stron,naklad,uwagi) " +
+          "values ('" +
+          lega.id +  "','" +
+          lega.indeks +        "','" +
+          lega.technologia_id +        "','" +
+          lega.typ_elementu +        "','" +
+          lega.rodzaj_legi +        "','" +
+          lega.element_id +        "','" +
+          lega.ilosc_stron +        "','" +
+          lega.naklad +        "','" +
+          lega.uwagi +        "'); ";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+      }
+
+
+      for (let legaFragment of legiFragmentyEdit) {
+
+        var sql =
+          "INSERT INTO artdruk.technologie_legi_fragmenty(id,indeks,technologia_id,element_id,fragment_id,arkusz_id,lega_id,naklad,oprawa_id,typ,wersja) " +
+          "values ('" +
+          legaFragment.id +  "','" +
+          legaFragment.indeks +        "','" +
+          legaFragment.technologia_id +        "','" +
+          legaFragment.element_id +        "','" +
+          legaFragment.fragment_id +        "','" +
+          legaFragment.arkusz_id +        "','" +
+          legaFragment.lega_id +        "','" +
+          legaFragment.naklad +        "','" +
+          legaFragment.oprawa_id +        "','" +
+          legaFragment.typ +        "','" +
+          legaFragment.wersja +        "'); ";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+      }
+
+      for (let grupa of grupaWykonanEdit) {
+
+        var sql =
+          "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,status,stan,uwagi) " +
+          "values ('" +
+          grupa.id +  "','" +
+          grupa.indeks +        "','" +
+          grupa.mnoznik +        "','" +
+          grupa.czas +        "','" +
+          grupa.koniec +        "','" +
+          grupa.narzad +        "','" +
+          grupa.nazwa +        "','" +
+          grupa.poczatek +        "','" +
+          grupa.predkosc +        "','" +
+          grupa.proces_id +        "','" +
+          grupa.procesor_id +        "','" +
+          grupa.status +        "','" +
+          grupa.stan +        "','" +
+          grupa.uwagi +        "'); ";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+      }
+
+      for (let wykonanie of wykonaniaEdit) {
+
+        var sql =
+          "INSERT INTO artdruk.technologie_wykonania(id,indeks, grupa_id,element_id,arkusz_id,typ_elementu,nazwa,naklad,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) " +
+          "values ('" +
+          wykonanie.id +  "','" +
+          wykonanie.indeks +        "','" +
+          wykonanie.grupa_id +        "','" +
+          wykonanie.element_id +        "','" +
+          wykonanie.arkusz_id +        "','" +
+          wykonanie.typ_elementu +        "','" +
+          wykonanie.nazwa +        "','" +
+          wykonanie.naklad +        "','" +
+          wykonanie.poczatek +        "','" +
+          wykonanie.czas +        "','" +
+          wykonanie.koniec +        "','" +
+          wykonanie.narzad +        "','" +
+          wykonanie.predkosc +        "','" +
+          wykonanie.mnoznik +        "','" +
+          wykonanie.proces_id +        "','" +
+          wykonanie.procesor_id +        "','" +
+          wykonanie.status +        "','" +
+          wykonanie.stan +        "','" +
+          wykonanie.uwagi +        "'); ";
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+      }
 
       var sql = "commit";
 connection.query(sql, function (err, result) {
