@@ -169,7 +169,7 @@ router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
 
 // Technologie nowe2
-router.get('/technologie_parametry/:idTechnologii/:technologia_prime_id',connections.getParametryTechnologii);
+router.get('/technologie_parametry/:idTechnologii',connections.getParametryTechnologii);
 router.get('/technologie',connections.getTechnologie);     
 router.post('/technologie',connections.postTechnologie); 
 router.post('/technologie_rest',connections.postTechnologieRest); 

@@ -34,6 +34,10 @@ class Connections {
         const idZamowienia = req.params['idZamowienia']
         const zamowienie_prime_id = req.params['zamowienie_prime_id']
 
+        var sql = "start transaction";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        });
 
         var sql  = "select * from artdruk.view_zamowienia_kopia where id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
@@ -95,9 +99,15 @@ class Connections {
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         dane.push(doc)
-        res.status(200).json(dane);
+        // res.status(200).json(dane);
         } );
 
+        var sql = "commit";
+        connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("get OK");
+        res.status(200).json(dane);
+        });
 
     }
     //---
@@ -107,7 +117,13 @@ class Connections {
 
             //idTechnologii/:technologia_prime_id
              const idTechnologii = req.params['idTechnologii']
-             const technologia_prime_id = req.params['technologia_prime_id']
+            //  const technologia_prime_id = req.params['technologia_prime_id']
+
+
+            var sql = "start transaction";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
      
              var sql  = "select * from artdruk.view_technologie where id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
@@ -123,13 +139,13 @@ class Connections {
              dane.push(doc)
              } );
 
-             var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.technologie_elementy where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
              } );
 
-             var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.technologie_fragmenty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
@@ -137,21 +153,54 @@ class Connections {
 
 
 
-             var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.view_technologie_oprawa where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
-             res.status(200).json(dane);
              } );
 
+             var sql = "select * from artdruk.technologie_procesy_elementow where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             } );
+
+             var sql = "select * from artdruk.technologie_legi where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             } );
+
+             var sql = "select * from artdruk.technologie_legi_fragmenty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             } );
      
-            //  var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' and final = 1 ORDER BY id ASC";
-            //  connection.query(sql, function (err, doc) {
-            //  if (err) throw err;
-            //  dane.push(doc)
-            //  res.status(200).json(dane);
-            //  } );
-     
+             var sql = "select * from artdruk.technologie_arkusze where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             } );
+
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             } );
+
+             var sql = "select * from artdruk.view_technologie_wykonania where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+             if (err) throw err;
+             dane.push(doc)
+             } );
+
+            var sql = "commit";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log("odczyt technologi OK");
+            res.status(200).json(dane);
+            });
      
          }
     //-----
@@ -958,10 +1007,11 @@ postTechnologieRest(req,res){
       for (let grupa of grupaWykonanEdit) {
 
         var sql =
-          "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,status,stan,uwagi) " +
+          "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,status,stan,uwagi) " +
           "values ('" +
           grupa.id +  "','" +
           grupa.indeks +        "','" +
+          grupa.technologia_id +        "','" +
           grupa.mnoznik +        "','" +
           grupa.czas +        "','" +
           grupa.koniec +        "','" +
@@ -982,10 +1032,11 @@ postTechnologieRest(req,res){
       for (let wykonanie of wykonaniaEdit) {
 
         var sql =
-          "INSERT INTO artdruk.technologie_wykonania(id,indeks, grupa_id,element_id,arkusz_id,typ_elementu,nazwa,naklad,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) " +
+          "INSERT INTO artdruk.technologie_wykonania(id,indeks,technologia_id, grupa_id,element_id,arkusz_id,typ_elementu,nazwa,naklad,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) " +
           "values ('" +
           wykonanie.id +  "','" +
           wykonanie.indeks +        "','" +
+          wykonanie.technologia_id +        "','" +
           wykonanie.grupa_id +        "','" +
           wykonanie.element_id +        "','" +
           wykonanie.arkusz_id +        "','" +
