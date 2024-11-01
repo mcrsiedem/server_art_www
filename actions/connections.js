@@ -205,6 +205,44 @@ class Connections {
          }
     //-----
 
+              //pobierz wszystkie objekty do TECHNOLOGI nr...
+              getWykonania_i_grupyAll(req,res){
+                let dane=[];
+    
+                //idTechnologii/:technologia_prime_id
+                //  const idTechnologii = req.params['idTechnologii']
+                //  const technologia_prime_id = req.params['technologia_prime_id']
+    
+    
+                var sql = "start transaction";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+         
+                 var sql  = "select * from artdruk.view_technologie_wykonania  ORDER BY id ASC";
+                 connection.query(sql, function (err, doc) {
+                 if (err) throw err;
+                 dane.push(doc)
+                 // res.status(200).json(dane);
+             
+                 });
+         
+                 var sql = "select * from artdruk.view_technologie_grupy_wykonan  ORDER BY id ASC";
+                 connection.query(sql, function (err, doc) {
+                 if (err) throw err;
+                 dane.push(doc)
+                 } );
+    
+                var sql = "commit";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                console.log("odczyt technologi OK");
+                res.status(200).json(dane);
+                });
+         
+             }
+        //-----
+
     // pobie
     getTechnologie(req,res){
         const idzlecenia = req.params['idzlecenia']
