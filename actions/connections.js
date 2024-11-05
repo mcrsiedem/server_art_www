@@ -1045,7 +1045,7 @@ postTechnologieRest(req,res){
       for (let grupa of grupaWykonanEdit) {
 
         var sql =
-          "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,status,stan,uwagi) " +
+          "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
           "values ('" +
           grupa.id +  "','" +
           grupa.indeks +        "','" +
@@ -1059,6 +1059,7 @@ postTechnologieRest(req,res){
           grupa.predkosc +        "','" +
           grupa.proces_id +        "','" +
           grupa.procesor_id +        "','" +
+          grupa.element_id +        "','" +
           grupa.status +        "','" +
           grupa.stan +        "','" +
           grupa.uwagi +        "'); ";
