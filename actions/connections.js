@@ -803,6 +803,7 @@ postTechnologie(req,res){
                 console.log("zapis pierwszy")
             }else{
 
+                // zamiast updateSetTechNotFinal
                 var sql = "update artdruk.technologie set final = 0 where prime_id = '" + prime_id+ "' ";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
