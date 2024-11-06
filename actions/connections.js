@@ -800,9 +800,14 @@ postTechnologie(req,res){
 
                 odpowiedz = [result,{prime_id:result.insertId}]
                 // res.status(201).json([result,{prime_id:result.insertId}]);
-                console.log("zapis")
+                console.log("zapis pierwszy")
             }else{
 
+                var sql = "update artdruk.technologie set final = 0 where prime_id = '" + prime_id+ "' ";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+                console.log("zapis kolejny")
                 odpowiedz = [result,{prime_id:prime_id}]
                 // res.status(201).json([result,{prime_id:prime_id}]);
             }
