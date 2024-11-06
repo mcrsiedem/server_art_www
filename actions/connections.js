@@ -778,6 +778,7 @@ postTechnologie(req,res){
     const klient_id = req.body.klient_id;
     const tytul = req.body.tytul;
     const final = req.body.final;
+    const zamowienie_id = req.body.zamowienie_id;
 
 
     let odpowiedz= []
@@ -786,8 +787,10 @@ postTechnologie(req,res){
             if (err) throw err;
             });
 
-    var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tytul,firma_id,klient_id,final) "+
-    "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul + "','" + firma_id + "','" + klient_id + "','" + final + "'); ";
+console.log("zamowienie_id: "+ zamowienie_id)
+
+    var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tytul,firma_id,klient_id,final,zamowienie_id) "+
+    "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul + "','" + firma_id + "','" + klient_id + "','" + final + "','" + zamowienie_id + "'); ";
 
     connection.query(sql, function (err, result) {
 
