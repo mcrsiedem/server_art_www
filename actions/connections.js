@@ -631,6 +631,7 @@ if (err) throw err;  });
             }
 
             // do produktu przypisuję opiekuna ze zlecenia
+            console.log("1")
             produkty = produkty.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
             elementy = elementy.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
             fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
@@ -641,6 +642,8 @@ if (err) throw err;  });
             daneZamowienia.id = result.insertId;
             // odpowiedz = [result,daneZamowienia,produkty,elementy,fragmenty,oprawa,pakowanie,procesyElementow]
 
+
+            console.log("2")
 for (let produkt of produkty) {
     var sql =
       "INSERT INTO artdruk.zamowienia_produkty (id,zamowienie_id,nazwa,wersja,opiekun_zamowienia_id,uwagi,stan,status,typ,ilosc_stron,format_x,format_y,oprawa,naklad,indeks) " +
@@ -662,7 +665,6 @@ for (let produkt of produkty) {
       produkt.indeks +        "'); ";
     connection.query(sql, function (err, result) {
       if (err) throw err;
-      produkt.global_id = result.insertId
     });
   }
 
