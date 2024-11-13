@@ -600,6 +600,8 @@ postZamowienieNew(req,res){
     let pakowanie = req.body[5]
     let procesyElementow = req.body[6]
 
+   
+
 // console.log("Dane zamowienia: ", daneZamowienia.id )
 // console.log("Produkty: ", produkty)
 
