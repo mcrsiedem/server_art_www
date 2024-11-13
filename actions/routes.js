@@ -131,6 +131,7 @@ router.delete('/delete_zamowienie',connections.deleteZamowienie);
     router.get('/parametry/:idZamowienia/:zamowienie_prime_id',connections.getParametry);
     router.get('/zamowienia',connections.getZamowienia);
     router.post('/zamowienie',connections.postZamowienie);
+    router.post('/zamowienie_new',connections.postZamowienieNew);
     router.post('/zapis_kosztow_dodatkowych',connections.zapisKosztowDodatkowych);
     router.post('/zapis_kosztow_dodatkowych_zamowienia',connections.zapisKosztowDodatkowychZamowienia);
 

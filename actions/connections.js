@@ -589,7 +589,92 @@ updateKlient(req,res){
 
 //--
 
+postZamowienieNew(req,res){
+// jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać priem_id
+    // const zamowienie_id = req.body.zamowienie_id; 
+    // const firma_id = req.body.firma_id;
+    // const prime_id = req.body.prime_id;
+    // const klient_id = req.body.klient_id;
+    // const data_przyjecia = req.body.data_przyjecia;
+    // const data_materialow = req.body.data_materialow;
+    // const data_spedycji= req.body.data_spedycji;
+    // const nr= req.body.nr;
+    // const rok= req.body.rok;
+    // const tytul= req.body.tytul;
+    // const opiekun_id= req.body.opiekun_id;
+    // const user= req.body.user;
+    // const stan= req.body.stan;
+    // const status= req.body.status;
+    // const rodzaj= req.body.rodzaj;
+    // const uwagi= req.body.uwagi;
+    // const final= req.body.final;
+    // const waluta_id= req.body.waluta_id;
+    // const vat_id= req.body.vat_id;
+    // const przedplata= req.body.przedplata;
+    // const cena= req.body.cena; 
+    // const termin_platnosci= req.body.termin_platnosci;
+    // const fsc= req.body.fsc;
 
+    let odpowiedz =[]
+
+    let daneZamowienia = req.body[0]
+    let produkty = req.body[1]
+    let elementy = req.body[2]
+    let fragmenty = req.body[3]
+    let oprawa = req.body[4]
+    let pakowanie = req.body[5]
+    let procesElementu = req.body[6]
+
+console.log("Dane zamowienia: ", daneZamowienia.id )
+// console.log("Produkty: ", produkty)
+
+
+var sql = "start transaction";
+connection.query(sql, function (err, result) {
+if (err) throw err;  });
+
+
+            // for(let row of rowsToDelete){
+            //     var sql = "update artdruk.zamowienia set final = 2 where id = '" + row.id+ "' ";
+            //     connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+            //     }
+
+    var sql =   "INSERT INTO artdruk.zamowienia (prime_id,nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final,rodzaj,waluta_id,vat_id,przedplata,cena,termin_platnosci,fsc) "+
+    "values ('" + daneZamowienia.prime_id + "','" + daneZamowienia.nr + "','" + daneZamowienia.rok + "','" + daneZamowienia.firma_id+ "','" + daneZamowienia.klient_id + "','" + daneZamowienia.tytul + "','" + daneZamowienia.data_przyjecia + "','" + daneZamowienia.data_materialow + "','" + daneZamowienia.data_spedycji + "','" + daneZamowienia.opiekun_id + "','" + daneZamowienia.user + "','" + daneZamowienia.stan + "','" + daneZamowienia.status + "','" + daneZamowienia.uwagi + "','" + daneZamowienia.final + "','" + daneZamowienia.rodzaj + "','" + daneZamowienia.waluta_id + "','" + daneZamowienia.vat_id + "','" + daneZamowienia.przedplata + "','" + daneZamowienia.cena + "','" + daneZamowienia.termin_platnosci + "','" + daneZamowienia.fsc + "'); ";
+    connection.query(sql, function (err, result) {
+
+            if(daneZamowienia.id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
+
+                var sql = "update artdruk.zamowienia  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+            // odpowiedz = [result,{prime_id:result.insertId}]
+
+            }else{
+            // odpowiedz = [result,{prime_id:1}]
+            
+            }
+
+            // daneZamowienia = daneZamowienia.map(x=> { return {...x, id:result.insertId }})
+            daneZamowienia.id = result.insertId;
+            odpowiedz = [result,daneZamowienia]
+
+});
+
+
+var sql = "commit";
+connection.query(sql, function (err, result) {
+if (err) throw err;
+console.log("Zlecenie zapisen NEW! ");
+res.status(201).json(odpowiedz);
+});
+
+
+
+
+}
 
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)1
