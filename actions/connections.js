@@ -623,9 +623,9 @@ postZamowienieNew(req,res){
     let fragmenty = req.body[3]
     let oprawa = req.body[4]
     let pakowanie = req.body[5]
-    let procesElementu = req.body[6]
+    let procesyElementow = req.body[6]
 
-console.log("Dane zamowienia: ", daneZamowienia.id )
+// console.log("Dane zamowienia: ", daneZamowienia.id )
 // console.log("Produkty: ", produkty)
 
 
@@ -643,23 +643,25 @@ if (err) throw err;  });
     "values ('" + daneZamowienia.prime_id + "','" + daneZamowienia.nr + "','" + daneZamowienia.rok + "','" + daneZamowienia.firma_id+ "','" + daneZamowienia.klient_id + "','" + daneZamowienia.tytul + "','" + daneZamowienia.data_przyjecia + "','" + daneZamowienia.data_materialow + "','" + daneZamowienia.data_spedycji + "','" + daneZamowienia.opiekun_id + "','" + daneZamowienia.user + "','" + daneZamowienia.stan + "','" + daneZamowienia.status + "','" + daneZamowienia.uwagi + "','" + daneZamowienia.final + "','" + daneZamowienia.rodzaj + "','" + daneZamowienia.waluta_id + "','" + daneZamowienia.vat_id + "','" + daneZamowienia.przedplata + "','" + daneZamowienia.cena + "','" + daneZamowienia.termin_platnosci + "','" + daneZamowienia.fsc + "'); ";
     connection.query(sql, function (err, result) {
 
-            if(daneZamowienia.id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
-
+            if(daneZamowienia.id == 1){  // jeżlie 1 to pierwszy zapis więc nadaj prime
                 var sql = "update artdruk.zamowienia  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
                 });
-
-            // odpowiedz = [result,{prime_id:result.insertId}]
-
+                daneZamowienia.prime_id = result.insertId;
             }else{
-            // odpowiedz = [result,{prime_id:1}]
-            
+
             }
 
-            // daneZamowienia = daneZamowienia.map(x=> { return {...x, id:result.insertId }})
+            produkty = produkty.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
+            elementy = elementy.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
+            fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
+            oprawa = oprawa.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
+            pakowanie = pakowanie.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
+            procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
+
             daneZamowienia.id = result.insertId;
-            odpowiedz = [result,daneZamowienia]
+            odpowiedz = [result,daneZamowienia,produkty,elementy,fragmenty,oprawa,pakowanie,procesyElementow]
 
 });
 
@@ -667,7 +669,7 @@ if (err) throw err;  });
 var sql = "commit";
 connection.query(sql, function (err, result) {
 if (err) throw err;
-console.log("Zlecenie zapisen NEW! ");
+console.log("Zlecenie zapisane NEW! ");
 res.status(201).json(odpowiedz);
 });
 
