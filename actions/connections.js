@@ -590,33 +590,8 @@ updateKlient(req,res){
 //--
 
 postZamowienieNew(req,res){
-// jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać priem_id
-    // const zamowienie_id = req.body.zamowienie_id; 
-    // const firma_id = req.body.firma_id;
-    // const prime_id = req.body.prime_id;
-    // const klient_id = req.body.klient_id;
-    // const data_przyjecia = req.body.data_przyjecia;
-    // const data_materialow = req.body.data_materialow;
-    // const data_spedycji= req.body.data_spedycji;
-    // const nr= req.body.nr;
-    // const rok= req.body.rok;
-    // const tytul= req.body.tytul;
-    // const opiekun_id= req.body.opiekun_id;
-    // const user= req.body.user;
-    // const stan= req.body.stan;
-    // const status= req.body.status;
-    // const rodzaj= req.body.rodzaj;
-    // const uwagi= req.body.uwagi;
-    // const final= req.body.final;
-    // const waluta_id= req.body.waluta_id;
-    // const vat_id= req.body.vat_id;
-    // const przedplata= req.body.przedplata;
-    // const cena= req.body.cena; 
-    // const termin_platnosci= req.body.termin_platnosci;
-    // const fsc= req.body.fsc;
 
     let odpowiedz =[]
-
     let daneZamowienia = req.body[0]
     let produkty = req.body[1]
     let elementy = req.body[2]
@@ -653,6 +628,7 @@ if (err) throw err;  });
 
             }
 
+            // do produktu przypisuję opiekuna ze zlecenia
             produkty = produkty.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
             elementy = elementy.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
             fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
@@ -661,9 +637,42 @@ if (err) throw err;  });
             procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
 
             daneZamowienia.id = result.insertId;
-            odpowiedz = [result,daneZamowienia,produkty,elementy,fragmenty,oprawa,pakowanie,procesyElementow]
+            // odpowiedz = [result,daneZamowienia,produkty,elementy,fragmenty,oprawa,pakowanie,procesyElementow]
 
+for (let produkt of produkty) {
+    var sql =
+      "INSERT INTO artdruk.zamowienia_produkty (id,zamowienie_id,nazwa,wersja,opiekun_zamowienia_id,uwagi,stan,status,typ,ilosc_stron,format_x,format_y,oprawa,naklad,indeks) " +
+      "values ('" +
+      produkt.id +  "','" +
+      produkt.zamowienie_id +        "','" +
+      produkt.nazwa +        "','" +
+      produkt.wersja +        "','" +
+      produkt.user +        "','" +
+      produkt.uwagi +        "','" +
+      produkt.stan +        "','" +
+      produkt.status +        "','" +
+      produkt.typ +        "','" +
+      produkt.ilosc_stron +        "','" +
+      produkt.format_x +        "','" +
+      produkt.format_y +        "','" +
+      produkt.oprawa +        "','" +
+      produkt.naklad +        "','" +
+      produkt.indeks +        "'); ";
+    connection.query(sql, function (err, result) {
+      if (err) throw err;
+      produkt.global_id = result.insertId
+    });
+  }
+
+
+
+odpowiedz = [daneZamowienia,produkty,elementy,fragmenty,oprawa,pakowanie,procesyElementow]
 });
+
+
+
+  
+
 
 
 var sql = "commit";
