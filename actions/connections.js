@@ -611,10 +611,16 @@ connection.query(sql, function (err, result) {
 if (err) throw err;  });
 
 
-            // for(let row of rowsToDelete){
-            //     var sql = "update artdruk.zamowienia set final = 2 where id = '" + row.id+ "' ";
-            //     connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-            //     }
+
+            if(daneZamowienia.prime_id != 1){  // jeżlie 1 to pierwszy zapis więc nadaj prime
+                var sql = "update artdruk.zamowienia  set final = 0 where prime_id = '" + daneZamowienia.prime_id +"'";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+                // daneZamowienia.prime_id = result.insertId;
+            }else{
+
+            }
 
     var sql =   "INSERT INTO artdruk.zamowienia (prime_id,nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,final,rodzaj,waluta_id,vat_id,przedplata,cena,termin_platnosci,fsc) "+
     "values ('" + daneZamowienia.prime_id + "','" + daneZamowienia.nr + "','" + daneZamowienia.rok + "','" + daneZamowienia.firma_id+ "','" + daneZamowienia.klient_id + "','" + daneZamowienia.tytul + "','" + daneZamowienia.data_przyjecia + "','" + daneZamowienia.data_materialow + "','" + daneZamowienia.data_spedycji + "','" + daneZamowienia.opiekun_id + "','" + daneZamowienia.user + "','" + daneZamowienia.stan + "','" + daneZamowienia.status + "','" + daneZamowienia.uwagi + "','" + daneZamowienia.final + "','" + daneZamowienia.rodzaj + "','" + daneZamowienia.waluta_id + "','" + daneZamowienia.vat_id + "','" + daneZamowienia.przedplata + "','" + daneZamowienia.cena + "','" + daneZamowienia.termin_platnosci + "','" + daneZamowienia.fsc + "'); ";
@@ -629,6 +635,9 @@ if (err) throw err;  });
             }else{
 
             }
+
+
+
 
             // do produktu przypisuję opiekuna ze zlecenia
             console.log("1")
@@ -796,35 +805,10 @@ for (let produkt of produkty) {
 
 
 
-
-
-
-
-
-
-
-
-
 odpowiedz = [daneZamowienia,produkty,elementy,fragmenty,oprawa,pakowanie,procesyElementow]
 res.status(201).json(odpowiedz);
 
 });
-
-
-
-  
-
-
-
-// var sql = "commit";
-// connection.query(sql, function (err, result) {
-// if (err) throw err;
-// console.log("Zlecenie zapisane NEW! ");
-// res.status(201).json(odpowiedz);
-// });
-
-
-
 
 }
 
