@@ -615,7 +615,12 @@ if (err) throw err;  });
             if(daneZamowienia.prime_id != 1){  // jeżlie 1 to pierwszy zapis więc nadaj prime
                 var sql = "update artdruk.zamowienia  set final = 0 where prime_id = '" + daneZamowienia.prime_id +"'";
                 connection.query(sql, function (err, result) {
-                if (err) throw err;
+                    if (err){
+
+                        connection.query("rollback ", function (err, result) {   });
+                    
+                            throw err;
+                          } 
                 });
                 // daneZamowienia.prime_id = result.insertId;
             }else{
@@ -629,7 +634,12 @@ if (err) throw err;  });
             if(daneZamowienia.id == 1){  // jeżlie 1 to pierwszy zapis więc nadaj prime
                 var sql = "update artdruk.zamowienia  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
                 connection.query(sql, function (err, result) {
-                if (err) throw err;
+                    if (err){
+
+                        connection.query("rollback ", function (err, result) {   });
+                    
+                            throw err;
+                          } 
                 });
                 daneZamowienia.prime_id = result.insertId;
             }else{
