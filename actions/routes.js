@@ -130,16 +130,16 @@ router.delete('/delete_zamowienie',connections.deleteZamowienie);
 // zamaówienie nowe
     router.get('/parametry/:idZamowienia/:zamowienie_prime_id',connections.getParametry);
     router.get('/zamowienia',connections.getZamowienia);
-    router.post('/zamowienie',connections.postZamowienie);
+    // router.post('/zamowienie',connections.postZamowienie);
     router.post('/zamowienie_new',connections.postZamowienieNew);
     router.post('/zapis_kosztow_dodatkowych',connections.zapisKosztowDodatkowych);
     router.post('/zapis_kosztow_dodatkowych_zamowienia',connections.zapisKosztowDodatkowychZamowienia);
 
     // router.post('/zamowienieobj',connections.postZamowienieObj);
-    router.post('/produkty',connections.postProdukty);
-    router.post('/elementy',connections.postElementy);
-    router.post('/fragmenty',connections.postFragmenty);
-    router.post('/pakowanie',connections.postPakowanie);
+    // router.post('/produkty',connections.postProdukty);
+    // router.post('/elementy',connections.postElementy);
+    // router.post('/fragmenty',connections.postFragmenty);
+    // router.post('/pakowanie',connections.postPakowanie);
     router.post('/addKosztDodatkowy',connections.postKoszty);
     router.post('/addKosztDodatkowyZamowienia',connections.postKosztyDodatkoweZamowienia);
     

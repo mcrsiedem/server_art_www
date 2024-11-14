@@ -825,6 +825,8 @@ res.status(201).json(odpowiedz);
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)1
     postZamowienie(req,res){
+
+        // starey zapis nieaktualny
         const zamowienie_id = req.body.zamowienie_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać priem_id
         const firma_id = req.body.firma_id;
         const prime_id = req.body.prime_id;
