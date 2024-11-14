@@ -606,7 +606,7 @@ postZamowienieNew(req,res){
 // console.log("Produkty: ", produkty)
 
 
-var sql = "start transaction";
+var sql = "begin";
 connection.query(sql, function (err, result) {
 if (err) throw err;  });
 
@@ -652,7 +652,7 @@ for (let produkt of produkty) {
       produkt.zamowienie_id +        "','" +
       produkt.nazwa +        "','" +
       produkt.wersja +        "','" +
-      produkt.user +        "','" +
+      produkt.opiekun_zamowienia_id +        "','" +
       produkt.uwagi +        "','" +
       produkt.stan +        "','" +
       produkt.status +        "','" +
@@ -664,13 +664,150 @@ for (let produkt of produkty) {
       produkt.naklad +        "','" +
       produkt.indeks +        "'); ";
     connection.query(sql, function (err, result) {
-      if (err) throw err;
+        if (err){
+
+            connection.query("rollback ", function (err, result) {   });
+        
+                throw err;
+              } 
+    });
+  }
+
+  console.log("3")
+  for (let element of elementy) {
+    var sql =
+      "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,gramatura_id,naklad,info,uwagi,stan,status,tytul,papier_info,indeks) " +
+      "values ('" +
+      element.id +  "','" +
+      element.zamowienie_id +        "','" +
+      element.produkt_id +        "','" +
+      element.nazwa +        "','" +
+      element.typ +        "','" +
+      element.ilosc_stron +        "','" +
+      element.kolory +        "','" +
+      element.format_x +        "','" +
+      element.format_y +        "','" +
+      element.papier_id +        "','" +
+      element.gramatura_id +        "','" +
+      element.naklad +        "','" +
+      element.info +        "','" +
+      element.uwagi +        "','" +
+      element.stan +        "','" +
+      element.status +        "','" +
+      element.tytul +        "','" +
+      element.papier_info +        "','" +
+      element.indeks +        "'); ";
+    connection.query(sql, function (err, result) {
+        if (err){
+
+            connection.query("rollback ", function (err, result) {   });
+        
+                throw err;
+              } 
+    });
+  }
+
+  console.log("4")
+  for (let fragment of fragmenty) {
+    var sql =
+      "INSERT INTO artdruk.zamowienia_fragmenty (id,zamowienie_id,produkt_id,element_id,oprawa_id,naklad,ilosc_stron,wersja,info,typ,indeks) " +
+      "values ('" +
+      fragment.id +  "','" +
+      fragment.zamowienie_id +        "','" +
+      fragment.produkt_id +        "','" +
+      fragment.element_id +        "','" +
+      fragment.oprawa_id +        "','" +
+      fragment.naklad +        "','" +
+      fragment.ilosc_stron +        "','" +
+      fragment.wersja +        "','" +
+      fragment.info +        "','" +
+      fragment.typ +        "','" +
+      fragment.indeks +        "'); ";
+    connection.query(sql, function (err, result) {
+        if (err){
+
+            connection.query("rollback ", function (err, result) {   });
+        
+                throw err;
+              } 
+    });
+  }
+
+  console.log("5")
+  for (let opr of oprawa) {
+    var sql =
+      "INSERT INTO artdruk.zamowienia_oprawa (id,zamowienie_id,produkt_id,oprawa,naklad,bok_oprawy,data_spedycji,uwagi,wersja,data_czystodrukow,indeks) " +
+      "values ('" +
+      opr.id +  "','" +
+      opr.zamowienie_id +        "','" +
+      opr.produkt_id +        "','" +
+      opr.oprawa +        "','" +
+      opr.naklad +        "','" +
+      opr.bok_oprawy +        "','" +
+      opr.data_spedycji +        "','" +
+      opr.uwagi +        "','" +
+      opr.wersja +        "','" +
+      opr.data_czystodrukow +        "','" +
+      opr.indeks +        "'); ";
+    connection.query(sql, function (err, result) {
+      if (err){
+
+    connection.query("rollback ", function (err, result) {   });
+
+        throw err;
+      } 
+
+
+    });
+  }
+
+
+  console.log("6")
+  for (let procesy of procesyElementow) {
+    var sql =
+      "INSERT INTO artdruk.zamowienia_procesy_elementow (id,zamowienie_id,produkt_id,element_id,proces_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,nazwa_id,indeks) " +
+      "values ('" +
+      procesy.id +  "','" +
+      procesy.zamowienie_id +        "','" +
+      procesy.produkt_id +        "','" +
+      procesy.element_id +        "','" +
+      procesy.proces_id +        "','" +
+      procesy.front_ilosc +        "','" +
+      procesy.back_ilosc +        "','" +
+      procesy.front_kolor +        "','" +
+      procesy.back_kolor +        "','" +
+      procesy.info +        "','" +
+      procesy.nazwa_id +        "','" +
+      procesy.indeks +        "'); ";
+    connection.query(sql, function (err, result) {
+      if (err){
+
+    connection.query("rollback ", function (err, result) {   });
+
+        throw err;
+      } 
+
+      connection.query("commit ", function (err, result) {
+       
+    });
+
     });
   }
 
 
 
+
+
+
+
+
+
+
+
+
 odpowiedz = [daneZamowienia,produkty,elementy,fragmenty,oprawa,pakowanie,procesyElementow]
+res.status(201).json(odpowiedz);
+
 });
 
 
@@ -679,12 +816,12 @@ odpowiedz = [daneZamowienia,produkty,elementy,fragmenty,oprawa,pakowanie,procesy
 
 
 
-var sql = "commit";
-connection.query(sql, function (err, result) {
-if (err) throw err;
-console.log("Zlecenie zapisane NEW! ");
-res.status(201).json(odpowiedz);
-});
+// var sql = "commit";
+// connection.query(sql, function (err, result) {
+// if (err) throw err;
+// console.log("Zlecenie zapisane NEW! ");
+// res.status(201).json(odpowiedz);
+// });
 
 
 
