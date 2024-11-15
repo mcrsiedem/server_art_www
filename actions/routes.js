@@ -148,7 +148,7 @@ router.delete('/delete_zamowienie',connections.deleteZamowienie);
     router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);
     router.put('/delete_zamowienie_kosz',connections.updateSetOrderToDeleted);
 
-    router.post('/oprawa',connections.postOprawa);
+   
     // router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
     // router.get('/lista-wykonczen',connections.getListaWykonczen);
     router.get('/lista-papierow',connections.getListaPapierow);

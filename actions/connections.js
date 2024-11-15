@@ -872,27 +872,6 @@ res.status(201).json(odpowiedz);
 
     });}
 
-        // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
-        postOprawa(req,res){
-            const zamowienie_id = req.body.zamowienie_id;
-            const produkt_id = req.body.produkt_id;
-            const oprawa = req.body.oprawa;
-            const naklad = req.body.naklad;
-            const bok_oprawy = req.body.bok_oprawy;
-            const wersja = req.body.wersja;
-
-            const uwagi = req.body.uwagi;
-            const data_spedycji = req.body.data_spedycji;
-            const data_czystodrukow = req.body.data_czystodrukow;
-            const indeks = req.body.indeks;
-    
-            var sql =   "INSERT INTO artdruk.zamowienia_oprawa(zamowienie_id,produkt_id,oprawa,naklad,uwagi,data_spedycji,data_czystodrukow,indeks,bok_oprawy,wersja) "+
-            "values ('" + zamowienie_id+ "','" + produkt_id + "','" + oprawa + "','" + naklad + "','" + uwagi + "','" + data_spedycji + "','" + data_czystodrukow + "','" + indeks + "','" + bok_oprawy + "','" + wersja + "'); ";
-            connection.query(sql, function (err, result) {
-            if (err) throw err;
-            res.status(201).json(result);
-            });
-        }
 
 
         updateSetOrderNotFinal(req,res){
