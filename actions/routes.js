@@ -152,7 +152,7 @@ router.delete('/delete_zamowienie',connections.deleteZamowienie);
     // router.get('/lista-uszlachetnien',connections.getListaUszlachetnien);
     // router.get('/lista-wykonczen',connections.getListaWykonczen);
     router.get('/lista-papierow',connections.getListaPapierow);
-    router.get('/lista-gramatur',connections.getListaGramatur);
+    router.get('/lista-papierow-nazwy',connections.getListaPapierowNazwy);
     router.get('/lista-procesow',connections.getListaProcesow);
     router.get('/lista-procesow-nazwa',connections.getListaProcesowNazwa);
     router.get('/procesyElementow',connections.getProcesyElementow);

@@ -1355,14 +1355,14 @@ console.log("zapis OK");
     // });}
 
     getListaPapierow(req,res){
-        var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
+        var sql = "SELECT * FROM artdruk.view_papiery ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
-    getListaGramatur(req,res){
-        var sql = "SELECT id,user,papier_id,gramatura,wykonczenie,bulk,info FROM artdruk.papiery_gramatury ORDER BY id ASC;";
+    getListaPapierowNazwy(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
