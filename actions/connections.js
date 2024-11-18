@@ -603,16 +603,18 @@ postZamowienieNew(req,res){
    
 
 // console.log("Dane zamowienia: ", daneZamowienia.id )
-// console.log("Produkty: ", produkty)
+console.log("SaveAs: ", req.body[0].saveAs)
 
 
 var sql = "begin";
 connection.query(sql, function (err, result) {
 if (err) throw err;  });
 
+// && req.body[0].saveAs == false
 
+if(req.body[0].saveAs == false){}
 
-            if(daneZamowienia.prime_id != 1){  // jeżlie 1 to pierwszy zapis więc nadaj prime
+            if(daneZamowienia.prime_id != 1 ){  // jeżlie 1 to pierwszy zapis więc nadaj prime
                 var sql = "update artdruk.zamowienia  set final = 0 where prime_id = '" + daneZamowienia.prime_id +"'";
                 connection.query(sql, function (err, result) {
                     if (err){
@@ -631,6 +633,7 @@ if (err) throw err;  });
     "values ('" + daneZamowienia.prime_id + "','" + daneZamowienia.nr + "','" + daneZamowienia.rok + "','" + daneZamowienia.firma_id+ "','" + daneZamowienia.klient_id + "','" + daneZamowienia.tytul + "','" + daneZamowienia.data_przyjecia + "','" + daneZamowienia.data_materialow + "','" + daneZamowienia.data_spedycji + "','" + daneZamowienia.opiekun_id + "','" + daneZamowienia.user + "','" + daneZamowienia.stan + "','" + daneZamowienia.status + "','" + daneZamowienia.uwagi + "','" + daneZamowienia.final + "','" + daneZamowienia.rodzaj + "','" + daneZamowienia.waluta_id + "','" + daneZamowienia.vat_id + "','" + daneZamowienia.przedplata + "','" + daneZamowienia.cena + "','" + daneZamowienia.termin_platnosci + "','" + daneZamowienia.fsc + "'); ";
     connection.query(sql, function (err, result) {
 
+        // || req.body[0].saveAs == true
             if(daneZamowienia.id == 1){  // jeżlie 1 to pierwszy zapis więc nadaj prime
                 var sql = "update artdruk.zamowienia  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
                 connection.query(sql, function (err, result) {
