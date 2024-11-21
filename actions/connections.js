@@ -183,7 +183,8 @@ class Connections {
              dane.push(doc)
              } );
 
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+            //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
