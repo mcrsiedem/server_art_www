@@ -18,7 +18,7 @@ require('../actions/mysql');
 app.use(bodyParser.json()); 
 app.use(cors(
   {
-    origin:["https://www.printforce.pl"],
+    origin:["https://planer.artdruk.eu"],
     // credentials: true
   }
   
@@ -26,7 +26,7 @@ app.use(cors(
 
  app.use('/api_www', apiRouter);
  app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'https://www.printforce.pl');
+    res.setHeader('Access-Control-Allow-Origin', 'https://planer.artdruk.eu');
     next();
 });
 
@@ -51,7 +51,7 @@ cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 const io = new Server(serverSSL,{
   // withCredential: true,
   cors:{
-     origin:["https://www.printforce.pl"]
+     origin:["https://planer.artdruk.eu"]
      //ss
   },
 })
