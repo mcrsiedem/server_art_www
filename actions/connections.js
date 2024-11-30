@@ -247,7 +247,7 @@ class Connections {
     // pobie
     getTechnologie(req,res){
         const idzlecenia = req.params['idzlecenia']
-        var sql  = "select * from artdruk.view_technologie ORDER BY id ASC";
+        var sql  = "select * from artdruk.view_technologie where final=1 ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
@@ -257,7 +257,8 @@ class Connections {
     //pobierz zamowienia do głownego widoku
     getZamowienia(req,res){
         const idzlecenia = req.params['idzlecenia']
-        var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
+        var sql  = "select * from artdruk.view_zamowienia where final=1 ORDER BY id ASC";
+        // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
