@@ -986,9 +986,86 @@ zapisKosztowDodatkowychZamowienia(req,res){
         
         }
 
-    
-//-----------
+//--------------    
 postTechnologie(req,res){
+    const technologia_id = req.body.technologia_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać prime_id
+    const firma_id = req.body.firma_id;
+    const prime_id = req.body.prime_id;
+    const nr = req.body.nr;
+    const rok = req.body.rok;
+    const klient_id = req.body.klient_id;
+    const tytul = req.body.tytul;
+    const final = req.body.final;
+    const zamowienie_id = req.body.zamowienie_id;
+
+
+    let odpowiedz= []
+    var sql = "start transaction";
+            connection.query(sql, function (err, result) {
+            if (err) throw err;
+            });
+
+
+            var sql = "update artdruk.technologie set final = 0 where prime_id = '" + prime_id+ "' ";
+            connection.query(sql, function (err, result) {
+
+
+  var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tytul,firma_id,klient_id,final,zamowienie_id) "+
+    "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul + "','" + firma_id + "','" + klient_id + "','" + final + "','" + zamowienie_id + "'); ";
+
+    connection.query(sql, function (err, result) {
+
+            if(technologia_id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
+                // console.log("result.insertId: "+ result.insertId)
+                var sql = "update artdruk.technologie  set prime_id = '" + result.insertId+ "' where id = '" + zamowienie_id+"'";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+
+                var sql = "update artdruk.zamowienia  set prime_id_technologia = '" + result.insertId+ "' where id = '" + result.insertId+"'";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+
+
+
+                odpowiedz = [result,{prime_id:result.insertId}]
+                console.log("zapis pierwszy")
+            }else{
+
+                // zamiast updateSetTechNotFinal
+
+                console.log("zapis kolejny")
+                odpowiedz = [result,{prime_id:prime_id}]
+                // res.status(201).json([result,{prime_id:prime_id}]);
+            }
+
+});
+
+
+            if (err) throw err;
+            });
+
+
+
+
+  
+
+
+var sql = "commit";
+connection.query(sql, function (err, result) {
+if (err) throw err;
+console.log("1 record update ");
+res.status(201).json(odpowiedz);
+});
+
+
+
+}
+//-----------
+postTechnologie2(req,res){
     const technologia_id = req.body.technologia_id; // jeśli = 1 oznacza, że jest to pierwszy zapis i trzeba nadać prime_id
     const firma_id = req.body.firma_id;
     const prime_id = req.body.prime_id;
@@ -1022,14 +1099,22 @@ postTechnologie(req,res){
     connection.query(sql, function (err, result) {
 
             if(technologia_id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
-                console.log("result.insertId: "+ result.insertId)
-                var sql = "update artdruk.technologie  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
+                // console.log("result.insertId: "+ result.insertId)
+                var sql = "update artdruk.technologie  set prime_id = '" + result.insertId+ "' where id = '" + zamowienie_id+"'";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
                 });
 
+
+                var sql = "update artdruk.zamowienia  set prime_id_technologia = '" + result.insertId+ "' where id = '" + result.insertId+"'";
+                connection.query(sql, function (err, result) {
+                if (err) throw err;
+                });
+
+
+
+
                 odpowiedz = [result,{prime_id:result.insertId}]
-                // res.status(201).json([result,{prime_id:result.insertId}]);
                 console.log("zapis pierwszy")
             }else{
 
