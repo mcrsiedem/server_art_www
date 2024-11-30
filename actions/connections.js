@@ -39,7 +39,8 @@ class Connections {
         if (err) throw err;
         });
 
-        var sql  = "select * from artdruk.view_zamowienia_kopia where id = '" + idZamowienia + "' ORDER BY id ASC";
+        var sql  = "select * from artdruk.view_zamowienia where id = '" + idZamowienia + "' ORDER BY id ASC";
+        // var sql  = "select * from artdruk.view_zamowienia_kopia where id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         dane.push(doc)
@@ -1004,7 +1005,15 @@ postTechnologie(req,res){
             if (err) throw err;
             });
 
-console.log("zamowienie_id: "+ zamowienie_id)
+// console.log("technologia_id: "+ technologia_id)
+// console.log("firma_id: "+ firma_id)
+// console.log("prime_id: "+ prime_id)
+// console.log("nr: "+ nr)
+// console.log("rok: "+ rok)
+// console.log("klient_id: "+ klient_id)
+// console.log("tytul: "+ tytul)
+// console.log("final: "+ final)
+// console.log("zamowienie_id: "+ zamowienie_id)
 
     var sql =   "INSERT INTO artdruk.technologie (prime_id,nr,rok,tytul,firma_id,klient_id,final,zamowienie_id) "+
     "values ('" + prime_id + "','" + nr + "','" + rok + "','" + tytul + "','" + firma_id + "','" + klient_id + "','" + final + "','" + zamowienie_id + "'); ";
@@ -1012,7 +1021,7 @@ console.log("zamowienie_id: "+ zamowienie_id)
     connection.query(sql, function (err, result) {
 
             if(technologia_id == 1){  // jeżlie 1 to pierwszy zapis z nadaniem prime id, else jeśli !==1 oznacza kolejny zapis a prime_id = 0 żeby można to było rozpoznać po tamtej stronie 
-
+                console.log("result.insertId: "+ result.insertId)
                 var sql = "update artdruk.technologie  set prime_id = '" + result.insertId+ "' where id = '" + result.insertId+"'";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
