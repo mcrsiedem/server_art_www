@@ -173,10 +173,10 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 router.get('/technologie_parametry/:idTechnologii',connections.getParametryTechnologii);
 router.get('/technologie_grupy_an_wykonania_all',connections.getWykonania_i_grupyAll);     
 router.get('/technologie',connections.getTechnologie);     
-router.post('/technologie',connections.postTechnologie); 
+// router.post('/technologie',connections.postTechnologie); 
 router.post('/technologie_new',connections.postTechnologieNew); 
-router.post('/technologie_rest',connections.postTechnologieRest); 
-router.put('/technologia_not_final',connections.updateSetTechNotFinal);  
+// router.post('/technologie_rest',connections.postTechnologieRest); 
+// router.put('/technologia_not_final',connections.updateSetTechNotFinal);  
 
 
 // Technologie nowe end
@@ -287,7 +287,7 @@ router.put('/technologia_not_final',connections.updateSetTechNotFinal);
 // router.get('/restore',connections.getRestore);
 // router.delete('/restore',connections.deleteBackup);
 // router.post('/restore',connections.restoreBackup);
-// router.put('/restore',connections.updateRestore);
+
 // router.post('/createbackup',connections.createBackup);
 // //------------------------------
 // router.get('/falcowanie',connections.loadFalcowanie); // nowe statusy

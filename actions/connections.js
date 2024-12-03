@@ -1398,7 +1398,7 @@ postTechnologieNew(req,res){
       for (let lega of legiEdit) {
 
         var sql =
-          "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,ilosc_stron,naklad,uwagi) " +
+          "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,uwagi) " +
           "values ('" +
           lega.id +  "','" +
           lega.indeks +        "','" +
@@ -1406,6 +1406,7 @@ postTechnologieNew(req,res){
           lega.typ_elementu +        "','" +
           lega.rodzaj_legi +        "','" +
           lega.element_id +        "','" +
+          lega.arkusz_id +        "','" +
           lega.ilosc_stron +        "','" +
           lega.naklad +        "','" +
           lega.uwagi +        "'); ";
@@ -2684,17 +2685,6 @@ createBackup(req,res){
                                                 });
 
 }
-//---------
-updateRestore(req,res){
-    const id = req.body.id;
-    const value = req.body.value;
-    var sql = "update backup set Opis = '" + value + "' where id='" + id + "'";
-
-    connection.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record update ");
-    res.status(201).json(result);
-});}
 //---------
 
 
