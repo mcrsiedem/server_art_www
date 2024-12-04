@@ -1183,7 +1183,7 @@ postTechnologieNew(req,res){
 
 
     if(daneTechEdit.prime_id != 1 ){  
-        var sql = "update artdruk.technolgie  set final = 0 where prime_id = '" + daneTechEdit.prime_id +"'";
+        var sql = "update artdruk.technologie  set final = 0 where prime_id = '" + daneTechEdit.prime_id +"'";
         connection.query(sql, function (err, result) {
             if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
         });
