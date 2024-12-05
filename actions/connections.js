@@ -405,7 +405,6 @@ deleteZamowienie(req,res){
     //usun na zawsze
     const rowsToDelete = req.body.row
 
-
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
     if (err) throw err;  });
@@ -432,6 +431,31 @@ deleteZamowienie(req,res){
         var sql =   "delete from artdruk.zamowienia_pakowanie where zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
         var sql =   "delete from artdruk.zamowienia_procesy_elementow where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+
+        }
+
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Zlecenie skasowane! ");
+res.status(201).json(result);
+});
+}
+
+odblokujZamowienie(req,res){
+
+    //usun na zawsze
+    const rowsToDelete = req.body.row
+
+    var sql = "start transaction";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;  });
+
+    for(let row of rowsToDelete){
+        var sql =   "update  artdruk.zamowienia set open_data = null, open_user = null, open_stan = null where id = '" + row.id + "'"
+        // var sql =   "call unlock_zamowienie('" + row.id + "')
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
         }
