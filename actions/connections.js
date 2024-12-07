@@ -1461,7 +1461,37 @@ postTechnologieNew(req,res){
         });
       }
 
+
+    //   var sql  = "select id,status,srodek,okladka  from zlecenia ";
+    //   connection.query(sql, function (err, doc) {
+    //   if (err) throw err;
+  
+    //   for (let i = 0; i < Object.keys(doc).length; i++) {
+   
+    //       var sql = "INSERT INTO zleceniastatus  (idzlecenia,idstatusu,idstatususrodek,idstatusuokladka,idstatusuinne) values ('" + doc[i].id + "','" + status.get(doc[i].status) + "','" + status.get(doc[i].srodek) + "','" + status.get(doc[i].okladka) + "',12);";
+    //       connection.query(sql, function (err, result) {
+    //       if (err) throw err; });
+  
+    //     }
+
+    //   });
+
+
+
       for (let grupa of grupaWykonanEdit) {
+
+            // if(grupa.global_id == 1000){
+
+                var sql  = "select max(koniec) as max_koniec from artdruk.technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
+                connection.query(sql, function (err, doc) {
+                if (err) throw err;
+            
+                console.log("max id: "+ doc[0].max_koniec)
+                
+            })
+        
+        
+        // }
 
         var sql =
           "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
@@ -3854,7 +3884,7 @@ res.status(201).json(result);
     if (err) throw err;
 
     for (let i = 0; i < Object.keys(doc).length; i++) {
-        // console.log(doc[i].typ);
+ 
         var sql = "INSERT INTO zleceniastatus  (idzlecenia,idstatusu,idstatususrodek,idstatusuokladka,idstatusuinne) values ('" + doc[i].id + "','" + status.get(doc[i].status) + "','" + status.get(doc[i].srodek) + "','" + status.get(doc[i].okladka) + "',12);";
         connection.query(sql, function (err, result) {
         if (err) throw err; });
