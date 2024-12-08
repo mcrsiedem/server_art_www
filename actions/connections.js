@@ -192,7 +192,7 @@ class Connections {
              dane.push(doc)
              } );
 
-             var sql = "select * from artdruk.technologie_wykonania where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.view_technologie_wykonania where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
@@ -1481,32 +1481,27 @@ postTechnologieNew(req,res){
 
       for (let grupa of grupaWykonanEdit) {
         let poczatek = null;
-        let czas = null;
+        let czas = grupa.czas;
         let koniec = null;
 
         let max_koniec_na_procesorze = null;
-            // if(grupa.global_id == 1000){
+        
 
                 var sql  = "select max(koniec) as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
                 connection.query(sql, function (err, doc) {
                 if (err) throw err;
                 
                 max_koniec_na_procesorze = doc[0].max_koniec
-                // console.log("max_koniec_na_procesorze:" + max_koniec_na_procesorze)
-                if(max_koniec_na_procesorze === null){
+                 console.log("max_koniec_na_procesorze:" + max_koniec_na_procesorze)
+                if(max_koniec_na_procesorze == null){
                     max_koniec_na_procesorze = teraz()
+                    
                 }
                 poczatek = max_koniec_na_procesorze;
-                // console.log("max id: "+ doc[0].max_koniec)
-                // console.log("now: "+ teraz())
-                
-            })
-        
-            
-            czas = grupa.czas;
-            
-        console.log("poczate:" + poczatek)
-        // }
+                czas = grupa.czas;
+
+
+
 
         var sql =
           "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
@@ -1519,7 +1514,7 @@ postTechnologieNew(req,res){
           grupa.koniec +        "','" +
           grupa.narzad +        "','" +
           grupa.nazwa +        "','" +
-          grupa.poczatek +        "','" +
+          poczatek +        "','" +
           grupa.predkosc +        "','" +
           grupa.proces_id +        "','" +
           grupa.procesor_id +        "','" +
@@ -1530,8 +1525,11 @@ postTechnologieNew(req,res){
         connection.query(sql, function (err, result) {
             if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
         });
-      }
+      
 
+            })
+        
+            
       for (let wykonanie of wykonaniaEdit) {
 
         var sql =
@@ -1560,6 +1558,11 @@ postTechnologieNew(req,res){
         connection.query(sql, function (err, result) {
             if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
         });
+            
+        }
+   
+
+
       }
 
       var sql = "commit";
