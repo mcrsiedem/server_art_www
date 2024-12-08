@@ -1,5 +1,6 @@
 
 const connection = require("./mysql");
+const { teraz } = require("./teraz");
 
 
 
@@ -185,7 +186,7 @@ class Connections {
              } );
 
             //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
-             var sql = "select * from artdruk.technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
@@ -1480,13 +1481,17 @@ postTechnologieNew(req,res){
 
       for (let grupa of grupaWykonanEdit) {
 
+        let max_koniec = null;
             // if(grupa.global_id == 1000){
 
                 var sql  = "select max(koniec) as max_koniec from artdruk.technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
                 connection.query(sql, function (err, doc) {
                 if (err) throw err;
-            
+                
+                max_koniec = doc[0].max_koniec
+                
                 console.log("max id: "+ doc[0].max_koniec)
+                console.log("now: "+ teraz())
                 
             })
         
