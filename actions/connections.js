@@ -1,6 +1,7 @@
 
 const connection = require("./mysql");
-const { teraz } = require("./teraz");
+const { teraz } = require("./czas/teraz");
+const { dodaj_minuty } = require("./czas/dodaj_minuty");
 
 
 
@@ -1477,14 +1478,14 @@ postTechnologieNew(req,res){
 
     //   });
 
-
+    let max_koniec_na_procesorze = null;
 
       for (let grupa of grupaWykonanEdit) {
         let poczatek = null;
         let czas = grupa.czas;
         let koniec = null;
 
-        let max_koniec_na_procesorze = null;
+      
         
 
                 var sql  = "select max(koniec) as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
@@ -1499,8 +1500,9 @@ postTechnologieNew(req,res){
                 }
                 poczatek = max_koniec_na_procesorze;
                 czas = grupa.czas;
+                koniec = dodaj_minuty(poczatek,czas)
 
-
+                max_koniec_na_procesorze=koniec;
 
 
         var sql =
@@ -1511,7 +1513,7 @@ postTechnologieNew(req,res){
           grupa.technologia_id +        "','" +
           grupa.mnoznik +        "','" +
           grupa.czas +        "','" +
-          grupa.koniec +        "','" +
+          koniec+        "','" +
           grupa.narzad +        "','" +
           grupa.nazwa +        "','" +
           poczatek +        "','" +
