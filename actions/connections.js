@@ -1478,58 +1478,58 @@ postTechnologieNew(req,res){
 
     //   });
 
-    let max_koniec_na_procesorze = null;
+    // let max_koniec_na_procesorze = null;
 
-      for (let grupa of grupaWykonanEdit) {
-        let poczatek = null;
-        let czas = grupa.czas;
-        let koniec = null;
+    //   for (let grupa of grupaWykonanEdit) {
+    //     let poczatek = null;
+    //     let czas = grupa.czas;
+    //     let koniec = null;
 
       
         
 
-                var sql  = "select max(koniec) as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
-                connection.query(sql, function (err, doc) {
-                if (err) throw err;
+    //             var sql  = "select max(koniec) as max_koniec from artdruk.technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
+    //             connection.query(sql, function (err, doc) {
+    //             if (err) throw err;
                 
-                max_koniec_na_procesorze = doc[0].max_koniec
-                 console.log("max_koniec_na_procesorze:" + max_koniec_na_procesorze)
-                if(max_koniec_na_procesorze == null){
-                    max_koniec_na_procesorze = teraz()
+    //             max_koniec_na_procesorze = doc[0].max_koniec
+    //              console.log("max_koniec_na_procesorze:" + max_koniec_na_procesorze)
+    //             if(max_koniec_na_procesorze == null){
+    //                 max_koniec_na_procesorze = teraz()
                     
-                }
-                poczatek = max_koniec_na_procesorze;
-                czas = grupa.czas;
-                koniec = dodaj_minuty(poczatek,czas)
+    //             }
+    //             poczatek = max_koniec_na_procesorze;
+    //             czas = grupa.czas;
+    //             koniec = dodaj_minuty(poczatek,czas)
 
-                max_koniec_na_procesorze=koniec;
+    //             max_koniec_na_procesorze=koniec;
 
 
-        var sql =
-          "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
-          "values ('" +
-          grupa.id +  "','" +
-          grupa.indeks +        "','" +
-          grupa.technologia_id +        "','" +
-          grupa.mnoznik +        "','" +
-          grupa.czas +        "','" +
-          koniec+        "','" +
-          grupa.narzad +        "','" +
-          grupa.nazwa +        "','" +
-          poczatek +        "','" +
-          grupa.predkosc +        "','" +
-          grupa.proces_id +        "','" +
-          grupa.procesor_id +        "','" +
-          grupa.element_id +        "','" +
-          grupa.status +        "','" +
-          grupa.stan +        "','" +
-          grupa.uwagi +        "'); ";
-        connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
-        });
+    //     var sql =
+    //       "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
+    //       "values ('" +
+    //       grupa.id +  "','" +
+    //       grupa.indeks +        "','" +
+    //       grupa.technologia_id +        "','" +
+    //       grupa.mnoznik +        "','" +
+    //       grupa.czas +        "','" +
+    //       koniec+        "','" +
+    //       grupa.narzad +        "','" +
+    //       grupa.nazwa +        "','" +
+    //       poczatek +        "','" +
+    //       grupa.predkosc +        "','" +
+    //       grupa.proces_id +        "','" +
+    //       grupa.procesor_id +        "','" +
+    //       grupa.element_id +        "','" +
+    //       grupa.status +        "','" +
+    //       grupa.stan +        "','" +
+    //       grupa.uwagi +        "'); ";
+    //     connection.query(sql, function (err, result) {
+    //         if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+    //     });
       
 
-            })
+    //         })
         
             
       for (let wykonanie of wykonaniaEdit) {
@@ -1565,7 +1565,7 @@ postTechnologieNew(req,res){
    
 
 
-      }
+    //   }
 
       var sql = "commit";
 connection.query(sql, function (err, result) {
@@ -1579,213 +1579,146 @@ odpowiedz = [daneTechEdit,produktyTechEdit,elementyTechEdit,fragmentyTechEdit,op
 });
 }
 //-------------
-postTechnologieRest(req,res){
+postTechnologieGrupy(req,res){
 
-    // global_id - nr nadawany automatycznie przez mysql
-    // id - nr lokalny nadawany podczas tworzenia nowego zlecenia do komunikacji pomiedzy objektami np. okladka id=1, środek id=2
-    // zapisuje wszystkie stany z technologii 
-    let produktyTechEdit = req.body[0]
-    let elementyTechEdit = req.body[1]
-    let fragmentyTechEdit = req.body[2]
-    let oprawaTechEdit = req.body[3]
-    let legiEdit = req.body[4]
-    let legiFragmentyEdit = req.body[5]
-    let arkuszeEdit = req.body[6]
-    let grupaWykonanEdit = req.body[7]
-    let wykonaniaEdit = req.body[8]
-    let procesyElementowTech = req.body[9]
+    let grupa = req.body
+
     
-    var sql = "start transaction";
+    var sql = "begin";
     connection.query(sql, function (err, result) {
     if (err) throw err;
     });
 
 
-    for (let produkty of produktyTechEdit) {
-      var sql =
-        "INSERT INTO artdruk.technologie_produkty (technologia_id,id,zamowienie_id,typ,indeks,naklad,nazwa,ilosc_stron,format_x,format_y,oprawa,uwagi,stan,status) " +
-        "values ('" +
-        produkty.technologia_id +  "','" +
-        produkty.id +        "','" +
-        produkty.zamowienie_id +        "','" +
-        produkty.typ +        "','" +
-        produkty.indeks +        "','" +
-        produkty.naklad +        "','" +
-        produkty.nazwa +        "','" +
-        produkty.ilosc_stron +        "','" +
-        produkty.format_x +        "','" +
-        produkty.format_y +        "','" +
-        produkty.oprawa +        "','" +
-        produkty.uwagi +        "','" +
-        produkty.stan +        "','" +
-        produkty.status +        "'); ";
-      connection.query(sql, function (err, result) {
-        if (err) throw err;
-      });
-    }
-
-    for (let element of elementyTechEdit) {
-        var sql =
-          "INSERT INTO artdruk.technologie_elementy (id,indeks,technologia_id,zamowienie_id,produkt_id,nazwa,typ,lega,ilosc_leg,ilosc_stron,format_x,format_y,papier_id,gramatura_id,papier_info,naklad,uwagi,stan,status) " +
-          "values ('" +
-          element.id +  "','" +
-          element.indeks +        "','" +
-          element.technologia_id +        "','" +
-          element.zamowienie_id +        "','" +
-          element.produkt_id +        "','" +
-          element.nazwa +        "','" +
-          element.typ +        "','" +
-          element.lega +        "','" +
-          element.ilosc_leg +        "','" +
-          element.ilosc_stron +        "','" +
-          element.format_x +        "','" +
-          element.format_y +        "','" +
-          element.papier_id +        "','" +
-          element.gramatura_id +        "','" +
-          element.papier_info +        "','" +
-          element.naklad +        "','" +
-          element.uwagi +        "','" +
-          element.stan +        "','" +
-          element.status +        "'); ";
-        connection.query(sql, function (err, result) {
-          if (err) throw err;
-        });
-      }
-
-      for (let fragment of fragmentyTechEdit) {
-        var sql =
-          "INSERT INTO artdruk.technologie_fragmenty (id,indeks,technologia_id,zamowienie_id,produkt_id,element_id,oprawa_id,typ,ilosc_stron,wersja,naklad,info) " +
-          "values ('" +
-          fragment.id +  "','" +
-          fragment.indeks +        "','" +
-          fragment.technologia_id +        "','" +
-          fragment.zamowienie_id +        "','" +
-          fragment.produkt_id +        "','" +
-          fragment.element_id +        "','" +
-          fragment.oprawa_id +        "','" +
-          fragment.typ +        "','" +
-          fragment.ilosc_stron +        "','" +
-          fragment.wersja +        "','" +
-          fragment.naklad +        "','" +
-          fragment.info +        "'); ";
-        connection.query(sql, function (err, result) {
-          if (err) throw err;
-        });
-      }
-
-      for (let procesElementu of procesyElementowTech) {
-        var sql =
-          "INSERT INTO artdruk.technologie_procesy_elementow (id,indeks,technologia_id,zamowienie_id,produkt_id,element_id,front_ilosc,front_kolor,back_ilosc,back_kolor,predkosc,narzad,mnoznik,nazwa,nazwa_id,rodzaj,typ,obszar,wykonczenie,procesor_domyslny) " +
-          "values ('" +
-          procesElementu.id +  "','" +
-          procesElementu.indeks +        "','" +
-          procesElementu.technologia_id +        "','" +
-          procesElementu.zamowienie_id +        "','" +
-          procesElementu.produkt_id +        "','" +
-          procesElementu.element_id +        "','" +
-          procesElementu.front_ilosc +        "','" +
-          procesElementu.front_kolor +        "','" +
-          procesElementu.back_ilosc +        "','" +
-          procesElementu.back_kolor+        "','" +
-          procesElementu.predkosc +        "','" +
-          procesElementu.narzad +        "','" +
-          procesElementu.mnoznik +        "','" +
-          procesElementu.nazwa +        "','" +
-          procesElementu.nazwa_id +        "','" +
-          procesElementu.rodzaj +        "','" +
-          procesElementu.typ +        "','" +
-          procesElementu.obszar +        "','" +
-          procesElementu.wykonczenie +        "','" +
-          procesElementu.procesor_domyslny +        "'); ";
-        connection.query(sql, function (err, result) {
-          if (err) throw err;
-        });
-      }
 
 
-      for (let oprawa of oprawaTechEdit) {
-        var sql =
-          "INSERT INTO artdruk.technologie_oprawa (id,indeks,technologia_id,zamowienie_id,produkt_id,bok_oprawy,naklad,data_czystodrukow,data_spedycji,oprawa,wersja,uwagi) " +
-          "values ('" +
-          oprawa.id +  "','" +
-          oprawa.indeks +        "','" +
-          oprawa.technologia_id +        "','" +
-          oprawa.zamowienie_id +        "','" +
-          oprawa.produkt_id +        "','" +
-          oprawa.bok_oprawy +        "','" +
-          oprawa.naklad +        "','" +
-          oprawa.data_czystodrukow +        "','" +
-          oprawa.data_spedycji +        "','" +
-          oprawa.oprawa+        "','" +
-          oprawa.wersja +        "','" +
-          oprawa.uwagi +        "'); ";
-        connection.query(sql, function (err, result) {
-          if (err) throw err;
-        });
-      }
+            let max_koniec_na_procesorze= null;
+            let poczatek = null;
+        let czas = grupa.czas;
+        let koniec = null;
+
+      
+        
+
+                var sql  = "select max(koniec) as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
+                connection.query(sql, function (err, doc) {
+                if (err) throw err;
+                
+                max_koniec_na_procesorze = doc[0].max_koniec
+                //  console.log("max_koniec_na_procesorze:" + max_koniec_na_procesorze)
+                if(max_koniec_na_procesorze == null){
+                    max_koniec_na_procesorze = teraz()
+                    
+                }
+                poczatek = max_koniec_na_procesorze;
+                czas = grupa.czas;
+                koniec = dodaj_minuty(max_koniec_na_procesorze,czas)
+
+                max_koniec_na_procesorze=koniec;
+                console.log("Początek:" + max_koniec_na_procesorze + "  Czas: "+czas+ " Koniec: "+koniec)
 
 
 
-      for (let arkusz of arkuszeEdit) {
+
+
+
+
+
+
+
+
+
 
         var sql =
-          "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,uwagi) " +
+          "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
           "values ('" +
-          arkusz.id +  "','" +
-          arkusz.indeks +        "','" +
-          arkusz.technologia_id +        "','" +
-          arkusz.typ_elementu +        "','" +
-          arkusz.rodzaj_arkusza +        "','" +
-          arkusz.element_id +        "','" +
-          arkusz.ilosc_stron +        "','" +
-          arkusz.ilosc_leg+        "','" +
-          arkusz.naklad +        "','" +
-          arkusz.uwagi +        "'); ";
+          grupa.id +  "','" +
+          grupa.indeks +        "','" +
+          grupa.technologia_id +        "','" +
+          grupa.mnoznik +        "','" +
+          grupa.czas +        "','" +
+          koniec +        "','" +
+          grupa.narzad +        "','" +
+          grupa.nazwa +        "','" +
+          poczatek +        "','" +
+          grupa.predkosc +        "','" +
+          grupa.proces_id +        "','" +
+          grupa.procesor_id +        "','" +
+          grupa.element_id +        "','" +
+          grupa.status +        "','" +
+          grupa.stan +        "','" +
+          grupa.uwagi +        "'); ";
         connection.query(sql, function (err, result) {
-          if (err) throw err;
+            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
         });
-      }
-
-      for (let lega of legiEdit) {
-
-        var sql =
-          "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,ilosc_stron,naklad,uwagi) " +
-          "values ('" +
-          lega.id +  "','" +
-          lega.indeks +        "','" +
-          lega.technologia_id +        "','" +
-          lega.typ_elementu +        "','" +
-          lega.rodzaj_legi +        "','" +
-          lega.element_id +        "','" +
-          lega.ilosc_stron +        "','" +
-          lega.naklad +        "','" +
-          lega.uwagi +        "'); ";
-        connection.query(sql, function (err, result) {
-          if (err) throw err;
-        });
-      }
+      
 
 
-      for (let legaFragment of legiFragmentyEdit) {
 
-        var sql =
-          "INSERT INTO artdruk.technologie_legi_fragmenty(id,indeks,technologia_id,element_id,fragment_id,arkusz_id,lega_id,naklad,oprawa_id,typ,wersja) " +
-          "values ('" +
-          legaFragment.id +  "','" +
-          legaFragment.indeks +        "','" +
-          legaFragment.technologia_id +        "','" +
-          legaFragment.element_id +        "','" +
-          legaFragment.fragment_id +        "','" +
-          legaFragment.arkusz_id +        "','" +
-          legaFragment.lega_id +        "','" +
-          legaFragment.naklad +        "','" +
-          legaFragment.oprawa_id +        "','" +
-          legaFragment.typ +        "','" +
-          legaFragment.wersja +        "'); ";
-        connection.query(sql, function (err, result) {
-          if (err) throw err;
-        });
-      }
+
+
+
+            });
+
+
+
+
+
+
+    //   for (let wykonanie of wykonaniaEdit) {
+
+    //     var sql =
+    //       "INSERT INTO artdruk.technologie_wykonania(id,indeks,technologia_id, grupa_id,element_id,arkusz_id,typ_elementu,nazwa,naklad,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) " +
+    //       "values ('" +
+    //       wykonanie.id +  "','" +
+    //       wykonanie.indeks +        "','" +
+    //       wykonanie.technologia_id +        "','" +
+    //       wykonanie.grupa_id +        "','" +
+    //       wykonanie.element_id +        "','" +
+    //       wykonanie.arkusz_id +        "','" +
+    //       wykonanie.typ_elementu +        "','" +
+    //       wykonanie.nazwa +        "','" +
+    //       wykonanie.naklad +        "','" +
+    //       wykonanie.poczatek +        "','" +
+    //       wykonanie.czas +        "','" +
+    //       wykonanie.koniec +        "','" +
+    //       wykonanie.narzad +        "','" +
+    //       wykonanie.predkosc +        "','" +
+    //       wykonanie.mnoznik +        "','" +
+    //       wykonanie.proces_id +        "','" +
+    //       wykonanie.procesor_id +        "','" +
+    //       wykonanie.status +        "','" +
+    //       wykonanie.stan +        "','" +
+    //       wykonanie.uwagi +        "'); ";
+    //     connection.query(sql, function (err, result) {
+    //       if (err) throw err;
+    //     });
+    //   }
+
+      var sql = "commit";
+connection.query(sql, function (err, result) {
+    if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+console.log("zapis OK");
+    res.status(201).json([{zapis:"OK"}]);
+});
+}
+
+
+
+
+
+
+//-------------
+postTechnologieRest(req,res){
+
+    let grupaWykonanEdit = req.body[0]
+    let wykonaniaEdit = req.body[1]
+    
+    var sql = "begin";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    });
+
 
       for (let grupa of grupaWykonanEdit) {
 
@@ -1809,7 +1742,7 @@ postTechnologieRest(req,res){
           grupa.stan +        "','" +
           grupa.uwagi +        "'); ";
         connection.query(sql, function (err, result) {
-          if (err) throw err;
+            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
         });
       }
 
@@ -1845,7 +1778,7 @@ postTechnologieRest(req,res){
 
       var sql = "commit";
 connection.query(sql, function (err, result) {
-if (err) throw err;
+    if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
 console.log("zapis OK");
     res.status(201).json([{zapis:"OK"}]);
 });
