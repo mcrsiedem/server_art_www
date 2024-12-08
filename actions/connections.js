@@ -231,7 +231,7 @@ class Connections {
              
                  });
          
-                 var sql = "select * from artdruk.view_technologie_grupy_wykonan  ORDER BY id ASC";
+                 var sql = "select * from artdruk.view_technologie_grupy_wykonan  ORDER BY poczatek";
                  connection.query(sql, function (err, doc) {
                  if (err) throw err;
                  dane.push(doc)
