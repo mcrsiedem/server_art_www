@@ -120,6 +120,7 @@ class Connections {
 
             //idTechnologii/:technologia_prime_id
              const idTechnologii = req.params['idTechnologii']
+             const prime_id = req.params['prime_id']
             //  const technologia_prime_id = req.params['technologia_prime_id']
 
 
@@ -162,7 +163,7 @@ class Connections {
              dane.push(doc)
              } );
 
-             var sql = "select * from artdruk.technologie_procesy_elementow where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.technologie_procesy_elementow where technologia_id = '" + prime_id + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
@@ -187,13 +188,13 @@ class Connections {
              } );
 
             //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + prime_id + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
              } );
 
-             var sql = "select * from artdruk.view_technologie_wykonania where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
+             var sql = "select * from artdruk.view_technologie_wykonania where technologia_id = '" + prime_id + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
