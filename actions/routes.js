@@ -179,6 +179,7 @@ router.get('/technologie',connections.getTechnologie);
 router.post('/technologie_new',connections.postTechnologieNew); 
 router.post('/grupa',connections.postTechnologieGrupy); 
 router.post('/wykonania',connections.postTechnologieWykonania); 
+router.post('/procesy_elementow',connections.postTechnologieProcesyElementow); 
 // router.post('/technologie_rest',connections.postTechnologieRest); 
 // router.put('/technologia_not_final',connections.updateSetTechNotFinal);  
 
