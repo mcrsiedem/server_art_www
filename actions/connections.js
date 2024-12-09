@@ -247,6 +247,43 @@ class Connections {
              }
         //-----
 
+        getWykonania_i_grupy_for_procesor(req,res){
+            let dane=[];
+
+            //idTechnologii/:technologia_prime_id
+             const procesor_id = req.params['procesor_id']
+            //  const technologia_prime_id = req.params['technologia_prime_id']
+
+
+            var sql = "begin";
+            connection.query(sql, function (err, result) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            });
+     
+             var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+             dane.push(doc)
+             // res.status(200).json(dane);
+         
+             });
+     
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+             connection.query(sql, function (err, doc) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+             dane.push(doc)
+             } );
+
+            var sql = "commit";
+            connection.query(sql, function (err, result) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            console.log("Get Grupy i Wykonania dla procesora "+ procesor_id);
+            res.status(200).json(dane);
+            });
+     
+         }
+    //-----
+
     // pobie
     getTechnologie(req,res){
         const idzlecenia = req.params['idzlecenia']
