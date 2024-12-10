@@ -1528,7 +1528,8 @@ postTechnologieGrupy(req,res){
         let czas = grupa.czas;
         let koniec = null;
 
-                var sql  = "select max(koniec) as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
+                // var sql  = "select max(koniec) as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
+                var sql  = "select  DATE_FORMAT(max(koniec),'%Y-%m-%d %H:%i') as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
                 connection.query(sql, function (err, doc) {
                 if (err) throw err;
                 
