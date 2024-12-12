@@ -1523,39 +1523,10 @@ postTechnologieGrupy(req,res){
     if (err) throw err;
     });
 
-        let max_koniec_na_procesorze= null;
-        // let poczatek = null;
-        let czas = grupa.czas;
-        // let koniec = null;
-
-                // var sql  = "select max(koniec) as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
-                var sql  = "select  DATE_FORMAT(max(koniec),'%Y-%m-%d %H:%i') as max_koniec from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + grupa.procesor_id + "'  ";
-                connection.query(sql, function (err, doc) {
-                if (err) throw err;
-                
-                // max_koniec_na_procesorze = doc[0].max_koniec
-                //  console.log("max_koniec_na_procesorze:" + max_koniec_na_procesorze)
-                // if(max_koniec_na_procesorze == null){
-                //     max_koniec_na_procesorze = teraz()
-                    
-                // }
-                // poczatek = max_koniec_na_procesorze;
-                czas = grupa.czas;
-                // koniec = dodaj_minuty(max_koniec_na_procesorze,czas)
-
-                // max_koniec_na_procesorze=koniec;
-                // console.log("Początek:" + max_koniec_na_procesorze + "  Czas: "+czas+ " Koniec: "+koniec)
-
-
-                // let poczatek2= "select (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") as max_koniec"
-                // let poczatek2= "select (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") as max_koniec"
-                // let poczatek_now= " now() "
+                let czas = grupa.czas;
 
                 let poczatek ="select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() else (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = 1) END "
-                // let koniec =" select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() else (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = 1) END "
-                // let koniec ="select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() + interval " + czas + " minute else (select max(koniec) + interval " + czas + " minute from artdruk.technologie_grupy_wykonan where procesor_id = 1 ) END "
-                
-                // let poczatek2= "select (max(koniec) from technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") as max_koniec"
+                let koniec =" (select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() + interval " + czas + " minute else (select max(koniec) + interval " + czas + " minute from artdruk.technologie_grupy_wykonan where procesor_id = 1) END) "
 
         var sql =
           "INSERT INTO artdruk.technologie_grupy_wykonan(poczatek,id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
@@ -1569,7 +1540,6 @@ postTechnologieGrupy(req,res){
            koniec +        ",'" +
           grupa.narzad +        "','" +
           grupa.nazwa +        "','" +
-        //   poczatek +        "','" +
           grupa.predkosc +        "','" +
           grupa.proces_id +        "','" +
           grupa.procesor_id +        "','" +
@@ -1580,7 +1550,7 @@ postTechnologieGrupy(req,res){
         connection.query(sql, function (err, result) {
             if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
         });
-            });
+           
 
 
       var sql = "commit";
