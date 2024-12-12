@@ -1543,29 +1543,32 @@ postTechnologieGrupy(req,res){
                 czas = grupa.czas;
                 koniec = dodaj_minuty(max_koniec_na_procesorze,czas)
 
-                max_koniec_na_procesorze=koniec;
+                // max_koniec_na_procesorze=koniec;
                 console.log("Początek:" + max_koniec_na_procesorze + "  Czas: "+czas+ " Koniec: "+koniec)
 
 
+                let poczatek2= "select (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") as max_koniec"
+                // let poczatek2= "select (max(koniec) from technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") as max_koniec"
         var sql =
-          "INSERT INTO artdruk.technologie_grupy_wykonan(id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,poczatek,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
-          "values ('" +
+          "INSERT INTO artdruk.technologie_grupy_wykonan(poczatek,id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
+          " " +
+          poczatek2 +  ",'" +
           grupa.id +  "','" +
           grupa.indeks +        "','" +
           grupa.technologia_id +        "','" +
           grupa.mnoznik +        "','" +
           grupa.czas +        "','" +
-          koniec +        "','" +
+           koniec +        "','" +
           grupa.narzad +        "','" +
           grupa.nazwa +        "','" +
-          poczatek +        "','" +
+        //   poczatek +        "','" +
           grupa.predkosc +        "','" +
           grupa.proces_id +        "','" +
           grupa.procesor_id +        "','" +
           grupa.element_id +        "','" +
           grupa.status +        "','" +
           grupa.stan +        "','" +
-          grupa.uwagi +        "'); ";
+          grupa.uwagi +        "'; ";
         connection.query(sql, function (err, result) {
             if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
         });
