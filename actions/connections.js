@@ -1525,8 +1525,8 @@ postTechnologieGrupy(req,res){
 
                 let czas = grupa.czas;
 
-                let poczatek ="select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() else (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = 1) END "
-                let koniec =" (select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() + interval " + czas + " minute else (select max(koniec) + interval " + czas + " minute from artdruk.technologie_grupy_wykonan where procesor_id = 1) END) "
+                let poczatek ="select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() else (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") END "
+                let koniec =" (select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() + interval " + czas + " minute else (select max(koniec) + interval " + czas + " minute from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") END) "
 
         var sql =
           "INSERT INTO artdruk.technologie_grupy_wykonan(poczatek,id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
