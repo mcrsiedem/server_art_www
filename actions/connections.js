@@ -429,12 +429,13 @@ setOrderClosed(req,res){
 }
 
 dragDropProcesGrup(req,res){
-    // zmienia wartość open_stan na null przy zamknięciu zamówienia!
+
     const id_drag_grupa_proces = req.body.id_drag_grupa_proces;
     const id_drop_grupa_proces = req.body.id_drop_grupa_proces;
-    // const token = req.body.token;
-    // const user = req.body.user;
 
+    let dane=[];
+
+    console.log("drag: "+ id_drag_grupa_proces +" drop: "+id_drop_grupa_proces);
 
 
     var sql = "begin";
@@ -442,24 +443,23 @@ dragDropProcesGrup(req,res){
         if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
     });
 
-     var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
-     connection.query(sql, function (err, doc) {
-        if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
-     dane.push(doc)
-     // res.status(200).json(dane);
+    //  var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
+    //  connection.query(sql, function (err, doc) {
+    //     if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+    //  dane.push(doc)
+   
  
-     });
+    //  });
 
-     var sql = "select * from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-     connection.query(sql, function (err, doc) {
-        if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
-     dane.push(doc)
-     } );
+    //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+    //  connection.query(sql, function (err, doc) {
+    //     if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+    //  dane.push(doc)
+    //  } );
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
         if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
-    console.log("Get Grupy i Wykonania dla procesora "+ procesor_id);
     res.status(200).json(dane);
     });
 }
