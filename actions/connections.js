@@ -430,37 +430,16 @@ setOrderClosed(req,res){
 
 dragDropProcesGrup(req,res){
 
-    const id_drag_grupa_proces = req.body.id_drag_grupa_proces;
-    const id_drop_grupa_proces = req.body.id_drop_grupa_proces;
-
-    let dane=[];
-
-    console.log("drag: "+ id_drag_grupa_proces +" drop: "+id_drop_grupa_proces);
+    const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
+    const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
 
 
-    var sql = "begin";
+    var sql = "call artdruk.drag_drop("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +")";
+    console.log(sql)
     connection.query(sql, function (err, result) {
-        if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
-    });
-
-    //  var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
-    //  connection.query(sql, function (err, doc) {
-    //     if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
-    //  dane.push(doc)
-   
- 
-    //  });
-
-    //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-    //  connection.query(sql, function (err, doc) {
-    //     if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
-    //  dane.push(doc)
-    //  } );
-
-    var sql = "commit";
-    connection.query(sql, function (err, result) {
-        if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
-    res.status(200).json(dane);
+        if (err)
+            
+            res.status(200).json(result);
     });
 }
 
@@ -472,7 +451,7 @@ deleteKlient(req,res){
     connection.query(sql, function (err, result) {
     if (err) throw err;
     // console.log("1 record delete ");
-    res.status(200).json(result);
+    res.status(201).json(result);
 })
 }
 
@@ -2888,18 +2867,18 @@ updateProduktyDataCTP(req,res){
     res.status(201).json(result);
 });}
 
-updateNaprawCzas(req,res){
-    const id = req.body.id;
-    const poczatekdruku = req.body.poczatekdruku;
-    const koniecdruku = req.body.koniecdruku;
+// updateNaprawCzas(req,res){
+//     const id = req.body.id;
+//     const poczatekdruku = req.body.poczatekdruku;
+//     const koniecdruku = req.body.koniecdruku;
 
-    var sql = "update produkty set PoczatekDruku = '" + poczatekdruku + "', KoniecDruku = '" + koniecdruku + "'  where id='" + id + "'";
+//     var sql = "update produkty set PoczatekDruku = '" + poczatekdruku + "', KoniecDruku = '" + koniecdruku + "'  where id='" + id + "'";
 
-    connection.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record update ");
-    res.status(201).json(result);
-});}
+//     connection.query(sql, function (err, result) {
+//     if (err) throw err;
+//     console.log("1 record update ");
+//     res.status(201).json(result);
+// });}
 
 
 
