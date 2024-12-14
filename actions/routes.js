@@ -181,7 +181,7 @@ router.post('/grupa',connections.postTechnologieGrupy);
 router.post('/wykonania',connections.postTechnologieWykonania); 
 router.post('/procesy_elementow',connections.postTechnologieProcesyElementow); 
 
-router.post('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);
+router.get('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);
 // router.post('/technologie_rest',connections.postTechnologieRest); 
 // router.put('/technologia_not_final',connections.updateSetTechNotFinal);  
 

@@ -433,12 +433,9 @@ dragDropProcesGrup(req,res){
     const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
     const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
 
-
-    var sql = "call artdruk.drag_drop("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +")";
-    console.log(sql)
+    var sql = "select artdruk.drag("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") as mcr";
     connection.query(sql, function (err, result) {
         if (err)
-            
             res.status(200).json(result);
     });
 }
