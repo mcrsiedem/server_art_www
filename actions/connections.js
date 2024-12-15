@@ -442,6 +442,20 @@ dragDropProcesGrup(req,res){
     });
 }
 
+dragDropProcesGrupToProcesor(req,res){
+
+    const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
+    const id = req.params['id']
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.zmien_procesor("+ id_drag_grupa_proces +", "+ id +") as procesor_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) throw err;  
+            res.status(200).json(result);
+    });
+}
+
 
 deleteKlient(req,res){
     const id = req.body.id;
