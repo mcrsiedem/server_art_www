@@ -487,6 +487,39 @@ updateWykonaniaOrazGrupa(req,res){
     });
 }
 
+updateWykonania(req,res){
+
+    const global_id_wykonania = req.params['global_id_wykonania']
+    const kolumna = req.params['kolumna']
+    const wartosc = req.params['wartosc']
+
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.update_wykonania("+ global_id_wykonania +", "+ kolumna +", "+ wartosc +") as technologia_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) throw err;  
+            res.status(200).json(result);
+    });
+}
+
+updateWydzielWykonanieZgrupy(req,res){
+
+    const global_id_wykonania = req.params['global_id_wykonania']
+
+
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.wyodrebnij_wykonanie_do_nowej_grupy("+ global_id_wykonania +") as technologia_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) throw err;  
+            res.status(200).json(result);
+    });
+}
+
+
+
 
 deleteKlient(req,res){
     const id = req.body.id;
