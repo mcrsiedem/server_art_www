@@ -187,6 +187,7 @@ router.get('/drag_drop_proces_grupa_to_procesor/:id_drag_grupa_proces/:id',conne
 router.get('/updateWykonaniaOrazGrupa/:global_id_grupa_wykonan/:kolumna/:wartosc',connections.updateWykonaniaOrazGrupa);
 router.get('/updateWykonania/:global_id_wykonania/:kolumna/:wartosc',connections.updateWykonania);
 router.get('/updateWydzielWykonanieZgrupy/:global_id_wykonania',connections.updateWydzielWykonanieZgrupy);
+router.get('/updatePrzeniesWykonanieDoInnejGrupy/:global_id_wykonania/:grupa_id_drop/:ostatnie_wykonania',connections.updatePrzeniesWykonanieDoInnejGrupy);
 
 
 // router.post('/technologie_rest',connections.postTechnologieRest); 

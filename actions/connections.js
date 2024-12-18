@@ -506,9 +506,6 @@ updateWykonania(req,res){
 updateWydzielWykonanieZgrupy(req,res){
 
     const global_id_wykonania = req.params['global_id_wykonania']
-
-
-
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
     var sql = "select artdruk.wyodrebnij_wykonanie_do_nowej_grupy("+ global_id_wykonania +") as technologia_id";
     console.log(sql)
@@ -519,7 +516,19 @@ updateWydzielWykonanieZgrupy(req,res){
 }
 
 
+updatePrzeniesWykonanieDoInnejGrupy(req,res){
 
+    const global_id_wykonania = req.params['global_id_wykonania']
+    const grupa_id_drop = req.params['grupa_id_drop']
+    const ostatnie_wykonania = req.params['ostatnie_wykonania']
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.przenies_wykonanie("+ global_id_wykonania +","+ grupa_id_drop +","+ ostatnie_wykonania +") as technologia_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) throw err;  
+            res.status(200).json(result);
+    });
+}
 
 deleteKlient(req,res){
     const id = req.body.id;
