@@ -409,7 +409,7 @@ setOrderOpen(req,res){
         if (err) throw err;
         if(doc[0].open_stan != 1)
         {
-                var sql = "update artdruk.zamowienia set open_token = '" + token+ "', open_user = '" + user+ "', open_data = now(), open_stan = 1 where id = " + id+ "";
+                var sql = "update artdruk.zamowienia set open_token = '" + token+ "', open_user = '" + user+ "', open_data = DATE_FORMAT(now(),'%Y-%m-%d %H:%i'), open_stan = 1 where id = " + id+ "";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
             
@@ -1655,8 +1655,8 @@ postTechnologieGrupy(req,res){
 
                 let czas = grupa.czas;
 
-                let poczatek ="select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() else (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") END "
-                let koniec =" (select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then now() + interval " + czas + " minute else (select max(koniec) + interval " + czas + " minute from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") END) "
+                let poczatek ="select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then DATE_FORMAT(now(),'%Y-%m-%d %H:%i') else (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") END "
+                let koniec =" (select case when (select max(koniec) from artdruk.technologie_grupy_wykonan where procesor_id =  "+ grupa.procesor_id +") is null then DATE_FORMAT(now(),'%Y-%m-%d %H:%i') + interval " + czas + " minute else (select max(koniec) + interval " + czas + " minute from artdruk.technologie_grupy_wykonan where procesor_id = "+ grupa.procesor_id +") END) "
 
         var sql =
           "INSERT INTO artdruk.technologie_grupy_wykonan(poczatek,id,indeks,technologia_id,mnoznik,czas,koniec,narzad,nazwa,predkosc,proces_id,procesor_id,element_id,status,stan,uwagi) " +
@@ -2359,7 +2359,7 @@ duplikujNaswietlenie(req,res){
     if (err) throw err;
     });
 
-    var sql = "insert into naswietlenia (produkt_id,blacha_id,kolej,grupa_id,data)  (select produkt_id,blacha_id,(select max(kolej)+1 from naswietlenia),(select max(id) from grupa), now() from naswietlenia where id= '"+id+"');";
+    var sql = "insert into naswietlenia (produkt_id,blacha_id,kolej,grupa_id,data)  (select produkt_id,blacha_id,(select max(kolej)+1 from naswietlenia),(select max(id) from grupa), DATE_FORMAT(now(),'%Y-%m-%d %H:%i') from naswietlenia where id= '"+id+"');";
     connection.query(sql, function (err, result) {
         if (err) throw err;
         });
@@ -2389,7 +2389,7 @@ updateZamknijGrupe(req,res){
     });
 
    
-    var sql = "update grupa set stan = 'Closed', koniec= now() where stan='Open'";
+    var sql = "update grupa set stan = 'Closed', koniec= DATE_FORMAT(now(),'%Y-%m-%d %H:%i') where stan='Open'";
     connection.query(sql, function (err, result) {
     if (err) throw err;     });
 
@@ -2397,7 +2397,7 @@ updateZamknijGrupe(req,res){
     connection.query(sql, function (err, result) {
     if (err) throw err;     })
 
-    var sql = "INSERT INTO grupa  (id,poczatek,stan)  SELECT MAX(id)+1,now(),'Open' from grupa";
+    var sql = "INSERT INTO grupa  (id,poczatek,stan)  SELECT MAX(id)+1,DATE_FORMAT(now(),'%Y-%m-%d %H:%i'),'Open' from grupa";
     connection.query(sql, function (err, result) {
     if (err) throw err;
                                                 });
@@ -2518,7 +2518,7 @@ getHistoria(req,res){
 
 getHistoria_short(req,res){
     var sql = "SELECT id,DATE_FORMAT(`data`, '%Y-%m-%d %H:%i') AS `data`, user,kategoria,  event , id_target, ifnull(NrZlecenia,'') as nrZlecenia, ifnull(RokZlecenia,'') as rokZlecenia,"+
-    "ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(Typ,'') as typ,statusStary,statusNowy FROM historia where data > now() - interval 30 day ORDER BY Data ASC;";
+    "ifnull(Klient,'') as klient,ifnull(Praca,'') as praca,ifnull(Typ,'') as typ,statusStary,statusNowy FROM historia where data > DATE_FORMAT(now(),'%Y-%m-%d %H:%i') - interval 30 day ORDER BY Data ASC;";
     connection.query(sql, function (err, doc) {
     if (err) throw err;
     //sconsole.log(doc);
@@ -2647,7 +2647,7 @@ createBackup(req,res){
     connection.query(sql, function (err, result) {
     if (err) throw err;                          });
 
-    var sql = "SELECT DATE_FORMAT(now() , '%Y-%m-%d %H:%i:%s') AS `teraz` ;";
+    var sql = "SELECT DATE_FORMAT(DATE_FORMAT(now(),'%Y-%m-%d %H:%i') , '%Y-%m-%d %H:%i:%s') AS `teraz` ;";
     connection.query(sql, function (err, doc) {
     if (err) throw err;
 
@@ -2870,7 +2870,7 @@ updatenaswietlenieprime(req,res){
     "nas_legi=(select legi from ctp21.produkty where ID = '" + id + "'),"+
     "nas_falc=(select legirodzaj from ctp21.produkty where ID = '" + id + "'),"+
     "nas_user='" + user_id + "',"+
-    " ilosc= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + ilosc + "'  ELSE ilosc END, blacha_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + blacha_id + "'  ELSE blacha_id  END, opis=0, data= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN now() ELSE data END, grupa_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN (select max(id) from grupa) ELSE grupa_id END where typ='prime' and produkt_id="+id;
+    " ilosc= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + ilosc + "'  ELSE ilosc END, blacha_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + blacha_id + "'  ELSE blacha_id  END, opis=0, data= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN DATE_FORMAT(now(),'%Y-%m-%d %H:%i') ELSE data END, grupa_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN (select max(id) from grupa) ELSE grupa_id END where typ='prime' and produkt_id="+id;
 
     connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -2890,7 +2890,7 @@ updatenaswietlenie(req,res){
     const id = req.body.id;
     const ilosc = req.body.ilosc;
     const blacha_id = req.body.blacha_id;
-    var sql = "update naswietlenia  set ilosc= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + ilosc + "'  ELSE ilosc END, blacha_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + blacha_id + "'  ELSE blacha_id  END, opis=0, data= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN now() ELSE data END, grupa_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN (select max(id) from grupa) ELSE grupa_id END where id="+id;
+    var sql = "update naswietlenia  set ilosc= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + ilosc + "'  ELSE ilosc END, blacha_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN '" + blacha_id + "'  ELSE blacha_id  END, opis=0, data= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN DATE_FORMAT(now(),'%Y-%m-%d %H:%i') ELSE data END, grupa_id= CASE WHEN  grupa_id =(select max(id) from grupa) OR grupa_id is null THEN (select max(id) from grupa) ELSE grupa_id END where id="+id;
 
     connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -2974,9 +2974,9 @@ res.status(200).json(doc);
 }
 
 updateProduktyDataCTP(req,res){
-    // wstawia wstawia now() do DataCTP przy dopisywaniu ilość zaświeconych blach
+    // wstawia wstawia DATE_FORMAT(now(),'%Y-%m-%d %H:%i') do DataCTP przy dopisywaniu ilość zaświeconych blach
     const id = req.body.id;
-    var sql = "update produkty set DataCTP = now() where id="+id;
+    var sql = "update produkty set DataCTP = DATE_FORMAT(now(),'%Y-%m-%d %H:%i') where id="+id;
     connection.query(sql, function (err, result) {
     if (err) throw err;
     res.status(201).json(result);
@@ -3200,7 +3200,7 @@ postBlachyLicznik(req,res){
     connection.query(sql, function (err, result) {
     if (err) throw err;
                                                 });
-    var sql = "INSERT INTO produkty  (ID,Kolejnosc,Praca,DataCTP,Typ,Maszyna)  SELECT MAX(ID)+1,'" + kolejnosc + "'+1,CONCAT('--------  ZAŚWIECONE  od  ',now()),now(),'Licznik','L' from produkty";
+    var sql = "INSERT INTO produkty  (ID,Kolejnosc,Praca,DataCTP,Typ,Maszyna)  SELECT MAX(ID)+1,'" + kolejnosc + "'+1,CONCAT('--------  ZAŚWIECONE  od  ',DATE_FORMAT(now(),'%Y-%m-%d %H:%i')),DATE_FORMAT(now(),'%Y-%m-%d %H:%i'),'Licznik','L' from produkty";
     connection.query(sql, function (err, result) {
     if (err) throw err;
                                                 });
@@ -3407,7 +3407,7 @@ getZlecenia(req,res){
 
 
     getMaxNrZlecenia(req,res){
-        var sql  = "SELECT  max(NrZlecenia)+1 as klient FROM zlecenia where RokZlecenia = YEAR(now()) ;";
+        var sql  = "SELECT  max(NrZlecenia)+1 as klient FROM zlecenia where RokZlecenia = YEAR(DATE_FORMAT(now(),'%Y-%m-%d %H:%i')) ;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
@@ -3945,7 +3945,7 @@ res.status(201).json(result);
     "left join statusy as statusSrodek on zlecenia.status_srodek = statusSrodek.id "+
     "left join statusy as statusOkladka on zlecenia.status_okladka = statusOkladka.id "+
     "left join statusy as statusInne on zlecenia.status_inne  = statusInne.id "+
-    // "where spedycja > (now() - interval (select 2-1) month)  ORDER BY KolejnoscOprawa ASC;";
+    // "where spedycja > (DATE_FORMAT(now(),'%Y-%m-%d %H:%i') - interval (select 2-1) month)  ORDER BY KolejnoscOprawa ASC;";
     //"where spedycja > (select max(spedycja) from produkty where status =12) - interval 31 day  ORDER BY KolejnoscOprawa ASC;";
     "ORDER BY KolejnoscOprawa ASC;";
     connection.query(sql, function (err, doc) {
