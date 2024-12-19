@@ -543,6 +543,22 @@ updateAddPrzerwa(req,res){
     });
 }
 
+updateDeletePrzerwa(req,res){
+
+    const global_id_grupa = req.params['global_id_grupa']
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.delete_przerwa("+ global_id_grupa +") as procesor_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) throw err;  
+            res.status(200).json(result);
+    });
+}
+
+
+
+
 deleteKlient(req,res){
     const id = req.body.id;
 

@@ -189,6 +189,7 @@ router.get('/updateWykonania/:global_id_wykonania/:kolumna/:wartosc',connections
 router.get('/updateWydzielWykonanieZgrupy/:global_id_wykonania',connections.updateWydzielWykonanieZgrupy);
 router.get('/updatePrzeniesWykonanieDoInnejGrupy/:global_id_wykonania/:grupa_id_drop/:ostatnie_wykonania',connections.updatePrzeniesWykonanieDoInnejGrupy);
 router.get('/updateAddPrzerwa/:global_id_grupa',connections.updateAddPrzerwa);
+router.get('/updateDeletePrzerwa/:global_id_grupa',connections.updateDeletePrzerwa);
 
 
 // router.post('/technologie_rest',connections.postTechnologieRest); 
