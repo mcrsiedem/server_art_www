@@ -556,6 +556,20 @@ updateDeletePrzerwa(req,res){
     });
 }
 
+zmienCzasTrwaniaGrupy(req,res){
+
+    const drop_grupa_global_id = req.params['drop_grupa_global_id']
+    const nowy_koniec = req.params['nowy_koniec']
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.zmien_czas_trwania_grupy("+ drop_grupa_global_id +",'"+ nowy_koniec +"') as procesor_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) throw err;  
+            res.status(200).json(result);
+    });
+}
+
 
 
 
