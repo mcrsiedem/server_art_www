@@ -533,9 +533,10 @@ updatePrzeniesWykonanieDoInnejGrupy(req,res){
 updateAddPrzerwa(req,res){
 
     const global_id_grupa = req.params['global_id_grupa']
+    const czas = req.params['czas']
 
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.add_przerwa("+ global_id_grupa +") as procesor_id";
+    var sql = "select artdruk.add_przerwa("+ global_id_grupa +","+ czas +") as procesor_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
        if (err) throw err;  
