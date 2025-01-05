@@ -1896,7 +1896,7 @@ console.log("Zapis: Proces Elementu");
     // });}
 
     getListaPapierow(req,res){
-        var sql = "SELECT * FROM artdruk.view_papiery ORDER BY id ASC;";
+        var sql = "SELECT * FROM artdruk.view_papiery;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
