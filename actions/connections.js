@@ -668,7 +668,7 @@ updatePapiery(req,res){
     if (err) throw err;  });
 
     for(let row of rowsToUpdate ){
-        var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = '" + row.grupa_id+ "', nazwa_id = '" + row.nazwa_id+ "', gramatura = '" + row.gramatura+ "', bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ " where id = '" + row.id + "'"
+        var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = '" + row.grupa_id+ "', nazwa_id = '" + row.nazwa_id+ "', gramatura = " + row.gramatura+ ", bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ " where id = '" + row.id + "'"
         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
 
         }
@@ -1927,14 +1927,14 @@ console.log("Zapis: Proces Elementu");
     // });}
 
     getListaPapierow(req,res){
-        var sql = "SELECT * FROM artdruk.view_papiery;";
+        var sql = "SELECT * FROM artdruk.view_papiery ;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
     getListaPapierowNazwy(req,res){
-        var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy ORDER BY id ASC;";
+        var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
