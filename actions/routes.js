@@ -169,7 +169,7 @@ router.put('/klient',connections.deleteKlient);
 router.put('/updateKlient',connections.updateKlient);
 router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
-router.put('/updatePapiery',connections.updatePapiery);
+router.put('/updatePaper',connections.updatePapiery);
 
 
 // Technologie nowe2
