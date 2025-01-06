@@ -654,6 +654,31 @@ res.status(201).json(result);
 });
 }
 
+updatePapiery(req,res){
+
+    //update papiery
+    const rowsToUpdate = req.body.row
+
+    var sql = "begin";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;  });
+
+    for(let row of rowsToUpdate ){
+        var sql =   "update  artdruk.papiery set  dodal = '" + row.dodal+ "', zmienil = '" + row.dodal+ "', grupa_id = '" + row.grupa_id+ "', nazwa_id = '" + row.nazwa_id+ "', gramatura = '" + row.gramatura+ "', bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = '" + row.wykonczenie_id+ "' where id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+
+        }
+
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+        if (err){connection.query("rollback ", function (err, result) {   });   throw err; } 
+    // console.log("Zlecenie skasowane! ");
+res.status(201).json(result);
+});
+}
+
+
 updateKlient(req,res){
     const id = req.body.id;
     const firma= req.body.firma;

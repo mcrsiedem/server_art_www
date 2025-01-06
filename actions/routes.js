@@ -169,6 +169,8 @@ router.put('/klient',connections.deleteKlient);
 router.put('/updateKlient',connections.updateKlient);
 router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
+router.put('/updatePapiery',connections.updatePapiery);
+
 
 // Technologie nowe2
 // router.get('/technologie_parametry/:idTechnologii/:prime_id',connections.getParametryTechnologii);
