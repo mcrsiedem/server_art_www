@@ -654,26 +654,28 @@ res.status(201).json(result);
 });
 }
 
+
+
+
 updatePapiery(req,res){
-
-
-    const rowsToUpdate = req.body
-    // res.status(201);
-
-    // for( let row of rowsToUpdate){
-    //     console.log("Update lista:", row)
-    // }
+    // rows.filter(x => x.update == true) 
+    const rows = req.body
     var sql = "begin";
     connection.query(sql, function (err, result) {
     if (err) throw err;  });
 
-    for(let row of rowsToUpdate ){
+    for(let row of rows.filter(x => x.update == true) ){
         var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = '" + row.grupa_id+ "', nazwa_id = '" + row.nazwa_id+ "', gramatura = " + row.gramatura+ ", bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ " where id = '" + row.id + "'"
         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-
         }
 
-    // console.log("Update lista:", rowsToUpdate)
+        for(let row of rows.filter(x => x.insert == true) ){
+            var sql =   "INSERT INTO artdruk.papiery (dodal,zmienil,grupa_id,nazwa_id,gramatura,bulk,info,wykonczenie_id) "+
+            "values (" + row.dodal + "," + row.zmienil + "," + row.grupa_id + "," + row.nazwa_id + "," + row.gramatura + ",'" + row.bulk + "','" + row.info + "'," + row.wykonczenie_id + "); ";
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+            }
+
+
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
@@ -683,6 +685,12 @@ res.status(201).json(result);
 
 });
 }
+
+
+
+
+
+
 
 
 updateKlient(req,res){

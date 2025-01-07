@@ -172,6 +172,7 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 router.put('/updatePaper',connections.updatePapiery);
 
 
+
 // Technologie nowe2
 // router.get('/technologie_parametry/:idTechnologii/:prime_id',connections.getParametryTechnologii);
 router.get('/technologie_parametry/:idTechnologii',connections.getParametryTechnologii);
