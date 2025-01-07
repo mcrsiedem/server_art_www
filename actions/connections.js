@@ -1954,6 +1954,14 @@ console.log("Zapis: Proces Elementu");
         res.status(200).json(doc);
     });}
 
+    getListaPapierowGrupa(req,res){
+        var sql = "SELECT id,nazwa FROM artdruk.papiery_grupa;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
     getListaProcesow(req,res){
         var sql = "SELECT * FROM artdruk.view_procesy ;";
         connection.query(sql, function (err, doc) {
