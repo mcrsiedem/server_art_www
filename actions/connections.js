@@ -675,6 +675,11 @@ updatePapiery(req,res){
             connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
             }
 
+            for(let row of rows.filter(x => x.delete == true) ){
+                var sql =   "DELETE from artdruk.papiery where id=" + row.id;
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+                }
+
 
 
     var sql = "commit";
