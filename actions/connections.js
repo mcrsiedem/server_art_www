@@ -691,9 +691,72 @@ res.status(201).json(result);
 });
 }
 
+updatePapieryNazwy(req,res){
+    // rows.filter(x => x.update == true) 
+    const rows = req.body
+    var sql = "begin";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;  });
+
+    for(let row of rows.filter(x => x.update == true) ){
+        var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "' where id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+        }
+
+        for(let row of rows.filter(x => x.insert == true) ){
+            var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa) value ('" + row.nazwa + "'); ";
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+            }
+
+            for(let row of rows.filter(x => x.delete == true) ){
+                var sql =   "DELETE from artdruk.papiery_nazwy where id=" + row.id;
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+                }
 
 
 
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+        if (err){connection.query("rollback ", function (err, result) {   });   throw err; } 
+
+res.status(201).json(result);
+
+});
+}
+
+
+updatePapieryGrupa(req,res){
+    // rows.filter(x => x.update == true) 
+    const rows = req.body
+    var sql = "begin";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;  });
+
+    for(let row of rows.filter(x => x.update == true) ){
+        var sql =   "update  artdruk.papiery_grupa set  grupa = '" + row.grupa+ "' where id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+        }
+
+        for(let row of rows.filter(x => x.insert == true) ){
+            var sql =   "INSERT INTO artdruk.papiery_grupa (grupa) value ('" + row.grupa + "'); ";
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+            }
+
+            for(let row of rows.filter(x => x.delete == true) ){
+                var sql =   "DELETE from artdruk.papiery_grupa where id=" + row.id;
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+                }
+
+
+
+    var sql = "commit";
+    connection.query(sql, function (err, result) {
+        if (err){connection.query("rollback ", function (err, result) {   });   throw err; } 
+
+res.status(201).json(result);
+
+});
+}
 
 
 

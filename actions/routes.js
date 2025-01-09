@@ -172,6 +172,8 @@ router.put('/updateKlient',connections.updateKlient);
 router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
 router.put('/updatePaper',connections.updatePapiery);
+router.put('/updatePaperNazwy',connections.updatePapieryNazwy);
+router.put('/updatePaperGrupa',connections.updatePapieryGrupa);
 
 
 
