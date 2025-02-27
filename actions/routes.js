@@ -58,7 +58,7 @@ function getUser(req,res){
     const login = req.params['login']
     const haslo = req.params['haslo']
 
-
+    console.log("Próba logowania" )
 var sql =   "INSERT INTO historia (User,Kategoria,Event,Klient) "+
 "values ('" + login + "','Logowanie','" + haslo + "','www'); ";
 connection.query(sql, function (err, result) {
