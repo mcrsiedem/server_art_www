@@ -59,7 +59,7 @@ function getUser(req,res){
     const haslo = req.params['haslo']
 
     console.log("Próba logowania" )
-var sql =   "INSERT INTO historia (User,Kategoria,Event,Klient) "+
+var sql =   "INSERT INTO artdruk.historia (User,Kategoria,Event,Klient) "+
 "values ('" + login + "','Logowanie','" + haslo + "','www'); ";
 connection.query(sql, function (err, result) {
         if (err) throw err;
