@@ -101,6 +101,7 @@ connection.query(sql, function (err, result) {
 }
 );
 
+console.log("login: " + login + "haslo: "+haslo )
 }  
 
 router.get('/users/:login/:haslo',getUser);
