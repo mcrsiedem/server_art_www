@@ -19,7 +19,7 @@ require('../actions/mysql');
 app.use(bodyParser.json()); 
 app.use(cors(
   {
-    origin:["https://planer.artdruk.eu:3443"],
+    origin:["https://planer.artdruk.eu"],
     // credentials: true
   }
   
@@ -52,7 +52,7 @@ cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 const io = new Server(serverSSL,{
   // withCredential: true,
   cors:{
-     origin:["https://planer.artdruk.eu:3443"]
+     origin:["https://planer.artdruk.eu"]
      //ss
   },
 })
