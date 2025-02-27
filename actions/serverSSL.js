@@ -15,7 +15,7 @@ const {Server} = require("socket.io")
 
 require('../actions/mysql');
 
-// app.use(bodyParser.json({limit: '50mb'})); 
+app.use(bodyParser.json({limit: '50mb'})); 
 app.use(bodyParser.json()); 
 app.use(cors(
   {
