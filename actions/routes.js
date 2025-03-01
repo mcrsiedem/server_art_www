@@ -7,7 +7,8 @@ const cookieParser =require("cookie-parser");
 const multer =require("multer");
 const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
-
+const { zapiszZamowienie } = require("./zapis/ZapiszZamowienie");
+const { zapiszZamowienieUpdate } = require("./zapis/ZapiszZamowienieUpdate");
 
 
 function isLogged(req,res){
@@ -134,6 +135,12 @@ router.delete('/odblokuj_zamowienie',connections.odblokujZamowienie);
     router.get('/zamowienia',connections.getZamowienia);
     // router.post('/zamowienie',connections.postZamowienie);
     router.post('/zamowienie_new',connections.postZamowienieNew);
+
+
+    router.post('/zapiszZamowienie', zapiszZamowienie);
+    router.put('/zapiszZamowienieUpdate', zapiszZamowienieUpdate);
+
+
     router.post('/zapis_kosztow_dodatkowych',connections.zapisKosztowDodatkowych);
     router.post('/zapis_kosztow_dodatkowych_zamowienia',connections.zapisKosztowDodatkowychZamowienia);
 
