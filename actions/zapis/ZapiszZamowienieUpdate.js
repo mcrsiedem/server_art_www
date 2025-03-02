@@ -41,6 +41,38 @@ for(let element of elementy.filter(x => x.update == true) ){
   }
 
 
+  for(let row of elementy.filter(x => x.insert == true) ){
+    var sql =   "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,naklad,info,uwagi,stan,status,tytul,papier_info,indeks) "+
+    "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + ",'" + row.nazwa + "'," + row.typ + ",'" + row.ilosc_stron + "','" + row.kolory + "'," + row.format_x + "," + row.format_y + "," + row.papier_id + "," + row.naklad + ",'" + row.info + "','" + row.uwagi + "','" + row.stan + "','" + row.status + "','" + row.tytul + "','" + row.papier_info + "','" + row.indeks + "'); ";
+    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+    }
+
+    for(let element of elementy.filter(x => x.delete == true) ){
+        var sql =   "DELETE from artdruk.zamowienia_elementy where global_id=" + element.global_id;
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+        }
+
+
+//--------------
+        for(let row of procesyElementow.filter(x => x.update == true) ){
+          var sql =   "update  artdruk.zamowienia_procesy_elementow set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", element_id = " + row.element_id+ ", proces_id = " + row.proces_id+ ", front_ilosc = '" + row.front_ilosc+ "', back_ilosc = " + row.back_ilosc+ ", front_kolor = '" + row.front_kolor+ "', back_kolor = '" + row.back_kolor+ "', info = '" + row.info+ "', nazwa_id = " + row.nazwa_id+ ",  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
+          connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+          }
+        
+        
+          for(let row of procesyElementow.filter(x => x.insert == true) ){
+            var sql =   "INSERT INTO artdruk.zamowienia_procesy_elementow (id,zamowienie_id,produkt_id,element_id,proces_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,nazwa_id,indeks) "+
+            "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.element_id + "," + row.proces_id + ",'" + row.front_ilosc + "','" + row.back_ilosc + "','" + row.front_kolor + "','" + row.back_kolor + "','" + row.info + "'," + row.nazwa_id + "," + row.indeks + "); ";
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+            }
+        
+            for(let row of procesyElementow.filter(x => x.delete == true) ){
+                var sql =   "DELETE from artdruk.zamowienia_procesy_elementow where global_id=" + row.global_id;
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+                }
+        
+
+
 
 
   connection.query("commit ", function (err, result) {
