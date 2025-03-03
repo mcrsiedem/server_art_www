@@ -131,7 +131,8 @@ router.delete('/odblokuj_zamowienie',connections.odblokujZamowienie);
 
 
 // zamaówienie nowe
-    router.get('/parametry/:idZamowienia/:zamowienie_prime_id',connections.getParametry);
+    // router.get('/parametry/:idZamowienia/:zamowienie_prime_id',connections.getParametry);
+    router.get('/parametry/:idZamowienia',connections.getParametry);
     router.get('/zamowienia',connections.getZamowienia);
     // router.post('/zamowienie',connections.postZamowienie);
     router.post('/zamowienie_new',connections.postZamowienieNew);
