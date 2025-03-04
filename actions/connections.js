@@ -3,7 +3,7 @@ const connection = require("./mysql");
 const jwt = require("jsonwebtoken");
 const { teraz } = require("./czas/teraz");
 const { dodaj_minuty } = require("./czas/dodaj_minuty");
-const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
+const { ACCESS_TOKEN } = require("./logowanie/ACCESS_TOKEN");
 
 
 class Connections {
