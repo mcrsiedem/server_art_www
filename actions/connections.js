@@ -160,7 +160,7 @@ class Connections {
             if (err) throw err;
             });
      
-             var sql  = "select * from artdruk.view_technologie  where id = '" + idTechnologii + "')  ORDER BY id ASC";
+             var sql  = "select * from artdruk.view_technologie  where id = '" + idTechnologii + "'  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
@@ -194,7 +194,7 @@ class Connections {
              dane.push(doc)
              } );
 
-             var sql = "select * from artdruk.technologie_procesy_elementow where technologia_id = (select prime_id from  artdruk.technologie where id = '" + idTechnologii + "' ) ORDER BY id ASC";
+             var sql = "select * from artdruk.technologie_procesy_elementow where technologia_id =  '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
@@ -219,13 +219,13 @@ class Connections {
              } );
 
              // (select prime_id from  artdruk.technologie where id= '" + idTechnologii + "' ) = prime_id
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = (select prime_id from  artdruk.technologie where id = '" + idTechnologii + "' )  ORDER BY id ASC";
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id =  '" + idTechnologii + "'  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
              } );
 
-             var sql = "select * from artdruk.view_technologie_wykonania where technologia_id = (select prime_id from  artdruk.technologie where id = '" + idTechnologii + "' )  ORDER BY id ASC";
+             var sql = "select * from artdruk.view_technologie_wykonania where technologia_id =  '" + idTechnologii + "'  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
