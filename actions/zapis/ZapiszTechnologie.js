@@ -1,8 +1,19 @@
 const connection = require("../mysql");
 const zapiszTechnologie = (req,res) =>{
 
-
- 
+console.log("danetech: ",req.body[0])
+  let daneTechEdit = req.body[0]
+  let produktyTechEdit = req.body[1]
+  let elementyTechEdit = req.body[2]
+  let fragmentyTechEdit = req.body[3]
+  let oprawaTechEdit = req.body[4]
+  let legiEdit = req.body[5]
+  let legiFragmentyEdit = req.body[6]
+  let arkuszeEdit = req.body[7]
+  let grupaWykonanEdit = req.body[8]
+  let wykonaniaEdit = req.body[9]
+  let procesyElementowTechEdit = req.body[10]
+  let odpowiedz= []
   connection.query("begin", function (err, result) {
     if (err){ connection.query("rollback ", function (err, result) {   });  throw err;   } 
   });
@@ -13,12 +24,13 @@ const zapiszTechnologie = (req,res) =>{
   //---------------- aaa
 
   var sql =   "INSERT INTO artdruk.technologie (nr,rok,tytul,firma_id,klient_id,zamowienie_id) "+
-  "values ('" + daneTechEdit.prime_id + "','" + daneTechEdit.nr + "','" + daneTechEdit.rok + "','" + daneTechEdit.tytul + "','" + daneTechEdit.firma_id + "','" + daneTechEdit.klient_id + "','" + daneTechEdit.final + "','" + daneTechEdit.zamowienie_id + "'); ";
+  "values ('" + daneTechEdit.nr + "','" + daneTechEdit.rok + "','" + daneTechEdit.tytul + "','" + daneTechEdit.firma_id + "','" + daneTechEdit.klient_id + "','" + daneTechEdit.zamowienie_id + "'); ";
 
   connection.query(sql, function (err, result) {
 
+    console.log("result" , result)
     // dodaje do wszystkiego id techologi
-    daneTechEdit.id =result.insertId
+    // daneTechEdit.id =result.insertId
     produktyTechEdit = produktyTechEdit.map((obj) => {return{...obj, technologia_id:result.insertId} })
     elementyTechEdit = elementyTechEdit.map((obj) => {return{...obj, technologia_id:result.insertId} })
     fragmentyTechEdit = fragmentyTechEdit.map((obj) => {return{...obj, technologia_id:result.insertId} })
@@ -198,6 +210,9 @@ const zapiszTechnologie = (req,res) =>{
 
 
 
+
+});
+
     var sql = "commit";
 connection.query(sql, function (err, result) {
   if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } ;
@@ -207,9 +222,6 @@ console.log("zapis OK");
 odpowiedz = [daneTechEdit,produktyTechEdit,elementyTechEdit,fragmentyTechEdit,oprawaTechEdit,legiEdit,legiFragmentyEdit,arkuszeEdit,grupaWykonanEdit,wykonaniaEdit,procesyElementowTechEdit]
   res.status(201).json(odpowiedz);
 });
-});
-
-
   //-------------------  aaa
   // connection.query("commit ", function (err, result) {
   //   if (err){ connection.query("rollback ", function (err, result) {   });  throw err;   } 

@@ -186,14 +186,14 @@ for (let produkt of produkty) {
         throw err;
       } 
 
-      connection.query("commit ", function (err, result) {
-       
-    });
+
 
     });
   }
 
-
+      connection.query("commit ", function (err, result) {
+       
+    });
 
 odpowiedz = [daneZamowienia,produkty,elementy,fragmenty,oprawa,procesyElementow]
 res.status(201).json(odpowiedz);

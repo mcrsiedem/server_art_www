@@ -13,6 +13,9 @@ const { verifyToken } = require("./logowanie/verifyToken");
 const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
 
 const { zapiszTechnologie } = require("./zapis/ZapiszTechnologie");
+const { zapiszTechnologieGrupy } = require("./zapis/ZapiszTechnologieGrupy");
+const { zapiszTechnologieWykonania } = require("./zapis/ZapiszTechnologieWykonania");
+const { zapiszTechnologieProcesyElementow } = require("./zapis/ZapiszTechnologieProcesyElementow");
 
 
 
@@ -26,7 +29,9 @@ const { zapiszTechnologie } = require("./zapis/ZapiszTechnologie");
     router.get('/zamowienia/:token',verifyToken,connections.getZamowienia);
 
     router.post('/zapiszTechnologie/:token',verifyToken, zapiszTechnologie); // zapisuje technologie
-
+    router.post('/zapiszTechnologieGrupy/:token',verifyToken,zapiszTechnologieGrupy); 
+    router.post('/zapiszTechnologieWykonania/:token',verifyToken,zapiszTechnologieWykonania); 
+    router.post('/zapiszTechnologieProcesyElementow/:token',verifyToken,zapiszTechnologieProcesyElementow); 
 
 
     // papiery
@@ -93,7 +98,7 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 
 // Technologie nowe2
 // router.get('/technologie_parametry/:idTechnologii/:prime_id',connections.getParametryTechnologii);
-router.get('/technologie_parametry/:idTechnologii',connections.getParametryTechnologii);
+router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
 router.get('/technologie_grupy_an_wykonania_all',connections.getWykonania_i_grupyAll);     
 router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);     
 router.get('/technologie',connections.getTechnologie);     

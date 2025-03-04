@@ -160,7 +160,7 @@ class Connections {
             if (err) throw err;
             });
      
-             var sql  = "select * from artdruk.view_technologie where prime_id = (select prime_id from  artdruk.technologie where id = '" + idTechnologii + "') and final = 1 ORDER BY id ASC";
+             var sql  = "select * from artdruk.view_technologie  where id = '" + idTechnologii + "')  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
              if (err) throw err;
              dane.push(doc)
