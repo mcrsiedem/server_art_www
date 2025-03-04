@@ -12,6 +12,7 @@ const { zapiszZamowienieUpdate } = require("./zapis/ZapiszZamowienieUpdate");
 const { verifyToken } = require("./logowanie/verifyToken");
 const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
 
+const { zapiszTechnologie } = require("./zapis/ZapiszTechnologie");
 
 
 
@@ -23,6 +24,8 @@ const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
     router.put('/zapiszZamowienieUpdate/:token',verifyToken, zapiszZamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:token',verifyToken,connections.getZamowienia);
+
+    router.post('/zapiszTechnologie/:token',verifyToken, zapiszTechnologie); // zapisuje technologie
 
 
 
