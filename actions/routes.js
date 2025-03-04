@@ -74,7 +74,7 @@ const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
     router.get('/procesyElementow',connections.getProcesyElementow);
     router.get('/procesory',connections.getProcesory);
     
-    // router.get('/lista-userow',connections.getUsersM);
+    router.get('/lista-userow',connections.getUsersM);
 // end
 router.get('/lista-klientow',connections.getKlienci);
 router.get('/lista-opraw',connections.getOprawy);
