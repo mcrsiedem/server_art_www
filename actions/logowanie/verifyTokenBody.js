@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const { ACCESS_TOKEN } = require("./ACCESS_TOKEN");
 
-const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
+
 
 const verifyTokenBody=(req,res,next) =>{
 

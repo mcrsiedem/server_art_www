@@ -1,11 +1,62 @@
 
 const connection = require("./mysql");
+const jwt = require("jsonwebtoken");
 const { teraz } = require("./czas/teraz");
 const { dodaj_minuty } = require("./czas/dodaj_minuty");
-
+const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 
 class Connections {
+
+    getUser(req,res){
+
+        const login = req.params['login']
+        const haslo = req.params['haslo']
+    
+    var sql =   "INSERT INTO artdruk.historia (User,Kategoria,Event,Klient) "+
+    "values ('" + login + "','Logowanie','" + haslo + "','www'); ";
+    connection.query(sql, function (err, result) {
+            if (err) throw err;
+            })
+    
+    
+        var sql = "select id,imie,nazwisko,login,haslo,dostep from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        connection.query(sql,  (err, result) => {
+    
+            if(err) return res.json({Status: "Error", Error: "Error in running query"})
+            if(result.length >0 ){
+                        const id = result[0].id;
+                        const imie = result[0].imie;
+                        const nazwisko = result[0].nazwisko;
+                        const dostep = result[0].dostep;
+                        const paylod = {
+                            id,
+                            imie,
+                            nazwisko,
+                            login,
+                            dostep
+                        }
+     
+               const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
+    
+                return res.status(200).json(token)
+                
+        
+            } else {
+                return res.json({Status: "Error", Error: "Wrong Email or Password"})
+            }
+    }
+    );
+    
+    }  
+
+     isLogged(req,res){
+        //  przed wywyłaniem tej fukncji sprawdzany jest verifyToken jako middleware w endpoincie
+      //   const token = req.params['token']
+      
+      
+       return res.json({Status: "Success"});
+      }
 
 
 
