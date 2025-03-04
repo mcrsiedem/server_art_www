@@ -9,45 +9,49 @@ const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
 const { zapiszZamowienie } = require("./zapis/ZapiszZamowienie");
 const { zapiszZamowienieUpdate } = require("./zapis/ZapiszZamowienieUpdate");
+const { verifyToken } = require("./logowanie/verifyToken");
+const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
+
 
 
 function isLogged(req,res){
   //  przed wywyłaniem tej fukncji sprawdzany jest verifyToken jako middleware w endpoincie
 //   const token = req.params['token']
-//   console.log(token)
+
 
  return res.json({Status: "Success"});
 }
 
-const verifyToken=(req,res,next) =>{
-    const token = req.params['token']
+// const verifyToken=(req,res,next) =>{
+//     const token = req.params['token']
 
-//    console.log("token z cookie! "+token)
-    if(!token){
-        return res.json({Error: "You are not Authenticated"});
-    } else {
-        jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
-            if(err) return res.json({Error: "Wrong token"});
-            next();
-        })
-    }
-    //console.log("next");
-}
+
+//     if(!token){
+//         return res.json({Error: "You are not Authenticated"});
+//     } else {
+//         jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
+//             if(err) return res.json({Error: "Wrong token"});
+//             next();
+//         })
+//     }
+
+// }
+
+
 //s
-const verifyTokenBody=(req,res,next) =>{
+// const verifyTokenBody=(req,res,next) =>{
 
-    const token= req.body.token;
-   //console.log("token z cookie! "+token)
-    if(!token){
-        return res.json({Error: "You are not Authenticated"});
-    } else {
-        jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
-            if(err) return res.json({Error: "Wrong token"});
-            next();
-        })
-    }
-    //console.log("next");
-}
+//     const token= req.body.token;
+//     if(!token){
+//         return res.json({Error: "You are not Authenticated"});
+//     } else {
+//         jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
+//             if(err) return res.json({Error: "Wrong token"});
+//             next();
+//         })
+//     }
+
+// }
 
 
 
@@ -120,18 +124,14 @@ router.get('/islogged/:token',verifyToken,isLogged);
 
 
 
-// zamaówienie nowe
     
-    // router.get('/parametry/:idZamowienia/:zamowienie_prime_id',connections.getParametry);
-    router.get('/zamowienia',connections.getZamowienia);
-    // router.post('/zamowienie',connections.postZamowienie);
-    // router.post('/zamowienie_new',connections.postZamowienieNew);
+   
 
     // najnowszy zapis zamówienia
     router.post('/zapiszZamowienie/:token',verifyToken, zapiszZamowienie); // dodaje nowe zmówienie
     router.put('/zapiszZamowienieUpdate/:token',verifyToken, zapiszZamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
-
+    router.get('/zamowienia/:token',verifyToken,connections.getZamowienia);
 
 
 

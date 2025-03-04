@@ -2,10 +2,10 @@ const jwt = require("jsonwebtoken");
 
 const ACCESS_TOKEN ='mcsdfsdg43sgkbajg45kt234ojgsdfsd234fsdkufgdgfdfg32423';
 
-const verifyToken=(req,res,next) =>{
-    const token = req.params['token']
+const verifyTokenBody=(req,res,next) =>{
 
-
+    const token= req.body.token;
+   //console.log("token z cookie! "+token)
     if(!token){
         return res.json({Error: "You are not Authenticated"});
     } else {
@@ -14,11 +14,11 @@ const verifyToken=(req,res,next) =>{
             next();
         })
     }
-
+    //console.log("next");
 }
 
 module.exports = {
-  verifyToken
+    verifyTokenBody
     
 }
  
