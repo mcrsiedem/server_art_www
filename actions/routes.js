@@ -103,7 +103,7 @@ connection.query(sql, function (err, result) {
 }
 );
 
-console.log("login: " + login + "haslo: "+haslo )
+
 }  
 
 router.get('/users/:login/:haslo',getUser);
@@ -113,33 +113,29 @@ router.get('/users/:login/:haslo',getUser);
 // weryfikacja tokenu
 router.get('/islogged/:token',verifyToken,isLogged);
 
-// aktualizacja ilość blach w druku row.js
-router.put('/updatenaswietlenieprimewww',verifyTokenBody,connections.updatenaswietlenieprime);
-
-//  aktualizacja statusów druku w row.js
-router.put('/updateStatusWWW',verifyTokenBody,connections.updateStatusWWW);
 
 
 
-// nie wiem czy sie udalo 
-// zlecenia
-router.post('/zlecenia',connections.postZlecenie);
-router.post('/zlecenia_z_excela',connections.postZlecenia_z_EXCELA);
 
-router.delete('/zlecenia',connections.deleteZlecenie);
-router.delete('/delete_zamowienie',connections.deleteZamowienie);
-router.delete('/odblokuj_zamowienie',connections.odblokujZamowienie);
+
 
 
 // zamaówienie nowe
-    router.get('/parametry/:idZamowienia/:zamowienie_prime_id',connections.getParametry);
+    
+    // router.get('/parametry/:idZamowienia/:zamowienie_prime_id',connections.getParametry);
     router.get('/zamowienia',connections.getZamowienia);
     // router.post('/zamowienie',connections.postZamowienie);
-    router.post('/zamowienie_new',connections.postZamowienieNew);
+    // router.post('/zamowienie_new',connections.postZamowienieNew);
+
+    // najnowszy zapis zamówienia
+    router.post('/zapiszZamowienie/:token',verifyToken, zapiszZamowienie); // dodaje nowe zmówienie
+    router.put('/zapiszZamowienieUpdate/:token',verifyToken, zapiszZamowienieUpdate); // aktualizacja zamowienia
+    router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
 
 
-    router.post('/zapiszZamowienie', zapiszZamowienie);
-    router.put('/zapiszZamowienieUpdate', zapiszZamowienieUpdate);
+
+
+
 
 
     router.post('/zapis_kosztow_dodatkowych',connections.zapisKosztowDodatkowych);
@@ -208,6 +204,26 @@ router.get('/updateAddPrzerwa/:global_id_grupa/:czas',connections.updateAddPrzer
 router.get('/updateDeletePrzerwa/:global_id_grupa',connections.updateDeletePrzerwa);
 router.get('/zmienCzasTrwaniaGrupy/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupy);
 
+
+
+
+
+// aktualizacja ilość blach w druku row.js
+router.put('/updatenaswietlenieprimewww',verifyTokenBody,connections.updatenaswietlenieprime);
+
+//  aktualizacja statusów druku w row.js
+router.put('/updateStatusWWW',verifyTokenBody,connections.updateStatusWWW);
+
+
+
+// nie wiem czy sie udalo 
+// zlecenia
+router.post('/zlecenia',connections.postZlecenie);
+router.post('/zlecenia_z_excela',connections.postZlecenia_z_EXCELA);
+
+router.delete('/zlecenia',connections.deleteZlecenie);
+router.delete('/delete_zamowienie',connections.deleteZamowienie);
+router.delete('/odblokuj_zamowienie',connections.odblokujZamowienie);
 
 // router.post('/technologie_rest',connections.postTechnologieRest); 
 // router.put('/technologia_not_final',connections.updateSetTechNotFinal);  
