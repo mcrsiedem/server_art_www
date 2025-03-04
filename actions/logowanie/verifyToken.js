@@ -11,6 +11,7 @@ const verifyToken=(req,res,next) =>{
     } else {
         jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
             if(err) return res.json({Error: "Wrong token"});
+
             next();
         })
     }

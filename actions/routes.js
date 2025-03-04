@@ -18,7 +18,7 @@ const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
     router.get('/users/:login/:haslo',connections.getUser);
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 
-    // najnowszy zapis zamówienia
+    // zamówienia
     router.post('/zapiszZamowienie/:token',verifyToken, zapiszZamowienie); // dodaje nowe zmówienie
     router.put('/zapiszZamowienieUpdate/:token',verifyToken, zapiszZamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
@@ -26,14 +26,26 @@ const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
 
 
 
-
+    // papiery
     router.get('/lista-papierow/:token',verifyToken,connections.getListaPapierow);
     router.get('/lista-papierow-nazwy/:token',verifyToken,connections.getListaPapierowNazwy);
     router.get('/lista-papierow-grupa/:token',verifyToken,connections.getListaPapierowGrupa);
+    router.put('/updatePaper/:token',verifyToken,connections.updatePapiery);
+    router.put('/updatePaperNazwy/:token',verifyToken,connections.updatePapieryNazwy);
+    router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);
 
 
 
 
+
+
+
+
+
+
+
+
+    
 
 
     router.post('/zapis_kosztow_dodatkowych',connections.zapisKosztowDodatkowych);
@@ -62,7 +74,7 @@ const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
     router.get('/procesyElementow',connections.getProcesyElementow);
     router.get('/procesory',connections.getProcesory);
     
-    router.get('/lista-userow',connections.getUsersM);
+    // router.get('/lista-userow',connections.getUsersM);
 // end
 router.get('/lista-klientow',connections.getKlienci);
 router.get('/lista-opraw',connections.getOprawy);
@@ -72,9 +84,7 @@ router.put('/klient',connections.deleteKlient);
 router.put('/updateKlient',connections.updateKlient);
 router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
-router.put('/updatePaper',connections.updatePapiery);
-router.put('/updatePaperNazwy',connections.updatePapieryNazwy);
-router.put('/updatePaperGrupa',connections.updatePapieryGrupa);
+
 
 
 
