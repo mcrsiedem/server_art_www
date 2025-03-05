@@ -23,8 +23,8 @@ const zapiszTechnologie = (req,res) =>{
 
   //---------------- aaa
 
-  var sql =   "INSERT INTO artdruk.technologie (nr,rok,tytul,firma_id,klient_id,zamowienie_id) "+
-  "values ('" + daneTechEdit.nr + "','" + daneTechEdit.rok + "','" + daneTechEdit.tytul + "','" + daneTechEdit.firma_id + "','" + daneTechEdit.klient_id + "','" + daneTechEdit.zamowienie_id + "'); ";
+  var sql =   "INSERT INTO artdruk.technologie (nr,rok,tytul,firma_id,klient_id,zamowienie_id,autor_id,opiekun_id) "+
+  "values ('" + daneTechEdit.nr + "','" + daneTechEdit.rok + "','" + daneTechEdit.tytul + "','" + daneTechEdit.firma_id + "','" + daneTechEdit.klient_id + "','" + daneTechEdit.zamowienie_id + "','" + daneTechEdit.autor_id + "','" + daneTechEdit.opiekun_id + "'); ";
 
   connection.query(sql, function (err, result) {
 

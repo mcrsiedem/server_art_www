@@ -16,6 +16,7 @@ const { zapiszTechnologie } = require("./zapis/ZapiszTechnologie");
 const { zapiszTechnologieGrupy } = require("./zapis/ZapiszTechnologieGrupy");
 const { zapiszTechnologieWykonania } = require("./zapis/ZapiszTechnologieWykonania");
 const { zapiszTechnologieProcesyElementow } = require("./zapis/ZapiszTechnologieProcesyElementow");
+const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
 
 
 
@@ -33,6 +34,7 @@ const { zapiszTechnologieProcesyElementow } = require("./zapis/ZapiszTechnologie
     router.post('/zapiszTechnologieGrupy/:token',verifyToken,zapiszTechnologieGrupy); 
     router.post('/zapiszTechnologieWykonania/:token',verifyToken,zapiszTechnologieWykonania); 
     router.post('/zapiszTechnologieProcesyElementow/:token',verifyToken,zapiszTechnologieProcesyElementow); 
+    router.put('/zapiszTechnologieUpdate/:token',verifyToken, zapiszTechnologieUpdate); // aktualizacja zamowienia
     router.get('/technologie/:token',verifyToken,connections.getTechnologie);    
     router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
 
