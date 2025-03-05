@@ -23,7 +23,7 @@ if (err) throw err;  });
 
 
 if( daneZamowienia.update == true){
-var sql =   "update  artdruk.zamowienia set  nr='" + daneZamowienia.nr + "', rok = '" + daneZamowienia.rok + "',firma_id=" + daneZamowienia.firma_id+ ",klient_id='" + daneZamowienia.klient_id + "',tytul='" + daneZamowienia.tytul + "',data_przyjecia='" + daneZamowienia.data_przyjecia + "',data_materialow=" +ifNoDateSetNull(daneZamowienia.data_materialow ) + ",data_spedycji=" + ifNoDateSetNull(daneZamowienia.data_spedycji ) + ",opiekun_id='" + daneZamowienia.opiekun_id + "',stan='" + daneZamowienia.stan + "',status='" + daneZamowienia.status + "',uwagi='" + daneZamowienia.uwagi + "',etap_produkcji='" + daneZamowienia.etap_produkcji + "',waluta_id='" + daneZamowienia.waluta_id + "',vat_id='" + daneZamowienia.vat_id + "',przedplata='" + daneZamowienia.przedplata + "',cena='" + daneZamowienia.cena + "',termin_platnosci='" + daneZamowienia.termin_platnosci + "',fsc='" + daneZamowienia.fsc + "' where id = '" + daneZamowienia.id + "'"
+var sql =   "update  artdruk.zamowienia set  nr='" + daneZamowienia.nr + "', rok = '" + daneZamowienia.rok + "',firma_id=" + daneZamowienia.firma_id+ ",klient_id='" + daneZamowienia.klient_id + "',tytul='" + daneZamowienia.tytul + "',data_przyjecia=" +ifNoDateSetNull( daneZamowienia.data_przyjecia) + ",data_materialow=" +ifNoDateSetNull(daneZamowienia.data_materialow ) + ",data_spedycji=" + ifNoDateSetNull(daneZamowienia.data_spedycji ) + ",opiekun_id='" + daneZamowienia.opiekun_id + "',stan='" + daneZamowienia.stan + "',status='" + daneZamowienia.status + "',uwagi='" + daneZamowienia.uwagi + "',etap_produkcji='" + daneZamowienia.etap_produkcji + "',waluta_id='" + daneZamowienia.waluta_id + "',vat_id='" + daneZamowienia.vat_id + "',przedplata='" + daneZamowienia.przedplata + "',cena='" + daneZamowienia.cena + "',termin_platnosci='" + daneZamowienia.termin_platnosci + "',fsc='" + daneZamowienia.fsc + "' where id = '" + daneZamowienia.id + "'"
 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
 }
 //---------------- produkty
@@ -98,7 +98,7 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
 
      //-------------- oprawa
   for(let row of oprawa.filter(x => x.update == true && x.insert != true) ){
-    var sql =   "update  artdruk.zamowienia_oprawa set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", oprawa = " + row.oprawa+ ", naklad = " + row.naklad+ ", bok_oprawy = '" + row.bok_oprawy+ "', data_spedycji = '" + row.data_spedycji+ "', uwagi = '" + row.uwagi+ "', wersja = '" + row.wersja+ "', data_czystodrukow = '" + row.data_czystodrukow+ "', indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
+    var sql =   "update  artdruk.zamowienia_oprawa set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", oprawa = " + row.oprawa+ ", naklad = " + row.naklad+ ", bok_oprawy = '" + row.bok_oprawy+ "', data_spedycji = " + ifNoDateSetNull(row.data_spedycji)+ ", uwagi = '" + row.uwagi+ "', wersja = '" + row.wersja+ "', data_czystodrukow = " +ifNoDateSetNull( row.data_czystodrukow)+ ", indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
     connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
     }
   
