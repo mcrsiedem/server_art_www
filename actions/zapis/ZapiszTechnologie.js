@@ -1,4 +1,5 @@
 const connection = require("../mysql");
+const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const zapiszTechnologie = (req,res) =>{
 
 
