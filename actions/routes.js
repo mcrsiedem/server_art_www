@@ -28,10 +28,14 @@ const { zapiszTechnologieProcesyElementow } = require("./zapis/ZapiszTechnologie
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:token',verifyToken,connections.getZamowienia);
 
+    // technologie
     router.post('/zapiszTechnologie/:token',verifyToken, zapiszTechnologie); // zapisuje technologie
     router.post('/zapiszTechnologieGrupy/:token',verifyToken,zapiszTechnologieGrupy); 
     router.post('/zapiszTechnologieWykonania/:token',verifyToken,zapiszTechnologieWykonania); 
     router.post('/zapiszTechnologieProcesyElementow/:token',verifyToken,zapiszTechnologieProcesyElementow); 
+    router.get('/technologie/:token',verifyToken,connections.getTechnologie);    
+    router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
+
 
 
     // papiery
@@ -98,15 +102,15 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 
 // Technologie nowe2
 // router.get('/technologie_parametry/:idTechnologii/:prime_id',connections.getParametryTechnologii);
-router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
+// router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
 router.get('/technologie_grupy_an_wykonania_all',connections.getWykonania_i_grupyAll);     
 router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);     
-router.get('/technologie',connections.getTechnologie);     
+ 
 // router.post('/technologie',connections.postTechnologie); 
-router.post('/technologie_new',connections.postTechnologieNew); 
-router.post('/grupa',connections.postTechnologieGrupy); 
-router.post('/wykonania',connections.postTechnologieWykonania); 
-router.post('/procesy_elementow',connections.postTechnologieProcesyElementow); 
+// router.post('/technologie_new',connections.postTechnologieNew); 
+// router.post('/grupa',connections.postTechnologieGrupy); 
+// router.post('/wykonania',connections.postTechnologieWykonania); 
+// router.post('/procesy_elementow',connections.postTechnologieProcesyElementow); 
 
 router.get('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);
 router.get('/drag_drop_proces_grupa_to_procesor/:id_drag_grupa_proces/:id',connections.dragDropProcesGrupToProcesor);

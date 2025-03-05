@@ -1,7 +1,7 @@
 const connection = require("../mysql");
 const zapiszTechnologie = (req,res) =>{
 
-console.log("danetech: ",req.body[0])
+
   let daneTechEdit = req.body[0]
   let produktyTechEdit = req.body[1]
   let elementyTechEdit = req.body[2]
@@ -28,9 +28,9 @@ console.log("danetech: ",req.body[0])
 
   connection.query(sql, function (err, result) {
 
-    console.log("result" , result)
+    console.log("result" , result.insertId)
     // dodaje do wszystkiego id techologi
-    // daneTechEdit.id =result.insertId
+    daneTechEdit.id =result.insertId
     produktyTechEdit = produktyTechEdit.map((obj) => {return{...obj, technologia_id:result.insertId} })
     elementyTechEdit = elementyTechEdit.map((obj) => {return{...obj, technologia_id:result.insertId} })
     fragmentyTechEdit = fragmentyTechEdit.map((obj) => {return{...obj, technologia_id:result.insertId} })
