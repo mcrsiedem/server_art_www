@@ -27,6 +27,7 @@ connection.query(sql, function (err, result) {
 if (err) throw err;  });
 
 
+
 if( daneTechEdit.update == true){
 var sql =   "update  artdruk.technologie set "+  
    "nr='" + daneTechEdit.nr +
@@ -36,6 +37,9 @@ var sql =   "update  artdruk.technologie set "+
    ",klient_id='" + daneTechEdit.klient_id + 
    "',zamowienie_id='" + daneTechEdit.zamowienie_id + 
    "',autor_id='" + daneTechEdit.autor_id + 
+   "',data_przyjecia='" + daneTechEdit.data_przyjecia + 
+   "',data_spedycji='" + daneTechEdit.data_spedycji + 
+   "',data_materialow='" + daneTechEdit.data_materialow + 
    "' where id = '" + daneTechEdit.id + "'"
 
 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
