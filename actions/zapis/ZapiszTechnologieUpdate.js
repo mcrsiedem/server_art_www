@@ -1,5 +1,8 @@
 const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
+const { zapiszTechnologieUpdate_dane } = require("./ZapiszTechnologieUpdate_dane");
+const { zapiszTechnologieUpdate_produkty } = require("./ZapiszTechnologieUpdate_produkty");
+const { zapiszTechnologieUpdate_elementy } = require("./ZapiszTechnologieUpdate_elementy");
 const zapiszTechnologieUpdate = (req,res) =>{
 
   let daneTechEdit = req.body[0]
@@ -26,39 +29,9 @@ connection.query(sql, function (err, result) {
 if (err) throw err;  });
 
 
-
-if( daneTechEdit.update == true){
-var sql =   "update  artdruk.technologie set "+  
-   "nr='" + daneTechEdit.nr +
-   "', rok = '" + daneTechEdit.rok + 
-   "', tytul = '" + daneTechEdit.tytul + 
-   "',firma_id=" + daneTechEdit.firma_id+ 
-   ",klient_id='" + daneTechEdit.klient_id + 
-   "',zamowienie_id='" + daneTechEdit.zamowienie_id + 
-   "',autor_id='" + daneTechEdit.autor_id + 
-   "',data_przyjecia=" + ifNoDateSetNull(daneTechEdit.data_przyjecia) + 
-   ",data_spedycji=" + ifNoDateSetNull(daneTechEdit.data_spedycji) + 
-   ",data_materialow=" + ifNoDateSetNull(daneTechEdit.data_materialow) + 
-   " where id = '" + daneTechEdit.id + "'"
-
-connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-}
-// //---------------- produkty
-// for(let row of produkty.filter(x => x.update == true && x.insert != true) ){
-//   var sql =   "update  artdruk.zamowienia_produkty set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", nazwa = '" + row.nazwa+ "', opiekun_zamowienia_id = " + row.opiekun_zamowienia_id+ ", uwagi = '" + row.uwagi+ "', stan = '" + row.stan+ "', status = '" + row.status+ "', typ = '" + row.typ+ "', ilosc_stron = '" + row.ilosc_stron+ "', format_x = '" + row.format_x+ "', format_y = '" + row.format_y+ "', oprawa = '" + row.oprawa+ "', naklad = '" + row.naklad+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
-//   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//   }
-
-//   for(let row of produkty.filter(x => x.insert == true && x.delete != true) ){
-//     var sql =   "INSERT INTO artdruk.zamowienia_produkty (id,zamowienie_id,nazwa,wersja,opiekun_zamowienia_id,uwagi,stan,status,typ,ilosc_stron,format_x,format_y,oprawa,naklad,indeks) "+
-//     "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.element_id + "," + row.oprawa_id + ",'" + row.naklad + "','" + row.ilosc_stron + "','" + row.wersja + "','" + row.info + "','" + row.typ + "'," + row.indeks + "); ";
-//     connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//     }
-
-//     for(let row of produkty.filter(x => x.delete == true && x.insert != true) ){
-//         var sql =   "DELETE from artdruk.zamowienia_produkty where global_id=" + row.global_id;
-//         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//         }
+zapiszTechnologieUpdate_dane(daneTechEdit)
+zapiszTechnologieUpdate_produkty(produktyTechEdit)
+zapiszTechnologieUpdate_elementy(elementyTechEdit)
 
   
 // //---------------- elementy
