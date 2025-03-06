@@ -21,6 +21,7 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   ", uwagi = '" + row.uwagi+ 
   "', ilosc_leg = '" + row.ilosc_leg+ 
   "', lega = '" + row.lega+ 
+  "', etap = '" + row.etap+ 
   "', arkusz_szerokosc = '" + row.arkusz_szerokosc+ 
   "', arkusz_wysokosc = '" + row.arkusz_wysokosc+ 
   "' where global_id = " + row.global_id + ""
@@ -28,8 +29,29 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   }
 
   for(let row of elementyTechEdit.filter(x => x.insert == true && x.delete != true) ){
-    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,naklad,info,uwagi,stan,status,tytul,papier_info,indeks) "+
-    "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + ",'" + row.nazwa + "'," + row.typ + ",'" + row.ilosc_stron + "','" + row.kolory + "'," + row.format_x + "," + row.format_y + "," + row.papier_id + "," + row.naklad + ",'" + row.info + "','" + row.uwagi + "','" + row.stan + "','" + row.status + "','" + row.tytul + "','" + row.papier_info + "','" + row.indeks + "'); ";
+    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,ilosc_leg,lega,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,stan,status,etap,tytul,papier_info,indeks) "+
+    "values (" 
+    + row.id + "," 
+    + row.zamowienie_id + "," 
+    + row.produkt_id + ",'" 
+    + row.nazwa + "'," 
+    + row.typ + ",'" 
+    + row.ilosc_stron + "','" 
+    + row.format_x + "," 
+    + row.format_y + "," 
+    + row.papier_id + "," 
+    + row.ilosc_leg + ",'" 
+    + row.lega + ",'" 
+    + row.arkusz_szerokosc + ",'" 
+    + row.arkusz_wysokosc + ",'" 
+    + row.naklad + ",'" 
+    + row.uwagi + "','" 
+    + row.stan + "','" 
+    + row.status + "','" 
+    + row.etap + "','" 
+    + row.tytul + "','" 
+    + row.papier_info + "','" 
+    + row.indeks + "'); ";
     connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
     }
 
