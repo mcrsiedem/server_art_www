@@ -13,16 +13,18 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   ", produkt_id = " + row.produkt_id+ 
   ", nazwa = '" + row.nazwa+ 
   "', typ = " + row.typ+ 
-  ", ilosc_stron = '" + row.ilosc_stron+ 
-  "', format_x = '" + row.format_x+ 
-  "', format_y = " + row.format_y+ 
+  ", ilosc_stron = " + row.ilosc_stron+ 
+  ", format_x = " + row.format_x+ 
+  ", format_y = " + row.format_y+ 
   ", papier_id = " + row.papier_id+ 
   ", naklad = " + row.naklad+ 
   ", uwagi = '" + row.uwagi+ 
-  "', ilosc_leg = '" + row.ilosc_leg+ 
-  "', lega = '" + row.lega+ 
-  "', etap = '" + row.etap+ 
-  "', arkusz_szerokosc = " + row.arkusz_szerokosc+ 
+  "', ilosc_leg = " + row.ilosc_leg+ 
+  ", lega = " + row.lega+ 
+  ", stan = " + row.stan+ 
+  ", status = " + row.etap+ 
+  ", etap = " + row.etap+ 
+  ", arkusz_szerokosc = " + row.arkusz_szerokosc+ 
   ", arkusz_wysokosc = " + row.arkusz_wysokosc+ 
   " where global_id = " + row.global_id + ""
   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
@@ -35,8 +37,8 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
     + row.zamowienie_id + "," 
     + row.produkt_id + ",'" 
     + row.nazwa + "'," 
-    + row.typ + ",'" 
-    + row.ilosc_stron + "'," 
+    + row.typ + "," 
+    + row.ilosc_stron + "," 
     + row.format_x + "," 
     + row.format_y + "," 
     + row.papier_id + "," 
@@ -45,10 +47,10 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
     + row.arkusz_szerokosc + "," 
     + row.arkusz_wysokosc + "," 
     + row.naklad + ",'" 
-    + row.uwagi + "','" 
-    + row.stan + "','" 
-    + row.status + "','" 
-    + row.etap + ",'" 
+    + row.uwagi + "'," 
+    + row.stan + "," 
+    + row.status + "," 
+    + row.etap + "," 
     + row.indeks + "'); ";
     connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
     }

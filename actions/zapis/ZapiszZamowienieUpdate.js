@@ -46,7 +46,7 @@ for(let row of produkty.filter(x => x.update == true && x.insert != true) ){
   
 //---------------- elementy
 for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
-  var sql =   "update  artdruk.zamowienia_elementy set  id = " + element.id+ ", zamowienie_id = " + element.zamowienie_id+ ", produkt_id = " + element.produkt_id+ ", nazwa = '" + element.nazwa+ "', typ = " + element.typ+ ", ilosc_stron = '" + element.ilosc_stron+ "', format_x = '" + element.format_x+ "', format_y = " + element.format_y+ ", papier_id = " + element.papier_id+ ", naklad = " + element.naklad+ ", stan = " + element.stan+ ", status = " + element.status+ ", etap = " + element.etap+ ", info = '" + element.info+ "', uwagi = '" + element.uwagi+ "' where global_id = " + element.global_id + ""
+  var sql =   "update  artdruk.zamowienia_elementy set  id = " + element.id+ ", zamowienie_id = " + element.zamowienie_id+ ", produkt_id = " + element.produkt_id+ ", nazwa = '" + element.nazwa+ "', typ = " + element.typ+ ", ilosc_stron = " + element.ilosc_stron+ ", format_x = '" + element.format_x+ "', format_y = '" + element.format_y+ "', papier_id = " + element.papier_id+ ", naklad = " + element.naklad+ ", stan = " + element.stan+ ", status = " + element.status+ ", etap = " + element.etap+ ", info = '" + element.info+ "', uwagi = '" + element.uwagi+ "' where global_id = " + element.global_id + ""
   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
   }
 
@@ -63,7 +63,7 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
 //-------------- fragmenty
 
         for(let row of fragmenty.filter(x => x.update == true && x.insert != true) ){
-          var sql =   "update  artdruk.zamowienia_fragmenty set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", element_id = " + row.element_id+ ", oprawa_id = " + row.oprawa_id+ ", naklad = '" + row.naklad+ "', ilosc_stron = '" + row.ilosc_stron+ "', wersja = '" + row.wersja+ "', info = '" + row.info+ "', typ = '" + row.typ+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
+          var sql =   "update  artdruk.zamowienia_fragmenty set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", element_id = " + row.element_id+ ", oprawa_id = " + row.oprawa_id+ ", naklad = " + row.naklad+ ", ilosc_stron = " + row.ilosc_stron+ ", wersja = '" + row.wersja+ "', info = '" + row.info+ "', typ = '" + row.typ+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
           connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
           }
         
