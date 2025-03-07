@@ -105,7 +105,7 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
   
     for(let row of oprawa.filter(x => x.insert == true && x.delete != true) ){
       var sql =   "INSERT INTO artdruk.zamowienia_oprawa (id,zamowienie_id,produkt_id,oprawa,naklad,bok_oprawy,data_spedycji,uwagi,wersja,data_czystodrukow,indeks) "+
-      "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.oprawa + "," + row.naklad + ",'" + row.bok_oprawy + "','" + row.data_spedycji + "','" + row.uwagi + "','" + row.wersja + "','" + row.data_czystodrukow + "'," + row.indeks + "); ";
+      "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.oprawa + "," + row.naklad + ",'" + row.bok_oprawy + "'," + row.data_spedycji + ",'" + row.uwagi + "','" + row.wersja + "'," + row.data_czystodrukow + "," + row.indeks + "); ";
       connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
       }
   
