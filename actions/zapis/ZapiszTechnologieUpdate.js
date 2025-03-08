@@ -5,6 +5,9 @@ const { zapiszTechnologieUpdate_produkty } = require("./ZapiszTechnologieUpdate_
 const { zapiszTechnologieUpdate_elementy } = require("./ZapiszTechnologieUpdate_elementy");
 const { zapiszTechnologieUpdate_procesy_elementow } = require("./ZapiszTechnologieUpdate_procesy_elementow");
 const { zapiszTechnologieUpdate_oprawa } = require("./ZapiszTechnologieUpdate_oprawa");
+const { zapiszTechnologieUpdate_legi } = require("./ZapiszTechnologieUpdate_legi");
+const { zapiszTechnologieUpdate_legi_fragmenty } = require("./ZapiszTechnologieUpdate_legi_fragmenty");
+
 
 
 
@@ -40,6 +43,10 @@ zapiszTechnologieUpdate_produkty(produktyTechEdit,res)
 zapiszTechnologieUpdate_elementy(elementyTechEdit,res)
 zapiszTechnologieUpdate_procesy_elementow(procesyElementowTechEdit,res)
 zapiszTechnologieUpdate_oprawa(oprawaTechEdit,res)
+zapiszTechnologieUpdate_legi(legiEdit,res)
+zapiszTechnologieUpdate_legi_fragmenty(legiFragmentyEdit,res)
+
+
 
 
 // //-------------- fragmenty

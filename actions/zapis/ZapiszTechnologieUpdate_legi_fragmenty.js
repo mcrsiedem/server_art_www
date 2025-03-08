@@ -3,22 +3,22 @@ const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 
 
-const zapiszTechnologieUpdate_legi=(legi) =>{
+const zapiszTechnologieUpdate_legi_fragmenty=(legi) =>{
 
 
 for(let row of legi.filter(x => x.update == true && x.insert != true) ){
-  var sql =   "update  artdruk.technologie_legi set  " +
+  var sql =   "update  artdruk.technologie_legi_fragmenty set  " +
   "id = " + row.id+ 
   ", indeks = " + row.indeks+ 
   ", technologia_id = " + row.technologia_id+ 
-  ", typ_elementu = " + row.typ_elementu+ 
-  ", ilosc_stron = " + row.ilosc_stron+ 
-  ", rodzaj_legi = '" + row.rodzaj_legi+ 
-  "', element_id = " + row.element_id+ 
+  ", fragment_id = " + row.fragment_id+ 
+  ", element_id = " + row.element_id+ 
   ", arkusz_id = " + row.arkusz_id+ 
-  ", ilosc_stron = " + row.ilosc_stron+ 
+  ", lega_id = " + row.lega_id+ 
+  ", oprawa_id = " + row.oprawa_id+ 
   ", naklad = " + row.naklad+ 
-  ", uwagi = '" + row.uwagi+ 
+  ", typ = " + row.typ+ 
+  ", wersja = '" + row.wersja+ 
   "' where global_id = " + row.global_id + ""
   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
   }
@@ -27,25 +27,26 @@ for(let row of legi.filter(x => x.update == true && x.insert != true) ){
 
   for(let row of legi.filter(x => x.insert == true && x.delete != true) ){
     var sql =
-    "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,uwagi) " +
+    "INSERT INTO artdruk.technologie_legi_fragmenty(id,indeks,technologia_id,element_id,fragment_id,arkusz_id,lega_id,naklad,oprawa_id,typ,wersja) " +
     "values ('" +
     row.id +  "','" +
     row.indeks +        "','" +
     row.technologia_id +        "','" +
-    row.typ_elementu +        "','" +
-    row.rodzaj_legi +        "','" +
     row.element_id +        "','" +
+    row.fragment_id +        "','" +
     row.arkusz_id +        "','" +
-    row.ilosc_stron +        "','" +
+    row.lega_id +        "','" +
     row.naklad +        "','" +
-    row.uwagi +        "'); ";
+    row.oprawa_id +        "','" +
+    row.typ +        "','" +
+    row.wersja +        "'); ";
   connection.query(sql, function (err, result) {
       if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
   });
   
 
     for(let row of legi.filter(x => x.delete == true && x.insert != true) ){
-        var sql =   "DELETE from artdruk.technologie_legi where global_id=" + row.global_id;
+        var sql =   "DELETE from artdruk.technologie_legi_fragmenty where global_id=" + row.global_id;
         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
         }
 
@@ -53,7 +54,7 @@ for(let row of legi.filter(x => x.update == true && x.insert != true) ){
 }
 
 module.exports = {
-  zapiszTechnologieUpdate_legi
+  zapiszTechnologieUpdate_legi_fragmenty
   
 }
  
