@@ -14,9 +14,9 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   ", nazwa = '" + row.nazwa+ 
   "', typ = " + row.typ+ 
   ", ilosc_stron = " + row.ilosc_stron+ 
-  ", format_x = " + row.format_x+ 
-  ", format_y = " + row.format_y+ 
-  ", papier_id = " + row.papier_id+ 
+  ", format_x = '" + row.format_x+ 
+  "', format_y = '" + row.format_y+ 
+  "', papier_id = " + row.papier_id+ 
   ", naklad = " + row.naklad+ 
   ", uwagi = '" + row.uwagi+ 
   "', ilosc_leg = " + row.ilosc_leg+ 
@@ -24,9 +24,9 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   ", stan = " + row.stan+ 
   ", status = " + row.etap+ 
   ", etap = " + row.etap+ 
-  ", arkusz_szerokosc = " + row.arkusz_szerokosc+ 
-  ", arkusz_wysokosc = " + row.arkusz_wysokosc+ 
-  " where global_id = " + row.global_id + ""
+  ", arkusz_szerokosc = '" + row.arkusz_szerokosc+ 
+  "', arkusz_wysokosc = '" + row.arkusz_wysokosc+ 
+  "' where global_id = " + row.global_id + ""
   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
   }
 

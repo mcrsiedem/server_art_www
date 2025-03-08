@@ -73,7 +73,7 @@ const zapiszTechnologie = (req,res) =>{
 
   for (let element of elementyTechEdit) {
       var sql =
-        "INSERT INTO artdruk.technologie_elementy (id,indeks,technologia_id,zamowienie_id,produkt_id,nazwa,typ,lega,ilosc_leg,ilosc_stron,format_x,format_y,papier_id,gramatura_id,papier_info,naklad,uwagi,etap,stan,status) " +
+        "INSERT INTO artdruk.technologie_elementy (id,indeks,technologia_id,zamowienie_id,produkt_id,nazwa,typ,lega,ilosc_leg,ilosc_stron,format_x,format_y,papier_id,papier_info,naklad,uwagi,etap,stan,status) " +
         "values ('" +
         element.id +  "','" +
         element.indeks +        "','" +
@@ -88,7 +88,6 @@ const zapiszTechnologie = (req,res) =>{
         element.format_x +        "','" +
         element.format_y +        "','" +
         element.papier_id +        "','" +
-        element.gramatura_id +        "','" +
         element.papier_info +        "','" +
         element.naklad +        "','" +
         element.uwagi +        "'," +

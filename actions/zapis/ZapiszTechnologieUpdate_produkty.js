@@ -17,9 +17,9 @@ for(let row of produktyTechEdit.filter(x => x.update == true && x.insert != true
      ", etap = " + row.etap+ 
      ", typ = '" + row.typ+ 
      "', ilosc_stron = " + row.ilosc_stron+ 
-     ", format_x = " + row.format_x+ 
-     ", format_y = " + row.format_y+ 
-     ", oprawa = '" + row.oprawa+ 
+     ", format_x = '" + row.format_x+ 
+     "', format_y = '" + row.format_y+ 
+     "', oprawa = '" + row.oprawa+ 
      "', naklad = " + row.naklad+ 
      ",  indeks = " + row.indeks+ 
      " where global_id = " + row.global_id + ""

@@ -3,6 +3,8 @@ const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const { zapiszTechnologieUpdate_dane } = require("./ZapiszTechnologieUpdate_dane");
 const { zapiszTechnologieUpdate_produkty } = require("./ZapiszTechnologieUpdate_produkty");
 const { zapiszTechnologieUpdate_elementy } = require("./ZapiszTechnologieUpdate_elementy");
+const { zapiszTechnologieUpdate_procesy_elementow } = require("./ZapiszTechnologieUpdate_procesy_elementow");
+
 const zapiszTechnologieUpdate = (req,res) =>{
 
   let daneTechEdit = req.body[0]
@@ -32,24 +34,10 @@ if (err) throw err;  });
 zapiszTechnologieUpdate_dane(daneTechEdit)
 zapiszTechnologieUpdate_produkty(produktyTechEdit)
 zapiszTechnologieUpdate_elementy(elementyTechEdit)
+zapiszTechnologieUpdate_procesy_elementow(procesyElementowTechEdit)
 
   
-// //---------------- elementy
-// for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
-//   var sql =   "update  artdruk.zamowienia_elementy set  id = " + element.id+ ", zamowienie_id = " + element.zamowienie_id+ ", produkt_id = " + element.produkt_id+ ", nazwa = '" + element.nazwa+ "', typ = " + element.typ+ ", ilosc_stron = '" + element.ilosc_stron+ "', format_x = '" + element.format_x+ "', format_y = " + element.format_y+ ", papier_id = " + element.papier_id+ ", naklad = " + element.naklad+ ", info = '" + element.info+ "', uwagi = '" + element.uwagi+ "' where global_id = " + element.global_id + ""
-//   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//   }
 
-//   for(let row of elementy.filter(x => x.insert == true && x.delete != true) ){
-//     var sql =   "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,naklad,info,uwagi,stan,status,tytul,papier_info,indeks) "+
-//     "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + ",'" + row.nazwa + "'," + row.typ + ",'" + row.ilosc_stron + "','" + row.kolory + "'," + row.format_x + "," + row.format_y + "," + row.papier_id + "," + row.naklad + ",'" + row.info + "','" + row.uwagi + "','" + row.stan + "','" + row.status + "','" + row.tytul + "','" + row.papier_info + "','" + row.indeks + "'); ";
-//     connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//     }
-
-//     for(let element of elementy.filter(x => x.delete == true && x.insert != true) ){
-//         var sql =   "DELETE from artdruk.zamowienia_elementy where global_id=" + element.global_id;
-//         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//         }
 // //-------------- fragmenty
 
 //         for(let row of fragmenty.filter(x => x.update == true && x.insert != true) ){
