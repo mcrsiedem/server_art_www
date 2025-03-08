@@ -29,58 +29,36 @@ const zapiszTechnologieUpdate = (req,res) =>{
 // console.log("SaveAs: ", req.body[0].saveAs)
 
 
-var sql = "begin";
+var sql = "BEGIN";
 connection.query(sql, function (err, result) {
-if (err) throw err;  });
+if (err) res.status(203).json(err)  });
 
 
-zapiszTechnologieUpdate_dane(daneTechEdit)
-zapiszTechnologieUpdate_produkty(produktyTechEdit)
-zapiszTechnologieUpdate_elementy(elementyTechEdit)
-zapiszTechnologieUpdate_procesy_elementow(procesyElementowTechEdit)
-zapiszTechnologieUpdate_oprawa(oprawaTechEdit)
 
-  
+zapiszTechnologieUpdate_dane(daneTechEdit,res)
+zapiszTechnologieUpdate_produkty(produktyTechEdit,res)
+zapiszTechnologieUpdate_elementy(elementyTechEdit,res)
+zapiszTechnologieUpdate_procesy_elementow(procesyElementowTechEdit,res)
+zapiszTechnologieUpdate_oprawa(oprawaTechEdit,res)
+
 
 // //-------------- fragmenty
 
 //         for(let row of fragmenty.filter(x => x.update == true && x.insert != true) ){
 //           var sql =   "update  artdruk.zamowienia_fragmenty set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", element_id = " + row.element_id+ ", oprawa_id = " + row.oprawa_id+ ", naklad = '" + row.naklad+ "', ilosc_stron = '" + row.ilosc_stron+ "', wersja = '" + row.wersja+ "', info = '" + row.info+ "', typ = '" + row.typ+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
-//           connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+//           connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
 //           }
         
 //           for(let row of fragmenty.filter(x => x.insert == true && x.delete != true) ){
 //             var sql =   "INSERT INTO artdruk.zamowienia_fragmenty (id,zamowienie_id,produkt_id,element_id,oprawa_id,naklad,ilosc_stron,wersja,info,typ,indeks) "+
 //             "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.element_id + "," + row.oprawa_id + ",'" + row.naklad + "','" + row.ilosc_stron + "','" + row.wersja + "','" + row.info + "','" + row.typ + "'," + row.indeks + "); ";
-//             connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+//             connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
 //             }
         
 //             for(let row of fragmenty.filter(x => x.delete == true && x.insert != true) ){
 //                 var sql =   "DELETE from artdruk.zamowienia_fragmenty where global_id=" + row.global_id;
-//                 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+//                 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
 //                 }
-
-
-
-//      //-------------- oprawa
-//   for(let row of oprawa.filter(x => x.update == true && x.insert != true) ){
-//     var sql =   "update  artdruk.zamowienia_oprawa set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", oprawa = " + row.oprawa+ ", naklad = " + row.naklad+ ", bok_oprawy = '" + row.bok_oprawy+ "', data_spedycji = '" + row.data_spedycji+ "', uwagi = '" + row.uwagi+ "', wersja = '" + row.wersja+ "', data_czystodrukow = '" + row.data_czystodrukow+ "', indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
-//     connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//     }
-  
-  
-//     for(let row of oprawa.filter(x => x.insert == true && x.delete != true) ){
-//       var sql =   "INSERT INTO artdruk.zamowienia_oprawa (id,zamowienie_id,produkt_id,oprawa,naklad,bok_oprawy,data_spedycji,uwagi,wersja,data_czystodrukow,indeks) "+
-//       "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.oprawa + "," + row.naklad + ",'" + row.bok_oprawy + "','" + row.data_spedycji + "','" + row.uwagi + "','" + row.wersja + "','" + row.data_czystodrukow + "'," + row.indeks + "); ";
-//       connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//       }
-  
-//       for(let row of oprawa.filter(x => x.delete == true && x.insert != true) ){
-//           var sql =   "DELETE from artdruk.zamowienia_oprawa where global_id=" + row.global_id;
-//           connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
-//           }     
-
-
 
 
   connection.query("commit ", function (err, result) {
@@ -88,7 +66,7 @@ zapiszTechnologieUpdate_oprawa(oprawaTechEdit)
 
 
 odpowiedz = [daneTechEdit]
-res.status(201).json(odpowiedz);
+// res.status(201).json(odpowiedz);
 
 
 

@@ -33,14 +33,14 @@ function zapiszTechnologieGrupy(req,res){
         grupa.stan +        "','" +
         grupa.uwagi +        "'; ";
       connection.query(sql, function (err, result) {
-          if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+          if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
       });
          
 
 
     var sql = "commit";
 connection.query(sql, function (err, result) {
-  if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+  if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 console.log("Zapis: Gryup wykonań");
   res.status(201).json([{zapis:"OK"}]);
 });

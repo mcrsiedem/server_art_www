@@ -68,13 +68,13 @@ class Connections {
 
         var sql = "begin";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
 
         var sql  = "select * from artdruk.view_zamowienia where id = '" + idZamowienia + "' ORDER BY id ASC";
        
         connection.query(sql, function (err, doc) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         dane.push(doc)
         // res.status(200).json(dane);
     
@@ -82,28 +82,28 @@ class Connections {
 
         var sql = "select * from artdruk.zamowienia_produkty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         dane.push(doc)
         
         } );
 
         var sql = "select * from artdruk.zamowienia_elementy where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         dane.push(doc)
    
         } );
 
         var sql = "select * from artdruk.zamowienia_fragmenty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         dane.push(doc)
      
         } );
 
         var sql = "select * from artdruk.view_zamowienia_oprawa where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         dane.push(doc)
 
         } );
@@ -111,7 +111,7 @@ class Connections {
         
         var sql = "select * from artdruk.view_zamowienia_procesy_elementow where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         dane.push(doc)
         } );
 
@@ -138,7 +138,7 @@ class Connections {
 
         var sql = "commit";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         console.log("get OK");
         res.status(200).json(dane);
         });
@@ -304,12 +304,12 @@ class Connections {
 
             var sql = "begin";
             connection.query(sql, function (err, result) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
             });
      
              var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
              dane.push(doc)
              // res.status(200).json(dane);
          
@@ -317,13 +317,13 @@ class Connections {
      
              var sql = "select * from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + procesor_id + "' ORDER BY poczatek";
              connection.query(sql, function (err, doc) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
              dane.push(doc)
              } );
 
             var sql = "commit";
             connection.query(sql, function (err, result) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
             console.log("Get Grupy i Wykonania dla procesora "+ procesor_id);
             res.status(200).json(dane);
             });
@@ -483,7 +483,7 @@ dragDropProcesGrup(req,res){
     var sql = "select artdruk.drag("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") as procesor_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -497,7 +497,7 @@ dragDropProcesGrupToProcesor(req,res){
     var sql = "select artdruk.zmien_procesor("+ id_drag_grupa_proces +", "+ id +") as procesor_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -513,7 +513,7 @@ updateWykonaniaOrazGrupa(req,res){
     var sql = "select artdruk.update_wykonania_oraz_grupa("+ global_id_grupa_wykonan +", "+ kolumna +", "+ wartosc +") as technologia_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -529,7 +529,7 @@ updateWykonania(req,res){
     var sql = "select artdruk.update_wykonania("+ global_id_wykonania +", "+ kolumna +", "+ wartosc +") as technologia_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -541,7 +541,7 @@ updateWydzielWykonanieZgrupy(req,res){
     var sql = "select artdruk.wyodrebnij_wykonanie_do_nowej_grupy("+ global_id_wykonania +") as technologia_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -556,7 +556,7 @@ updatePrzeniesWykonanieDoInnejGrupy(req,res){
     var sql = "select artdruk.przenies_wykonanie("+ global_id_wykonania +","+ grupa_id_drop +","+ ostatnie_wykonania +") as technologia_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -570,7 +570,7 @@ updateAddPrzerwa(req,res){
     var sql = "select artdruk.add_przerwa("+ global_id_grupa +","+ czas +") as procesor_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -583,7 +583,7 @@ updateDeletePrzerwa(req,res){
     var sql = "select artdruk.delete_przerwa("+ global_id_grupa +") as procesor_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -597,7 +597,7 @@ zmienCzasTrwaniaGrupy(req,res){
     var sql = "select artdruk.zmien_czas_trwania_grupy("+ drop_grupa_global_id +",'"+ nowy_koniec +"') as procesor_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
-       if (err) throw err;  
+       if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
@@ -623,7 +623,7 @@ deleteZamowienie(req,res){
 
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
     for(let row of rowsToDelete){
 
@@ -667,7 +667,7 @@ odblokujZamowienie(req,res){
 
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
     for(let row of rowsToDelete){
         var sql =   "update  artdruk.zamowienia set open_data = null, open_user = null, open_stan = null where id = '" + row.id + "'"
@@ -693,29 +693,29 @@ updatePapiery(req,res){
     const rows = req.body
     var sql = "begin";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
     for(let row of rows.filter(x => x.update == true) ){
         var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = '" + row.grupa_id+ "', nazwa_id = '" + row.nazwa_id+ "', gramatura = " + row.gramatura+ ", bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ " where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery (dodal,zmienil,grupa_id,nazwa_id,gramatura,bulk,info,wykonczenie_id) "+
             "values (" + row.dodal + "," + row.zmienil + "," + row.grupa_id + "," + row.nazwa_id + "," + row.gramatura + ",'" + row.bulk + "','" + row.info + "'," + row.wykonczenie_id + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
                 }
 
 
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
-        if (err){connection.query("rollback ", function (err, result) {   });   throw err; } 
+        if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err) } 
 
 res.status(201).json(result);
 
@@ -727,28 +727,28 @@ updatePapieryNazwy(req,res){
     const rows = req.body
     var sql = "begin";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
     for(let row of rows.filter(x => x.update == true) ){
         var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "' where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa) value ('" + row.nazwa + "'); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery_nazwy where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
                 }
 
 
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
-        if (err){connection.query("rollback ", function (err, result) {   });   throw err; } 
+        if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err) } 
 
 res.status(201).json(result);
 
@@ -761,28 +761,28 @@ updatePapieryGrupa(req,res){
     const rows = req.body
     var sql = "begin";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
     for(let row of rows.filter(x => x.update == true) ){
         var sql =   "update  artdruk.papiery_grupa set  grupa = '" + row.grupa+ "' where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery_grupa (grupa) value ('" + row.grupa + "'); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery_grupa where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
                 }
 
 
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
-        if (err){connection.query("rollback ", function (err, result) {   });   throw err; } 
+        if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err) } 
 
 res.status(201).json(result);
 
@@ -962,7 +962,7 @@ updateKlient(req,res){
 
             var sql = "start transaction";
             connection.query(sql, function (err, result) {
-            if (err) throw err;  });
+            if (err) res.status(203).json(err)  });
         
             for(let row of rowsToDelete){
 
@@ -1245,7 +1245,7 @@ postTechnologieNew(req,res){
     if(daneTechEdit.prime_id != 1 ){  
         var sql = "update artdruk.technologie  set final = 0 where prime_id = '" + daneTechEdit.prime_id +"'";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
     }else{
 
@@ -1329,7 +1329,7 @@ postTechnologieNew(req,res){
         produkty.stan +        "','" +
         produkty.status +        "'); ";
       connection.query(sql, function (err, result) {
-        if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+        if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
       });
     }
 
@@ -1357,7 +1357,7 @@ postTechnologieNew(req,res){
           element.stan +        "','" +
           element.status +        "'); ";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
       }
 
@@ -1378,7 +1378,7 @@ postTechnologieNew(req,res){
           fragment.naklad +        "','" +
           fragment.info +        "'); ";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
       }
 
@@ -1407,7 +1407,7 @@ postTechnologieNew(req,res){
     //       procesElementu.wykonczenie +        "','" +
     //       procesElementu.procesor_domyslny +        "'); ";
     //     connection.query(sql, function (err, result) {
-    //         if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+    //         if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
     //     });
     //   }
 
@@ -1429,7 +1429,7 @@ postTechnologieNew(req,res){
           oprawa.wersja +        "','" +
           oprawa.uwagi +        "'); ";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
       }
 
@@ -1451,7 +1451,7 @@ postTechnologieNew(req,res){
           arkusz.naklad +        "','" +
           arkusz.uwagi +        "'); ";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
       }
 
@@ -1471,7 +1471,7 @@ postTechnologieNew(req,res){
           lega.naklad +        "','" +
           lega.uwagi +        "'); ";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
       }
 
@@ -1493,7 +1493,7 @@ postTechnologieNew(req,res){
           legaFragment.typ +        "','" +
           legaFragment.wersja +        "'); ";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
       }
 
@@ -1501,7 +1501,7 @@ postTechnologieNew(req,res){
 
       var sql = "commit";
 connection.query(sql, function (err, result) {
-    if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } ;
+    if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } ;
 console.log("zapis OK");
 
 
@@ -1544,14 +1544,14 @@ postTechnologieGrupy(req,res){
           grupa.stan +        "','" +
           grupa.uwagi +        "'; ";
         connection.query(sql, function (err, result) {
-            if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+            if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         });
            
 
 
       var sql = "commit";
 connection.query(sql, function (err, result) {
-    if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+    if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 console.log("Zapis: Gryup wykonań");
     res.status(201).json([{zapis:"OK"}]);
 });
@@ -1593,7 +1593,7 @@ postTechnologieWykonania(req,res){
     
       var sql = "commit";
 connection.query(sql, function (err, result) {
-    if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+    if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 console.log("Zapis: wykonania ");
     res.status(201).json([{zapis:"OK"}]);
 });
@@ -1631,12 +1631,12 @@ postTechnologieProcesyElementow(req,res){
     procesElementu.wykonczenie +        "','" +
     procesElementu.procesor_domyslny +        "'); ";
   connection.query(sql, function (err, result) {
-      if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+      if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
   });
     
       var sql = "commit";
 connection.query(sql, function (err, result) {
-    if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+    if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 console.log("Zapis: Proces Elementu");
     res.status(201).json([{zapis:"OK"}]);
 });
@@ -1677,7 +1677,7 @@ console.log("Zapis: Proces Elementu");
 //           grupa.stan +        "','" +
 //           grupa.uwagi +        "'); ";
 //         connection.query(sql, function (err, result) {
-//             if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+//             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 //         });
 //       }
 
@@ -1713,7 +1713,7 @@ console.log("Zapis: Proces Elementu");
 
 //       var sql = "commit";
 // connection.query(sql, function (err, result) {
-//     if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+//     if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 // console.log("zapis OK");
 //     res.status(201).json([{zapis:"OK"}]);
 // });
@@ -2111,7 +2111,7 @@ insertPrzerwaDruk(req,res){
 
     var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
             connection.query(sql, function (err, result) {
-            if (err) throw err; });
+            if (err) res.status(203).json(err) });
 
 
     var sql = "commit";
@@ -2205,12 +2205,12 @@ duplikujDruk(req,res){
 
     var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
             connection.query(sql, function (err, result) {
-            if (err) throw err; });
+            if (err) res.status(203).json(err) });
 
 
             var sql = "INSERT INTO papier_stan  (produkt_id,info) select (SELECT MAX(id) from produkty) as id,'kopia' ;";
             connection.query(sql, function (err, result) {
-            if (err) throw err; });
+            if (err) res.status(203).json(err) });
 
 
     var sql = "commit";
@@ -2265,11 +2265,11 @@ updateZamknijGrupe(req,res){
    
     var sql = "update grupa set stan = 'Closed', koniec= now() where stan='Open'";
     connection.query(sql, function (err, result) {
-    if (err) throw err;     });
+    if (err) res.status(203).json(err)     });
 
     var sql = "update naswietlenia set stan = 'Closed' where grupa_id= (select max(id) from grupa)";
     connection.query(sql, function (err, result) {
-    if (err) throw err;     })
+    if (err) res.status(203).json(err)     })
 
     var sql = "INSERT INTO grupa  (id,poczatek,stan)  SELECT MAX(id)+1,now(),'Open' from grupa";
     connection.query(sql, function (err, result) {
@@ -2444,7 +2444,7 @@ deleteBackup(req,res){
 
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
     var sql= "DELETE FROM backup WHERE ID ='" +id+ "'";
         connection.query(sql, function (err, result) {
@@ -2478,31 +2478,31 @@ restoreBackup(req,res){
 
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });
+    if (err) res.status(203).json(err)                          });
 
     var sql= "delete from produkty";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });
+    if (err) res.status(203).json(err)                          });
 
     var sql= "INSERT INTO produkty SELECT * FROM `produkty_"+data+"`;";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });
+    if (err) res.status(203).json(err)                          });
 
     var sql= "delete from zlecenia;";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });
+    if (err) res.status(203).json(err)                          });
 
     var sql= "INSERT INTO zlecenia SELECT * FROM `zlecenia_"+data+"`;";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });
+    if (err) res.status(203).json(err)                          });
 
     var sql= "update backup set Aktualny = null";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });
+    if (err) res.status(203).json(err)                          });
 
     var sql= "update backup set Aktualny = 'X'  where id='" + id + "'";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });  
+    if (err) res.status(203).json(err)                          });  
     
 
 
@@ -2519,7 +2519,7 @@ restoreBackup(req,res){
 createBackup(req,res){
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });
+    if (err) res.status(203).json(err)                          });
 
     var sql = "SELECT DATE_FORMAT(now() , '%Y-%m-%d %H:%i:%s') AS `teraz` ;";
     connection.query(sql, function (err, doc) {
@@ -2557,7 +2557,7 @@ createBackup(req,res){
     "  PRIMARY KEY (`ID`)\n" +
     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_polish_ci;";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });  
+    if (err) res.status(203).json(err)                          });  
  
     
     var sql= "CREATE TABLE `produkty_"+doc[0].teraz+"` (\n" +
@@ -2602,24 +2602,24 @@ createBackup(req,res){
     "  PRIMARY KEY (`ID`)\n" +
     ") ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_polish_ci;";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });  
+    if (err) res.status(203).json(err)                          });  
 
 
     var sql= "update backup set Aktualny = null  ";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });  
+    if (err) res.status(203).json(err)                          });  
 
     var sql= "INSERT INTO backup (Utworzono,Aktualny) values ('"+doc[0].teraz+"','X') ;";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });  
+    if (err) res.status(203).json(err)                          });  
 
     var sql= "INSERT INTO `produkty_" + doc[0].teraz + "` SELECT * FROM produkty;";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });  
+    if (err) res.status(203).json(err)                          });  
 
     var sql = "INSERT INTO `zlecenia_" + doc[0].teraz  + "` SELECT * FROM zlecenia;";
     connection.query(sql, function (err, result) {
-    if (err) throw err;                          });  
+    if (err) res.status(203).json(err)                          });  
 
 
 
@@ -2696,7 +2696,7 @@ updateProdukty(req,res){
 
     var sql = "start transaction";
 connection.query(sql, function (err, result) {
-if (err) throw err;  });
+if (err) res.status(203).json(err)  });
 
 
     var sql = "update produkty set " + kolumna + " = '" + value + "' where id="+id;
@@ -2717,7 +2717,7 @@ var sql ="update ctp21.zlecenia set druk_przeloty = (select sum(przeloty) from c
         "falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia = '"+idzlecenia+"' ), "+
         "uv = (select folia from produkty where id_zlecenia = '"+idzlecenia+"'  and typ='Okładka' limit 1) where id = '"+idzlecenia+"' ;";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
 
 var sql = "commit";
@@ -3068,7 +3068,7 @@ postBlachyLicznik(req,res){
 
    var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
     var sql = "update produkty set Kolejnosc = Kolejnosc+1 where Kolejnosc > '" + kolejnosc + "'";
     connection.query(sql, function (err, result) {
@@ -3098,7 +3098,7 @@ const praca = req.body.praca;
 
 var sql = "start transaction";
 connection.query(sql, function (err, result) {
-if (err) throw err;  });
+if (err) res.status(203).json(err)  });
 
 var sql = "update produkty set Kolejnosc = Kolejnosc+1 where Kolejnosc > '" + kolejnosc + "'";
 connection.query(sql, function (err, result) {
@@ -3123,7 +3123,7 @@ const kolejnosc = req.body.kolejnosc;
 
 var sql = "start transaction";
 connection.query(sql, function (err, result) {
-if (err) throw err;  });
+if (err) res.status(203).json(err)  });
 
 var sql = "DELETE FROM produkty WHERE ID =" +id+ "";
     connection.query(sql, function (err, result) {
@@ -3154,32 +3154,32 @@ const widok = req.body.widok;
 const id_drag = req.body.id_drag;
 
 
-connection.query("start transaction", function (err, result) { if (err) throw err;  });
+connection.query("start transaction", function (err, result) { if (err) res.status(203).json(err)  });
 
     if(widok=="Oprawa"){
         var sql = "update zlecenia set KolejnoscOprawa = KolejnoscOprawa+1 where KolejnoscOprawa>'" + k2_drop + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
 
         var sql = "update zlecenia set KolejnoscOprawa = '" + k2_drop + "'+1 where id='" + id_drag + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
 
         var sql = "update zlecenia  set KolejnoscOprawa = KolejnoscOprawa-1 where KolejnoscOprawa>'" + k1_drag + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
     }
 
     
     if(widok=="Blachy"){
         var sql= "update produkty set Kolejnosc = Kolejnosc+1 where Kolejnosc>'" + k2_drop + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
 
         var sql = "update produkty set Kolejnosc = '" + k2_drop + "'+1 where id='" + id_drag + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
 
         var sql = "update produkty  set Kolejnosc = Kolejnosc-1 where Kolejnosc>'" + k1_drag + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
     }
 
-connection.query("commit", function (err, result) { if (err) throw err;  console.log("z gory do dolu ");  res.status(201).json(result); });
+connection.query("commit", function (err, result) { if (err)  res.status(201).json(result); });
 
 }
 
@@ -3190,27 +3190,27 @@ const widok = req.body.widok;
 const id_drag = req.body.id_drag;
 
 
-connection.query("start transaction", function (err, result) { if (err) throw err;  });
+connection.query("start transaction", function (err, result) { if (err) res.status(203).json(err)  });
 
     if(widok=="Oprawa"){
         var sql = "update zlecenia set KolejnoscOprawa = KolejnoscOprawa+1 where KolejnoscOprawa>='" + k_drop + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
 
         var sql = "update zlecenia set KolejnoscOprawa = '" + k_drop + "' where id='" + id_drag + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
 
     }
 
     
     if(widok=="Blachy"){
         var sql= "update produkty set Kolejnosc = Kolejnosc+1 where Kolejnosc>='" + k_drop + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
 
         var sql  = "update produkty set Kolejnosc = '" + k_drop + "' where id='" + id_drag + "'";
-        connection.query(sql, function (err, result) {    if (err) throw err;  });
+        connection.query(sql, function (err, result) {    if (err) res.status(203).json(err)  });
     }
 
-connection.query("commit", function (err, result) { if (err) throw err;  console.log("z dolu na gore ");  res.status(201).json(result); });
+connection.query("commit", function (err, result) { if (err)   res.status(201).json(result); });
 
 }
 
@@ -3426,29 +3426,29 @@ updateStatusZlecenia(req,res){
 
         var sql = "start transaction";
         connection.query(sql, function (err, result) {
-        if (err) throw err;  });
+        if (err) res.status(203).json(err)  });
 
         var sql ="INSERT INTO zlecenia  (ID,KolejnoscOprawa,NrZlecenia,RokZlecenia,Klient,Praca,Naklad,Spedycja,status_glowny) SELECT MAX(ID)+1,(SELECT MAX(KolejnoscOprawa)+1),'" + jsonParsed[0].nr + "','" + jsonParsed[0].rok + "','"+ jsonParsed[0].klient + "','"+ jsonParsed[0].praca + "','"+ jsonParsed[0].naklad + "','"+ jsonParsed[0].spedycja + "', '1' FROM zlecenia";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
         var sql = "INSERT INTO historia (User,Kategoria,Event,ID_target,NrZlecenia,RokZlecenia,Klient,Praca,Typ,StatusStary,StatusNowy) values ('" + jsonParsed[0].user + "','Zlecenie','Dodanie zlecenia',(SELECT MAX(ID) from zlecenia),'" + jsonParsed[0].nr + "','" + jsonParsed[0].rok + "','" + jsonParsed[0].klient + "','" + jsonParsed[0].praca + "','Zlecenie','',''); ";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
         for (let i = 0; i < Object.keys(jsonParsed[1]).length; i++) {
       
             var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0].naklad+ "','" +jsonParsed[0].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0].nr + "','"+ jsonParsed[0].rok + "','"+ jsonParsed[0].klient + "',1,'"+ jsonParsed[1][i].praca + "','"+ jsonParsed[1][i].oprawa+ "','"+ jsonParsed[1][i].uwagi+ "','"+ jsonParsed[1][i].narzad+ "','"+ jsonParsed[1][i].folia+ "','"+ jsonParsed[1][i].przeloty+ "','"+ jsonParsed[1][i].predkoscDruku+ "','"+ jsonParsed[1][i].arkusze+ "','"+ jsonParsed[1][i].legi+ "','"+ jsonParsed[1][i].legiRodzaj+ "','"+ jsonParsed[1][i].falcCzas+ "','"+ jsonParsed[1][i].falcPredkosc+ "','"+ jsonParsed[1][i].oprawaCzas+ "','"+ jsonParsed[1][i].formatPapieru+ "','"+ jsonParsed[1][i].maszyna + "','"+ jsonParsed[1][i].typ + "', (select MAX(KoniecDruku) from produkty where maszyna='"+ jsonParsed[1][i].maszyna + "') as PoczatekDruku ,'"+ jsonParsed[1][i].czasDruku+ "',(select MAX(KoniecDruku) from produkty where maszyna='"+ jsonParsed[1][i].maszyna + "') + interval '"+ jsonParsed[1][i].czasDruku+ "' minute as KoniecDruku  FROM produkty";
             connection.query(sql, function (err, result) {
-            if (err) throw err; });
+            if (err) res.status(203).json(err) });
 
             var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
             connection.query(sql, function (err, result) {
-            if (err) throw err; });
+            if (err) res.status(203).json(err) });
 
             var sql = "INSERT INTO papier_stan  (produkt_id) select (SELECT MAX(id) from produkty) as id ;";
             connection.query(sql, function (err, result) {
-            if (err) throw err; });
+            if (err) res.status(203).json(err) });
 
 
 
@@ -3465,7 +3465,7 @@ updateStatusZlecenia(req,res){
         "falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) ), "+
         "uv = (select folia from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)  and typ='Okładka' limit 1) where id =(select max(id) from (select id from zlecenia) as id);";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
     
         var sql = "commit";
@@ -3487,7 +3487,7 @@ postZlecenia_z_EXCELA(req,res){
 
    var sql = "start transaction";
    connection.query(sql, function (err, result) {
-   if (err) throw err;  });
+   if (err) res.status(203).json(err)  });
 
    
 
@@ -3497,31 +3497,31 @@ postZlecenia_z_EXCELA(req,res){
 
         var sql ="INSERT INTO zlecenia  (ID,KolejnoscOprawa,NrZlecenia,RokZlecenia,Klient,Praca,Naklad,Spedycja,status_glowny) SELECT MAX(ID)+1,(SELECT MAX(KolejnoscOprawa)+1),'" + jsonParsed[0][i].nr + "','" + jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "','"+ jsonParsed[0][i].praca + "','"+ jsonParsed[0][i].naklad + "','"+ jsonParsed[0][i].spedycja + "','15' FROM zlecenia";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
 
             // okładka
        var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0][i].naklad+ "','" +jsonParsed[0][i].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0][i].nr + "','"+ jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "',15,'"+ jsonParsed[0][i].praca + "','-',' ','10','"+ jsonParsed[0][i].lakier+ "','"+ jsonParsed[0][i].przelotydrukokladka+ "','12000','"+ jsonParsed[0][i].arkusze+ "','"+ jsonParsed[0][i].legi+ "','0','0','0','0',' ','XL','Okładka', (select MAX(KoniecDruku) from produkty where maszyna='XL') as PoczatekDruku ,'"+ jsonParsed[0][i].czasdrukuokladka+ "',(select MAX(KoniecDruku) from produkty where maszyna='XL') + interval '"+ jsonParsed[0][i].czasdrukuokladka+ "' minute as KoniecDruku  FROM produkty";
        connection.query(sql, function (err, result) {
-       if (err) throw err; });
+       if (err) res.status(203).json(err) });
 
        var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
        connection.query(sql, function (err, result) {
-       if (err) throw err; });
+       if (err) res.status(203).json(err) });
 
         // srodek
 
         var sql = "INSERT INTO produkty  (ID,Kolejnosc,Naklad,Spedycja,ID_Zlecenia,NrZlecenia,RokZlecenia,Klient,Status,Praca,Oprawa,Uwagi,Narzad,Folia,Przeloty,PredkoscDruku,Arkusze,Legi,LegiRodzaj,FalcCzas,FalcPredkosc,OprawaCzas,FormatPapieru,Maszyna,Typ,PoczatekDruku,CzasDruku,KoniecDruku) SELECT MAX(ID)+1,(SELECT MAX(Kolejnosc)+1),'" +jsonParsed[0][i].naklad+ "','" +jsonParsed[0][i].spedycja+ "', (select MAX(ID) from zlecenia) as ID_Zlecenia ,'"+ jsonParsed[0][i].nr + "','"+ jsonParsed[0][i].rok + "','"+ jsonParsed[0][i].klient + "',15,'"+ jsonParsed[0][i].praca + "','"+ jsonParsed[0][i].oprawa+ "',' ','22','-','"+ jsonParsed[0][i].przelotydruk+ "','6000','"+ jsonParsed[0][i].arkusze+ "','"+ jsonParsed[0][i].legi+ "','"+ jsonParsed[0][i].rodzajlegi+ "','"+ jsonParsed[0][i].czasfalcowania+ "','"+ jsonParsed[0][i].predkoscfalcowania+ "','"+ jsonParsed[0][i].czasoprawy+ "',' ','H3','Środek', (select MAX(KoniecDruku) from produkty where maszyna='H3') as PoczatekDruku ,'"+ jsonParsed[0][i].czasdruku+ "',(select MAX(KoniecDruku) from produkty where maszyna='H3') + interval '"+ jsonParsed[0][i].czasdruku+ "' minute as KoniecDruku  FROM produkty";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
  
         var sql = "INSERT INTO naswietlenia  (produkt_id,kolej,typ) select (SELECT MAX(id) from produkty) as id, (select MAX(kolej)+1 from naswietlenia) as kolej,'prime' ;";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
         var sql = "INSERT INTO papier_stan  (produkt_id) select (SELECT MAX(id) from produkty) as id ;";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
 
         var sql ="update ctp21.zlecenia set druk_przeloty = (select sum(przeloty) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)), "+
@@ -3534,7 +3534,7 @@ postZlecenia_z_EXCELA(req,res){
         "falc_przeloty = (select sum(ROUND((Przeloty * (Legi/Arkusze)),0)) from ctp21.produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id) ), "+
         "uv = (select folia from produkty where id_zlecenia = (select max(id) from (select id from zlecenia) as id)  and typ='Okładka' limit 1) where id =(select max(id) from (select id from zlecenia) as id) ;";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
      }
 
@@ -3558,7 +3558,7 @@ deleteZlecenie(req,res){
 
         var sql = "start transaction";
         connection.query(sql, function (err, result) {
-        if (err) throw err;  });
+        if (err) res.status(203).json(err)  });
 
         //----  pobieramy wszystkie podroduktu których idzlecenia = req.body.idzlecenia i kasujemy w pętli
           var sql  = "select id,id_zlecenia ,    utworzono ,    zmodyfikowano ,    kolejnosc ,    typ ,    nazwa ,    maszyna ,   DATE_FORMAT(`PoczatekDruku`, '%Y-%m-%d %H:%i') AS `poczatekDruku` ,    predkoscDruku ,    narzad ,    czasDruku ,    DATE_FORMAT(`KoniecDruku`, '%Y-%m-%d %H:%i') AS `koniecDruku` ,    nrZlecenia ,    rokZlecenia ,    klient ,    praca ,    naklad ,    formatPapieru ,    oprawa ,    oprawaCzas ,   oprawaPredkosc ,    folia ,    DATE_FORMAT(`spedycja`, '%Y-%m-%d') AS `spedycja` ,    arkusze ,    legi ,    legiRodzaj ,    przeloty ,    status ,    uwagi ,    sm_ok ,    sm_dmg ,    xl_ok ,    xl_dmg ,    falcPredkosc ,    falcCzas ,    dataCtp from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3') and ID_zlecenia = '" + idzlecenia+ "' ORDER BY Typ ASC";
@@ -3639,7 +3639,7 @@ deleteZlecenie(req,res){
 
         var sql = "start transaction";
         connection.query(sql, function (err, result) {
-        if (err) throw err;  });
+        if (err) res.status(203).json(err)  });
 
         //----  pobieramy wszystkie podroduktu których idzlecenia = req.body.idzlecenia i kasujemy w pętli
         var sql  = "select id,ifnull(ID_Zlecenia,0) as id_zlecenia ,   status  from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3') and (typ != 'Przerwa' or typ !='Licznik') ";
@@ -3650,7 +3650,7 @@ deleteZlecenie(req,res){
             // console.log(doc[i].typ);
             var sql = "INSERT INTO produktystatus  (idproduktu,idzlecenia,idstatusu) values ('" + doc[i].id + "','" + doc[i].id_zlecenia + "','" + status.get(doc[i].status) + "');";
             connection.query(sql, function (err, result) {
-            if (err) throw err; });
+            if (err) res.status(203).json(err) });
 
           }
         //console.log(doc);
@@ -3673,7 +3673,7 @@ deleteZlecenie(req,res){
 
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
 
     var sql  = "select id,ifnull(xl_ok,0) as xl_ok, ifnull( DATE_FORMAT(`dataCtp`, '%Y-%m-%d %H:%i:%s'),'2081-05-20 08:15:00') AS `datactp` from produkty where Maszyna='XL' and (typ != 'Przerwa' or typ !='Licznik') ";
@@ -3684,7 +3684,7 @@ deleteZlecenie(req,res){
         // console.log(doc[i].typ);
         var sql = "INSERT INTO naswietlenia  (produkt_id,ilosc,typ,blacha_id,data) values ('" + doc[i].id + "'," + doc[i].xl_ok + ",'prime',2,'" + doc[i].datactp + "');";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
       }
     //console.log(doc);
@@ -3698,7 +3698,7 @@ deleteZlecenie(req,res){
         // console.log(doc[i].typ);
         var sql = "INSERT INTO naswietlenia  (produkt_id,ilosc,typ,blacha_id,data) values ('" + doc[i].id + "'," + doc[i].sm_ok + ",'prime',1,'" + doc[i].datactp + "');";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
       }
     //console.log(doc);
@@ -3724,7 +3724,7 @@ res.status(201).json(result);
 
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
 
     var sql  = "select id from produkty where (Maszyna='H1' or Maszyna='XL' or Maszyna='H3' )and (typ != 'Przerwa' or typ !='Licznik') ";
@@ -3736,7 +3736,7 @@ res.status(201).json(result);
 
         var sql = "INSERT INTO papier_stan  (produkt_id) values ('" + doc[i].id + "');";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
       }
     //console.log(doc);
@@ -3770,7 +3770,7 @@ res.status(201).json(result);
 
     var sql = "start transaction";
     connection.query(sql, function (err, result) {
-    if (err) throw err;  });
+    if (err) res.status(203).json(err)  });
 
   
 
@@ -3783,7 +3783,7 @@ res.status(201).json(result);
  
         var sql = "INSERT INTO zleceniastatus  (idzlecenia,idstatusu,idstatususrodek,idstatusuokladka,idstatusuinne) values ('" + doc[i].id + "','" + status.get(doc[i].status) + "','" + status.get(doc[i].srodek) + "','" + status.get(doc[i].okladka) + "',12);";
         connection.query(sql, function (err, result) {
-        if (err) throw err; });
+        if (err) res.status(203).json(err) });
 
       }
     //console.log(doc);

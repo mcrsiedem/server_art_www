@@ -3,7 +3,7 @@ const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 
 
-const zapiszTechnologieUpdate_produkty=(produktyTechEdit) =>{
+const zapiszTechnologieUpdate_produkty=(produktyTechEdit,res) =>{
 
 
 for(let row of produktyTechEdit.filter(x => x.update == true && x.insert != true) ){
@@ -23,7 +23,7 @@ for(let row of produktyTechEdit.filter(x => x.update == true && x.insert != true
      "', naklad = " + row.naklad+ 
      ",  indeks = " + row.indeks+ 
      " where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
   }
 
   // for(let row of produktyTechEdit.filter(x => x.insert == true && x.delete != true) ){
@@ -40,12 +40,12 @@ for(let row of produktyTechEdit.filter(x => x.update == true && x.insert != true
   //   "','" + row.typ + 
   //   "'," + row.indeks + 
   //   "); ";
-  //   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+  //   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
   //   }
 
   //   for(let row of produktyTechEdit.filter(x => x.delete == true && x.insert != true) ){
   //       var sql =   "DELETE from artdruk.technologie_produkty where global_id=" + row.global_id;
-  //       connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+  //       connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
   //       }
 
 

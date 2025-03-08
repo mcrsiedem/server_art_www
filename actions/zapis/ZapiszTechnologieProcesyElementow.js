@@ -31,12 +31,12 @@ function zapiszTechnologieProcesyElementow(req,res){
   procesElementu.wykonczenie +        "','" +
   procesElementu.procesor_domyslny +        "'); ";
 connection.query(sql, function (err, result) {
-    if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+    if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 });
   
     var sql = "commit";
 connection.query(sql, function (err, result) {
-  if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+  if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 console.log("Zapis: Proces Elementu");
   res.status(201).json([{zapis:"OK"}]);
 });

@@ -36,7 +36,7 @@ function zapiszTechnologieWykonania(req,res){
   
     var sql = "commit";
 connection.query(sql, function (err, result) {
-  if (err){ connection.query("rollback ", function (err, result) {   }); throw err; } 
+  if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 console.log("Zapis: wykonania ");
   res.status(201).json([{zapis:"OK"}]);
 });

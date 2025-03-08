@@ -20,7 +20,7 @@ console.log("SaveAs: ", req.body[0].saveAs)
 
 var sql = "begin";
 connection.query(sql, function (err, result) {
-if (err) throw err;  });
+if (err) res.status(203).json(err)  });
 
 
 

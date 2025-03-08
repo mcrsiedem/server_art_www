@@ -3,10 +3,10 @@ const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 
 
-const zapiszTechnologieUpdate_dane=(daneTechEdit) =>{
+const zapiszTechnologieUpdate_dane=(daneTechEdit,res) =>{
 
 
-    console.log("dane: "+daneTechEdit)
+    // console.log("dane: "+daneTechEdit)
     if( daneTechEdit.update == true){
         var sql =   "update  artdruk.technologie set "+  
            "nr='" + daneTechEdit.nr +
@@ -25,7 +25,7 @@ const zapiszTechnologieUpdate_dane=(daneTechEdit) =>{
            ",etap=" + daneTechEdit.etap + 
            " where id = '" + daneTechEdit.id + "'"
         
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err;         }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
         }
 
 }
