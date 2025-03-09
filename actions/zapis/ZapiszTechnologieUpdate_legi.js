@@ -3,7 +3,7 @@ const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 
 
-const zapiszTechnologieUpdate_legi=(legi) =>{
+const zapiszTechnologieUpdate_legi=(legi,res) =>{
 
 
 for(let row of legi.filter(x => x.update == true && x.insert != true) ){
@@ -18,7 +18,8 @@ for(let row of legi.filter(x => x.update == true && x.insert != true) ){
   ", arkusz_id = " + row.arkusz_id+ 
   ", ilosc_stron = " + row.ilosc_stron+ 
   ", naklad = " + row.naklad+ 
-  ", uwagi = '" + row.uwagi+ 
+  ", nr_legi = '" + row.nr_legi+ 
+  "', uwagi = '" + row.uwagi+ 
   "' where global_id = " + row.global_id + ""
   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
   }
@@ -27,7 +28,7 @@ for(let row of legi.filter(x => x.update == true && x.insert != true) ){
 
   for(let row of legi.filter(x => x.insert == true && x.delete != true) ){
     var sql =
-    "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,uwagi) " +
+    "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,nr_legi,uwagi) " +
     "values ('" +
     row.id +  "','" +
     row.indeks +        "','" +
@@ -38,6 +39,7 @@ for(let row of legi.filter(x => x.update == true && x.insert != true) ){
     row.arkusz_id +        "','" +
     row.ilosc_stron +        "','" +
     row.naklad +        "','" +
+    row.nr_legi +        "','" +
     row.uwagi +        "'); ";
   connection.query(sql, function (err, result) {
       if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 

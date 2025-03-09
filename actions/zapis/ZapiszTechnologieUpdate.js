@@ -33,9 +33,9 @@ const zapiszTechnologieUpdate = (req,res) =>{
 // console.log("SaveAs: ", req.body[0].saveAs)
 
 
-var sql = "BEGIN";
-connection.query(sql, function (err, result) {
-if (err) res.status(203).json(err)  });
+// var sql = "BEGIN";
+// connection.query(sql, function (err, result) {
+// if (err) res.status(203).json(err)  });
 
 
 
@@ -46,7 +46,7 @@ zapiszTechnologieUpdate_procesy_elementow(procesyElementowTechEdit,res)
 zapiszTechnologieUpdate_oprawa(oprawaTechEdit,res)
 zapiszTechnologieUpdate_legi(legiEdit,res)
 zapiszTechnologieUpdate_legi_fragmenty(legiFragmentyEdit,res)
-zapiszTechnologieUpdate_arkusze(arkuszeEdit)
+zapiszTechnologieUpdate_arkusze(arkuszeEdit,res)
 
 
 
@@ -69,8 +69,8 @@ zapiszTechnologieUpdate_arkusze(arkuszeEdit)
 //                 }
 
 
-  connection.query("commit ", function (err, result) {
-  });
+  // connection.query("commit ", function (err, result) {
+  // });
 
 
 // odpowiedz = [daneTechEdit]
