@@ -73,7 +73,7 @@ const zapiszTechnologie = (req,res) =>{
 
   for (let element of elementyTechEdit) {
       var sql =
-        "INSERT INTO artdruk.technologie_elementy (id,indeks,technologia_id,zamowienie_id,produkt_id,nazwa,typ,lega,ilosc_leg,ilosc_stron,format_x,format_y,papier_id,papier_info,naklad,uwagi,etap,stan,status) " +
+        "INSERT INTO artdruk.technologie_elementy (id,indeks,technologia_id,zamowienie_id,produkt_id,nazwa,typ,lega,ilosc_leg,ilosc_stron,format_x,format_y,papier_id,papier_info,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,etap,stan,status) " +
         "values ('" +
         element.id +  "','" +
         element.indeks +        "','" +
@@ -89,6 +89,8 @@ const zapiszTechnologie = (req,res) =>{
         element.format_y +        "','" +
         element.papier_id +        "','" +
         element.papier_info +        "','" +
+        element.arkusz_szerokosc +        "','" +
+        element.arkusz_wysokosc +        "','" +
         element.naklad +        "','" +
         element.uwagi +        "'," +
         element.etap +        "," +
@@ -148,7 +150,7 @@ const zapiszTechnologie = (req,res) =>{
     for (let arkusz of arkuszeEdit) {
 
       var sql =
-        "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,uwagi) " +
+        "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,papier_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
         "values ('" +
         arkusz.id +  "','" +
         arkusz.indeks +        "','" +
@@ -158,7 +160,11 @@ const zapiszTechnologie = (req,res) =>{
         arkusz.element_id +        "','" +
         arkusz.ilosc_stron +        "','" +
         arkusz.ilosc_leg+        "','" +
-        arkusz.naklad +        "','" +
+        arkusz.naklad +        "'," +
+        arkusz.papier_id +        ",'" +
+        arkusz.nr_arkusza +        "','" +
+        arkusz.arkusz_szerokosc +        "','" +
+        arkusz.arkusz_wysokosc +        "','" +
         arkusz.uwagi +        "'); ";
       connection.query(sql, function (err, result) {
           if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
@@ -168,7 +174,7 @@ const zapiszTechnologie = (req,res) =>{
     for (let lega of legiEdit) {
 
       var sql =
-        "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,uwagi) " +
+        "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,nr_legi,uwagi) " +
         "values ('" +
         lega.id +  "','" +
         lega.indeks +        "','" +
@@ -179,6 +185,7 @@ const zapiszTechnologie = (req,res) =>{
         lega.arkusz_id +        "','" +
         lega.ilosc_stron +        "','" +
         lega.naklad +        "','" +
+        lega.nr_legi +        "','" +
         lega.uwagi +        "'); ";
       connection.query(sql, function (err, result) {
           if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
