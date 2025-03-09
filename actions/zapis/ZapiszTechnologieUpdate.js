@@ -7,6 +7,7 @@ const { zapiszTechnologieUpdate_procesy_elementow } = require("./ZapiszTechnolog
 const { zapiszTechnologieUpdate_oprawa } = require("./ZapiszTechnologieUpdate_oprawa");
 const { zapiszTechnologieUpdate_legi } = require("./ZapiszTechnologieUpdate_legi");
 const { zapiszTechnologieUpdate_legi_fragmenty } = require("./ZapiszTechnologieUpdate_legi_fragmenty");
+const { zapiszTechnologieUpdate_arkusze } = require("./ZapiszTechnologieUpdate_arkusze");
 
 
 
@@ -24,7 +25,7 @@ const zapiszTechnologieUpdate = (req,res) =>{
   let grupaWykonanEdit = req.body[8]
   let wykonaniaEdit = req.body[9]
   let procesyElementowTechEdit = req.body[10]
-  let odpowiedz= []
+  // let odpowiedz= []
 
    
 
@@ -45,7 +46,7 @@ zapiszTechnologieUpdate_procesy_elementow(procesyElementowTechEdit,res)
 zapiszTechnologieUpdate_oprawa(oprawaTechEdit,res)
 zapiszTechnologieUpdate_legi(legiEdit,res)
 zapiszTechnologieUpdate_legi_fragmenty(legiFragmentyEdit,res)
-
+zapiszTechnologieUpdate_arkusze(arkuszeEdit)
 
 
 
@@ -72,7 +73,7 @@ zapiszTechnologieUpdate_legi_fragmenty(legiFragmentyEdit,res)
   });
 
 
-odpowiedz = [daneTechEdit]
+// odpowiedz = [daneTechEdit]
 // res.status(201).json(odpowiedz);
 
 
