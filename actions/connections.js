@@ -1746,6 +1746,14 @@ console.log("Zapis: Proces Elementu");
     //     res.status(200).json(doc);
     // });}
 
+    getNadkomplety(req,res){
+        var sql = "SELECT * FROM artdruk.nadkomplety;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        //sconsole.log(doc);
+        res.status(200).json(doc);
+    });}
+
     getListaPapierow(req,res){
         var sql = "SELECT * FROM artdruk.view_papiery ;";
         connection.query(sql, function (err, doc) {

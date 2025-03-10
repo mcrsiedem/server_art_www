@@ -47,6 +47,8 @@ const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
     router.put('/updatePaper/:token',verifyToken,connections.updatePapiery);
     router.put('/updatePaperNazwy/:token',verifyToken,connections.updatePapieryNazwy);
     router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);
+    router.get('/nadkomplety/:token',verifyToken,connections.getNadkomplety);
+    
 
 
 
@@ -90,7 +92,7 @@ const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
     
     router.get('/lista-userow',connections.getUsersM);
 // end
-router.get('/lista-klientow',connections.getKlienci);
+router.get('/lista-klientow/:token',verifyToken,connections.getKlienci);
 router.get('/lista-opraw',connections.getOprawy);
 router.get('/lista-produktow',connections.getProdukty);
 router.post('/klienci',connections.postKlient);
