@@ -16,7 +16,7 @@ const zapiszTechnologie = (req,res) =>{
   let procesyElementowTechEdit = req.body[10]
   let odpowiedz= []
   connection.query("begin", function (err, result) {
-    if (err){ connection.query("rollback ", function (err, result) {   });  res.status(203).json(err)   } 
+    if (err){ connection.query("rollback ", function (err, result) {   });  throw err;  } 
   });
 
 
@@ -67,7 +67,7 @@ const zapiszTechnologie = (req,res) =>{
       produkty.stan +        "," +
       produkty.status +        "); ";
     connection.query(sql, function (err, result) {
-      if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+      if (err){ connection.query("rollback ", function (err, result) {   });  throw err; } 
     });
   }
 
@@ -97,7 +97,7 @@ const zapiszTechnologie = (req,res) =>{
         element.stan +        "," +
         element.status +        "); ";
       connection.query(sql, function (err, result) {
-          if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+          if (err){ connection.query("rollback ", function (err, result) {   });  throw err;  } 
       });
     }
 
@@ -118,7 +118,7 @@ const zapiszTechnologie = (req,res) =>{
         fragment.naklad +        "','" +
         fragment.info +        "'); ";
       connection.query(sql, function (err, result) {
-          if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+          if (err){ connection.query("rollback ", function (err, result) {   });  throw err; } 
       });
     }
 
@@ -141,7 +141,7 @@ const zapiszTechnologie = (req,res) =>{
         oprawa.wersja +        "','" +
         oprawa.uwagi +        "'); ";
       connection.query(sql, function (err, result) {
-          if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+          if (err){ connection.query("rollback ", function (err, result) {   });  throw err;  } 
       });
     }
 
@@ -150,7 +150,7 @@ const zapiszTechnologie = (req,res) =>{
     for (let arkusz of arkuszeEdit) {
 
       var sql =
-        "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,papier_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
+        "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,nadkomplet,papier_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
         "values ('" +
         arkusz.id +  "','" +
         arkusz.indeks +        "','" +
@@ -160,14 +160,15 @@ const zapiszTechnologie = (req,res) =>{
         arkusz.element_id +        "','" +
         arkusz.ilosc_stron +        "','" +
         arkusz.ilosc_leg+        "','" +
-        arkusz.naklad +        "'," +
+        arkusz.naklad +        "','" +
+        arkusz.nadkomplet +        "'," +
         arkusz.papier_id +        ",'" +
         arkusz.nr_arkusza +        "','" +
         arkusz.arkusz_szerokosc +        "','" +
         arkusz.arkusz_wysokosc +        "','" +
         arkusz.uwagi +        "'); ";
       connection.query(sql, function (err, result) {
-          if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+          if (err){ connection.query("rollback ", function (err, result) {   });  throw err; } 
       });
     }
 
@@ -188,7 +189,7 @@ const zapiszTechnologie = (req,res) =>{
         lega.nr_legi +        "','" +
         lega.uwagi +        "'); ";
       connection.query(sql, function (err, result) {
-          if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+          if (err){ connection.query("rollback ", function (err, result) {   });  throw err; } 
       });
     }
 
@@ -210,7 +211,7 @@ const zapiszTechnologie = (req,res) =>{
         legaFragment.typ +        "','" +
         legaFragment.wersja +        "'); ";
       connection.query(sql, function (err, result) {
-          if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+          if (err){ connection.query("rollback ", function (err, result) {   });  throw err;  } 
       });
     }
 
@@ -224,7 +225,7 @@ const zapiszTechnologie = (req,res) =>{
 
     var sql = "commit";
 connection.query(sql, function (err, result) {
-  if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } ;
+  if (err){ connection.query("rollback ", function (err, result) {   });  throw err; } ;
 console.log("zapis OK");
 
 
