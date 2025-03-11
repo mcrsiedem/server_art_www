@@ -197,7 +197,7 @@ const zapiszTechnologie = (req,res) =>{
     for (let legaFragment of legiFragmentyEdit) {
 
       var sql =
-        "INSERT INTO artdruk.technologie_legi_fragmenty(id,indeks,technologia_id,element_id,fragment_id,arkusz_id,lega_id,naklad,oprawa_id,typ,wersja) " +
+        "INSERT INTO artdruk.technologie_legi_fragmenty(id,indeks,technologia_id,element_id,fragment_id,arkusz_id,lega_id,nr_legi,naklad,oprawa_id,typ,wersja) " +
         "values ('" +
         legaFragment.id +  "','" +
         legaFragment.indeks +        "','" +
@@ -206,6 +206,7 @@ const zapiszTechnologie = (req,res) =>{
         legaFragment.fragment_id +        "','" +
         legaFragment.arkusz_id +        "','" +
         legaFragment.lega_id +        "','" +
+        legaFragment.nr_legi +        "','" +
         legaFragment.naklad +        "','" +
         legaFragment.oprawa_id +        "','" +
         legaFragment.typ +        "','" +
