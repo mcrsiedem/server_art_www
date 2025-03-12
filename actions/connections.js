@@ -857,104 +857,89 @@ updateKlient(req,res){
 
     });}
 
-    postArkusze2(req,res){
-        let error = false;
+//     postArkusze2(req,res){
+//         let error = false;
 
-        let arkusze = req.body[0]
+//         let arkusze = req.body[0]
 
-        for (let arkusz of arkusze) {
+//         for (let arkusz of arkusze) {
 
-            var sql =
-              "INSERT INTO artdruk.technologie_arkusze_temp (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,nadkomplet,papier_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
-              "values ('" +
-              arkusz.id +  "','" +
-              arkusz.indeks +        "','" +
-              arkusz.technologia_id +        "','" +
-              arkusz.typ_elementu +        "','" +
-              arkusz.rodzaj_arkusza +        "','" +
-              arkusz.element_id +        "','" +
-              arkusz.ilosc_stron +        "','" +
-              arkusz.ilosc_leg+        "','" +
-              arkusz.naklad +        "','" +
-              arkusz.nadkomplet +        "'," +
-              arkusz.papier_id +        ",'" +
-              arkusz.nr_arkusza +        "','" +
-              arkusz.arkusz_szerokosc +        "','" +
-              arkusz.arkusz_wysokosc +        "','" +
-              arkusz.uwagi +        "'); ";
-            connection.query(sql, function (err, result) {
-                if (err){ 
-                    // connection.query("rollback ", function (err, result) {     });
-                    // error.push(err)
-                    // throw err
-                    res.error(203).json(err);
-                 error = true 
-                 } 
+//             var sql =
+//               "INSERT INTO artdruk.technologie_arkusze_temp (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,nadkomplet,papier_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
+//               "values ('" +
+//               arkusz.id +  "','" +
+//               arkusz.indeks +        "','" +
+//               arkusz.technologia_id +        "','" +
+//               arkusz.typ_elementu +        "','" +
+//               arkusz.rodzaj_arkusza +        "','" +
+//               arkusz.element_id +        "','" +
+//               arkusz.ilosc_stron +        "','" +
+//               arkusz.ilosc_leg+        "','" +
+//               arkusz.naklad +        "','" +
+//               arkusz.nadkomplet +        "'," +
+//               arkusz.papier_id +        ",'" +
+//               arkusz.nr_arkusza +        "','" +
+//               arkusz.arkusz_szerokosc +        "','" +
+//               arkusz.arkusz_wysokosc +        "','" +
+//               arkusz.uwagi +        "'); ";
+//             connection.query(sql, function (err, result) {
+//                 if (err){ 
+//                     // connection.query("rollback ", function (err, result) {     });
+//                     // error.push(err)
+//                     // throw err
+//                     res.error(203).json(err);
+//                  error = true 
+//                  } 
                
-            });
+//             });
 
 
-          }
-          res.status(201).json({id:1})
+//           }
+//           res.status(201).json({id:1})
      
 
         
-;}
+// ;}
 
 
-postArkusze (req,res) {
-    let arkusze = req.body[0]
-    let promises = [];
-    for (let arkusz of arkusze) {
-        var sql =
-        "INSERT INTO artdruk.technologie_arkusze_temp (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,nadkomplet,papier_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
-        "values ('" +
-        arkusz.id +  "','" +
-        arkusz.indeks +        "','" +
-        arkusz.technologia_id +        "','" +
-        arkusz.typ_elementu +        "','" +
-        arkusz.rodzaj_arkusza +        "','" +
-        arkusz.element_id +        "','" +
-        arkusz.ilosc_stron +        "','" +
-        arkusz.ilosc_leg+        "','" +
-        arkusz.naklad +        "','" +
-        arkusz.nadkomplet +        "'," +
-        arkusz.papier_id +        ",'" +
-        arkusz.nr_arkusza +        "','" +
-        arkusz.arkusz_szerokosc +        "','" +
-        arkusz.arkusz_wysokosc +        "','" +
-        arkusz.uwagi +        "'); ";
+// postArkusze (req,res) {
+//     let arkusze = req.body[0]
+//     let promises = [];
+//     for (let arkusz of arkusze) {
+//         var sql =
+//         "INSERT INTO artdruk.technologie_arkusze_temp (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,nadkomplet,papier_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
+//         "values ('" +
+//         arkusz.id +  "','" +
+//         arkusz.indeks +        "','" +
+//         arkusz.technologia_id +        "','" +
+//         arkusz.typ_elementu +        "','" +
+//         arkusz.rodzaj_arkusza +        "','" +
+//         arkusz.element_id +        "','" +
+//         arkusz.ilosc_stron +        "','" +
+//         arkusz.ilosc_leg+        "','" +
+//         arkusz.naklad +        "','" +
+//         arkusz.nadkomplet +        "'," +
+//         arkusz.papier_id +        ",'" +
+//         arkusz.nr_arkusza +        "','" +
+//         arkusz.arkusz_szerokosc +        "','" +
+//         arkusz.arkusz_wysokosc +        "','" +
+//         arkusz.uwagi +        "'); ";
 
-        promises.push(     new Promise((resolve, reject) => {
-            connection.query(sql, (err, results) => {
-            if (err) {
-                resolve([err,"blad"]);               
-            } else {
-                resolve([results,"ok"])
-            }
-        });
-    })) 
+//         promises.push(     new Promise((resolve, reject) => {
+//             connection.query(sql, (err, results) => {
+//             if (err) {
+//                 resolve([err,"blad"]);               
+//             } else {
+//                 resolve([results,"ok"])
+//             }
+//         });
+//     })) 
 
-    }
-    Promise.all(promises).then((data) => res.status(201).json(data));
+//     }
+//     Promise.all(promises).then((data) => res.status(201).json(data));
 
+// };
 
-
-
-
-
-};
-
-selectByCode(sql) {  
-    return new Promise((resolve, reject) => {
-        connection.query(sql, (err, results) => {
-        if (err) {
-            reject(err);
-        } else {
-            resolve(results.length)
-        }
-    });
-})}
 
 
 
