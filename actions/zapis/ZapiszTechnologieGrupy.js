@@ -46,7 +46,7 @@ function zapiszTechnologieGrupy(req,res){
 connection.query(sql, function (err, result) {
   if (err){ connection.query("rollback ", function (err, result) {   });  } 
 // console.log("Zapis: Gryup wykonań");
-//   res.status(201).json([{zapis:"OK"}]);
+  res.status(201).json([{zapis:"OK"}]);
 });
 }
 

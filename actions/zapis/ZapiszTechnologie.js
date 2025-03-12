@@ -15,9 +15,13 @@ const zapiszTechnologie = (req,res) =>{
   let wykonaniaEdit = req.body[9]
   let procesyElementowTechEdit = req.body[10]
   let odpowiedz= []
-  connection.query("begin", function (err, result) {
-    if (err){ connection.query("rollback ", function (err, result) {   });  throw err;  } 
-  });
+
+  // connection.query("begin", function (err, result) {
+  //   if (err){ connection.query("rollback ", function (err, result) {   });  throw err;  } 
+  // });
+  // connection.query("begin", function (err, result) {
+  //   if (err){ connection.query("rollback ", function (err, result) {   });  throw err;  } 
+  // });
 
 
 
@@ -29,7 +33,7 @@ const zapiszTechnologie = (req,res) =>{
 
   connection.query(sql, function (err, result) {
     if(err){console.log(err)}
-    console.log("result" , result.insertId)
+    // console.log("result" , result.insertId)
     // dodaje do wszystkiego id techologi
     daneTechEdit.id =result.insertId
     produktyTechEdit = produktyTechEdit.map((obj) => {return{...obj, technologia_id:result.insertId} })
@@ -67,7 +71,7 @@ const zapiszTechnologie = (req,res) =>{
       produkty.stan +        "," +
       produkty.status +        "); ";
     connection.query(sql, function (err, result) {
-      if (err){ connection.query("rollback ", function (err, result) {   });  throw err; } 
+      if (err)  throw err; 
     });
   }
 

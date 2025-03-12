@@ -71,7 +71,8 @@ const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
     
     // router.post('/zamowienieobj',connections.postZamowienieObj);
     // router.post('/produkty',connections.postProdukty);
-    // router.post('/elementy',connections.postElementy);
+    router.post('/elementy',connections.postElementy);
+    router.post('/arkusze/:token',verifyToken,connections.postArkusze);
     // router.post('/fragmenty',connections.postFragmenty);
     // router.post('/pakowanie',connections.postPakowanie);
 
