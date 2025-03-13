@@ -12,10 +12,12 @@ const { zapiszZamowienieUpdate } = require("./zapis/ZapiszZamowienieUpdate");
 const { verifyToken } = require("./logowanie/verifyToken");
 const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
 
-const { zapiszTechnologie } = require("./zapis/ZapiszTechnologie");
-const { zapiszTechnologieGrupy } = require("./zapis/ZapiszTechnologieGrupy");
-const { zapiszTechnologieWykonania } = require("./zapis/ZapiszTechnologieWykonania");
-const { zapiszTechnologieProcesyElementow } = require("./zapis/ZapiszTechnologieProcesyElementow");
+const { zapiszTechnologie } = require("./zapis/stareZapiszTechnologie");
+const { zapiszTechnologieGrupy } = require("./zapis/stareZapiszTechnologieGrupy");
+const { zapiszTechnologieWykonania } = require("./zapis/stareZapiszTechnologieWykonania");
+
+
+const { zapiszTechnologieProcesyElementow } = require("./zapis/stareZapiszTechnologieProcesyElementow");
 const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
 const { zapiszTechnologieInsertDane } = require("./zapis/ZapiszTechnologieInsertDane");
 const { zapiszTechnologieInsertProdukty } = require("./zapis/ZapiszTechnologieInsertProdukty");
