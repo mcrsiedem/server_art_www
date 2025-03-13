@@ -14,8 +14,8 @@ const zapiszTechnologieInsertArkusze = (req,res) =>{
   for (let arkusz of arkusze) {
       var sql =
       "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,nadkomplet,papier_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
-      "values ('" +
-      arkusz.id +  "','" +
+      "values (" +
+      arkusz.id +  ",'" +
       arkusz.indeks +        "','" +
       arkusz.technologia_id +        "','" +
       arkusz.typ_elementu +        "','" +
@@ -34,7 +34,8 @@ const zapiszTechnologieInsertArkusze = (req,res) =>{
       promises.push(     new Promise((resolve, reject) => {
         connection.query(sql, (err, results) => {
         if (err) {
-            resolve([{zapis: false},err]);               
+ 
+            resolve([err]);               
         } else {
             // resolve([results,"ok arkusz"])
             resolve([{zapis: true}])

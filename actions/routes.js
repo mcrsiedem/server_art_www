@@ -17,8 +17,18 @@ const { zapiszTechnologieGrupy } = require("./zapis/ZapiszTechnologieGrupy");
 const { zapiszTechnologieWykonania } = require("./zapis/ZapiszTechnologieWykonania");
 const { zapiszTechnologieProcesyElementow } = require("./zapis/ZapiszTechnologieProcesyElementow");
 const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
-const { zapiszTechnologieNEW } = require("./zapis/ZapiszTechnologieNEW");
 const { zapiszTechnologieInsertDane } = require("./zapis/ZapiszTechnologieInsertDane");
+const { zapiszTechnologieInsertProdukty } = require("./zapis/ZapiszTechnologieInsertProdukty");
+const { zapiszTechnologieInsertElementy } = require("./zapis/ZapiszTechnologieInsertElementy");
+const { zapiszTechnologieInsertFragmenty } = require("./zapis/ZapiszTechnologieInsertFragmenty");
+const { zapiszTechnologieInsertOprawa } = require("./zapis/ZapiszTechnologieInsertOprawa");
+const { zapiszTechnologieInsertArkusze } = require("./zapis/ZapiszTechnologieInsertArkusze");
+const { zapiszTechnologieInsertLegi } = require("./zapis/ZapiszTechnologieInsertLegi");
+const { zapiszTechnologieInsertLegiFragmenty } = require("./zapis/ZapiszTechnologieInsertLegiFragmenty");
+const { zapiszTechnologieInsertGrupy } = require("./zapis/ZapiszTechnologieInsertGrupy");
+const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
+const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
+
 
 
 
@@ -31,9 +41,22 @@ const { zapiszTechnologieInsertDane } = require("./zapis/ZapiszTechnologieInsert
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:token',verifyToken,connections.getZamowienia);
 
-    // technologie
-    router.post('/zapiszTechnologieNEW/:token',verifyToken, zapiszTechnologieNEW); // zapisuje technologie
+    // technologie promise
     router.post('/zapiszTechnologieInsertDane/:token',verifyToken, zapiszTechnologieInsertDane); // zapisuje technologie
+    router.post('/zapiszTechnologieInsertProdukty/:token',verifyToken, zapiszTechnologieInsertProdukty); 
+    router.post('/zapiszTechnologieInsertElementy/:token',verifyToken, zapiszTechnologieInsertElementy); 
+    router.post('/zapiszTechnologieInsertFragmenty/:token',verifyToken, zapiszTechnologieInsertFragmenty);
+    router.post('/zapiszTechnologieInsertOprawa/:token',verifyToken, zapiszTechnologieInsertOprawa); 
+    router.post('/zapiszTechnologieInsertArkusze/:token',verifyToken, zapiszTechnologieInsertArkusze); 
+    router.post('/zapiszTechnologieInsertLegi/:token',verifyToken, zapiszTechnologieInsertLegi); 
+    router.post('/zapiszTechnologieInsertLegiFragmenty/:token',verifyToken, zapiszTechnologieInsertLegiFragmenty);
+    router.post('/zapiszTechnologieInsertGrupy/:token',verifyToken, zapiszTechnologieInsertGrupy); 
+    router.post('/zapiszTechnologieInsertWykonania/:token',verifyToken, zapiszTechnologieInsertWykonania); 
+    router.post('/zapiszTechnologieInsertProcesyElementow/:token',verifyToken, zapiszTechnologieInsertProcesyElementow); 
+
+    router.put('/zapiszTechnologieUpdate/:token',verifyToken, zapiszTechnologieUpdate); // aktualizacja zamowienia
+    router.get('/technologie/:token',verifyToken,connections.getTechnologie);    
+    router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
 
 
 
@@ -41,9 +64,7 @@ const { zapiszTechnologieInsertDane } = require("./zapis/ZapiszTechnologieInsert
     router.post('/zapiszTechnologieGrupy/:token',verifyToken,zapiszTechnologieGrupy); 
     router.post('/zapiszTechnologieWykonania/:token',verifyToken,zapiszTechnologieWykonania); 
     router.post('/zapiszTechnologieProcesyElementow/:token',verifyToken,zapiszTechnologieProcesyElementow); 
-    router.put('/zapiszTechnologieUpdate/:token',verifyToken, zapiszTechnologieUpdate); // aktualizacja zamowienia
-    router.get('/technologie/:token',verifyToken,connections.getTechnologie);    
-    router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
+
 
 
 

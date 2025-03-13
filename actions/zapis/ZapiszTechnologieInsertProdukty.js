@@ -13,7 +13,7 @@ const zapiszTechnologieInsertProdukty = (req,res) =>{
       produkt.technologia_id +  "','" +
       produkt.id +        "','" +
       produkt.zamowienie_id +        "','" +
-      proproduktdukty.typ +        "','" +
+      produkt.typ +        "','" +
       produkt.indeks +        "','" +
       produkt.naklad +        "','" +
       produkt.nazwa +        "','" +
