@@ -34,12 +34,13 @@ const zapiszTechnologieInsertArkusze = (req,res) =>{
       promises.push(     new Promise((resolve, reject) => {
         connection.query(sql, (err, results) => {
         if (err) {
- 
-            resolve([err]);               
+          resolve([{zapis: false},err]);                 
         } else {
             // resolve([results,"ok arkusz"])
             resolve([{zapis: true}])
         }
+
+        
     });
     })) 
 
