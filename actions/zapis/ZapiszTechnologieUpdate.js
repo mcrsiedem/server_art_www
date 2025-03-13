@@ -8,6 +8,7 @@ const { zapiszTechnologieUpdate_oprawa } = require("./ZapiszTechnologieUpdate_op
 const { zapiszTechnologieUpdate_legi } = require("./ZapiszTechnologieUpdate_legi");
 const { zapiszTechnologieUpdate_legi_fragmenty } = require("./ZapiszTechnologieUpdate_legi_fragmenty");
 const { zapiszTechnologieUpdate_arkusze } = require("./ZapiszTechnologieUpdate_arkusze");
+const { zapiszTechnologieUpdate_fragmenty } = require("./ZapiszTechnologieUpdate_fragmenty");
 
 
 
@@ -25,23 +26,12 @@ const zapiszTechnologieUpdate = (req,res) =>{
   let grupaWykonanEdit = req.body[8]
   let wykonaniaEdit = req.body[9]
   let procesyElementowTechEdit = req.body[10]
-  // let odpowiedz= []
-
-   
-
-// console.log("Dane zamowienia: ", daneZamowienia.id )
-// console.log("SaveAs: ", req.body[0].saveAs)
-
-
-// var sql = "BEGIN";
-// connection.query(sql, function (err, result) {
-// if (err) res.status(203).json(err)  });
-
 
 
 zapiszTechnologieUpdate_dane(daneTechEdit,res)
 zapiszTechnologieUpdate_produkty(produktyTechEdit,res)
 zapiszTechnologieUpdate_elementy(elementyTechEdit,res)
+zapiszTechnologieUpdate_fragmenty(fragmentyTechEdit,res)
 zapiszTechnologieUpdate_procesy_elementow(procesyElementowTechEdit,res)
 zapiszTechnologieUpdate_oprawa(oprawaTechEdit,res)
 zapiszTechnologieUpdate_legi(legiEdit,res)
@@ -74,7 +64,7 @@ zapiszTechnologieUpdate_arkusze(arkuszeEdit,res)
 
 
 // odpowiedz = [daneTechEdit]
-// res.status(201).json(odpowiedz);
+res.status(201).json("");
 
 
 

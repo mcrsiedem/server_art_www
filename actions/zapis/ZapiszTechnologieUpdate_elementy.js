@@ -31,10 +31,11 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   }
 
   for(let row of elementyTechEdit.filter(x => x.insert == true && x.delete != true) ){
-    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,ilosc_leg,lega,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,stan,status,etap,indeks) "+
+    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologa_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,ilosc_leg,lega,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,stan,status,etap,indeks) "+
     "values (" 
     + row.id + "," 
     + row.zamowienie_id + "," 
+    + row.technologa_id + "," 
     + row.produkt_id + ",'" 
     + row.nazwa + "'," 
     + row.typ + "," 
