@@ -1,7 +1,7 @@
 const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 
-const zapiszZamowienieUpdate = (req,res) =>{
+const zamowienieUpdate = (req,res) =>{
 
     let odpowiedz =[]
     let daneZamowienia = req.body[0]
@@ -129,7 +129,7 @@ res.status(201).json(odpowiedz);
 }
 
 module.exports = {
-  zapiszZamowienieUpdate
+  zamowienieUpdate
     
 }
  

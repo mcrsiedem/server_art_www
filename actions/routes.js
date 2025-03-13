@@ -7,10 +7,15 @@ const connections = require('./connections');
 // const multer =require("multer");
 
 
-const { zapiszZamowienie } = require("./zapis/ZapiszZamowienie");
-const { zapiszZamowienieUpdate } = require("./zapis/ZapiszZamowienieUpdate");
+
+
+
+
 const { verifyToken } = require("./logowanie/verifyToken");
 const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
+const { zamowienieInsertDane } = require("./zapis/ZamowienieInsertDane");
+const { zamowienieInsertParametry } = require("./zapis/ZamowienieInsertParametry");
+const { zamowienieUpdate } = require("./zapis/ZamowienieUpdate");
 
 
 const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
@@ -29,12 +34,18 @@ const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechn
 
 
 
+
+
+
     router.get('/users/:login/:haslo',connections.getUser);
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 
     // zamówienia
-    router.post('/zapiszZamowienie/:token',verifyToken, zapiszZamowienie); // dodaje nowe zmówienie
-    router.put('/zapiszZamowienieUpdate/:token',verifyToken, zapiszZamowienieUpdate); // aktualizacja zamowienia
+    router.post('/zamowienieInsertDane/:token',verifyToken, zamowienieInsertDane); // dodaje nowe zmówienie
+    router.post('/zamowienieInsertParametry/:token',verifyToken, zamowienieInsertParametry); // dodaje nowe zmówienie
+    // router.post('/zapiszZamowienie/:token',verifyToken, zamowienieInsert); // dodaje nowe zmówienie
+
+    router.put('/zapiszZamowienieUpdate/:token',verifyToken, zamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:token',verifyToken,connections.getZamowienia);
 
