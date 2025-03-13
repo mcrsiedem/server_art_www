@@ -1,18 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const connections = require('./connections');
-// const connection = require("./mysql");
-// const jwt = require("jsonwebtoken");
-// const cookieParser =require("cookie-parser");
-// const multer =require("multer");
-
-
-
-
-
 
 const { verifyToken } = require("./logowanie/verifyToken");
 const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
+
 const { zamowienieInsertDane } = require("./zapis/ZamowienieInsertDane");
 const { zamowienieInsertParametry } = require("./zapis/ZamowienieInsertParametry");
 const { zamowienieUpdate } = require("./zapis/ZamowienieUpdate");
@@ -30,11 +22,6 @@ const { zapiszTechnologieInsertLegiFragmenty } = require("./zapis/ZapiszTechnolo
 const { zapiszTechnologieInsertGrupy } = require("./zapis/ZapiszTechnologieInsertGrupy");
 const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
-
-
-
-
-
 
 
     router.get('/users/:login/:haslo',connections.getUser);
@@ -107,7 +94,7 @@ const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechn
     // router.post('/pakowanie',connections.postPakowanie);
 
 
-    router.post('/procesyElementow',connections.postProcesyElementow);
+    // router.post('/procesyElementow',connections.postProcesyElementow);
     router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);
     router.put('/delete_zamowienie_kosz',connections.updateSetOrderToDeleted);
 
