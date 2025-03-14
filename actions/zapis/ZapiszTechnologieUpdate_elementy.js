@@ -27,15 +27,15 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   ", arkusz_szerokosc = '" + row.arkusz_szerokosc+ 
   "', arkusz_wysokosc = '" + row.arkusz_wysokosc+ 
   "' where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err     }});
   }
 
   for(let row of elementyTechEdit.filter(x => x.insert == true && x.delete != true) ){
-    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologa_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,ilosc_leg,lega,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,stan,status,etap,indeks) "+
+    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,ilosc_leg,lega,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,stan,status,etap,indeks) "+
     "values (" 
     + row.id + "," 
     + row.zamowienie_id + "," 
-    + row.technologa_id + "," 
+    + row.technologia_id + "," 
     + row.produkt_id + ",'" 
     + row.nazwa + "'," 
     + row.typ + "," 
@@ -52,13 +52,13 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
     + row.stan + "," 
     + row.status + "," 
     + row.etap + "," 
-    + row.indeks + "'); ";
-    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+    + row.indeks + "); ";
+    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });    throw err         }});
     }
 
     for(let row of elementyTechEdit.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.technologie_elementy where global_id=" + row.global_id;
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err          }});
         }
 
 }

@@ -25,7 +25,7 @@ for(let row of arkusze.filter(x => x.update == true && x.insert != true) ){
   "', nadkomplet = '" + row.nadkomplet+ 
   "', uwagi = '" + row.uwagi+ 
   "' where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+  connection.query(sql, function (err, result) {      if (err)throw err     });
   }
 
 
@@ -46,21 +46,18 @@ for(let row of arkusze.filter(x => x.update == true && x.insert != true) ){
     row.papier_id+        "','" +
     row.arkusz_szerokosc+        "','" +
     row.arkusz_wysokosc+        "','" +
-    row.papier_id+        "','" +
     row.naklad +        "','" +
     row.nadkomplet +        "','" +
     row.uwagi +        "'); ";
-  connection.query(sql, function (err, result) {
-      if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-  });
+  connection.query(sql, function (err, result) {      if (err)throw err     });
   
+}
 
     for(let row of arkusze.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.technologie_arkusze where global_id=" + row.global_id;
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+        connection.query(sql, function (err, result) {      if (err)throw err     });
         }
 
-}
 }
 
 module.exports = {

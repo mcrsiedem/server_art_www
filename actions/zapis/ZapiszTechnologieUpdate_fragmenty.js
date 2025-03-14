@@ -16,7 +16,7 @@ for(let row of fragmentyTechEdit.filter(x => x.update == true && x.insert != tru
   ", arkusz_szerokosc = '" + row.arkusz_szerokosc+ 
   "', arkusz_wysokosc = '" + row.arkusz_wysokosc+ 
   "' where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+  connection.query(sql, function (err, result) {      if (err)throw err     });
   }
 
   for(let row of fragmentyTechEdit.filter(x => x.insert == true && x.delete != true) ){
@@ -34,12 +34,12 @@ for(let row of fragmentyTechEdit.filter(x => x.update == true && x.insert != tru
     row.wersja +        "','" +
     row.naklad +        "','" +
     row.info +        "'); ";
-    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+    connection.query(sql, function (err, result) {      if (err)throw err     });
     }
 
     for(let row of fragmentyTechEdit.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.technologie_fragmenty where global_id=" + row.global_id;
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+        connection.query(sql, function (err, result) {      if (err)throw err     });
         }
 
 }

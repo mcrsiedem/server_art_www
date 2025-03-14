@@ -38,32 +38,6 @@ zapiszTechnologieUpdate_legi(legiEdit,res)
 zapiszTechnologieUpdate_legi_fragmenty(legiFragmentyEdit,res)
 zapiszTechnologieUpdate_arkusze(arkuszeEdit,res)
 
-
-
-// //-------------- fragmenty
-
-//         for(let row of fragmenty.filter(x => x.update == true && x.insert != true) ){
-//           var sql =   "update  artdruk.zamowienia_fragmenty set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", element_id = " + row.element_id+ ", oprawa_id = " + row.oprawa_id+ ", naklad = '" + row.naklad+ "', ilosc_stron = '" + row.ilosc_stron+ "', wersja = '" + row.wersja+ "', info = '" + row.info+ "', typ = '" + row.typ+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
-//           connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
-//           }
-        
-//           for(let row of fragmenty.filter(x => x.insert == true && x.delete != true) ){
-//             var sql =   "INSERT INTO artdruk.zamowienia_fragmenty (id,zamowienie_id,produkt_id,element_id,oprawa_id,naklad,ilosc_stron,wersja,info,typ,indeks) "+
-//             "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.element_id + "," + row.oprawa_id + ",'" + row.naklad + "','" + row.ilosc_stron + "','" + row.wersja + "','" + row.info + "','" + row.typ + "'," + row.indeks + "); ";
-//             connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
-//             }
-        
-//             for(let row of fragmenty.filter(x => x.delete == true && x.insert != true) ){
-//                 var sql =   "DELETE from artdruk.zamowienia_fragmenty where global_id=" + row.global_id;
-//                 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
-//                 }
-
-
-  // connection.query("commit ", function (err, result) {
-  // });
-
-
-// odpowiedz = [daneTechEdit]
 res.status(201).json("");
 
 
