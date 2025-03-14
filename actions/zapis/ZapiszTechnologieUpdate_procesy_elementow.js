@@ -28,8 +28,23 @@ const zapiszTechnologieUpdate_procesy_elementow=(procesyElementow) =>{
   
   
     for(let row of procesyElementow.filter(x => x.insert == true && x.delete != true) ){
-      var sql =   "INSERT INTO artdruk.technologie_procesy_elementow (id,zamowienie_id,technologia_id,produkt_id,element_id,proces_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,nazwa_id,indeks) "+
-      "values (" + row.id + "," + row.zamowienie_id + "," + row.technologia_id + "," + row.produkt_id + "," + row.element_id + "," + row.proces_id + ",'" + row.front_ilosc + "','" + row.back_ilosc + "','" + row.front_kolor + "','" + row.back_kolor + "','" + row.info + "'," + row.nazwa_id + "," + row.indeks + "); ";
+      var sql =
+      "INSERT INTO artdruk.technologie_procesy_elementow (id,indeks,technologia_id,zamowienie_id,produkt_id,element_id,front_ilosc,front_kolor,back_ilosc,back_kolor,info,nazwa_id,proces_id) " +
+      "values ('" +
+      row.id +  "','" +
+      row.indeks +        "','" +
+      row.technologia_id +        "','" +
+      row.zamowienie_id +        "','" +
+      row.produkt_id +        "','" +
+      row.element_id +        "','" +
+      row.front_ilosc +        "','" +
+      row.front_kolor +        "','" +
+      row.back_ilosc +        "','" +
+      row.back_kolor+        "','" +
+      row.info+        "','" +
+      row.nazwa_id +        "','" +
+      row.proces_id +        "'); ";
+      
       connection.query(sql, function (err, result) {      if (err)throw err     });
       }
   
