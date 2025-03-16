@@ -146,10 +146,11 @@ for (let opr of oprawa) {
 
 for (let procesy of procesyElementow) {
   var sql =
-    "INSERT INTO artdruk.zamowienia_procesy_elementow (id,zamowienie_id,produkt_id,element_id,proces_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,nazwa_id,indeks) " +
+    "INSERT INTO artdruk.zamowienia_procesy_elementow (id,zamowienie_id,ilosc_uzytkow,produkt_id,element_id,proces_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,nazwa_id,indeks) " +
     "values ('" +
     procesy.id +  "','" +
     procesy.zamowienie_id +        "','" +
+    procesy.ilosc_uzytkow +        "','" +
     procesy.produkt_id +        "','" +
     procesy.element_id +        "','" +
     procesy.proces_id +        "','" +
