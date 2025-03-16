@@ -696,19 +696,19 @@ updatePapiery(req,res){
     if (err) res.status(203).json(err)  });
 
     for(let row of rows.filter(x => x.update == true) ){
-        var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = '" + row.grupa_id+ "', nazwa_id = '" + row.nazwa_id+ "', gramatura = " + row.gramatura+ ", bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ " where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+        var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = " + row.grupa_id+ ", nazwa_id = " + row.nazwa_id+ ", gramatura = '" + row.gramatura+ "', bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ " where id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err       }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery (dodal,zmienil,grupa_id,nazwa_id,gramatura,bulk,info,wykonczenie_id) "+
-            "values (" + row.dodal + "," + row.zmienil + "," + row.grupa_id + "," + row.nazwa_id + "," + row.gramatura + ",'" + row.bulk + "','" + row.info + "'," + row.wykonczenie_id + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+            "values (" + row.dodal + "," + row.zmienil + "," + row.grupa_id + "," + row.nazwa_id + ",'" + row.gramatura + "','" + row.bulk + "','" + row.info + "'," + row.wykonczenie_id + "); ";
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err       }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err        }});
                 }
 
 
@@ -731,17 +731,17 @@ updatePapieryNazwy(req,res){
 
     for(let row of rows.filter(x => x.update == true) ){
         var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "' where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err     }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa) value ('" + row.nazwa + "'); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err       }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery_nazwy where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err          }});
                 }
 
 
@@ -765,17 +765,17 @@ updatePapieryGrupa(req,res){
 
     for(let row of rows.filter(x => x.update == true) ){
         var sql =   "update  artdruk.papiery_grupa set  grupa = '" + row.grupa+ "' where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err        }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery_grupa (grupa) value ('" + row.grupa + "'); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err        }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery_grupa where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err         }});
                 }
 
 
