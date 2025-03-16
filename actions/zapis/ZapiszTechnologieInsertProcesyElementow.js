@@ -13,7 +13,7 @@ const zapiszTechnologieInsertProcesyElementow = (req,res) =>{
   //------------------------------
   for (let procesElementu of procesyElementow) {
     var sql =
-    "INSERT INTO artdruk.technologie_procesy_elementow (id,indeks,technologia_id,zamowienie_id,produkt_id,element_id,front_ilosc,front_kolor,back_ilosc,back_kolor,info,nazwa_id,proces_id) " +
+    "INSERT INTO artdruk.technologie_procesy_elementow (id,indeks,technologia_id,zamowienie_id,produkt_id,element_id,ilosc_uzytkow,front_ilosc,front_kolor,back_ilosc,back_kolor,info,nazwa_id,proces_id) " +
     "values ('" +
     procesElementu.id +  "','" +
     procesElementu.indeks +        "','" +
@@ -21,6 +21,7 @@ const zapiszTechnologieInsertProcesyElementow = (req,res) =>{
     procesElementu.zamowienie_id +        "','" +
     procesElementu.produkt_id +        "','" +
     procesElementu.element_id +        "','" +
+    procesElementu.ilosc_uzytkow +        "','" +
     procesElementu.front_ilosc +        "','" +
     procesElementu.front_kolor +        "','" +
     procesElementu.back_ilosc +        "','" +
