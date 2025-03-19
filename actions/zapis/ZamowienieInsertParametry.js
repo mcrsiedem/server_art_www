@@ -50,7 +50,7 @@ const zamowienieInsertParametry = (req,res) =>{
 
 for (let element of elementy) {
   var sql =
-    "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,naklad,info,uwagi,stan,status,etap,tytul,papier_info,indeks) " +
+    "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,papier_postac_id,naklad,info,uwagi,stan,status,etap,tytul,papier_info,indeks) " +
     "values ('" +
     element.id +  "','" +
     element.zamowienie_id +        "','" +
@@ -62,6 +62,7 @@ for (let element of elementy) {
     element.format_x +        "','" +
     element.format_y +        "','" +
     element.papier_id +        "','" +
+    element.papier_postac_id +        "','" +
     element.naklad +        "','" +
     element.info +        "','" +
     element.uwagi +        "'," +

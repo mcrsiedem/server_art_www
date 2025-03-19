@@ -1885,6 +1885,13 @@ console.log("Zapis: Proces Elementu");
         res.status(200).json(doc);
     });}
 
+    getListaPapierowPowleczenie(req,res){
+        var sql = "SELECT * FROM artdruk.papiery_powleczenie;";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });}
+
     getListaProcesow(req,res){
         var sql = "SELECT * FROM artdruk.view_procesy ;";
         connection.query(sql, function (err, doc) {

@@ -65,6 +65,7 @@ const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechn
     router.get('/lista-papierow-postac/:token',verifyToken,connections.getListaPapierowPostac);
     router.get('/lista-papierow-rodzaj/:token',verifyToken,connections.getListaPapierowRodzaj);
     router.get('/lista-papierow-wykonczenia/:token',verifyToken,connections.getListaPapierowWykonczenia);
+    router.get('/lista-papierow-powleczenie/:token',verifyToken,connections.getListaPapierowPowleczenie);
     router.put('/updatePaper/:token',verifyToken,connections.updatePapiery);
     router.put('/updatePaperNazwy/:token',verifyToken,connections.updatePapieryNazwy);
     router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);

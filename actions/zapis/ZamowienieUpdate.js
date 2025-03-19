@@ -46,13 +46,13 @@ for(let row of produkty.filter(x => x.update == true && x.insert != true) ){
   
 //---------------- elementy
 for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
-  var sql =   "update  artdruk.zamowienia_elementy set  id = " + element.id+ ", zamowienie_id = " + element.zamowienie_id+ ", produkt_id = " + element.produkt_id+ ", nazwa = '" + element.nazwa+ "', typ = " + element.typ+ ", ilosc_stron = " + element.ilosc_stron+ ", format_x = '" + element.format_x+ "', format_y = '" + element.format_y+ "', papier_id = " + element.papier_id+ ", naklad = " + element.naklad+ ", stan = " + element.stan+ ", status = " + element.status+ ", etap = " + element.etap+ ", info = '" + element.info+ "', uwagi = '" + element.uwagi+ "' where global_id = " + element.global_id + ""
+  var sql =   "update  artdruk.zamowienia_elementy set  id = " + element.id+ ", zamowienie_id = " + element.zamowienie_id+ ", produkt_id = " + element.produkt_id+ ", nazwa = '" + element.nazwa+ "', typ = " + element.typ+ ", ilosc_stron = " + element.ilosc_stron+ ", format_x = '" + element.format_x+ "', format_y = '" + element.format_y+ "', papier_id = " + element.papier_id+ ", papier_postac_id = " + element.papier_postac_id+ ", naklad = " + element.naklad+ ", stan = " + element.stan+ ", status = " + element.status+ ", etap = " + element.etap+ ", info = '" + element.info+ "', uwagi = '" + element.uwagi+ "' where global_id = " + element.global_id + ""
   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
   }
 
   for(let row of elementy.filter(x => x.insert == true && x.delete != true) ){
-    var sql =   "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,naklad,info,uwagi,stan,status,etap,tytul,papier_info,indeks) "+
-    "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + ",'" + row.nazwa + "'," + row.typ + ",'" + row.ilosc_stron + "','" + row.kolory + "','" + row.format_x + "','" + row.format_y + "'," + row.papier_id + "," + row.naklad + ",'" + row.info + "','" + row.uwagi + "'," + row.stan + "," + row.status + "," + row.etap + ",'" + row.tytul + "','" + row.papier_info + "','" + row.indeks + "'); ";
+    var sql =   "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,papier_postac_id,naklad,info,uwagi,stan,status,etap,tytul,papier_info,indeks) "+
+    "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + ",'" + row.nazwa + "'," + row.typ + ",'" + row.ilosc_stron + "','" + row.kolory + "','" + row.format_x + "','" + row.format_y + "'," + row.papier_id + "," + row.papier_postac_id + "," + row.naklad + ",'" + row.info + "','" + row.uwagi + "'," + row.stan + "," + row.status + "," + row.etap + ",'" + row.tytul + "','" + row.papier_info + "','" + row.indeks + "'); ";
     connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err)         }});
     }
 
