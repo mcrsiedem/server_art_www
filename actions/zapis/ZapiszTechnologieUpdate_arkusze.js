@@ -19,6 +19,7 @@ for(let row of arkusze.filter(x => x.update == true && x.insert != true) ){
   "', ilosc_stron = " + row.ilosc_stron+ 
   ", ilosc_leg = " + row.ilosc_leg+ 
   ", papier_id = " + row.papier_id+ 
+  ", papier_postac_id = " + row.papier_postac_id+ 
   ", arkusz_szerokosc = '" + row.arkusz_szerokosc+ 
   "', arkusz_wysokosc = '" + row.arkusz_wysokosc+ 
   "', naklad = '" + row.naklad+ 
@@ -32,7 +33,7 @@ for(let row of arkusze.filter(x => x.update == true && x.insert != true) ){
 
   for(let row of arkusze.filter(x => x.insert == true && x.delete != true) ){
     var sql =
-    "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,nr_arkusza,element_id,ilosc_stron,ilosc_leg,papier_id,arkusz_szerokosc,arkusz_wysokosc,naklad,nadkomplet,uwagi) " +
+    "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,nr_arkusza,element_id,ilosc_stron,ilosc_leg,papier_id,papier_postac_id,arkusz_szerokosc,arkusz_wysokosc,naklad,nadkomplet,uwagi) " +
     "values ('" +
     row.id +  "','" +
     row.indeks +        "','" +
@@ -44,6 +45,7 @@ for(let row of arkusze.filter(x => x.update == true && x.insert != true) ){
     row.ilosc_stron +        "','" +
     row.ilosc_leg+        "','" +
     row.papier_id+        "','" +
+    row.papier_postac_id+        "','" +
     row.arkusz_szerokosc+        "','" +
     row.arkusz_wysokosc+        "','" +
     row.naklad +        "','" +

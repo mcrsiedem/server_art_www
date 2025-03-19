@@ -17,6 +17,7 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   ", format_x = '" + row.format_x+ 
   "', format_y = '" + row.format_y+ 
   "', papier_id = " + row.papier_id+ 
+  ", papier_postac_id = " + row.papier_postac_id+ 
   ", naklad = " + row.naklad+ 
   ", uwagi = '" + row.uwagi+ 
   "', ilosc_leg = " + row.ilosc_leg+ 
@@ -31,7 +32,7 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   }
 
   for(let row of elementyTechEdit.filter(x => x.insert == true && x.delete != true) ){
-    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,ilosc_leg,lega,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,stan,status,etap,indeks) "+
+    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,papier_postac_id,ilosc_leg,lega,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,stan,status,etap,indeks) "+
     "values (" 
     + row.id + "," 
     + row.zamowienie_id + "," 
@@ -43,6 +44,7 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
     + row.format_x + "," 
     + row.format_y + "," 
     + row.papier_id + "," 
+    + row.papier_postac_id + "," 
     + row.ilosc_leg + "," 
     + row.lega + ",'" 
     + row.arkusz_szerokosc + "','" 
