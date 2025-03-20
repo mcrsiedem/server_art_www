@@ -144,6 +144,75 @@ class Connections {
         });
 
     }
+
+    getPapieryParametry(req,res){
+        let dane=[];
+        //  const idZamowienia = req.params['idZamowienia']
+         // const zamowienie_prime_id = req.params['zamowienie_prime_id']
+ 
+         var sql = "begin";
+         connection.query(sql, function (err, result) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         });
+ 
+         var sql = "SELECT * FROM artdruk.view_papiery ;";
+        
+         connection.query(sql, function (err, doc) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         dane.push(doc)
+     
+         });
+ 
+         var sql = "SELECT * FROM artdruk.papiery_nazwy;";
+         connection.query(sql, function (err, doc) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         dane.push(doc)
+         
+         } );
+ 
+         var sql = "SELECT * FROM artdruk.papiery_grupa;";
+         connection.query(sql, function (err, doc) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         dane.push(doc)
+    
+         } );
+ 
+         var sql = "SELECT * FROM artdruk.papiery_postac;";
+         connection.query(sql, function (err, doc) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         dane.push(doc)
+      
+         } );
+ 
+         var sql = "SELECT * FROM artdruk.papiery_rodzaj;";
+         connection.query(sql, function (err, doc) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         dane.push(doc)
+ 
+         } );
+ 
+         
+         var sql = "SELECT * FROM artdruk.papiery_wykonczenia;";
+         connection.query(sql, function (err, doc) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         dane.push(doc)
+         } );
+ 
+         var sql = "SELECT * FROM artdruk.papiery_powleczenie;";
+         connection.query(sql, function (err, doc) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         dane.push(doc)
+         } );
+
+ 
+         var sql = "commit";
+         connection.query(sql, function (err, result) {
+             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+         console.log("Pobranie papierów oraz paramaterów");
+         res.status(200).json(dane);
+         });
+ 
+     }
     //---
           //pobierz wszystkie objekty do TECHNOLOGI nr...
           getParametryTechnologii(req,res){
