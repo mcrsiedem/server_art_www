@@ -406,18 +406,11 @@ class Connections {
         let dane=[];
 
         
-        var sql  = "select * from artdruk.technologie_arkusze  where papier_id= "+ papier_id ;
+        var sql  = "select count(*) as ilosc from artdruk.technologie_arkusze  where papier_id= "+ papier_id ;
         connection.query(sql, function (err, doc) {
 
-            if(doc.length==0){
-                dane.push({papier_uzywany: false})  
-            }else{
-                dane.push({papier_uzywany: true})   
-            }
-
-
         if (err) throw err;
-        res.status(200).json(dane);
+        res.status(200).json(doc);
     });
     }
 
