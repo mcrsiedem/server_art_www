@@ -764,7 +764,7 @@ updatePapiery(req,res){
     connection.query(sql, function (err, result) {
     if (err) res.status(203).json(err)  });
 
-    for(let row of rows.filter(x => x.update == true) ){
+    for(let row of rows.filter(x => x.update == true && x.insert != true) ){
         var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = " + row.grupa_id+ ", nazwa_id = " + row.nazwa_id+ ", gramatura = '" + row.gramatura+ "', bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ " where id = '" + row.id + "'"
         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err       }});
         }
@@ -798,13 +798,13 @@ updatePapieryNazwy(req,res){
     connection.query(sql, function (err, result) {
     if (err) res.status(203).json(err)  });
 
-    for(let row of rows.filter(x => x.update == true) ){
-        var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "' where id = '" + row.id + "'"
+    for(let row of rows.filter(x => x.update == true && x.insert != true) ){
+        var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "', grupa_id = " + row.grupa_id+ " where id = '" + row.id + "'"
         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err     }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
-            var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa) value ('" + row.nazwa + "'); ";
+            var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa,grupa_id) value ('" + row.nazwa + "'," + row.grupa_id + "); ";
             connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err       }});
             }
 
@@ -832,7 +832,7 @@ updatePapieryGrupa(req,res){
     connection.query(sql, function (err, result) {
     if (err) res.status(203).json(err)  });
 
-    for(let row of rows.filter(x => x.update == true) ){
+    for(let row of rows.filter(x => x.update == true && x.insert != true) ){
         var sql =   "update  artdruk.papiery_grupa set  grupa = '" + row.grupa+ "' where id = '" + row.id + "'"
         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err        }});
         }
@@ -1919,7 +1919,7 @@ console.log("Zapis: Proces Elementu");
         res.status(200).json(doc);
     });}
     getListaPapierowNazwy(req,res){
-        var sql = "SELECT id,nazwa FROM artdruk.papiery_nazwy;";
+        var sql = "SELECT * FROM artdruk.papiery_nazwy;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
@@ -1927,7 +1927,7 @@ console.log("Zapis: Proces Elementu");
     });}
 
     getListaPapierowGrupa(req,res){
-        var sql = "SELECT id,grupa FROM artdruk.papiery_grupa;";
+        var sql = "SELECT * FROM artdruk.papiery_grupa;";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         //sconsole.log(doc);
