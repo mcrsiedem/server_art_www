@@ -60,6 +60,7 @@ const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechn
 
     // papiery
     router.get('/papiery-parametry/:token',verifyToken,connections.getPapieryParametry);
+    router.get('/sprawdzCzyPapierUzyty/:papier_id',connections.sprawdzCzyPapierUzyty);
 
     router.get('/lista-papierow/:token',verifyToken,connections.getListaPapierow);
     router.get('/lista-papierow-nazwy/:token',verifyToken,connections.getListaPapierowNazwy);

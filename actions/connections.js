@@ -400,6 +400,28 @@ class Connections {
          }
     //-----
 
+    sprawdzCzyPapierUzyty(req,res){
+        
+        const papier_id = req.params['papier_id']
+        let dane=[];
+
+        
+        var sql  = "select * from artdruk.technologie_arkusze  where papier_id= "+ papier_id ;
+        connection.query(sql, function (err, doc) {
+
+            if(doc.length==0){
+                dane.push({papier_uzywany: false})  
+            }else{
+                dane.push({papier_uzywany: true})   
+            }
+
+
+        if (err) throw err;
+        res.status(200).json(dane);
+    });
+    }
+
+
     // pobie
     getTechnologie(req,res){
         const idzlecenia = req.params['idzlecenia']
