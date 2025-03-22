@@ -401,17 +401,37 @@ class Connections {
     //-----
 
     sprawdzCzyPapierUzyty(req,res){
-        
+        // spraawdza czy papier był użyty w trzech miejscach i zlicza je. 
+        // jeśli był użyty to nie da się go skasować
         const papier_id = req.params['papier_id']
         let dane=[];
 
-        
         var sql  = "select count(*) as ilosc from artdruk.technologie_arkusze  where papier_id= "+ papier_id ;
         connection.query(sql, function (err, doc) {
+            dane.push(doc)
+        if (err) throw err;
+        });
+
+        var sql  = "select count(*) as ilosc from artdruk.zamowienia_elementy  where papier_id= "+ papier_id ;
+        connection.query(sql, function (err, doc) {
+            dane.push(doc)
 
         if (err) throw err;
-        res.status(200).json(doc);
-    });
+        });
+        
+        var sql  = "select count(*) as ilosc from artdruk.technologie_elementy  where papier_id= "+ papier_id ;
+        connection.query(sql, function (err, doc) {
+            dane.push(doc)
+            //sumowanie ilosci
+           dane =  dane.map(x => x[0].ilosc).reduce((a, b) => a + b, 0)
+
+            
+        if (err) throw err;
+        res.status(200).json(dane);
+        });
+
+
+
     }
 
 
@@ -780,13 +800,13 @@ updatePapiery(req,res){
     if (err) res.status(203).json(err)  });
 
     for(let row of rows.filter(x => x.update == true && x.insert != true) ){
-        var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = " + row.grupa_id+ ", nazwa_id = " + row.nazwa_id+ ", gramatura = '" + row.gramatura+ "', bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ " where id = '" + row.id + "'"
+        var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = " + row.grupa_id+ ", nazwa_id = " + row.nazwa_id+ ", gramatura = '" + row.gramatura+ "', bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ ", powleczenie_id = " + row.powleczenie_id+ " where id = '" + row.id + "'"
         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err       }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
-            var sql =   "INSERT INTO artdruk.papiery (dodal,zmienil,grupa_id,nazwa_id,gramatura,bulk,info,wykonczenie_id) "+
-            "values (" + row.dodal + "," + row.zmienil + "," + row.grupa_id + "," + row.nazwa_id + ",'" + row.gramatura + "','" + row.bulk + "','" + row.info + "'," + row.wykonczenie_id + "); ";
+            var sql =   "INSERT INTO artdruk.papiery (dodal,zmienil,grupa_id,nazwa_id,gramatura,bulk,info,wykonczenie_id,powleczenie_id) "+
+            "values (" + row.dodal + "," + row.zmienil + "," + row.grupa_id + "," + row.nazwa_id + ",'" + row.gramatura + "','" + row.bulk + "','" + row.info + "'," + row.wykonczenie_id + "," + row.powleczenie_id + "); ";
             connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err       }});
             }
 
@@ -814,12 +834,12 @@ updatePapieryNazwy(req,res){
     if (err) res.status(203).json(err)  });
 
     for(let row of rows.filter(x => x.update == true && x.insert != true) ){
-        var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "', grupa_id = " + row.grupa_id+ " where id = '" + row.id + "'"
+        var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "', grupa_id = " + row.grupa_id+ ", powleczenie_id = " + row.powleczenie_id+ " where id = '" + row.id + "'"
         connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err     }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
-            var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa,grupa_id) value ('" + row.nazwa + "'," + row.grupa_id + "); ";
+            var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa,grupa_id,powleczenie_id) value ('" + row.nazwa + "'," + row.grupa_id + "," + row.powleczenie_id + "); ";
             connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err       }});
             }
 
