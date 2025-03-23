@@ -463,14 +463,7 @@ class Connections {
         res.status(200).json(doc);
     });
     }
-    getOprawy(req,res){
-   
-        var sql  = "select * from artdruk.oprawy ORDER BY id";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        res.status(200).json(doc);
-    });
-    }
+
     getProdukty(req,res){
    
         var sql  = "select * from artdruk.produkty ORDER BY id";

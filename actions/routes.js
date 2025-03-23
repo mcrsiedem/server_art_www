@@ -119,7 +119,7 @@ const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechn
     router.get('/lista-userow',connections.getUsersM);
 // end
 router.get('/lista-klientow/:token',verifyToken,connections.getKlienci);
-router.get('/lista-opraw',connections.getOprawy);
+
 router.get('/lista-produktow',connections.getProdukty);
 router.post('/klienci',connections.postKlient);
 router.put('/klient',connections.deleteKlient);
