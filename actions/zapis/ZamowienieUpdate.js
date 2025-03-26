@@ -10,8 +10,9 @@ const zamowienieUpdate = (req,res) =>{
     let fragmenty = req.body[3]
     let oprawa = req.body[4]
     let procesyElementow = req.body[5]
+    let technologieID = req.body[6]  // id technologii z tego zamówienia
 
-   
+   console.log("technologieID: " ,technologieID)
 
 // console.log("Dane zamowienia: ", daneZamowienia.id )
 // console.log("SaveAs: ", req.body[0].saveAs)
@@ -32,11 +33,6 @@ for(let row of produkty.filter(x => x.update == true && x.insert != true) ){
   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
   }
 
-  // for(let row of produkty.filter(x => x.insert == true && x.delete != true) ){
-  //   var sql =   "INSERT INTO artdruk.zamowienia_produkty (id,zamowienie_id,nazwa,wersja,opiekun_zamowienia_id,uwagi,stan,status,typ,ilosc_stron,format_x,format_y,oprawa,naklad,indeks) "+
-  //   "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.element_id + "," + row.oprawa_id + ",'" + row.naklad + "','" + row.ilosc_stron + "','" + row.wersja + "','" + row.info + "','" + row.typ + "'," + row.indeks + "); ";
-  //   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
-  //   }
 
     for(let row of produkty.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.zamowienia_produkty where global_id=" + row.global_id;
@@ -55,6 +51,50 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
     "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + ",'" + row.nazwa + "'," + row.typ + ",'" + row.ilosc_stron + "','" + row.kolory + "','" + row.format_x + "','" + row.format_y + "'," + row.papier_id + "," + row.papier_postac_id + "," + row.naklad + ",'" + row.info + "','" + row.uwagi + "'," + row.stan + "," + row.status + "," + row.etap + ",'" + row.tytul + "','" + row.papier_info + "','" + row.indeks + "'); ";
     connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
     }
+
+            //--
+
+            if(technologieID.length > 0  ){
+
+              for ( let tech_id of technologieID){
+
+                    for(let row of elementy.filter(x => x.insert == true && x.delete != true) ){
+                      var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,papier_postac_id,naklad,uwagi,stan,status,etap,indeks) "+
+                      "values (" 
+                      + row.id + "," 
+                      + row.zamowienie_id + "," 
+                      + tech_id.technologia_id + "," 
+                      + row.produkt_id + ",'" 
+                      + row.nazwa + "'," 
+                      + row.typ + "," 
+                      + row.ilosc_stron + "," 
+                      + row.format_x + "," 
+                      + row.format_y + "," 
+                      + row.papier_id + "," 
+                      + row.papier_postac_id + "," 
+                      + row.naklad + ",'" 
+                      + row.uwagi + "'," 
+                      + row.stan + "," 
+                      + row.status + "," 
+                      + row.etap + "," 
+                      + row.indeks + "); ";
+                          connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+                          }
+
+              }
+
+
+
+            }
+    
+          
+
+
+
+            //----
+
+
+
 
     for(let element of elementy.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.zamowienia_elementy where global_id=" + element.global_id;
