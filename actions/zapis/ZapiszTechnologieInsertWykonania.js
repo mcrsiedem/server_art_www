@@ -13,11 +13,12 @@ const zapiszTechnologieInsertWykonania = (req,res) =>{
   //------------------------------
   for (let wykonanie of wykonania) {
     var sql =
-    "INSERT INTO artdruk.technologie_wykonania(id,indeks,technologia_id, grupa_id,element_id,arkusz_id,typ_elementu,nazwa,naklad,przeloty,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) " +
+    "INSERT INTO artdruk.technologie_wykonania(id,indeks,technologia_id,zamowienie_id, grupa_id,element_id,arkusz_id,typ_elementu,nazwa,naklad,przeloty,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) " +
     "values ('" +
     wykonanie.id +  "','" +
     wykonanie.indeks +        "','" +
     wykonanie.technologia_id +        "','" +
+    wykonanie.zamowienie_id +        "','" +
     wykonanie.grupa_id +        "','" +
     wykonanie.element_id +        "','" +
     wykonanie.arkusz_id +        "','" +

@@ -10,11 +10,12 @@ const zapiszTechnologieInsertLegiFragmenty = (req,res) =>{
   //------------------------------
   for (let legaFragment of legiFragmenty) {
     var sql =
-    "INSERT INTO artdruk.technologie_legi_fragmenty(id,indeks,technologia_id,element_id,fragment_id,arkusz_id,lega_id,nr_legi,naklad,oprawa_id,typ,wersja) " +
+    "INSERT INTO artdruk.technologie_legi_fragmenty(id,indeks,technologia_id,zamowienie_id,element_id,fragment_id,arkusz_id,lega_id,nr_legi,naklad,oprawa_id,typ,wersja) " +
     "values ('" +
     legaFragment.id +  "','" +
     legaFragment.indeks +        "','" +
     legaFragment.technologia_id +        "','" +
+    legaFragment.zamowienie_id +        "','" +
     legaFragment.element_id +        "','" +
     legaFragment.fragment_id +        "','" +
     legaFragment.arkusz_id +        "','" +

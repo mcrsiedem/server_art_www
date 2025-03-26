@@ -10,11 +10,12 @@ const zapiszTechnologieInsertLegi = (req,res) =>{
   //------------------------------
   for (let lega of legi) {
     var sql =
-    "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,nr_legi,uwagi) " +
+    "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,zamowienie_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,nr_legi,uwagi) " +
     "values ('" +
     lega.id +  "','" +
     lega.indeks +        "','" +
     lega.technologia_id +        "','" +
+    lega.zamowienie_id +        "','" +
     lega.typ_elementu +        "','" +
     lega.rodzaj_legi +        "','" +
     lega.element_id +        "','" +

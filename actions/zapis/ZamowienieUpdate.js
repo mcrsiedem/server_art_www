@@ -26,7 +26,16 @@ if (err) res.status(203).json(err)  });
 if( daneZamowienia.update == true){
 var sql =   "update  artdruk.zamowienia set  nr='" + daneZamowienia.nr + "', rok = '" + daneZamowienia.rok + "',firma_id=" + daneZamowienia.firma_id+ ",klient_id='" + daneZamowienia.klient_id + "',tytul='" + daneZamowienia.tytul + "',data_przyjecia=" +ifNoDateSetNull( daneZamowienia.data_przyjecia) + ",data_materialow=" +ifNoDateSetNull(daneZamowienia.data_materialow ) + ",data_spedycji=" + ifNoDateSetNull(daneZamowienia.data_spedycji ) + ",opiekun_id='" + daneZamowienia.opiekun_id + "',stan=" + daneZamowienia.stan + ",status=" + daneZamowienia.status + ",etap=" + daneZamowienia.etap + ",uwagi='" + daneZamowienia.uwagi + "',etap='" + daneZamowienia.etap + "',waluta_id='" + daneZamowienia.waluta_id + "',vat_id='" + daneZamowienia.vat_id + "',przedplata='" + daneZamowienia.przedplata + "',cena='" + daneZamowienia.cena + "',termin_platnosci='" + daneZamowienia.termin_platnosci + "',fsc='" + daneZamowienia.fsc + "' where id = '" + daneZamowienia.id + "'"
 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+
+if(daneZamowienia.status == 3){
+
+var sql =   "call artdruk.zamowienie_set_alert(" + daneZamowienia.id + ")"
+connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
 }
+
+
+}
+
 //---------------- produkty
 for(let row of produkty.filter(x => x.update == true && x.insert != true) ){
   var sql =   "update  artdruk.zamowienia_produkty set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", nazwa = '" + row.nazwa+ "', opiekun_zamowienia_id = " + row.opiekun_zamowienia_id+ ", uwagi = '" + row.uwagi+ "', stan = " + row.stan+ ", status = " + row.status+ ", etap = " + row.etap+ ", typ = '" + row.typ+ "', ilosc_stron = '" + row.ilosc_stron+ "', format_x = '" + row.format_x+ "', format_y = '" + row.format_y+ "', oprawa = '" + row.oprawa+ "', naklad = '" + row.naklad+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
@@ -53,11 +62,8 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
     }
 
             //--
-
             if(technologieID.length > 0  ){
-
               for ( let tech_id of technologieID){
-
                     for(let row of elementy.filter(x => x.insert == true && x.delete != true) ){
                       var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,papier_postac_id,naklad,uwagi,stan,status,etap,indeks) "+
                       "values (" 
@@ -80,21 +86,9 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
                       + row.indeks + "); ";
                           connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
                           }
-
               }
-
-
-
             }
-    
-          
-
-
-
             //----
-
-
-
 
     for(let element of elementy.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.zamowienia_elementy where global_id=" + element.global_id;

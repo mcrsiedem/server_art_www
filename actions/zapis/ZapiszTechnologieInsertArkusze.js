@@ -13,11 +13,12 @@ const zapiszTechnologieInsertArkusze = (req,res) =>{
   //------------------------------
   for (let arkusz of arkusze) {
       var sql =
-      "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,nadkomplet,papier_id,papier_postac_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
+      "INSERT INTO artdruk.technologie_arkusze (id,indeks,technologia_id,zamowienie_id,typ_elementu,rodzaj_arkusza,element_id,ilosc_stron,ilosc_leg,naklad,nadkomplet,papier_id,papier_postac_id,nr_arkusza,arkusz_szerokosc,arkusz_wysokosc,uwagi) " +
       "values (" +
       arkusz.id +  ",'" +
       arkusz.indeks +        "','" +
       arkusz.technologia_id +        "','" +
+      arkusz.zamowienie_id +        "','" +
       arkusz.typ_elementu +        "','" +
       arkusz.rodzaj_arkusza +        "','" +
       arkusz.element_id +        "','" +
