@@ -11,8 +11,11 @@ const zamowienieUpdate = (req,res) =>{
     let oprawa = req.body[4]
     let procesyElementow = req.body[5]
     let technologieID = req.body[6]  // id technologii z tego zamówienia
+    let historiaZamowienia = req.body[7]
 
-   console.log("technologieID: " ,technologieID)
+
+  //  console.log("technologieID: " ,technologieID)
+  console.log("historiaZamowienia: " ,historiaZamowienia)
 
 // console.log("Dane zamowienia: ", daneZamowienia.id )
 // console.log("SaveAs: ", req.body[0].saveAs)
@@ -150,7 +153,16 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
           connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
           }     
 
+//-------------- historia zamówienia
+if(historiaZamowienia !=null){
+        for(let row of historiaZamowienia?.filter(x => x.insert == true) ){
+            var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) "+
+            "values (" + row.user_id + ",'" + row.kategoria + "','" + row.event + "'," + row.zamowienie_id + "); ";
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+            }
 
+}
+    
 
 
   connection.query("commit ", function (err, result) {
