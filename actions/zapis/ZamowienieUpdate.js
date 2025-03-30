@@ -67,7 +67,7 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
     }
 
             //--
-            if(technologieID.length > 0  ){
+            if(technologieID !=null && technologieID.length > 0  ){
               for ( let tech_id of technologieID){
                     for(let row of elementy.filter(x => x.insert == true && x.delete != true) ){
                       var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,papier_postac_id,naklad,uwagi,stan,status,etap,indeks) "+

@@ -136,11 +136,6 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 router.get('/technologie_grupy_an_wykonania_all',connections.getWykonania_i_grupyAll);     
 router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);     
  
-// router.post('/technologie',connections.postTechnologie); 
-// router.post('/technologie_new',connections.postTechnologieNew); 
-// router.post('/grupa',connections.postTechnologieGrupy); 
-// router.post('/wykonania',connections.postTechnologieWykonania); 
-// router.post('/procesy_elementow',connections.postTechnologieProcesyElementow); 
 
 router.get('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);
 router.get('/drag_drop_proces_grupa_to_procesor/:id_drag_grupa_proces/:id',connections.dragDropProcesGrupToProcesor);
@@ -174,7 +169,6 @@ router.delete('/delete_zamowienie',connections.deleteZamowienie);
 router.delete('/odblokuj_zamowienie',connections.odblokujZamowienie);
 
 // router.post('/technologie_rest',connections.postTechnologieRest); 
-// router.put('/technologia_not_final',connections.updateSetTechNotFinal);  
 
 
 // Technologie nowe end
