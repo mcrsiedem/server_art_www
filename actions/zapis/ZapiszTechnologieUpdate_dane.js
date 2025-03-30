@@ -8,6 +8,8 @@ const zapiszTechnologieUpdate_dane=(daneTechEdit,res) =>{
 
     // console.log("dane: "+daneTechEdit)
     if( daneTechEdit.update == true){
+
+        console.log(daneTechEdit.alert)
         var sql =   "update  artdruk.technologie set "+  
            "nr='" + daneTechEdit.nr +
            "', rok = '" + daneTechEdit.rok + 

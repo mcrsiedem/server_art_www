@@ -9,6 +9,7 @@ const { zapiszTechnologieUpdate_legi } = require("./ZapiszTechnologieUpdate_legi
 const { zapiszTechnologieUpdate_legi_fragmenty } = require("./ZapiszTechnologieUpdate_legi_fragmenty");
 const { zapiszTechnologieUpdate_arkusze } = require("./ZapiszTechnologieUpdate_arkusze");
 const { zapiszTechnologieUpdate_fragmenty } = require("./ZapiszTechnologieUpdate_fragmenty");
+const { zapiszTechnologieUpdate_alert } = require("./ZapiszTechnologieUpdate_alert");
 
 
 
@@ -37,6 +38,9 @@ zapiszTechnologieUpdate_oprawa(oprawaTechEdit,res)
 zapiszTechnologieUpdate_legi(legiEdit,res)
 zapiszTechnologieUpdate_legi_fragmenty(legiFragmentyEdit,res)
 zapiszTechnologieUpdate_arkusze(arkuszeEdit,res)
+zapiszTechnologieUpdate_alert(daneTechEdit,res)
+
+
 
 res.status(201).json("");
 
