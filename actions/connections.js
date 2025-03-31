@@ -20,7 +20,8 @@ class Connections {
             })
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,dostep from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_odrzuc,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+ 
         connection.query(sql,  (err, result) => {
     
             if(err) return res.json({Status: "Error", Error: "Error in running query"})
@@ -28,15 +29,26 @@ class Connections {
                         const id = result[0].id;
                         const imie = result[0].imie;
                         const nazwisko = result[0].nazwisko;
-                        const dostep = result[0].dostep;
+                        const zamowienie_odrzuc = result[0].zamowienie_odrzuc;
+                        const klienci_wszyscy = result[0].klienci_wszyscy;
+                        const klienci_zapis = result[0].klienci_zapis;
+                        const klienci_usun = result[0].klienci_usun;
+                        const papier_zapis = result[0].papier_zapis;
+                        const papier_usun = result[0].papier_usun;
+                        const procesy_edycja = result[0].procesy_edycja;
+
                         const paylod = {
                             id,
                             imie,
                             nazwisko,
                             login,
-                            dostep
+                            zamowienie_odrzuc,
+                            klienci_wszyscy,klienci_zapis,klienci_usun,
+                            papier_zapis,papier_usun,
+                            procesy_edycja
                         }
      
+                        console.log(result[0])
                const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
     
                 return res.status(200).json(token)
