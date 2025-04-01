@@ -13,11 +13,8 @@ class Connections {
         const login = req.params['login']
         const haslo = req.params['haslo']
     
-    var sql =   "INSERT INTO artdruk.historia (User,Kategoria,Event,Klient) "+
-    "values ('" + login + "','Logowanie','" + haslo + "','www'); ";
-    connection.query(sql, function (err, result) {
-            if (err) throw err;
-            })
+    // var sql =   "INSERT INTO artdruk.historia (User,Kategoria,Event,Klient) values ('" + login + "','Logowanie','" + haslo + "','www'); ";
+    // connection.query(sql, function (err, result) {            if (err) throw err;            })
     
     
         var sql = "select id,imie,nazwisko,login,haslo,zamowienie_odrzuc,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
@@ -54,6 +51,10 @@ class Connections {
      
                         console.log(result[0])
                const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
+
+
+               var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria) values ("+ id +",'" + imie +" "+nazwisko+ "','Logowanie'); ";
+               connection.query(sql, function (err, result) {            if (err) throw err;            })
     
                 return res.status(200).json(token)
                 
