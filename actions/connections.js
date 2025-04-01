@@ -38,6 +38,7 @@ class Connections {
                         const procesy_edycja = result[0].procesy_edycja;
                         const zamowienia_wszystkie = result[0].zamowienia_wszystkie;
                         const technologie_wszystkie = result[0].technologie_wszystkie;
+            
 
                         const paylod = {
                             id,
