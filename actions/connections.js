@@ -727,6 +727,19 @@ zmienCzasTrwaniaGrupy(req,res){
 }
 
 
+skasujGrupe(req,res){
+
+    const global_id_grupa = req.params['global_id_grupa']
+
+
+    // kasowanie grupy wykonan wg global_id grupy
+    var sql = "select artdruk.delete_grupa_wykonan("+ global_id_grupa +") as procesor_id_grupy";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) res.status(203).json(err)  
+            res.status(200).json(result);
+    });
+}
 
 
 deleteKlient(req,res){
@@ -772,6 +785,9 @@ deleteZamowienie(req,res){
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
         var sql =   "delete from artdruk.zamowienia_procesy_elementow where zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.historia where zamowienie_id = '" + row.id + "'"
+        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+
 
         }
 
