@@ -146,6 +146,9 @@ router.get('/updatePrzeniesWykonanieDoInnejGrupy/:global_id_wykonania/:grupa_id_
 router.get('/updateAddPrzerwa/:global_id_grupa/:czas',connections.updateAddPrzerwa);
 router.get('/updateDeletePrzerwa/:global_id_grupa',connections.updateDeletePrzerwa);
 router.get('/zmienCzasTrwaniaGrupy/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupy);
+router.get('/skasujGrupe/:global_id_grupa/:token',verifyToken,connections.skasujGrupe);
+
+
 
 
 
