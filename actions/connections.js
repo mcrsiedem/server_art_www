@@ -533,14 +533,15 @@ class Connections {
 
     postKlient(req,res){
         const firma = req.body.firma;
+        const firma_nazwa = req.body.firma_nazwa;
         const adres = req.body.adres;
         const kod = req.body.kod;
         const nip = req.body.nip;
         const opiekun_id = req.body.opiekun_id;
         const utworzyl_user_id = req.body.utworzyl_user_id;
 
-        var sql =   "INSERT INTO artdruk.klienci (firma,adres,kod,nip,opiekun_id,utworzyl_user_id,deleted) "+
-        "values ('" + firma+ "','" + adres + "','" + kod + "','" + nip + "','" + opiekun_id + "','" + utworzyl_user_id + "',0); ";
+        var sql =   "INSERT INTO artdruk.klienci (firma,firma_nazwa,adres,kod,nip,opiekun_id,utworzyl_user_id,deleted) "+
+        "values ('" + firma+ "','" + firma_nazwa + "','" + adres + "','" + kod + "','" + nip + "','" + opiekun_id + "','" + utworzyl_user_id + "',0); ";
         connection.query(sql, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
@@ -935,12 +936,13 @@ res.status(201).json(result);
 updateKlient(req,res){
     const id = req.body.id;
     const firma= req.body.firma;
+    const firma_nazwa= req.body.firma_nazwa;
     const adres= req.body.adres;
     const kod= req.body.kod;
     const nip= req.body.nip;
     const opiekun_id= req.body.opiekun_id;
 
-    var sql = "update artdruk.klienci set firma = '" + firma+ "', adres = '" + adres+ "', kod = '" + kod+ "', nip = '" + nip+ "', opiekun_id = " + opiekun_id+ " where id = " + id+ "";
+    var sql = "update artdruk.klienci set firma = '" + firma+ "', firma_nazwa = '" + firma_nazwa+ "', adres = '" + adres+ "', kod = '" + kod+ "', nip = '" + nip+ "', opiekun_id = " + opiekun_id+ " where id = " + id+ "";
     connection.query(sql, function (err, result) {
     if (err) throw err;
     // console.log("1 record delete ");
