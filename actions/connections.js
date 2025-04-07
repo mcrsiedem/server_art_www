@@ -786,7 +786,7 @@ deleteZamowienie(req,res){
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
         var sql =   "delete from artdruk.zamowienia_procesy_elementow where zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.historia where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_historia where zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
 
