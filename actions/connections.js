@@ -559,7 +559,7 @@ setOrderOpen(req,res){
     const token = req.body.token;
     const user = req.body.user;
 
-    var sql  = "select * from artdruk.view_zamowienia where id = '" + id+ "' ORDER BY id ASC ";
+    var sql  = "select * from artdruk.view_zamowienia_stan_otwarcia where id = '" + id+ "' ORDER BY id ASC ";
     connection.query(sql, function (err, doc) {
 
         if (err) throw err;
