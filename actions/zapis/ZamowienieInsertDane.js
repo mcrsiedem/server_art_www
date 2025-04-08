@@ -8,7 +8,6 @@ const zamowienieInsertDane = (req,res) =>{
 
   let promises = [];
   let daneZamowienia = req.body[0]
-
   // daneZamowienia.id = result.insertId;
   // produkty = produkty.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
   // elementy = elementy.map((obj) => {return{...obj, zamowienie_id:result.insertId} })

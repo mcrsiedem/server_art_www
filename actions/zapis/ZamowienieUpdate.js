@@ -1,6 +1,8 @@
 const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 
+
+
 const zamowienieUpdate = (req,res) =>{
 
     let odpowiedz =[]
@@ -172,12 +174,18 @@ if(historiaZamowienia !=null){
 odpowiedz = [daneZamowienia,produkty,elementy,fragmenty,oprawa,procesyElementow]
 res.status(201).json(odpowiedz);
 
+// setTimeout(()=>{
+//   res.status(201).json(odpowiedz);
+//   console.log("Już")
+// }, 3000);
 
 
 }
+
 
 module.exports = {
   zamowienieUpdate
     
 }
  
+
