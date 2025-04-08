@@ -484,7 +484,7 @@ class Connections {
     }
     getKlienci(req,res){
    
-        var sql  = "select * from artdruk.view_klienci ORDER BY firma ASC";
+        var sql  = "select * from artdruk.view_klienci ORDER BY firma_nazwa ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
