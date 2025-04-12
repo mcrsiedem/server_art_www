@@ -22,6 +22,7 @@ const { zapiszTechnologieInsertLegiFragmenty } = require("./zapis/ZapiszTechnolo
 const { zapiszTechnologieInsertGrupy } = require("./zapis/ZapiszTechnologieInsertGrupy");
 const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
+const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
 
 
     router.get('/users/:login/:haslo',connections.getUser);
@@ -29,6 +30,7 @@ const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechn
 
     // zamówienia
     router.post('/zamowienieInsertDane/:token',verifyToken, zamowienieInsertDane); // dodaje nowe zmówienie
+    router.post('/zamowienieNumer/:token',verifyToken, zamowienieInsertNumer); // dodaje nowe zmówienie
     router.post('/zamowienieInsertParametry/:token',verifyToken, zamowienieInsertParametry); // dodaje nowe zmówienie
     // router.post('/zapiszZamowienie/:token',verifyToken, zamowienieInsert); // dodaje nowe zmówienie
 
