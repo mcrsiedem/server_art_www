@@ -17,7 +17,7 @@ class Connections {
     // connection.query(sql, function (err, result) {            if (err) throw err;            })
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_odrzuc,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
     
@@ -26,7 +26,7 @@ class Connections {
                         const id = result[0].id;
                         const imie = result[0].imie;
                         const nazwisko = result[0].nazwisko;
-                        const zamowienie_odrzuc = result[0].zamowienie_odrzuc;
+                        const zamowienie_przyjmij = result[0].zamowienie_przyjmij;
                         const klienci_wszyscy = result[0].klienci_wszyscy;
                         const klienci_zapis = result[0].klienci_zapis;
                         const klienci_usun = result[0].klienci_usun;
@@ -42,7 +42,7 @@ class Connections {
                             imie,
                             nazwisko,
                             login,
-                            zamowienie_odrzuc,
+                            zamowienie_przyjmij,
                             klienci_wszyscy,klienci_zapis,klienci_usun,
                             papier_zapis,papier_usun,
                             procesy_edycja,
