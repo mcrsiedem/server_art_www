@@ -10,6 +10,7 @@ const zamowienieInsertParametry = (req,res) =>{
   let fragmenty = req.body[2]
   let oprawa = req.body[3]
   let procesyElementow = req.body[4]
+  let pakowanie = req.body[5]
 
 
 
@@ -175,6 +176,21 @@ for (let procesy of procesyElementow) {
 })) 
 }
 
+for (let pakunek of pakowanie) {
+  var sql =   "INSERT INTO artdruk.zamowienia_pakowanie(id,zamowienie_id,produkt_id,nazwa,naklad,uwagi,sztuki_w_paczce,rodzaj_pakowania,indeks) "+
+  "values ('" + pakunek.id+ "','" + pakunek.zamowienie_id+ "','" + pakunek.produkt_id + "','" + pakunek.nazwa + "','" + pakunek.naklad + "','" + pakunek.uwagi + "','" + pakunek.sztuki_w_paczce + "','" + pakunek.rodzaj_pakowania + "','" +pakunek.indeks + "'); ";
+
+  promises.push(     new Promise((resolve, reject) => {
+    connection.query(sql, (err, results) => {
+    if (err) {
+        resolve([{zapis: false},err]);               
+    } else {
+        // resolve([results,"ok arkusz"])
+        resolve([{zapis: true}])
+    }
+});
+})) 
+}
 
 
   Promise.all(promises).then((data) => res.status(201).json(data));
