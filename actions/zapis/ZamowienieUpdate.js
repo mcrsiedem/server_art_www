@@ -33,7 +33,8 @@ if( daneZamowienia.update == true){
 var sql =   "update  artdruk.zamowienia set  nr='" + daneZamowienia.nr + "',  rok = '" + daneZamowienia.rok + "',firma_id=" + daneZamowienia.firma_id+ ",klient_id='" + daneZamowienia.klient_id + "',tytul='" + daneZamowienia.tytul + "',data_przyjecia=" +ifNoDateSetNull( daneZamowienia.data_przyjecia) + ",data_materialow=" +ifNoDateSetNull(daneZamowienia.data_materialow ) + ",data_spedycji=" + ifNoDateSetNull(daneZamowienia.data_spedycji ) + ",opiekun_id='" + daneZamowienia.opiekun_id + "',stan=" + daneZamowienia.stan + ",status=" + daneZamowienia.status + ",etap=" + daneZamowienia.etap + ",uwagi='" + daneZamowienia.uwagi + "',etap='" + daneZamowienia.etap + "',waluta_id='" + daneZamowienia.waluta_id + "',vat_id='" + daneZamowienia.vat_id + "',przedplata='" + daneZamowienia.przedplata + "',cena='" + daneZamowienia.cena + "',termin_platnosci='" + daneZamowienia.termin_platnosci + "',fsc='" + daneZamowienia.fsc + "' where id = '" + daneZamowienia.id + "'"
 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
 
-if(daneZamowienia.status > 2 && daneZamowienia.status < 6 ){
+if(daneZamowienia.status > 2  ){
+  // if(daneZamowienia.status > 2 && daneZamowienia.status < 6 ){
 var sql =   "call artdruk.zamowienie_set_alert(" + daneZamowienia.id + ")"
 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
 }
