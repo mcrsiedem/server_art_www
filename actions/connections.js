@@ -17,7 +17,7 @@ class Connections {
     // connection.query(sql, function (err, result) {            if (err) throw err;            })
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,harmonogram_przyjmij from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
     
@@ -35,6 +35,7 @@ class Connections {
                         const procesy_edycja = result[0].procesy_edycja;
                         const zamowienia_wszystkie = result[0].zamowienia_wszystkie;
                         const technologie_wszystkie = result[0].technologie_wszystkie;
+                        const technologia_zapis = result[0].technologia_zapis;
                         const harmonogram_przyjmij = result[0].harmonogram_przyjmij;
             
 
@@ -47,7 +48,7 @@ class Connections {
                             klienci_wszyscy,klienci_zapis,klienci_usun,
                             papier_zapis,papier_usun,
                             procesy_edycja,
-                            zamowienia_wszystkie,technologie_wszystkie,
+                            zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
                             harmonogram_przyjmij
                         }
      
