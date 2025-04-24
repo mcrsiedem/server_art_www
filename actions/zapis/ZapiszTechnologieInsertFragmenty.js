@@ -6,7 +6,7 @@ const zapiszTechnologieInsertFragmenty = (req,res) =>{
 
 
 
-  for (let fragment of fragmenty) {
+  for (let fragment of fragmenty.filter(x =>  x.delete != true)) {
     var sql =
     "INSERT INTO artdruk.technologie_fragmenty (id,indeks,technologia_id,zamowienie_id,produkt_id,element_id,oprawa_id,typ,ilosc_stron,wersja,naklad,info) " +
     "values ('" +

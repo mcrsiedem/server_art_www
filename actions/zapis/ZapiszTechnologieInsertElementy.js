@@ -4,9 +4,9 @@ const zapiszTechnologieInsertElementy = (req,res) =>{
   let promises = [];
   let elementy = req.body[0]
 
+  // .filter(x => x.insert == true && x.delete != true)
 
-
-  for (let element of elementy) {
+  for (let element of elementy.filter(x =>  x.delete != true)) {
     var sql =
     "INSERT INTO artdruk.technologie_elementy (id,indeks,technologia_id,zamowienie_id,produkt_id,nazwa,typ,lega,ilosc_leg,ilosc_stron,format_x,format_y,papier_id,papier_postac_id,papier_info,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,etap,stan,status) " +
     "values ('" +

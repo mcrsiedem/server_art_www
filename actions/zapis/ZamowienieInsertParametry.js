@@ -49,7 +49,7 @@ const zamowienieInsertParametry = (req,res) =>{
 }
 
 
-for (let element of elementy) {
+for (let element of elementy.filter(x =>  x.delete != true)) {
   var sql =
     "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,papier_postac_id,naklad,info,uwagi,stan,status,etap,tytul,papier_info,indeks) " +
     "values ('" +
@@ -88,7 +88,7 @@ for (let element of elementy) {
 }
 
 
-for (let fragment of fragmenty) {
+for (let fragment of fragmenty.filter(x =>  x.delete != true)) {
   var sql =
     "INSERT INTO artdruk.zamowienia_fragmenty (id,zamowienie_id,produkt_id,element_id,oprawa_id,naklad,ilosc_stron,wersja,info,typ,indeks) " +
     "values ('" +
@@ -118,7 +118,7 @@ for (let fragment of fragmenty) {
 
 
 
-for (let opr of oprawa) {
+for (let opr of oprawa.filter(x =>  x.delete != true)) {
   var sql =
     "INSERT INTO artdruk.zamowienia_oprawa (id,zamowienie_id,produkt_id,oprawa,naklad,bok_oprawy,data_spedycji,uwagi,wersja,data_czystodrukow,indeks) " +
     "values ('" +
@@ -146,7 +146,7 @@ for (let opr of oprawa) {
 })) 
 }
 
-for (let procesy of procesyElementow) {
+for (let procesy of procesyElementow.filter(x =>  x.delete != true)) {
   var sql =
     "INSERT INTO artdruk.zamowienia_procesy_elementow (id,zamowienie_id,ilosc_uzytkow,produkt_id,element_id,proces_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,nazwa_id,indeks) " +
     "values ('" +
