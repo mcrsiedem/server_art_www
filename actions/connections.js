@@ -478,7 +478,7 @@ class Connections {
     //pobierz zamowienia do głownego widoku
     getZamowienia(req,res){
         const idzlecenia = req.params['idzlecenia']
-        var sql  = "select * from artdruk.view_zamowienia where final is null ORDER BY zmodyfikowano";
+        var sql  = "select * from artdruk.view_zamowienia where final is null ORDER BY nr";
         // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
