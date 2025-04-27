@@ -161,7 +161,7 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
 
 //-------------- historia zamówienia
 if(historiaZamowienia !=null){
-        for(let row of historiaZamowienia?.filter(x => x.insert == true) ){
+        for(let row of historiaZamowienia?.filter(x => x.insert == true).sort((a,c)=>a.id-c.id) ){
             var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) "+
             "values (" + row.user_id + ",'" + row.kategoria + "','" + row.event + "'," + row.zamowienie_id + "); ";
             connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});

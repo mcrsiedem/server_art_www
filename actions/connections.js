@@ -17,7 +17,7 @@ class Connections {
     // connection.query(sql, function (err, result) {            if (err) throw err;            })
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_zapis,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
     
@@ -27,6 +27,7 @@ class Connections {
                         const imie = result[0].imie;
                         const nazwisko = result[0].nazwisko;
                         const zamowienie_przyjmij = result[0].zamowienie_przyjmij;
+                        const zamowienie_zapis = result[0].zamowienie_zapis;
                         const klienci_wszyscy = result[0].klienci_wszyscy;
                         const klienci_zapis = result[0].klienci_zapis;
                         const klienci_usun = result[0].klienci_usun;
@@ -44,7 +45,7 @@ class Connections {
                             imie,
                             nazwisko,
                             login,
-                            zamowienie_przyjmij,
+                            zamowienie_przyjmij,zamowienie_zapis,
                             klienci_wszyscy,klienci_zapis,klienci_usun,
                             papier_zapis,papier_usun,
                             procesy_edycja,
@@ -505,7 +506,7 @@ class Connections {
 
     getUsersM(req,res){
         // pobiera listę użytkowników  w App getUserList
-        var sql  = "select * from artdruk.users ORDER BY id ASC";
+        var sql  = "select * from artdruk.users ORDER BY Imie";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
         res.status(200).json(doc);
