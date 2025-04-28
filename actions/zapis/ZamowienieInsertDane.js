@@ -13,10 +13,8 @@ const zamowienieInsertDane = (req, res) => {
   // skonto: daneZamowienia.skonto,
   //     nr_kalkulacji: daneZamowienia.nr_kalkulacji,
   var sql =
-    "INSERT INTO artdruk.zamowienia (nr,rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) " +
+    "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) " +
     "values ('" +
-    daneZamowienia.nr +
-    "','" +
     daneZamowienia.rok +
     "','" +
     daneZamowienia.firma_id +
