@@ -39,6 +39,10 @@ app.use(cors(
 // privkey.pem  - klucz prywatny - latwo poznac po naglowku w pliku
 //cert.pem - certyfikat
 
+///etc/letsencrypt/live/domena
+// privkey.pem == key.pem
+// cert.pem
+
 //--------------------------
 
 const serverSSL = https.createServer({
