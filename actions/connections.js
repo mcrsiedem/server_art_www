@@ -53,7 +53,7 @@ class Connections {
                             harmonogram_przyjmij
                         }
      
-                        console.log(result[0])
+                        // console.log(result[0])
                const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
 
 
@@ -478,8 +478,8 @@ class Connections {
 
     //pobierz zamowienia do głownego widoku
     getZamowienia(req,res){
-        const idzlecenia = req.params['idzlecenia']
-        var sql  = "select * from artdruk.view_zamowienia where final is null ORDER BY nr";
+        const orderby = req.params['orderby']
+        var sql  = "select * from artdruk.view_zamowienia where final is null ORDER BY "+orderby ;
         // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;

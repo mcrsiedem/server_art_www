@@ -36,7 +36,7 @@ const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
 
     router.put('/zapiszZamowienieUpdate/:token',verifyToken, zamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
-    router.get('/zamowienia/:token',verifyToken,connections.getZamowienia);
+    router.get('/zamowienia/:orderby/:token',verifyToken,connections.getZamowienia);
 
     // technologie promise
     router.post('/zapiszTechnologieInsertDane/:token',verifyToken, zapiszTechnologieInsertDane); // zapisuje technologie
