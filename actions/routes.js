@@ -19,7 +19,8 @@ const { zapiszTechnologieInsertOprawa } = require("./zapis/ZapiszTechnologieInse
 const { zapiszTechnologieInsertArkusze } = require("./zapis/ZapiszTechnologieInsertArkusze");
 const { zapiszTechnologieInsertLegi } = require("./zapis/ZapiszTechnologieInsertLegi");
 const { zapiszTechnologieInsertLegiFragmenty } = require("./zapis/ZapiszTechnologieInsertLegiFragmenty");
-const { zapiszTechnologieInsertGrupy } = require("./zapis/ZapiszTechnologieInsertGrupy");
+const { zapiszTechnologieInsertGrupyZamowienia } = require("./zapis/ZapiszTechnologieInsertGrupyZamowienia");
+const { zapiszTechnologieInsertGrupyHarmonogram } = require("./zapis/ZapiszTechnologieInsertGrupyHarmonogram");
 const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
 const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
@@ -47,7 +48,8 @@ const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
     router.post('/zapiszTechnologieInsertArkusze/:token',verifyToken, zapiszTechnologieInsertArkusze); 
     router.post('/zapiszTechnologieInsertLegi/:token',verifyToken, zapiszTechnologieInsertLegi); 
     router.post('/zapiszTechnologieInsertLegiFragmenty/:token',verifyToken, zapiszTechnologieInsertLegiFragmenty);
-    router.post('/zapiszTechnologieInsertGrupy/:token',verifyToken, zapiszTechnologieInsertGrupy); 
+    router.post('/zapiszTechnologieInsertGrupyZammowienia/:token',verifyToken, zapiszTechnologieInsertGrupyZamowienia); 
+    router.post('/zapiszTechnologieInsertGrupyHarmonogram/:token',verifyToken, zapiszTechnologieInsertGrupyHarmonogram); 
     router.post('/zapiszTechnologieInsertWykonania/:token',verifyToken, zapiszTechnologieInsertWykonania); 
     router.post('/zapiszTechnologieInsertProcesyElementow/:token',verifyToken, zapiszTechnologieInsertProcesyElementow); 
 
