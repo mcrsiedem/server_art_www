@@ -1,6 +1,6 @@
 const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
-const zapiszTechnologieInsertGrupy = (req,res) =>{
+const zapiszTechnologieInsertGrupy_do_skasowania = (req,res) =>{
 
 
 
@@ -59,7 +59,7 @@ grupa.uwagi +        "'; ";
 }
 
 module.exports = {
-  zapiszTechnologieInsertGrupy
+  zapiszTechnologieInsertGrupy_do_skasowania
     
 }
  
