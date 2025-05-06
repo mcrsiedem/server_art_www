@@ -491,6 +491,17 @@ class Connections {
         res.status(200).json(doc);
     });
     }
+
+    getZamowieniaPliki(req,res){
+        const orderby = req.params['orderby']
+        var sql  = "select * from artdruk.view_zamowienia_pliki" ;
+        // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+
     getKlienci(req,res){
    
         var sql  = "select * from artdruk.view_klienci ORDER BY firma_nazwa ASC";

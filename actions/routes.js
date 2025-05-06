@@ -40,6 +40,7 @@ const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/Zapis
     router.put('/zapiszZamowienieUpdate/:token',verifyToken, zamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:token',verifyToken,connections.getZamowienia);
+    router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
 
     // technologie promise
     router.post('/zapiszTechnologieInsertDane/:token',verifyToken, zapiszTechnologieInsertDane); // zapisuje technologie
