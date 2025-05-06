@@ -969,6 +969,20 @@ updateKlient(req,res){
     res.status(200).json(result);
 })
 }
+updatePlikiEtap(req,res){
+    const zamowienie_id = req.body.zamowienie_id;
+    const element_id = req.body.element_id;
+    const etap= req.body.etap;
+
+
+    var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where zamowienie_id = " + zamowienie_id+ " and element_id = " + element_id+ "";
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    // console.log("1 record delete ");
+    res.status(200).json(result);
+})
+}
+
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
     postFragmenty(req,res){

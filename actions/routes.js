@@ -84,6 +84,7 @@ const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/Zapis
     router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);
     router.get('/nadkomplety/:token',verifyToken,connections.getNadkomplety);
     
+    router.put('/updatePlikiEtap/:token',verifyToken,connections.updatePlikiEtap);
 
 
 
