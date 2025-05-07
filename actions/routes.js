@@ -87,6 +87,7 @@ const { cratePliki } = require('./zapis/createPliki');
     router.get('/nadkomplety/:token',verifyToken,connections.getNadkomplety);
     
     router.put('/updatePlikiEtap/:token',verifyToken,connections.updatePlikiEtap);
+    router.put('/updateHistoria/:token',verifyToken,connections.updateHistoria);
 
 
 
