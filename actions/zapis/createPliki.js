@@ -4,6 +4,9 @@ const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 
 const cratePliki = (req,res) =>{
 
+// funkcja do skasowania
+// napisana aby utworzyć pliki z elementow - uzyta raz 
+
   let promises = [];
 
 
