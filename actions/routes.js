@@ -26,6 +26,7 @@ const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieI
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
 const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
+const { cratePliki } = require('./zapis/createPliki');
 
 
     router.get('/users/:login/:haslo',connections.getUser);
@@ -43,6 +44,7 @@ const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/Zapis
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
 
     // technologie promise
+    router.get('/createPliki/:token',verifyToken, cratePliki); // zapisuje technologie
     router.post('/zapiszTechnologieInsertDane/:token',verifyToken, zapiszTechnologieInsertDane); // zapisuje technologie
     router.post('/zapiszTechnologieInsertProdukty/:token',verifyToken, zapiszTechnologieInsertProdukty); 
     router.post('/zapiszTechnologieInsertElementy/:token',verifyToken, zapiszTechnologieInsertElementy); 

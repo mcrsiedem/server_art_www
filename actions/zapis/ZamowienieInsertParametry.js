@@ -192,6 +192,33 @@ for (let pakunek of pakowanie) {
 })) 
 }
 
+for (let element of elementy.filter(x =>  x.delete != true)) {
+  var sql =
+    "INSERT INTO artdruk.zamowienia_pliki (id,zamowienie_id,produkt_id,element_id,uwagi,stan,status,etap,indeks) " +
+    "values ('" +
+    element.id +  "','" +
+    element.zamowienie_id +        "','" +
+    element.produkt_id +        "','" +
+    element.id +        "','" +
+    element.uwagi +        "'," +
+    element.stan +        "," +
+    element.status +        ",1,'" +
+    element.indeks +        "'); ";
+
+  promises.push(     new Promise((resolve, reject) => {
+    connection.query(sql, (err, results) => {
+    if (err) {
+      throw err
+        resolve([{zapis: false},err]);               
+    } else {
+        // resolve([results,"ok arkusz"])
+        resolve([{zapis: true}])
+    }
+});
+})) 
+
+}
+
 
   Promise.all(promises).then((data) => res.status(201).json(data));
 
