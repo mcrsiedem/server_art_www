@@ -1006,7 +1006,10 @@ updateHistoria(req,res){
 
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) "+
     "values (" + user_id+ ",'" + kategoria + "','" + event + "'," + zamowienie_id+ "); ";
-    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       res.status(200).json(result);   }});
+    connection.query(sql, function (err, result) {    
+           if (err) throw err;   
+               res.status(200).json(result);   
+        });
 
  
 
