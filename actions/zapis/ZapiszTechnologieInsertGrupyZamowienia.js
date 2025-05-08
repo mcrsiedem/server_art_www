@@ -42,7 +42,9 @@ grupa.uwagi +        "'; ";
       promises.push(     new Promise((resolve, reject) => {
         connection.query(sql, (err, results) => {
         if (err) {
-            resolve([{zapis: false},err]);               
+          throw err
+            resolve([{zapis: false},err]);       
+
         } else {
             // resolve([results,"ok arkusz"])
             resolve([{zapis: true}])

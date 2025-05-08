@@ -983,6 +983,20 @@ updatePlikiEtap(req,res){
 })
 }
 
+updateZamowienieEtap(req,res){
+    const zamowienie_id = req.body.zamowienie_id;
+    const etap= req.body.etap;
+
+
+    var sql = "update artdruk.zamowienia set etap = " + etap+ " where id = " + zamowienie_id;
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    // console.log("1 record delete ");
+    res.status(200).json(result);
+})
+}
+
+
 updateHistoria(req,res){
     const kategoria = req.body.kategoria;
     const event = req.body.event;
