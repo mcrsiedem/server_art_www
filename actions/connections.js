@@ -624,8 +624,32 @@ dragDropProcesGrup(req,res){
     const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
     const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
 
+    
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
     var sql = "select artdruk.drag("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") as procesor_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) res.status(203).json(err)  
+            res.status(200).json(result);
+    });
+}
+
+
+zakoncz_proces_elementu_uwolnij_nastepny(req,res){
+
+    // const technologia_id = req.params['technologia_id']
+    // const proces_id = req.params['proces_id']
+    // const element_id = req.params['element_id']
+
+        const technologia_id = req.body.technologia_id;
+    const proces_id = req.body.proces_id;
+    const element_id = req.body.element_id;
+    const grupa_id = req.body.grupa_id;
+    
+    
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.zakoncz_proces_elementu_uwolnij_nastepny("+ technologia_id +", "+ proces_id +", "+ element_id +", "+ grupa_id +") as indeks_aktualnego_procesu";
     console.log(sql)
     connection.query(sql, function (err, result) {
        if (err) res.status(203).json(err)  
