@@ -202,7 +202,7 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
     element.id +        "','" +
     element.uwagi +        "'," +
     element.stan +        "," +
-    element.status +        ",1,'" +
+    element.status +        ",2,'" +
     element.indeks +        "'); ";
 
   promises.push(     new Promise((resolve, reject) => {
