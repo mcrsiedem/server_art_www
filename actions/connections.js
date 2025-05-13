@@ -997,13 +997,13 @@ updatePlikiEtap(req,res){
     const zamowienie_id = req.body.zamowienie_id;
     const element_id = req.body.element_id;
     const etap= req.body.etap;
-    const global_id_pliki_row= req.body.global_id_pliki_row;
+    const global_id_grupa_row= req.body.global_id_grupa_row;
 
 // jesli etap 6 i 7 to zmienc status grupy na oczekujace
 
     // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where zamowienie_id = " + zamowienie_id+ " and element_id = " + element_id+ "";
     // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where zamowienie_id = " + zamowienie_id+ " and element_id = " + element_id+ " and global_id = " + global_id_pliki_row+ "" ;
-     var sql =   "select artdruk.update_pliki_etap(" + zamowienie_id+ "," + element_id+ "," + global_id_pliki_row+ "," + etap+ ")"
+     var sql =   "select artdruk.update_pliki_etap(" + zamowienie_id+ "," + element_id+ "," + global_id_grupa_row+ "," + etap+ ")"
     // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where global_id =" + global_id_pliki_row+ "";
     console.log(req.body)
     connection.query(sql, function (err, result) {
