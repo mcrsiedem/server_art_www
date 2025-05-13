@@ -86,7 +86,7 @@ const { cratePliki } = require('./zapis/createPliki');
     router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);
     router.get('/nadkomplety/:token',verifyToken,connections.getNadkomplety);
     
-    router.put('/updatePlikiEtap/:token',verifyToken,connections.updatePlikiEtap);
+    router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,connections.updatePlikiEtapGrupyWykonan);
     router.put('/updateZamowienieEtap/:token',verifyToken,connections.updateZamowienieEtap);
     router.put('/updateHistoria/:token',verifyToken,connections.updateHistoria);
 

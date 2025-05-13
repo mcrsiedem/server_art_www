@@ -993,7 +993,8 @@ updateKlient(req,res){
     res.status(200).json(result);
 })
 }
-updatePlikiEtap(req,res){
+updatePlikiEtapGrupyWykonan(req,res){
+    //aktualizacja etapu plikow z widoku grupy wykonan tj z maszyn
     const zamowienie_id = req.body.zamowienie_id;
     const element_id = req.body.element_id;
     const etap= req.body.etap;
@@ -1003,7 +1004,7 @@ updatePlikiEtap(req,res){
 
     // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where zamowienie_id = " + zamowienie_id+ " and element_id = " + element_id+ "";
     // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where zamowienie_id = " + zamowienie_id+ " and element_id = " + element_id+ " and global_id = " + global_id_pliki_row+ "" ;
-     var sql =   "select artdruk.update_pliki_etap(" + zamowienie_id+ "," + element_id+ "," + global_id_grupa_row+ "," + etap+ ")"
+     var sql =   "select artdruk.update_pliki_etap_grupy_wykonan (" + zamowienie_id+ "," + element_id+ "," + global_id_grupa_row+ "," + etap+ ")"
     // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where global_id =" + global_id_pliki_row+ "";
     console.log(req.body)
     connection.query(sql, function (err, result) {
