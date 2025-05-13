@@ -640,21 +640,27 @@ zakoncz_proces_elementu_uwolnij_nastepny(req,res){
     // const technologia_id = req.params['technologia_id']
     // const proces_id = req.params['proces_id']
     // const element_id = req.params['element_id']
-
+console.log("tuuuuu")
         const technologia_id = req.body.technologia_id;
     const proces_id = req.body.proces_id;
     const element_id = req.body.element_id;
     const grupa_id = req.body.grupa_id;
     
     
+// indeks procesu
+var sql = "select indeks from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+proces_id
+connection.query(sql, function (err, result) {
+    console.log(result)
+    if (err) res.status(203).json(err)  
+         res.status(200).json(result);
+ });
 
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.zakoncz_proces_elementu_uwolnij_nastepny("+ technologia_id +", "+ proces_id +", "+ element_id +", "+ grupa_id +") as indeks_aktualnego_procesu";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+    // var sql = "select artdruk.zakoncz_proces_elementu_uwolnij_nastepny("+ technologia_id +", "+ proces_id +", "+ element_id +", "+ grupa_id +") as indeks_aktualnego_procesu";
+    // connection.query(sql, function (err, result) {
+    //    if (err) res.status(203).json(err)  
+    //         res.status(200).json(result);
+    // });
 }
 
 dragDropProcesGrupToProcesor(req,res){
@@ -999,20 +1005,33 @@ updatePlikiEtapGrupyWykonan(req,res){
     const element_id = req.body.element_id;
     const etap= req.body.etap;
     const global_id_grupa_row= req.body.global_id_grupa_row;
-
-// jesli etap 6 i 7 to zmienc status grupy na oczekujace
-
-    // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where zamowienie_id = " + zamowienie_id+ " and element_id = " + element_id+ "";
-    // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where zamowienie_id = " + zamowienie_id+ " and element_id = " + element_id+ " and global_id = " + global_id_pliki_row+ "" ;
      var sql =   "select artdruk.update_pliki_etap_grupy_wykonan (" + zamowienie_id+ "," + element_id+ "," + global_id_grupa_row+ "," + etap+ ")"
-    // var sql = "update artdruk.zamowienia_pliki set etap = " + etap+ " where global_id =" + global_id_pliki_row+ "";
     console.log(req.body)
     connection.query(sql, function (err, result) {
     if (err) throw err;
-    // console.log("1 record delete ");
     res.status(200).json(result);
 })
 }
+
+
+
+
+updatePlikiEtapZamowienia(req,res){
+    //aktualizacja etapu plikow z widoku zamowien
+    const zamowienie_id = req.body.zamowienie_id;
+    const element_id = req.body.element_id;
+    const etap= req.body.etap;
+    const global_id_pliki_row= req.body.global_id_pliki_row;
+
+     var sql =   "select artdruk.update_pliki_etap_zamowienia (" + zamowienie_id+ "," + element_id+ "," + global_id_pliki_row+ "," + etap+ ")"
+    console.log(req.body)
+    connection.query(sql, function (err, result) {
+    if (err) throw err;
+    res.status(200).json(result);
+})
+}
+
+
 
 updateZamowienieEtap(req,res){
     const zamowienie_id = req.body.zamowienie_id;
