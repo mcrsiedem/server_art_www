@@ -673,18 +673,18 @@ id_procesu = result[0].id
 // console.log("indeks_nastepnego_procesu "+indeks_nastepnego_procesu)
 
  // nastepny proces po zakonczenie aktualnego
- var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+")"
- connection.query(sql, function (err, result) {
-console.log('technologia_id XX --'+technologia_id)
-console.log('element_id XX --'+element_id)
-console.log('indeks_nastepnego_procesu XX --'+indeks_nastepnego_procesu)
-console.log('id_nastepnego_procesu XX --'+result[0].id)
-console.log('')
+//  var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+")"
+//  connection.query(sql, function (err, result) {
+// console.log('technologia_id XX --'+technologia_id)
+// console.log('element_id XX --'+element_id)
+// console.log('indeks_nastepnego_procesu XX --'+indeks_nastepnego_procesu)
+// console.log('id_nastepnego_procesu XX --'+result[0].id)
+// console.log('')
 
- id_nastepnego_procesu = result[0].id
+//  id_nastepnego_procesu = result[0].id
 
-     if (err) throw err
-  });
+//      if (err) throw err
+//   });
     if (err) throw err
  });
 
@@ -742,9 +742,17 @@ console.log('')
       connection.query(sql, function (err, result) {
         if (err) throw err;
       });
+        var sql =
+        " update artdruk.technologie_grupy_wykonan set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and proces_id ="+id_nastepnego_procesu
+      connection.query(sql, function (err, result) {
+        if (err) throw err;
+      });
 
-
-
+        var sql =
+        " update artdruk.technologie_wykonania set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and proces_id ="+id_nastepnego_procesu
+      connection.query(sql, function (err, result) {
+        if (err) throw err;
+      });
 
      if (err) throw err
   });
