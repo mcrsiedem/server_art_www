@@ -641,19 +641,77 @@ zakoncz_proces_elementu_uwolnij_nastepny(req,res){
     // const proces_id = req.params['proces_id']
     // const element_id = req.params['element_id']
 console.log("tuuuuu")
-        const technologia_id = req.body.technologia_id;
+    const technologia_id = req.body.technologia_id;
     const proces_id = req.body.proces_id;
     const element_id = req.body.element_id;
     const grupa_id = req.body.grupa_id;
+    const status = req.body.status;
+
+     let indeks_procesu;
+     let global_id_procesu;
+     let id_procesu;
+     let grupyWykonan =[]
+     let grupyAktualnegoProcesu = []
     
     
 // indeks procesu
-var sql = "select indeks from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+proces_id
+var sql = "select indeks,global_id,id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+proces_id
 connection.query(sql, function (err, result) {
-    console.log(result)
+// indeks.push(result[0].indeks)
+indeks_procesu = result[0].indeks
+global_id_procesu = result[0].global_id
+id_procesu = result[0].id
     if (err) res.status(203).json(err)  
-         res.status(200).json(result);
  });
+
+
+
+ //  all group current process - wszystkie grupy aktualnego procesu
+
+ var sql = "SELECT * FROM artdruk.technologie_grupy_wykonan where technologia_id="+ technologia_id 
+ connection.query(sql, function (err, result) {
+ // indeks.push(result[0].indeks)
+ grupyWykonan = result
+ grupyAktualnegoProcesu = [...result.filter(x=> x.proces_id == id_procesu )]
+
+
+
+ 
+     if (err) res.status(203).json(err)  
+  });
+
+  if(status !=4){
+    // jezeli status != 4
+//  zmien status procesu na najwyzszy status grupy
+  }
+
+
+  if(status ==4){  // status == 4 zakonczone
+// jezli status ==4
+// sprawdz czy wszystkie grupy ==4 
+// zmien status procesu na 4
+// zmien status=2 nastepnego procesu indeks +1 where element_id na 
+  }
+
+
+ var sql = "commit";
+ connection.query(sql, function (err, result) {
+     if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+
+     console.clear()
+     console.log("indeks proces: "+indeks_procesu)
+     console.log("global_id_procesu proces: "+global_id_procesu)
+     console.log("id_procesu: "+id_procesu)
+     console.log("element_id: "+element_id)
+     console.log("nowy status: "+status)
+     console.log(" ")
+     console.log("grupyAktualnegoProcesu : ",grupyAktualnegoProcesu)
+     console.log(" ")
+     
+ res.status(200).json(indeks_procesu)  
+ });
+
+ 
 
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
     // var sql = "select artdruk.zakoncz_proces_elementu_uwolnij_nastepny("+ technologia_id +", "+ proces_id +", "+ element_id +", "+ grupa_id +") as indeks_aktualnego_procesu";
