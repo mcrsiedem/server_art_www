@@ -732,10 +732,10 @@ connection.query(sql, function (err, result) {
 console.log('technologia_id XX --'+technologia_id)
 console.log('element_id XX --'+element_id)
 console.log('indeks_nastepnego_procesu XX --'+indeks_nastepnego_procesu)
-console.log('id_nastepnego_procesu XX --'+result[0].id)
+console.log('id_nastepnego_procesu XX --'+result[0]?.id)
 console.log('')
 
- id_nastepnego_procesu = result[0].id
+ id_nastepnego_procesu = result[0]?.id || 0
 
         var sql =
         " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+id_nastepnego_procesu
@@ -757,38 +757,13 @@ console.log('')
      if (err) throw err
   });
 
-// var sql = " update artdruk.technologie_grupy_wykonan set status ="+ status +" where global_id ="+grupa_global_id
-// connection.query(sql, function (err, result) {
-//     if (err) throw err
-//  });
-//  var sql = " update artdruk.technologie_wykonania set status ="+ status +" where technologia_id ="+technologia_id+" and grupa_id="+grupa_id
-// connection.query(sql, function (err, result) {
-//     if (err) throw err
-//  });
-
-    //     var sql =
-    //     " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+id_nastepnego_procesu
-    //   connection.query(sql, function (err, result) {
-    //     if (err) throw err;
-    //   });
-
-        // uruchom nastepny proces 
-        //grupy
-        //wykonania
-
-
 
     }
-// sprawdz czy wszystkie grupy ==4 
-// zmien status procesu na 4
-// zmien status=2 nastepnego procesu indeks +1 where element_id na 
+
   }
 
   if (err) throw err
   });
-
-
-
 
 
 
@@ -799,17 +774,7 @@ console.log('')
 
     //  console.clear()
     //  console.log("indeks proces: "+indeks_procesu)
-    //  console.log("global_id_procesu proces: "+global_id_procesu)
-    //  console.log("id_procesu: "+id_procesu)
-    //  console.log("element_id: "+element_id)
-    //  console.log("nowy status: "+status)
-    //  console.log(" ")
-    //  console.log("grupyAktualnegoProcesu : ",grupyAktualnegoProcesu)
-    //  console.log(" ")
-    //  console.log("indeks_nastepnego_procesu "+indeks_nastepnego_procesu)
-    //  console.log("id_nastepnego_procesu "+id_nastepnego_procesu)
-     
-    //  console.log(" ")
+
      
  res.status(200).json(indeks_procesu)  
  });
