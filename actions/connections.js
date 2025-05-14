@@ -652,19 +652,31 @@ console.log("tuuuuu")
      let id_procesu;
      let grupyWykonan =[]
      let grupyAktualnegoProcesu = []
+
+     let indeks_nastepnego_procesu;
+     let id_nastepnego_procesu;
+
     
     
 // indeks procesu
 var sql = "select indeks,global_id,id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+proces_id
 connection.query(sql, function (err, result) {
-// indeks.push(result[0].indeks)
 indeks_procesu = result[0].indeks
+indeks_nastepnego_procesu= parseInt(indeks_procesu)+1
 global_id_procesu = result[0].global_id
 id_procesu = result[0].id
+
+
     if (err) res.status(203).json(err)  
  });
 
+ // nastepny proces po zakonczenie aktualnego
+ var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and indeks ="+indeks_procesu
+ connection.query(sql, function (err, result) {
 
+ id_nastepnego_procesu = result
+     if (err) throw err
+  });
 
  //  all group current process - wszystkie grupy aktualnego procesu
 
@@ -674,24 +686,52 @@ id_procesu = result[0].id
  grupyWykonan = result
  grupyAktualnegoProcesu = [...result.filter(x=> x.proces_id == id_procesu )]
 
-
-
- 
-     if (err) res.status(203).json(err)  
-  });
-
-  if(status !=4){
-    // jezeli status != 4
-//  zmien status procesu na najwyzszy status grupy
+let max_status = Math.max(...grupyAktualnegoProcesu.map((f) => f.status))
+ if(status !=4){
+//  zmien status procesu na najwyzszy status grupy 
+var sql = " update artdruk.technologie_procesy_elementow set status ="+ max_status +" where global_id ="+global_id_procesu
+connection.query(sql, function (err, result) {
+    if (err) throw err
+ });
   }
 
 
   if(status ==4){  // status == 4 zakonczone
-// jezli status ==4
+    
+    if(grupyAktualnegoProcesu.every(x=>x.status == 4)){
+
+        // zakoncz aktualny proces
+        var sql =
+          " update artdruk.technologie_procesy_elementow set status = 4 where global_id =" +
+          global_id_procesu;
+        connection.query(sql, function (err, result) {
+          if (err) throw err;
+        });
+
+    //     var sql =
+    //     " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and indeks ="+id_nastepnego_procesu
+    //   connection.query(sql, function (err, result) {
+    //     if (err) throw err;
+    //   });
+        // uruchom nastepny proces 
+        //grupy
+        //wykonania
+
+
+
+    }
 // sprawdz czy wszystkie grupy ==4 
 // zmien status procesu na 4
 // zmien status=2 nastepnego procesu indeks +1 where element_id na 
   }
+
+  if (err) throw err
+  });
+
+
+
+
+
 
 
  var sql = "commit";
@@ -706,6 +746,8 @@ id_procesu = result[0].id
      console.log("nowy status: "+status)
      console.log(" ")
      console.log("grupyAktualnegoProcesu : ",grupyAktualnegoProcesu)
+     console.log(" ")
+    //  console.log("id_nastepnego_procesu "+id_nastepnego_procesu)
      console.log(" ")
      
  res.status(200).json(indeks_procesu)  
