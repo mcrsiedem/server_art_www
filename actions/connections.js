@@ -636,10 +636,6 @@ dragDropProcesGrup(req,res){
 
 
 zakoncz_proces_elementu_uwolnij_nastepny(req,res){
-
-    // const technologia_id = req.params['technologia_id']
-    // const proces_id = req.params['proces_id']
-    // const element_id = req.params['element_id']
 console.log("tuuuuu")
     const technologia_id = req.body.technologia_id;
     const proces_id = req.body.proces_id;
@@ -666,17 +662,21 @@ indeks_nastepnego_procesu= parseInt(indeks_procesu)+1
 global_id_procesu = result[0].global_id
 id_procesu = result[0].id
 
+ // nastepny proces po zakonczenie aktualnego
+ var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+")"
+ connection.query(sql, function (err, result) {
+console.log('technologia_id '+technologia_id)
+console.log('element_id '+element_id)
+console.log('indeks_nastepnego_procesu '+indeks_nastepnego_procesu)
+ id_nastepnego_procesu = result[0].id
+console.log('id_nastepnego_procesu '+id_nastepnego_procesu)
 
+     if (err) throw err
+  });
     if (err) res.status(203).json(err)  
  });
 
- // nastepny proces po zakonczenie aktualnego
- var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and indeks ="+indeks_procesu
- connection.query(sql, function (err, result) {
 
- id_nastepnego_procesu = result
-     if (err) throw err
-  });
 
  //  all group current process - wszystkie grupy aktualnego procesu
 
@@ -708,11 +708,11 @@ connection.query(sql, function (err, result) {
           if (err) throw err;
         });
 
-    //     var sql =
-    //     " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and indeks ="+id_nastepnego_procesu
-    //   connection.query(sql, function (err, result) {
-    //     if (err) throw err;
-    //   });
+        var sql =
+        " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+id_nastepnego_procesu
+      connection.query(sql, function (err, result) {
+        if (err) throw err;
+      });
         // uruchom nastepny proces 
         //grupy
         //wykonania
@@ -738,17 +738,19 @@ connection.query(sql, function (err, result) {
  connection.query(sql, function (err, result) {
      if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 
-     console.clear()
-     console.log("indeks proces: "+indeks_procesu)
-     console.log("global_id_procesu proces: "+global_id_procesu)
-     console.log("id_procesu: "+id_procesu)
-     console.log("element_id: "+element_id)
-     console.log("nowy status: "+status)
-     console.log(" ")
-     console.log("grupyAktualnegoProcesu : ",grupyAktualnegoProcesu)
-     console.log(" ")
+    //  console.clear()
+    //  console.log("indeks proces: "+indeks_procesu)
+    //  console.log("global_id_procesu proces: "+global_id_procesu)
+    //  console.log("id_procesu: "+id_procesu)
+    //  console.log("element_id: "+element_id)
+    //  console.log("nowy status: "+status)
+    //  console.log(" ")
+    //  console.log("grupyAktualnegoProcesu : ",grupyAktualnegoProcesu)
+    //  console.log(" ")
+    //  console.log("indeks_nastepnego_procesu "+indeks_nastepnego_procesu)
     //  console.log("id_nastepnego_procesu "+id_nastepnego_procesu)
-     console.log(" ")
+     
+    //  console.log(" ")
      
  res.status(200).json(indeks_procesu)  
  });
