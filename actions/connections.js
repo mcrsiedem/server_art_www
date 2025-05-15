@@ -705,14 +705,7 @@ var sql = " update artdruk.technologie_procesy_elementow set status ="+ max_stat
 connection.query(sql, function (err, result) {
     if (err) throw err
  });
-// var sql = " update artdruk.technologie_grupy_wykonan set status ="+ status +" where global_id ="+grupa_global_id
-// connection.query(sql, function (err, result) {
-//     if (err) throw err
-//  });
-//  var sql = " update artdruk.technologie_wykonania set status ="+ status +" where technologia_id ="+technologia_id+" and grupa_id="+grupa_id
-// connection.query(sql, function (err, result) {
-//     if (err) throw err
-//  });
+ 
 
   }
 
