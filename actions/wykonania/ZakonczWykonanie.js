@@ -9,38 +9,46 @@ const zakonczWykonanie = (req, res) => {
 
 // console.clear()
 // console.log(wykonanieRow.global_id)
-   var sql = " update artdruk.technologie_wykonania set status ="+ wykonanieRow.status +" where global_id ="+wykonanieRow.global_id
-connection.query(sql, function (err, result) {
-    if (err) throw err
 
 
- })
+ if(wykonanieRow.status == 4 ){
 
-//---- znajdz globa_id wykonaniaz nastepnego procesu
+//---- znajdz wszystkie globa_id wykonaniaz nastepnego procesu
 var sql = "select global_id from artdruk.view_technologie_wykonania where technologia_id ="+ wykonanieRow.technologia_id +" and arkusz_id ="+wykonanieRow.arkusz_id+" and proces_indeks ="+next_proces_indeks+" and status =1"
 connection.query(sql, function (err, result) {
 
-global_id_next = result[0]?.global_id || 0
-// console.log("next global id :"+ global_id_next)
-if(wykonanieRow.status == 4 ){
-
-   var sql = " update artdruk.technologie_wykonania set status =2 where global_id ="+global_id_next
+  for(res3 of result){
+global_id_next = res3?.global_id || 0
+ var sql = " update artdruk.technologie_wykonania set status =2 where global_id ="+global_id_next 
 connection.query(sql, function (err, result) {
     if (err) throw err
 
 
  });
 
-}
+  }
+
+
 
 
 
     if (err) throw err
-        res.status(200).json("OK")  
  });
+
+
+
+
+}
+
  //-------
 
+    var sql = " update artdruk.technologie_wykonania set status ="+ wykonanieRow.status +" where global_id ="+wykonanieRow.global_id
+connection.query(sql, function (err, result) {
+    if (err) throw err
 
+        res.status(200).json("OK")  
+
+ })
 
 
 
