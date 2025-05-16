@@ -7,8 +7,8 @@ const zakonczWykonanie = (req, res) => {
      let global_id_next;
      let next_proces_indeks = parseInt(wykonanieRow.proces_indeks)+1
 
-console.clear()
-console.log(wykonanieRow.global_id)
+// console.clear()
+// console.log(wykonanieRow.global_id)
    var sql = " update artdruk.technologie_wykonania set status ="+ wykonanieRow.status +" where global_id ="+wykonanieRow.global_id
 connection.query(sql, function (err, result) {
     if (err) throw err
@@ -21,7 +21,7 @@ var sql = "select global_id from artdruk.view_technologie_wykonania where techno
 connection.query(sql, function (err, result) {
 
 global_id_next = result[0]?.global_id || 0
-console.log("next global id :"+ global_id_next)
+// console.log("next global id :"+ global_id_next)
 if(wykonanieRow.status == 4 ){
 
    var sql = " update artdruk.technologie_wykonania set status =2 where global_id ="+global_id_next
