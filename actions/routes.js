@@ -27,6 +27,7 @@ const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechn
 const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
 const { cratePliki } = require('./zapis/createPliki');
+const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
 
 
     router.get('/users/:login/:haslo',connections.getUser);
@@ -93,6 +94,7 @@ const { cratePliki } = require('./zapis/createPliki');
 
 
     router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny);
+    router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie);
 
 
 
