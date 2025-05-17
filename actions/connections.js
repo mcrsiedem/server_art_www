@@ -670,27 +670,12 @@ indeks_procesu = result[0].indeks
 indeks_nastepnego_procesu= parseInt(indeks_procesu)+1
 global_id_procesu = result[0].global_id
 id_procesu = result[0].id
-// console.log("indeks_nastepnego_procesu "+indeks_nastepnego_procesu)
 
- // nastepny proces po zakonczenie aktualnego
-//  var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+")"
-//  connection.query(sql, function (err, result) {
-// console.log('technologia_id XX --'+technologia_id)
-// console.log('element_id XX --'+element_id)
-// console.log('indeks_nastepnego_procesu XX --'+indeks_nastepnego_procesu)
-// console.log('id_nastepnego_procesu XX --'+result[0].id)
-// console.log('')
-
-//  id_nastepnego_procesu = result[0].id
-
-//      if (err) throw err
-//   });
     if (err) throw err
  });
 
 
 
- //  all group current process - wszystkie grupy aktualnego procesu
 
  var sql = "SELECT * FROM artdruk.technologie_grupy_wykonan where technologia_id="+ technologia_id 
  connection.query(sql, function (err, result) {
