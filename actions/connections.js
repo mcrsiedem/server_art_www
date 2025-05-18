@@ -743,9 +743,6 @@ connection.query(sql, function (err, result) {
 
  var sql = "SELECT * FROM artdruk.view_technologie_wykonania where technologia_id="+ technologia_id 
  connection.query(sql, function (err, result) {
-        // indeks.push(result[0].indeks)
-  
-
         if(result.every(x=>x.status == 4)){
         var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status = CASE WHEN status = '1' THEN 2 ELSE status END where technologia_id ="+ technologia_id 
         connection.query(sql, function (err, result) {

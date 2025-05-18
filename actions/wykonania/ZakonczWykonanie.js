@@ -40,7 +40,7 @@ connection.query(sql, function (err, result) {
  WSZYTKIE_WYKONANIA = result
  wykonaniaGrupy = [...WSZYTKIE_WYKONANIA.filter(x=> x.grupa_id == wykonanieRow.grupa_id )]
  wykonaniaProcesu = [...WSZYTKIE_WYKONANIA.filter(x=>  x.proces_id == wykonanieRow.proces_id )]
- wykonaniaElementu = [...WSZYTKIE_WYKONANIA.filter(x=>  x.proces_id == wykonanieRow.proces_id )]
+ wykonaniaElementu = [...WSZYTKIE_WYKONANIA.filter(x=>  x.element_id == wykonanieRow.element_id )]
 //  wykonaniaProces = [...result.filter(x=> x.element_id == wykonanieRow.element_id && x.proces_id == wykonanieRow.proces_id )]
 
 
@@ -59,13 +59,13 @@ connection.query(sql, function (err, result) {
  });
     }
 //-----------
-//      if(WSZYTKIE_WYKONANIA.every(x=>x.status == 4)){
-//  var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status =2 where technologia_id ="+ wykonanieRow.technologia_id 
-// connection.query(sql, function (err, result) {
-//     if (err) throw err
-//  });
-//     }
-
+ if(wykonaniaElementu.every(x=>x.status == 4)){
+ var sql = " update artdruk.technologie_elementy set status =4 where id ="+wykonanieRow.element_id+" and technologia_id ="+ wykonanieRow.technologia_id 
+connection.query(sql, function (err, result) {
+    if (err) throw err
+ });
+    }
+//-------------
          if(WSZYTKIE_WYKONANIA.every(x=>x.status == 4)){
  var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status = CASE WHEN status = '1' THEN 2 ELSE status END where technologia_id ="+ wykonanieRow.technologia_id 
 connection.query(sql, function (err, result) {
