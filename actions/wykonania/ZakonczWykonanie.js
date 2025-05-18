@@ -39,7 +39,8 @@ connection.query(sql, function (err, result) {
  // indeks.push(result[0].indeks)
  wykonania = result
  wykonaniaGrupy = [...result.filter(x=> x.grupa_id == wykonanieRow.grupa_id && x.element_id == wykonanieRow.element_id && x.proces_id == wykonanieRow.proces_id )]
- wykonaniaProces = [...result.filter(x=> x.element_id == wykonanieRow.element_id && x.proces_id == wykonanieRow.proces_id )]
+ wykonaniaProces = [...result.filter(x=>  x.proces_id == wykonanieRow.proces_id )]
+//  wykonaniaProces = [...result.filter(x=> x.element_id == wykonanieRow.element_id && x.proces_id == wykonanieRow.proces_id )]
 
 
  if(wykonaniaGrupy.every(x=>x.status == 4)){
@@ -55,6 +56,16 @@ connection.query(sql, function (err, result) {
     if (err) throw err
  });
 
+//  var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status =2 where technologia_id ="+ wykonanieRow.technologia_id 
+// connection.query(sql, function (err, result) {
+//     if (err) throw err
+//  });
+
+
+    }
+
+     if(wykonania.every(x=>x.status == 4)){
+
  var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status =2 where technologia_id ="+ wykonanieRow.technologia_id 
 connection.query(sql, function (err, result) {
     if (err) throw err
@@ -69,9 +80,7 @@ connection.query(sql, function (err, result) {
   });
 
 
-// jeśli ostatnie wykonanie procesu to go zakończ
-// jeśli ostatnie wykonanie elementu to go zakończ i uwolnij oprawe
-
+// odświeżyć oprawe!!!!!
 
 
 

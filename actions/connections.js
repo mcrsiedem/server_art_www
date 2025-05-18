@@ -695,23 +695,23 @@ connection.query(sql, function (err, result) {
   }
 
   if(status ==4){  // status == 4 zakonczone
- console.log("status:"+status)   
+//  console.log("status:"+status)   
  
-    console.log("grupyAktualnegoProcesu:",grupyAktualnegoProcesu)
+//     console.log("grupyAktualnegoProcesu:",grupyAktualnegoProcesu)
     if(grupyAktualnegoProcesu.every(x=>x.status == 4)){
 
 var sql = " update artdruk.technologie_procesy_elementow set status =4 where global_id ="+global_id_procesu
 connection.query(sql, function (err, result) {
     if (err) throw err
  });
- console.log('id_nastepnego_procesu XX --'+result[0].id)
+//  console.log('id_nastepnego_procesu XX --'+result[0].id)
  var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+")"
  connection.query(sql, function (err, result) {
-console.log('technologia_id XX --'+technologia_id)
-console.log('element_id XX --'+element_id)
-console.log('indeks_nastepnego_procesu XX --'+indeks_nastepnego_procesu)
-console.log('id_nastepnego_procesu XX --'+result[0]?.id)
-console.log('')
+// console.log('technologia_id XX --'+technologia_id)
+// console.log('element_id XX --'+element_id)
+// console.log('indeks_nastepnego_procesu XX --'+indeks_nastepnego_procesu)
+// console.log('id_nastepnego_procesu XX --'+result[0]?.id)
+// console.log('')
 
  id_nastepnego_procesu = result[0]?.id || 0
 
@@ -734,9 +734,16 @@ console.log('')
 
      if (err) throw err
   });
-
-
     }
+
+
+//--- zakoncz element jeśli to wszystkie grupy i uwolnij oprawe
+
+//-----
+
+
+
+
 
   }
 
@@ -750,21 +757,13 @@ console.log('')
  connection.query(sql, function (err, result) {
      if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
 
-    //  console.clear()
-    //  console.log("indeks proces: "+indeks_procesu)
+
 
      
  res.status(200).json(indeks_procesu)  
  });
 
  
-
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    // var sql = "select artdruk.zakoncz_proces_elementu_uwolnij_nastepny("+ technologia_id +", "+ proces_id +", "+ element_id +", "+ grupa_id +") as indeks_aktualnego_procesu";
-    // connection.query(sql, function (err, result) {
-    //    if (err) res.status(203).json(err)  
-    //         res.status(200).json(result);
-    // });
 }
 
 dragDropProcesGrupToProcesor(req,res){
