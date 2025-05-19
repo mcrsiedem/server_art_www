@@ -15,17 +15,32 @@ connection.query(sql, function (err, result) {
  if(wykonanieRow.status == 4 ){
 
 //---- znajdz wszystkie globa_id wykonania z nastepnego procesu
-var sql = "select global_id from artdruk.view_technologie_wykonania where technologia_id ="+ wykonanieRow.technologia_id +" and arkusz_id ="+wykonanieRow.arkusz_id+" and proces_indeks ="+next_proces_indeks+" and status =1"
+var sql = "select global_id,grupa_id from artdruk.view_technologie_wykonania where technologia_id ="+ wykonanieRow.technologia_id +" and arkusz_id ="+wykonanieRow.arkusz_id+" and proces_indeks ="+next_proces_indeks+" and status =1"
 connection.query(sql, function (err, result) {
 
   for(res3 of result){
 global_id_next = res3?.global_id || 0
+grupa_id_next = res3?.grupa_id || 0
+// console.log("nxt grupa_id: "+grupa_id_next)
  var sql = " update artdruk.technologie_wykonania set status =2 where global_id ="+global_id_next 
+connection.query(sql, function (err, result) {
+
+
+    if (err) throw err
+ });
+
+ // zmienia grupe na oczekujący gdy wykonanie robi się oczekujące przez zakończenie wykonania z poprzedniego procesu
+            var sql = " update artdruk.technologie_grupy_wykonan set status = CASE WHEN status = 1 THEN 2 ELSE status END where technologia_id ="+ wykonanieRow.technologia_id+" and id="+grupa_id_next
+
 connection.query(sql, function (err, result) {
     if (err) throw err
  });
 
   }
+
+
+
+
     if (err) throw err
  });
 
