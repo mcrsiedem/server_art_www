@@ -779,6 +779,30 @@ connection.query(sql, function (err, result) {
  
 }
 
+zmien_status_przerwy(req,res){
+
+    const technologia_id = req.body.technologia_id;
+    const proces_id = req.body.proces_id;
+    const element_id = req.body.element_id;
+    const grupa_id = req.body.grupa_id;
+    const status = req.body.status;
+    const grupa_global_id = req.body.global_id;
+
+
+ var sql = " update artdruk.technologie_grupy_wykonan set status ="+ status +" where global_id ="+grupa_global_id
+connection.query(sql, function (err, result) {
+    if (err) throw err
+ res.status(200).json("OK")  
+ });
+
+ 
+}
+
+
+
+
+
+
 dragDropProcesGrupToProcesor(req,res){
 
     const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
