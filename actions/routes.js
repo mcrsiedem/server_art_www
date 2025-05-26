@@ -170,7 +170,7 @@ router.get('/updateDeletePrzerwa/:global_id_grupa',connections.updateDeletePrzer
 router.get('/zmienCzasTrwaniaGrupy/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupy);
 router.get('/skasujGrupe/:global_id_grupa/:token',verifyToken,connections.skasujGrupe);
 router.get('/skasujGrupeOprawa/:global_id_grupa/:token',verifyToken,connections.skasujGrupeOprawa);
-
+router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyToken,connections.skasujTechnologie);
 
 
 

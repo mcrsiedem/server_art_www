@@ -916,7 +916,21 @@ zmienCzasTrwaniaGrupy(req,res){
             res.status(200).json(result);
     });
 }
+skasujTechnologie(req,res){
 
+    const id_delete = req.params['id_delete']
+    const zamowienie_id = req.params['zamowienie_id']
+    const user_id = req.params['user_id']
+
+
+    // kasowanie grupy wykonan wg global_id grupy
+    var sql = "call artdruk.deletedforever_technologia("+ id_delete +","+ zamowienie_id +","+ user_id +") ";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) res.status(203).json(err)  
+            res.status(200).json(result);
+    });
+}
 
 skasujGrupe(req,res){
 
