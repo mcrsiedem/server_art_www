@@ -931,7 +931,19 @@ skasujGrupe(req,res){
             res.status(200).json(result);
     });
 }
+skasujGrupeOprawa(req,res){
 
+    const global_id_grupa = req.params['global_id_grupa']
+
+
+    // kasowanie grupy wykonan wg global_id grupy
+    var sql = "select artdruk.delete_grupa_wykonan_oprawa("+ global_id_grupa +") as procesor_id_grupy";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) res.status(203).json(err)  
+            res.status(200).json(result);
+    });
+}
 
 deleteKlient(req,res){
     const id = req.body.id;

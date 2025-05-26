@@ -169,7 +169,7 @@ router.get('/updateAddPrzerwa/:global_id_grupa/:czas',connections.updateAddPrzer
 router.get('/updateDeletePrzerwa/:global_id_grupa',connections.updateDeletePrzerwa);
 router.get('/zmienCzasTrwaniaGrupy/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupy);
 router.get('/skasujGrupe/:global_id_grupa/:token',verifyToken,connections.skasujGrupe);
-router.get('/skasujGrupe/:global_id_grupa/:token',verifyToken,connections.skasujGrupe);
+router.get('/skasujGrupeOprawa/:global_id_grupa/:token',verifyToken,connections.skasujGrupeOprawa);
 
 
 
