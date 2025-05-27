@@ -657,7 +657,7 @@ console.log("tuuuuu")
 connection.query(sql, function (err, result) {
     if (err) throw err
  });
- var sql = " update artdruk.technologie_wykonania set status ="+ status +" where technologia_id ="+technologia_id+" and grupa_id="+grupa_id
+ var sql = " update artdruk.technologie_wykonania set status ="+ status +" where technologia_id ="+technologia_id+" and global_id !=0 and grupa_id="+grupa_id
 connection.query(sql, function (err, result) {
     if (err) throw err
  });
@@ -705,7 +705,7 @@ connection.query(sql, function (err, result) {
     if (err) throw err
  });
 //  console.log('id_nastepnego_procesu XX --'+result[0].id)
- var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+" and status=1)"
+ var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+") and (status=1 or status is null)"
  connection.query(sql, function (err, result) {
 // console.log('technologia_id XX --'+technologia_id)
 // console.log('element_id XX --'+element_id)
@@ -715,19 +715,21 @@ connection.query(sql, function (err, result) {
 
  id_nastepnego_procesu = result[0]?.id || 0
 
+ console.log(" id_nastepnego_procesu: "+id_nastepnego_procesu)
+
         var sql =
-        " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+id_nastepnego_procesu
+        " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and id ="+id_nastepnego_procesu
       connection.query(sql, function (err, result) {
         if (err) throw err;
       });
         var sql =
-        " update artdruk.technologie_grupy_wykonan set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and proces_id ="+id_nastepnego_procesu
+        " update artdruk.technologie_grupy_wykonan set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and proces_id ="+id_nastepnego_procesu
       connection.query(sql, function (err, result) {
         if (err) throw err;
       });
 
         var sql =
-        " update artdruk.technologie_wykonania set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and proces_id ="+id_nastepnego_procesu
+        " update artdruk.technologie_wykonania set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and proces_id ="+id_nastepnego_procesu
       connection.query(sql, function (err, result) {
         if (err) throw err;
       });
@@ -744,7 +746,7 @@ connection.query(sql, function (err, result) {
  var sql = "SELECT * FROM artdruk.view_technologie_wykonania where technologia_id="+ technologia_id 
  connection.query(sql, function (err, result) {
         if(result.every(x=>x.status == 4)){
-        var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status = CASE WHEN status = '1' THEN 2 ELSE status END where technologia_id ="+ technologia_id 
+        var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status = CASE WHEN status = '1' THEN 2 ELSE status END where global_id !=0 and technologia_id ="+ technologia_id 
         connection.query(sql, function (err, result) {
             if (err) throw err
         });
