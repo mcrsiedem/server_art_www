@@ -94,6 +94,7 @@ const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
 
 
     router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny);
+    router.put('/zakoncz_oprawe/:token',verifyToken,connections.zakoncz_oprawe);
     router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
     router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie);
 
