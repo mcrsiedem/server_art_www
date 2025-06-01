@@ -17,7 +17,7 @@ class Connections {
     // connection.query(sql, function (err, result) {            if (err) throw err;            })
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_zapis,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_zapis,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
     
@@ -38,7 +38,13 @@ class Connections {
                         const technologie_wszystkie = result[0].technologie_wszystkie;
                         const technologia_zapis = result[0].technologia_zapis;
                         const harmonogram_przyjmij = result[0].harmonogram_przyjmij;
+                        const wersja_max = result[0].wersja_max;
+                        const mini_druk = result[0].mini_druk;
+                        const mini_falc = result[0].mini_falc;
+                        const mini_oprawa = result[0].mini_oprawa;
+                        const mini_uv = result[0].mini_uv;
             
+                        
 
                         const paylod = {
                             id,
@@ -50,7 +56,7 @@ class Connections {
                             papier_zapis,papier_usun,
                             procesy_edycja,
                             zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
-                            harmonogram_przyjmij
+                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv
                         }
      
                         // console.log(result[0])
