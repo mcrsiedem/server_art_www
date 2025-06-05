@@ -91,6 +91,10 @@ const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
     router.put('/updatePlikiEtapZamowienia/:token',verifyToken,connections.updatePlikiEtapZamowienia);
     router.put('/updateZamowienieEtap/:token',verifyToken,connections.updateZamowienieEtap);
     router.put('/updateHistoria/:token',verifyToken,connections.updateHistoria);
+    router.put('/updateWydaniePapieru_status/:token',verifyToken,connections.updateWydaniePapieru_status);
+    router.post('/insertWydaniePapieru_status/:token',verifyToken,connections.insertWydaniePapieru_status);
+router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connections.insertWydaniePapieru_status_multiselect);
+    
 
 
     router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny);

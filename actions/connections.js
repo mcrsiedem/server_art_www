@@ -1292,8 +1292,73 @@ updateHistoria(req,res){
            if (err) throw err;   
                res.status(200).json(result);   
         });
+}
 
+
+updateWydaniePapieru_status(req,res){
+    const global_id_grupa = req.body.global_id_grupa;
+    const status = req.body.status;
+
+ var sql = "update artdruk.technologie_wydanie_papieru set status = " + status+ " where global_id_grupa = '" + global_id_grupa+ "' ";
+
+    connection.query(sql, function (err, result) {    
+           if (err) throw err;   
+               res.status(200).json(result);   
+        });
+}
+
+insertWydaniePapieru_status(req,res){
+    const global_id_grupa = req.body.global_id_grupa;
+    const status = req.body.status;
+
+  var sql =   "INSERT INTO artdruk.technologie_wydanie_papieru (global_id_grupa,status) "+
+        "values ('" + global_id_grupa+ "','" + status + "'); ";
+       
+
+    connection.query(sql, function (err, result) {    
+           if (err) throw err;   
+               res.status(200).json(result);   
+        });
+}
+insertWydaniePapieru_status_multiselect(req,res){
  
+    const grupyWykonanSelect = req.body;
+
+                // tutaj insert
+           for( let grupa of grupyWykonanSelect.filter(x=> x.wydanie_papieru_status == null)){
+           
+                    var sql =   "INSERT INTO artdruk.technologie_wydanie_papieru (global_id_grupa,status) "+
+                    "values ('" + grupa.global_id+ "',3); ";
+                
+                        connection.query(sql, function (err, result) {    
+                    if (err) throw err;   
+                    });
+
+
+           }
+
+
+           // tutaj update
+                      for( let grupa of grupyWykonanSelect.filter(x=> x.wydanie_papieru_status != null)){
+
+        var sql = "update artdruk.technologie_wydanie_papieru set status = 3 where global_id_grupa = '" + grupa.global_id+ "' ";
+
+    connection.query(sql, function (err, result) {    
+           if (err) throw err;   
+        });
+
+           }
+//   var sql =   "INSERT INTO artdruk.technologie_wydanie_papieru (global_id_grupa,status) "+
+//         "values ('" + global_id_grupa+ "','" + status + "'); ";
+       
+
+//     connection.query(sql, function (err, result) {    
+//            if (err) throw err;   
+//                res.status(200).json(result);   
+//         });
+
+               res.status(200).json("OK");   
+
 
 }
 
