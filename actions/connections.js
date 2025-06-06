@@ -17,7 +17,7 @@ class Connections {
     // connection.query(sql, function (err, result) {            if (err) throw err;            })
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_zapis,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_zapis,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
     
@@ -28,6 +28,7 @@ class Connections {
                         const nazwisko = result[0].nazwisko;
                         const zamowienie_przyjmij = result[0].zamowienie_przyjmij;
                         const zamowienie_zapis = result[0].zamowienie_zapis;
+                        const zamowienie_skasuj = result[0].zamowienie_skasuj;
                         const klienci_wszyscy = result[0].klienci_wszyscy;
                         const klienci_zapis = result[0].klienci_zapis;
                         const klienci_usun = result[0].klienci_usun;
@@ -56,7 +57,7 @@ class Connections {
                             nazwisko,
                             login,
                             zamowienie_przyjmij,zamowienie_zapis,
-                            klienci_wszyscy,klienci_zapis,klienci_usun,
+                            klienci_wszyscy,klienci_zapis,zamowienie_skasuj,klienci_usun,
                             papier_zapis,papier_usun,
                             procesy_edycja,
                             zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
