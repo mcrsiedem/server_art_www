@@ -1050,25 +1050,25 @@ deleteZamowienie(req,res){
         var sql =   "delete from artdruk.zamowienia where id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_produkty where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_produkty  where global_id !=0 and zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_elementy where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_elementy where  global_id !=0 and zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_fragmenty where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_fragmenty where global_id !=0 and zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_koszty_dodatkowe where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_koszty_dodatkowe where global_id !=0 and zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_oprawa where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_oprawa where global_id !=0 and zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_pakowanie where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_pakowanie where global_id !=0 and zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_procesy_elementow where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_procesy_elementow where global_id !=0 and zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_historia where zamowienie_id = '" + row.id + "'"
+        var sql =   "delete from artdruk.zamowienia_historia where id !=0 and zamowienie_id = '" + row.id + "'"
         connection.query(sql, function (err, result) {        if (err) console.log(err);          });
 
 
