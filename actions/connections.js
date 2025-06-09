@@ -16,7 +16,7 @@ class Connections {
 
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_zapis,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
         // var sql = "select * from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
@@ -34,6 +34,7 @@ class Connections {
                         const klienci_zapis = result[0].klienci_zapis;
                         const klienci_usun = result[0].klienci_usun;
                         const papier_zapis = result[0].papier_zapis;
+                        const zamowienie_oddaj = result[0].zamowienie_oddaj;
                         const papier_usun = result[0].papier_usun;
                         const procesy_edycja = result[0].procesy_edycja;
                         const zamowienia_wszystkie = result[0].zamowienia_wszystkie;
@@ -57,7 +58,7 @@ class Connections {
                             imie,
                             nazwisko,
                             login,
-                            zamowienie_przyjmij,zamowienie_zapis,
+                            zamowienie_przyjmij,zamowienie_zapis,zamowienie_oddaj,
                             klienci_wszyscy,klienci_zapis,zamowienie_skasuj,klienci_usun,
                             papier_zapis,papier_usun,
                             procesy_edycja,
