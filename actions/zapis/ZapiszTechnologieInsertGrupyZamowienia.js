@@ -8,7 +8,7 @@ const zapiszTechnologieInsertGrupyZamowienia = (req,res) =>{
 
   let promises = [];
 
-
+console.log("grupa", grypy)
 
   //------------------------------
   for (let grupa of grypy) {

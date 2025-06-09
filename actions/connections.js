@@ -13,59 +13,61 @@ class Connections {
         const login = req.params['login']
         const haslo = req.params['haslo']
     
-    // var sql =   "INSERT INTO artdruk.historia (User,Kategoria,Event,Klient) values ('" + login + "','Logowanie','" + haslo + "','www'); ";
-    // connection.query(sql, function (err, result) {            if (err) throw err;            })
+
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_zapis,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        // var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_zapis,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select * from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
     
             if(err) return res.json({Status: "Error", Error: "Error in running query"})
             if(result.length >0 ){
-                        const id = result[0].id;
-                        const imie = result[0].imie;
-                        const nazwisko = result[0].nazwisko;
-                        const zamowienie_przyjmij = result[0].zamowienie_przyjmij;
-                        const zamowienie_zapis = result[0].zamowienie_zapis;
-                        const zamowienie_skasuj = result[0].zamowienie_skasuj;
-                        const klienci_wszyscy = result[0].klienci_wszyscy;
-                        const klienci_zapis = result[0].klienci_zapis;
-                        const klienci_usun = result[0].klienci_usun;
-                        const papier_zapis = result[0].papier_zapis;
-                        const papier_usun = result[0].papier_usun;
-                        const procesy_edycja = result[0].procesy_edycja;
-                        const zamowienia_wszystkie = result[0].zamowienia_wszystkie;
-                        const technologie_wszystkie = result[0].technologie_wszystkie;
-                        const technologia_zapis = result[0].technologia_zapis;
-                        const harmonogram_przyjmij = result[0].harmonogram_przyjmij;
-                        const wersja_max = result[0].wersja_max;
-                        const mini_druk = result[0].mini_druk;
-                        const mini_falc = result[0].mini_falc;
-                        const mini_oprawa = result[0].mini_oprawa;
-                        const mini_uv = result[0].mini_uv;
-                        const manage_druk = result[0].manage_druk;
-                        const manage_falc = result[0].manage_falc;
-                        const manage_oprawa = result[0].manage_oprawa;
-                        const manage_inne = result[0].manage_inne;
+
+                        // const id = result[0].id;
+                        // const imie = result[0].imie;
+                        // const nazwisko = result[0].nazwisko;
+                        // const zamowienie_przyjmij = result[0].zamowienie_przyjmij;
+                        // const zamowienie_zapis = result[0].zamowienie_zapis;
+                        // const zamowienie_skasuj = result[0].zamowienie_skasuj;
+                        // const klienci_wszyscy = result[0].klienci_wszyscy;
+                        // const klienci_zapis = result[0].klienci_zapis;
+                        // const klienci_usun = result[0].klienci_usun;
+                        // const papier_zapis = result[0].papier_zapis;
+                        // const papier_usun = result[0].papier_usun;
+                        // const procesy_edycja = result[0].procesy_edycja;
+                        // const zamowienia_wszystkie = result[0].zamowienia_wszystkie;
+                        // const technologie_wszystkie = result[0].technologie_wszystkie;
+                        // const technologia_zapis = result[0].technologia_zapis;
+                        // const harmonogram_przyjmij = result[0].harmonogram_przyjmij;
+                        // const wersja_max = result[0].wersja_max;
+                        // const mini_druk = result[0].mini_druk;
+                        // const mini_falc = result[0].mini_falc;
+                        // const mini_oprawa = result[0].mini_oprawa;
+                        // const mini_uv = result[0].mini_uv;
+                        // const manage_druk = result[0].manage_druk;
+                        // const manage_falc = result[0].manage_falc;
+                        // const manage_oprawa = result[0].manage_oprawa;
+                        // const manage_inne = result[0].manage_inne;
             
                         
 
-                        const paylod = {
-                            id,
-                            imie,
-                            nazwisko,
-                            login,
-                            zamowienie_przyjmij,zamowienie_zapis,
-                            klienci_wszyscy,klienci_zapis,zamowienie_skasuj,klienci_usun,
-                            papier_zapis,papier_usun,
-                            procesy_edycja,
-                            zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
-                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne
-                        }
+                        // const paylod = {
+                        //     id,
+                        //     imie,
+                        //     nazwisko,
+                        //     login,
+                        //     zamowienie_przyjmij,zamowienie_zapis,
+                        //     klienci_wszyscy,klienci_zapis,zamowienie_skasuj,klienci_usun,
+                        //     papier_zapis,papier_usun,
+                        //     procesy_edycja,
+                        //     zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
+                        //     harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne
+                        // }
      
-                        // console.log(result[0])
-               const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
+                                               const paylod2 = {...result[0]}
+           
+               const token = jwt.sign(paylod2, ACCESS_TOKEN, {expiresIn:'8h'});
 
 
                var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria) values ("+ id +",'" + imie +" "+nazwisko+ "','Logowanie'); ";
