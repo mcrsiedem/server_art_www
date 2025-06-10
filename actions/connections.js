@@ -1303,7 +1303,7 @@ updateWydaniePapieru_status(req,res){
     const global_id_grupa = req.body.global_id_grupa;
     const status = req.body.status;
 
- var sql = "update artdruk.technologie_wydanie_papieru set status = " + status+ " where global_id_grupa = '" + global_id_grupa+ "' ";
+ var sql = "update artdruk.technologie_wydanie_papieru set status = " + status+ " where global_id !=0 and global_id_grupa = '" + global_id_grupa+ "' ";
 
     connection.query(sql, function (err, result) {    
            if (err) throw err;   
@@ -1345,7 +1345,7 @@ insertWydaniePapieru_status_multiselect(req,res){
            // tutaj update
                       for( let grupa of grupyWykonanSelect.filter(x=> x.wydanie_papieru_status != null)){
 
-        var sql = "update artdruk.technologie_wydanie_papieru set status = 3 where global_id_grupa = '" + grupa.global_id+ "' ";
+        var sql = "update artdruk.technologie_wydanie_papieru set status = 3 where global_id !=0 and global_id_grupa = '" + grupa.global_id+ "' ";
 
     connection.query(sql, function (err, result) {    
            if (err) throw err;   
