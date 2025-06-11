@@ -16,7 +16,7 @@ class Connections {
 
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
         // var sql = "select * from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
@@ -50,6 +50,8 @@ class Connections {
                         const manage_falc = result[0].manage_falc;
                         const manage_oprawa = result[0].manage_oprawa;
                         const manage_inne = result[0].manage_inne;
+                        const procesor_domyslny = result[0].procesor_domyslny;
+                        
             
                         
 
@@ -63,7 +65,7 @@ class Connections {
                             papier_zapis,papier_usun,
                             procesy_edycja,
                             zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
-                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne
+                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny
                         }
      
                                             //    const paylod2 = {...result[0]}
