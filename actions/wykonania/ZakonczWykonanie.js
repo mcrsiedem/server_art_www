@@ -97,28 +97,12 @@ connection.query(sql, function (err, result) {
 }
 
 
-
-
-
-
-
-
-
     var sql = "commit"
 connection.query(sql, function (err, result) {
     if (err) throw err
         res.status(200).json("OK")  
 
  })
-
-
-
-
-
-
-
-
-
 
   
 };

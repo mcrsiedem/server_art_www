@@ -28,6 +28,7 @@ const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
 const { cratePliki } = require('./zapis/createPliki');
 const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
+const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
 
 
     router.get('/users/:login/:haslo',connections.getUser);
@@ -101,6 +102,7 @@ router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connec
     router.put('/zakoncz_oprawe/:token',verifyToken,connections.zakoncz_oprawe);
     router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
     router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie);
+    router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
 
 
 
