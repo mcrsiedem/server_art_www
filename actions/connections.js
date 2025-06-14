@@ -772,8 +772,30 @@ connection.query(sql, function (err, result) {
 
 
 
-
-
+// nr1 sprawdz czy cały druk zakonczony, jeśli tak to zmień etap zamowienia na wydrukowane
+ var sql = "SELECT * FROM artdruk.view_technologie_procesy_elementow where nazwa_id = 1 and technologia_id="+ technologia_id 
+ connection.query(sql, function (err, result) {
+        if(result.every(x=> x.status == 4)){
+        var sql = " update artdruk.zamowienia set etap = CASE WHEN etap < 8 THEN 8 ELSE etap END where id !=0 and technologia_id ="+ technologia_id 
+        connection.query(sql, function (err, result) {
+            if (err) throw err
+        });
+            }
+            if (err) throw err
+     });
+// nr1 end
+// nr2 sprawdz czy cały falc zakonczony, jeśli tak to zmień etap zamowienia na wydrukowane
+ var sql = "SELECT * FROM artdruk.view_technologie_procesy_elementow where nazwa_id = 3 and technologia_id="+ technologia_id 
+ connection.query(sql, function (err, result) {
+        if(result.every(x=> x.status == 4)){
+        var sql = " update artdruk.zamowienia set etap = CASE WHEN etap < 10 THEN 10 ELSE etap END where id !=0 and technologia_id ="+ technologia_id 
+        connection.query(sql, function (err, result) {
+            if (err) throw err
+        });
+            }
+            if (err) throw err
+     });
+// nr2 end
 
 
   }
