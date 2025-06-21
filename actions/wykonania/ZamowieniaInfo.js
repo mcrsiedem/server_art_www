@@ -19,14 +19,14 @@ let suma_przelotow_falc_zakonczone =0;
 
  var sql = " SELECT sum(przeloty) as przeloty FROM artdruk.view_technologie_wykonania where proces_nazwa_id = 1 and zamowienie_id = "+ zamowienie.id 
  connection.query(sql, function (err, result) {
-  suma_przelotow_druk = suma_przelotow_druk + parseInt(result[0].przeloty)
+  suma_przelotow_druk = suma_przelotow_druk + parseInt(result[0].przeloty || 0)
     // console.log(result[0].przeloty)
     if (err) throw err
     });
 
  var sql = " SELECT sum(przeloty) as przeloty FROM artdruk.view_technologie_wykonania where proces_nazwa_id = 3 and zamowienie_id = "+ zamowienie.id 
  connection.query(sql, function (err, result) {
-  suma_przelotow_falc = suma_przelotow_falc + parseInt(result[0].przeloty)
+  suma_przelotow_falc = suma_przelotow_falc + parseInt(result[0].przeloty || 0)
     // console.log(result[0].przeloty)
     if (err) throw err
     });
@@ -34,14 +34,14 @@ let suma_przelotow_falc_zakonczone =0;
 
      var sql = " SELECT sum(przeloty) as przeloty FROM artdruk.view_technologie_wykonania where proces_nazwa_id = 1 and status = 4 and zamowienie_id = "+ zamowienie.id 
  connection.query(sql, function (err, result) {
-  suma_przelotow_druk_zakonczone = suma_przelotow_druk_zakonczone + parseInt(result[0].przeloty)
+  suma_przelotow_druk_zakonczone = suma_przelotow_druk_zakonczone + parseInt(result[0].przeloty || 0)
     // console.log(result[0].przeloty)
     if (err) throw err
     });
 
  var sql = " SELECT sum(przeloty) as przeloty FROM artdruk.view_technologie_wykonania where proces_nazwa_id = 3 and status = 4 and zamowienie_id = "+ zamowienie.id 
  connection.query(sql, function (err, result) {
-  suma_przelotow_falc_zakonczone = suma_przelotow_falc_zakonczone + parseInt(result[0].przeloty)
+  suma_przelotow_falc_zakonczone = suma_przelotow_falc_zakonczone + parseInt(result[0].przeloty || 0)
     // console.log(result[0].przeloty)
     if (err) throw err
     });
@@ -57,7 +57,7 @@ let suma_przelotow_falc_zakonczone =0;
 connection.query(sql, function (err, result) {
     if (err) throw err
         // res.status(200).json([suma_przelotow_druk,suma_przelotow_falc,suma_przelotow_druk_zakonczone,suma_przelotow_falc_zakonczone])  
-        res.status(200).json({przeloty_druk:suma_przelotow_druk || 0 ,przeloty_falc: suma_przelotow_falc || 0, przeloty_druk_zakonczone:suma_przelotow_druk_zakonczone || 0, przeloty_falc_zakonczone:suma_przelotow_falc_zakonczone || 0})  
+        res.status(200).json({przeloty_druk:suma_przelotow_druk,przeloty_falc: suma_przelotow_falc, przeloty_druk_zakonczone:suma_przelotow_druk_zakonczone, przeloty_falc_zakonczone:suma_przelotow_falc_zakonczone})  
 
  })
 
