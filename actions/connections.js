@@ -500,7 +500,7 @@ class Connections {
     //pobierz zamowienia do głownego widoku
     getZamowienia(req,res){
         const orderby = req.params['orderby']
-        var sql  = "select * from artdruk.view_zamowienia where final is null ORDER BY "+orderby ;
+        var sql  = "select * from artdruk.view_zamowienia where final is null ORDER BY "+orderby
         // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
