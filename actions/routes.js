@@ -30,6 +30,8 @@ const { cratePliki } = require('./zapis/createPliki');
 const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
 const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
 const { ZamowieniaInfo } = require('./wykonania/ZamowieniaInfo');
+const { SendMailPlaner } = require('./mail/SendMailPlaner');
+
 
 
     router.get('/users/:login/:haslo',connections.getUser);
@@ -105,6 +107,7 @@ router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connec
     router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie);
     router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
     router.put('/zamowieniaInfo/:token',verifyToken,ZamowieniaInfo);
+    router.put('/mail/:token',verifyToken,SendMailPlaner);
 
 
 
