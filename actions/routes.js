@@ -172,7 +172,7 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 // router.get('/technologie_parametry/:idTechnologii/:prime_id',connections.getParametryTechnologii);
 // router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
 router.get('/technologie_grupy_an_wykonania_all',connections.getWykonania_i_grupyAll);     
-router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);     
+router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor);     
  
 
 router.get('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);

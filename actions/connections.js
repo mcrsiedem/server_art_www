@@ -420,6 +420,7 @@ class Connections {
 
             //idTechnologii/:technologia_prime_id
              const procesor_id = req.params['procesor_id']
+             const dniWstecz = req.params['dniWstecz']
             //  const technologia_prime_id = req.params['technologia_prime_id']
 
 
@@ -436,7 +437,7 @@ class Connections {
          
              });
      
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan where procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
              connection.query(sql, function (err, doc) {
                 if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
              dane.push(doc)
