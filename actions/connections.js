@@ -16,7 +16,7 @@ class Connections {
 
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
         // var sql = "select * from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
@@ -30,6 +30,7 @@ class Connections {
                         const zamowienie_przyjmij = result[0].zamowienie_przyjmij;
                         const zamowienie_zapis = result[0].zamowienie_zapis;
                         const zamowienie_skasuj = result[0].zamowienie_skasuj;
+                        const zamowienie_odblokuj = result[0].zamowienie_odblokuj;
                         const klienci_wszyscy = result[0].klienci_wszyscy;
                         const klienci_zapis = result[0].klienci_zapis;
                         const klienci_usun = result[0].klienci_usun;
@@ -60,7 +61,7 @@ class Connections {
                             imie,
                             nazwisko,
                             login,
-                            zamowienie_przyjmij,zamowienie_zapis,zamowienie_oddaj,
+                            zamowienie_przyjmij,zamowienie_zapis,zamowienie_oddaj,zamowienie_odblokuj,
                             klienci_wszyscy,klienci_zapis,zamowienie_skasuj,klienci_usun,
                             papier_zapis,papier_usun,
                             procesy_edycja,
