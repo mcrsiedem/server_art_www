@@ -16,7 +16,7 @@ class Connections {
 
     
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
         // var sql = "select * from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  
         connection.query(sql,  (err, result) => {
@@ -47,6 +47,7 @@ class Connections {
                         const mini_falc = result[0].mini_falc;
                         const mini_oprawa = result[0].mini_oprawa;
                         const mini_uv = result[0].mini_uv;
+                        const mini_inne = result[0].mini_inne;
                         const manage_druk = result[0].manage_druk;
                         const manage_falc = result[0].manage_falc;
                         const manage_oprawa = result[0].manage_oprawa;
@@ -66,7 +67,7 @@ class Connections {
                             papier_zapis,papier_usun,
                             procesy_edycja,
                             zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
-                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny
+                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny
                         }
      
                                             //    const paylod2 = {...result[0]}
@@ -377,6 +378,26 @@ class Connections {
      
          }
     //-----
+                  getGrupyAll(req,res){
+                    // uæywane do sprawdzenia na wersji mini czy w procesorze są jakieś wykonania i czy wyświetlić dany procesor
+
+                let dane=[];
+    
+                //idTechnologii/:technologia_prime_id
+                //  const idTechnologii = req.params['idTechnologii']
+                //  const technologia_prime_id = req.params['technologia_prime_id']
+
+                // typ_grupy < 3 oznacza grypy  nie z harmonogramu
+    
+                 var sql = "select * from artdruk.view_technologie_grupy_wykonan where status <4 and typ_grupy < 3 ORDER BY poczatek";
+                 connection.query(sql, function (err, doc) {
+                 if (err) throw err;
+                 dane.push(doc)
+                 res.status(200).json(dane);
+                 } );
+    
+         
+             }
 
               //pobierz wszystkie objekty do TECHNOLOGI nr...
               getWykonania_i_grupyAll(req,res){
