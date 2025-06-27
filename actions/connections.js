@@ -475,6 +475,36 @@ class Connections {
          }
     //-----
 
+        getGrupy_oprawa_for_procesor(req,res){
+            let dane=[];
+
+
+             const procesor_id = req.params['procesor_id']
+             const dniWstecz = req.params['dniWstecz']
+
+
+
+            //  var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
+            //  connection.query(sql, function (err, doc) {
+            //     if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+            //  dane.push(doc)
+            //  });
+     
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+             connection.query(sql, function (err, doc) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+             dane.push(doc)
+             res.status(200).json(dane);
+             } );
+
+
+     
+         }
+    //----
+
+
+
+
     sprawdzCzyPapierUzyty(req,res){
         // spraawdza czy papier był użyty w trzech miejscach i zlicza je. 
         // jeśli był użyty to nie da się go skasować
