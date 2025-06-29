@@ -455,16 +455,24 @@ class Connections {
              connection.query(sql, function (err, doc) {
                 if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
              dane.push(doc)
-             // res.status(200).json(dane);
          
              });
      
              var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-            //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
              connection.query(sql, function (err, doc) {
                 if (err){ throw err } 
              dane.push(doc)
              } );
+
+           
+            var sql = "select   DATE_FORMAT(min(poczatek) - interval 1 day, '%Y-%m-%d') AS `dni` from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = " + procesor_id ;
+            // var sql = "select min(poczatek) - interval 1 day as dni from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = " + procesor_id ;
+             connection.query(sql, function (err, doc) {
+                if (err){ throw err } 
+             dane.push(doc)
+             } );
+
+
 
             var sql = "commit";
             connection.query(sql, function (err, result) {
