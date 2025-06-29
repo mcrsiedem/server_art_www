@@ -442,6 +442,46 @@ class Connections {
 
             //idTechnologii/:technologia_prime_id
              const procesor_id = req.params['procesor_id']
+            //  const dniWstecz = req.params['dniWstecz']
+            //  const technologia_prime_id = req.params['technologia_prime_id']
+
+
+            var sql = "begin";
+            connection.query(sql, function (err, result) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+            });
+     
+             var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
+             connection.query(sql, function (err, doc) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+             dane.push(doc)
+             // res.status(200).json(dane);
+         
+             });
+     
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+            //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+             connection.query(sql, function (err, doc) {
+                if (err){ throw err } 
+             dane.push(doc)
+             } );
+
+            var sql = "commit";
+            connection.query(sql, function (err, result) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+            console.log("Get Grupy i Wykonania dla procesora "+ procesor_id);
+            res.status(200).json(dane);
+            });
+     
+         }
+    //-----
+            getWykonania_i_grupy_for_procesor_dni_wstecz(req,res){
+
+                // tylko odświeżanie procesora po zmianie kalendarza
+            let dane=[];
+
+            //idTechnologii/:technologia_prime_id
+             const procesor_id = req.params['procesor_id']
              const dniWstecz = req.params['dniWstecz']
             //  const technologia_prime_id = req.params['technologia_prime_id']
 
@@ -473,7 +513,7 @@ class Connections {
             });
      
          }
-    //-----
+    //--------
 
         getGrupy_oprawa_for_procesor(req,res){
             let dane=[];
