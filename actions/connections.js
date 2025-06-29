@@ -538,7 +538,7 @@ class Connections {
             //  dane.push(doc)
             //  });
      
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+             var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan_oprawa where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
              connection.query(sql, function (err, doc) {
                 if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
              dane.push(doc)
