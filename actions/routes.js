@@ -174,6 +174,7 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 router.get('/technologie_grupy_an_wykonania_all',connections.getWykonania_i_grupyAll);     
 router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);     
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz);     
+router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz_oprawa/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa);     
 router.get('/technologie_grupyWykonan/:token',verifyToken,connections.getGrupyAll);     
 router.get('/technologie_grupy_oprawa_for_procesor/:procesor_id/:dniWstecz',connections.getGrupy_oprawa_for_procesor);     
  
