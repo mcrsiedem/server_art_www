@@ -578,7 +578,7 @@ class Connections {
 
 
              const procesor_id = req.params['procesor_id']
-             const dniWstecz = req.params['dniWstecz']
+          
 
 
 
