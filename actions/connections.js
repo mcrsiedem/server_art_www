@@ -751,6 +751,22 @@ dragDropProcesGrup(req,res){
     });
 }
 
+dragDropProcesGrupOprawa(req,res){
+
+    const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
+    const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
+
+    
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.drag_oprawa("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") as procesor_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) res.status(203).json(err)  
+            res.status(200).json(result);
+    });
+}
+
+
 
 zakoncz_proces_elementu_uwolnij_nastepny(req,res){
 console.log("tuuuuu")
@@ -1069,12 +1085,39 @@ updateAddPrzerwa(req,res){
     });
 }
 
+updateAddPrzerwaOprawa(req,res){
+
+    const global_id_grupa = req.params['global_id_grupa']
+    const czas = req.params['czas']
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.add_przerwa_oprawa("+ global_id_grupa +","+ czas +") as procesor_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) res.status(203).json(err)  
+            res.status(200).json(result);
+    });
+}
+
 updateDeletePrzerwa(req,res){
 
     const global_id_grupa = req.params['global_id_grupa']
 
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
     var sql = "select artdruk.delete_przerwa("+ global_id_grupa +") as procesor_id";
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) res.status(203).json(err)  
+            res.status(200).json(result);
+    });
+}
+
+updateDeletePrzerwaOprawa(req,res){
+
+    const global_id_grupa = req.params['global_id_grupa']
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "select artdruk.delete_przerwa_oprawa("+ global_id_grupa +") as procesor_id";
     console.log(sql)
     connection.query(sql, function (err, result) {
        if (err) res.status(203).json(err)  
