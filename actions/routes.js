@@ -191,6 +191,9 @@ router.get('/updateAddPrzerwaOprawa/:global_id_grupa/:czas',connections.updateAd
 router.get('/updateDeletePrzerwa/:global_id_grupa',connections.updateDeletePrzerwa);
 router.get('/updateDeletePrzerwaOprawa/:global_id_grupa',connections.updateDeletePrzerwaOprawa);
 router.get('/zmienCzasTrwaniaGrupy/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupy);
+router.get('/zmienCzasTrwaniaGrupyOprawa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyOprawa);
+router.get('/zmienCzasTrwaniaGrupyOprawaPrzerwa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyOprawaPrzerwa);
+
 router.get('/zmienCzasTrwaniaGrupyPrzerwa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyPrzerwa);
 
 router.get('/skasujGrupe/:global_id_grupa/:token',verifyToken,connections.skasujGrupe);
