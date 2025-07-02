@@ -48,6 +48,11 @@ const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:token',verifyToken,connections.getZamowienia);
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
+router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
+
+
+    
+
 
     // technologie promise
     router.get('/createPliki/:token',verifyToken, cratePliki); // zapisuje technologie

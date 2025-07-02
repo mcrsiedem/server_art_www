@@ -668,6 +668,40 @@ class Connections {
     });
     }
 
+
+            getZamowieniaKalendarz(req,res){
+            let dane=[];
+
+
+             const procesor_id = req.params['procesor_id']
+          
+
+
+             var sql = "select * from artdruk.view_zamowienia_kalendarz ORDER BY data_spedycji";
+             connection.query(sql, function (err, doc) {
+                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+             dane.push(doc)
+             } );
+
+                      var sql = "select   DATE_FORMAT(min(data_spedycji), '%Y-%m-%d') AS `data_spedycji_min`, DATE_FORMAT(max(data_spedycji), '%Y-%m-%d') AS `data_spedycji_max`,SELECT DateDiff((select max(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz),(select min(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz)) AS ilosc_dni  from artdruk.view_zamowienia_kalendarz ";
+            // var sql = "select min(poczatek) - interval 1 day as dni from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = " + procesor_id ;
+             connection.query(sql, function (err, doc) {
+                if (err){ throw err } 
+             dane.push(doc)
+             res.status(200).json(dane);
+
+             } );
+
+
+
+     
+         }
+
+
+
+
+
+
     getZamowieniaPliki(req,res){
         const orderby = req.params['orderby']
         var sql  = "select * from artdruk.view_zamowienia_pliki" ;
