@@ -814,10 +814,10 @@ setOrderOpen(req,res){
 
 setOrderClosed(req,res){
     // zmienia wartość open_stan na null przy zamknięciu zamówienia!
-    const id = req.body.id;
+    const id = req.body.id || 1;
     // const token = req.body.token;
     // const user = req.body.user;
-
+                
                 var sql = "update artdruk.zamowienia set open_stan = null, open_data = null, open_user = null where id = " + id+ "";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
