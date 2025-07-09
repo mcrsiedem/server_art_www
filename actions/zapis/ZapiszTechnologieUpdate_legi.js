@@ -11,6 +11,7 @@ for(let row of legi.filter(x => x.update == true && x.insert != true) ){
   "id = " + row.id+ 
   ", indeks = " + row.indeks+ 
   ", technologia_id = " + row.technologia_id+ 
+  ", zamowienie_id = " + row.zamowienie_id+ 
   ", typ_elementu = " + row.typ_elementu+ 
   ", ilosc_stron = " + row.ilosc_stron+ 
   ", rodzaj_legi = '" + row.rodzaj_legi+ 
@@ -28,11 +29,12 @@ for(let row of legi.filter(x => x.update == true && x.insert != true) ){
 
   for(let row of legi.filter(x => x.insert == true && x.delete != true) ){
     var sql =
-    "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,nr_legi,uwagi) " +
+    "INSERT INTO artdruk.technologie_legi(id,indeks,technologia_id,zamowienie_id,typ_elementu,rodzaj_legi,element_id,arkusz_id,ilosc_stron,naklad,nr_legi,uwagi) " +
     "values ('" +
     row.id +  "','" +
     row.indeks +        "','" +
     row.technologia_id +        "','" +
+    row.zamowienie_id +        "','" +
     row.typ_elementu +        "','" +
     row.rodzaj_legi +        "','" +
     row.element_id +        "','" +
