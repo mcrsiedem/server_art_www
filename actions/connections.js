@@ -172,14 +172,14 @@ class Connections {
         } );
 
 
-        // var sql = "select * from artdruk.view_zamowienia_koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' ORDER BY id ASC";
-        // connection.query(sql, function (err, doc) {
-        // if (err) throw err;
-        // dane.push(doc)
+        var sql = "select * from artdruk.zamowienia_koszty_dodatkowe where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
 
-        // } );
+        } );
 
-        // var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_prime_id = '" + zamowienie_prime_id + "' and final = 1 ORDER BY id ASC";
+        // var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         // connection.query(sql, function (err, doc) {
         // if (err) throw err;
         // dane.push(doc)
