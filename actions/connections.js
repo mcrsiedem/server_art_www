@@ -179,6 +179,13 @@ class Connections {
 
         } );
 
+             var sql = "select * from artdruk.zamowienia_ksiegowosc where zamowienie_id = " + idZamowienia ;
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        dane.push(doc)
+
+        } );
+
         // var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         // connection.query(sql, function (err, doc) {
         // if (err) throw err;
