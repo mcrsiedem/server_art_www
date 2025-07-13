@@ -11,6 +11,8 @@ const zamowienieInsertParametry = (req,res) =>{
   let oprawa = req.body[3]
   let procesyElementow = req.body[4]
   let pakowanie = req.body[5]
+  let kosztyDodatkoweZamowienia = req.body[6]
+  let ksiegowosc = req.body[7]
 
 
 
@@ -218,6 +220,42 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
 })) 
 
 }
+
+
+
+for (let koszt of kosztyDodatkoweZamowienia.filter(x =>  x.delete != true)) {
+  var sql =
+    "INSERT INTO artdruk.zamowienia_koszty_dodatkowe (id,zamowienie_id,indeks,nazwa,ilosc,cena,suma,info,status,stan,dodal,zmienil) " +
+    "values (" +
+    koszt.id +  "," +
+    koszt.zamowienie_id +        "," +
+    koszt.indeks +        ",'" +
+    koszt.nazwa +        "','" +
+    koszt.ilosc +        "','" +
+    koszt.cena +        "','" +
+    koszt.suma +        "','" +
+    koszt.info +        "'," +
+    koszt.status +        "," +
+    koszt.stan +        "," +
+    koszt.dodal +        "," +
+    koszt.zmienil +        "); ";
+
+  promises.push(     new Promise((resolve, reject) => {
+    connection.query(sql, (err, results) => {
+    if (err) {
+      throw err
+        resolve([{zapis: false},err]);               
+    } else {
+        // resolve([results,"ok arkusz"])
+        resolve([{zapis: true}])
+    }
+});
+})) 
+
+}
+
+
+
 
 
   Promise.all(promises).then((data) => res.status(201).json(data));

@@ -15,6 +15,7 @@ const zamowienieUpdate = (req,res) =>{
     let technologieID = req.body[6]  // id technologii z tego zamówienia
     let historiaZamowienia = req.body[7]
     let pakowanie = req.body[8]
+    let kosztyDodatkoweZamowienia = req.body[9]
 
 
   //  console.log("technologieID: " ,technologieID)
@@ -174,18 +175,23 @@ if(historiaZamowienia !=null){
       var sql =   "update  artdruk.zamowienia_pakowanie set  id = '" + row.id+ "', zamowienie_id = " + row.zamowienie_id+ ", naklad = '" + row.naklad+ "', nazwa = '" + row.nazwa+ "', uwagi = '" + row.uwagi+ "', sztuki_w_paczce = '" + row.sztuki_w_paczce + "', rodzaj_pakowania = '" +row.rodzaj_pakowania+ "', indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
       connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
       }
-    
-    
-      // for(let row of oprawa.filter(x => x.insert == true && x.delete != true) ){
-      //   var sql =   "INSERT INTO artdruk.zamowienia_oprawa (id,zamowienie_id,produkt_id,oprawa,naklad,bok_oprawy,data_spedycji,uwagi,wersja,data_czystodrukow,indeks) "+
-      //   "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + "," + row.oprawa + "," + row.naklad + ",'" + row.bok_oprawy + "'," + ifNoDateSetNull(row.data_spedycji) + ",'" + row.uwagi + "','" + row.wersja + "'," + ifNoDateSetNull(row.data_czystodrukow) + "," + row.indeks + "); ";
-      //   connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
-      //   }
-    
-      //   for(let row of oprawa.filter(x => x.delete == true && x.insert != true) ){
-      //       var sql =   "DELETE from artdruk.zamowienia_oprawa where global_id=" + row.global_id;
-      //       connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
-      //       } 
+   //-------------- koszty dodatkowe
+
+        for(let row of kosztyDodatkoweZamowienia.filter(x => x.update == true && x.insert != true) ){
+          var sql =   "update  artdruk.zamowienia_koszty_dodatkowe set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", element_id = " + row.element_id+ ", oprawa_id = " + row.oprawa_id+ ", naklad = " + row.naklad+ ", ilosc_stron = " + row.ilosc_stron+ ", wersja = '" + row.wersja+ "', info = '" + row.info+ "', typ = '" + row.typ+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
+          connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+          }
+        
+          for(let row of kosztyDodatkoweZamowienia.filter(x => x.insert == true && x.delete != true) ){
+            var sql =   "INSERT INTO artdruk.zamowienia_koszty_dodatkowe (id,zamowienie_id,indeks,nazwa,ilosc,cena,suma,info,status,stan,dodal) "+
+            "values (" + row.id + "," + row.zamowienie_id + "," + row.indeks + ",'" + row.nazwa + "','" + row.ilosc + "','" + row.cena + "','" + row.suma + "','" + row.info + "'," + row.status + "," + row.stan + "," + row.dodal + "); ";
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+            }
+        
+            for(let row of kosztyDodatkoweZamowienia.filter(x => x.delete == true && x.insert != true) ){
+                var sql =   "DELETE from artdruk.zamowienia_koszty_dodatkowe where global_id=" + row.global_id;
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+                } 
     
 
 
