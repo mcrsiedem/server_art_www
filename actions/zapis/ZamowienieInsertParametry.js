@@ -223,36 +223,65 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
 
 
 
-for (let koszt of kosztyDodatkoweZamowienia.filter(x =>  x.delete != true)) {
+// for (let koszt of kosztyDodatkoweZamowienia.filter(x =>  x.delete != true)) {
+//   var sql =
+//     "INSERT INTO artdruk.zamowienia_koszty_dodatkowe (id,zamowienie_id,indeks,nazwa,ilosc,cena,suma,info,status,stan,dodal,zmienil) " +
+//     "values (" +
+//     koszt.id +  "," +
+//     koszt.zamowienie_id +        "," +
+//     koszt.indeks +        ",'" +
+//     koszt.nazwa +        "','" +
+//     koszt.ilosc +        "','" +
+//     koszt.cena +        "','" +
+//     koszt.suma +        "','" +
+//     koszt.info +        "'," +
+//     koszt.status +        "," +
+//     koszt.stan +        "," +
+//     koszt.dodal +        "," +
+//     koszt.zmienil +        "); ";
+
+//   promises.push(     new Promise((resolve, reject) => {
+//     connection.query(sql, (err, results) => {
+//     if (err) {
+//       throw err
+//         resolve([{zapis: false},err]);               
+//     } else {
+//         resolve([{zapis: true}])
+//     }
+// });
+// })) 
+
+// }
+
   var sql =
-    "INSERT INTO artdruk.zamowienia_koszty_dodatkowe (id,zamowienie_id,indeks,nazwa,ilosc,cena,suma,info,status,stan,dodal,zmienil) " +
+    "INSERT INTO artdruk.zamowienia_ksiegowosc (zamowienie_id,koszty_status,koszty_wartosc,faktury_status,faktury_wartosc,faktury_naklad,info) " +
     "values (" +
-    koszt.id +  "," +
-    koszt.zamowienie_id +        "," +
-    koszt.indeks +        ",'" +
-    koszt.nazwa +        "','" +
-    koszt.ilosc +        "','" +
-    koszt.cena +        "','" +
-    koszt.suma +        "','" +
-    koszt.info +        "'," +
-    koszt.status +        "," +
-    koszt.stan +        "," +
-    koszt.dodal +        "," +
-    koszt.zmienil +        "); ";
+    ksiegowosc.zamowienie_id +
+    "," +
+    ksiegowosc.koszty_status +
+    ",'" +
+    ksiegowosc.koszty_wartosc +
+    "'," +
+    ksiegowosc.faktury_status +
+    ",'" +
+    ksiegowosc.faktury_wartosc +
+    "'," +
+    ksiegowosc.faktury_naklad +
+    ",'" +
+    ksiegowosc.info +
+    "'); ";
 
-  promises.push(     new Promise((resolve, reject) => {
-    connection.query(sql, (err, results) => {
-    if (err) {
-      throw err
-        resolve([{zapis: false},err]);               
-    } else {
-        // resolve([results,"ok arkusz"])
-        resolve([{zapis: true}])
-    }
-});
-})) 
-
-}
+  promises.push(
+    new Promise((resolve, reject) => {
+      connection.query(sql, (err, results) => {
+        if (err) {
+          throw err;
+        } else {
+          resolve([{ zapis: true }, { zamowienie_id: results.insertId }]);
+        }
+      });
+    })
+  );
 
 
 
