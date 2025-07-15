@@ -16,10 +16,11 @@ const zamowienieUpdate = (req,res) =>{
     let historiaZamowienia = req.body[7]
     let pakowanie = req.body[8]
     let kosztyDodatkoweZamowienia = req.body[9]
+    let ksiegowosc = req.body[10]
 
 
   //  console.log("technologieID: " ,technologieID)
-  console.log("historiaZamowienia: " ,historiaZamowienia)
+  // console.log("historiaZamowienia: " ,historiaZamowienia)
 
 // console.log("Dane zamowienia: ", daneZamowienia.id )
 // console.log("SaveAs: ", req.body[0].saveAs)
@@ -47,6 +48,18 @@ if(daneZamowienia.status == 2 ){
   }
 
 }
+// console.log(ksiegowosc)
+
+if( ksiegowosc.update == true){
+var sql =   "update  artdruk.zamowienia_ksiegowosc set koszty_status=" + ksiegowosc.koszty_status + ", koszty_wartosc='" + ksiegowosc.koszty_wartosc + "',  faktury_status=" + ksiegowosc.faktury_status + ", faktury_wartosc='" + ksiegowosc.faktury_wartosc + "', faktury_naklad=" + ksiegowosc.faktury_naklad + ",  info = '" + ksiegowosc.info + "' where zamowienie_id = '" + ksiegowosc.zamowienie_id + "'"
+connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+
+
+}
+
+
+
+
 
 //---------------- produkty
 for(let row of produkty.filter(x => x.update == true && x.insert != true) ){
