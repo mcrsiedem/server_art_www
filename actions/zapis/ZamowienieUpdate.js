@@ -189,9 +189,21 @@ if(historiaZamowienia !=null){
       connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
       }
    //-------------- koszty dodatkowe
+      //    id: 1,
+      // indeks:1,
+      // zamowienie_id: daneZamowienia.id,
+      // nazwa:"",
+      // ilosc: "1",
+      // cena: "0",
+      // suma: "0",
+      // info:"",
+      // status:1,
+      // stan:1,
+      // insert: true,
+      // dodal: DecodeToken(sessionStorage.getItem("token")).id,
 
         for(let row of kosztyDodatkoweZamowienia.filter(x => x.update == true && x.insert != true) ){
-          var sql =   "update  artdruk.zamowienia_koszty_dodatkowe set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", produkt_id = " + row.produkt_id+ ", element_id = " + row.element_id+ ", oprawa_id = " + row.oprawa_id+ ", naklad = " + row.naklad+ ", ilosc_stron = " + row.ilosc_stron+ ", wersja = '" + row.wersja+ "', info = '" + row.info+ "', typ = '" + row.typ+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
+          var sql =   "update  artdruk.zamowienia_koszty_dodatkowe set  id = " + row.id+ ", nazwa = '" + row.nazwa+ "', ilosc = '" + row.ilosc+ "', cena = '" + row.cena+ "', suma = '" + row.suma+ "', info = '" + row.info+ "', status = " + row.status+ ", stan = " + row.stan+ ", dodal = " + row.dodal+ ", zmienil = '" + row.zmienil+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
           connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
           }
         
