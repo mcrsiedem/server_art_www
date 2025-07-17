@@ -17,6 +17,7 @@ const zamowienieUpdate = (req,res) =>{
     let pakowanie = req.body[8]
     let kosztyDodatkoweZamowienia = req.body[9]
     let ksiegowosc = req.body[10]
+    let faktury = req.body[11]
 
 
   //  console.log("technologieID: " ,technologieID)
@@ -217,6 +218,27 @@ if(historiaZamowienia !=null){
                 var sql =   "DELETE from artdruk.zamowienia_koszty_dodatkowe where global_id=" + row.global_id;
                 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
                 } 
+
+
+
+
+
+                        for(let row of faktury.filter(x => x.update == true && x.insert != true) ){
+          var sql =   "update  artdruk.zamowienia_faktury set  id = " + row.id+ ", nazwa = '" + row.nazwa+ "', wz = '" + row.wz+ "', ilosc = '" + row.ilosc+ "', cena = '" + row.cena+ "', suma = '" + row.suma+ "', info = '" + row.info+ "', status = " + row.status+ ", stan = " + row.stan+ ", dodal = " + row.dodal+ ", zmienil = '" + row.zmienil+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
+          connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+          }
+        
+          for(let row of faktury.filter(x => x.insert == true && x.delete != true) ){
+            var sql =   "INSERT INTO artdruk.zamowienia_faktury (id,zamowienie_id,indeks,nazwa,wz,ilosc,cena,suma,info,status,stan,dodal) "+
+            "values (" + row.id + "," + row.zamowienie_id + "," + row.indeks + ",'" + row.nazwa + "','" + row.wz + "','" + row.ilosc + "','" + row.cena + "','" + row.suma + "','" + row.info + "'," + row.status + "," + row.stan + "," + row.dodal + "); ";
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+            }
+        
+            for(let row of faktury.filter(x => x.delete == true && x.insert != true) ){
+                var sql =   "DELETE from artdruk.zamowienia_faktury where global_id=" + row.global_id;
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+                } 
+    
     
 
 
