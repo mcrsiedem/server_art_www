@@ -52,7 +52,7 @@ if(daneZamowienia.status == 2 ){
 // console.log(ksiegowosc)
 
 if( ksiegowosc.update == true){
-var sql =   "update  artdruk.zamowienia_ksiegowosc set koszty_status=" + ksiegowosc.koszty_status + ", koszty_wartosc='" + ksiegowosc.koszty_wartosc + "',  faktury_status=" + ksiegowosc.faktury_status + ", faktury_wartosc='" + ksiegowosc.faktury_wartosc + "', faktury_naklad=" + ksiegowosc.faktury_naklad + ",  info = '" + ksiegowosc.info + "' where zamowienie_id = '" + ksiegowosc.zamowienie_id + "'"
+var sql =   "update  artdruk.zamowienia_ksiegowosc set koszty_status=" + ksiegowosc.koszty_status + ", koszty_wartosc='" + ksiegowosc.koszty_wartosc + "',  faktury_status=" + ksiegowosc.faktury_status + ", faktury_wartosc='" + ksiegowosc.faktury_wartosc + "', faktury_naklad=" + ksiegowosc.faktury_naklad + ",  info = '" + ksiegowosc.info + "' where global_id = '" + ksiegowosc.global_id + "'"
 connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
 
 
