@@ -26,12 +26,12 @@ const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieI
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
 const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
-const { cratePliki } = require('./zapis/createPliki');
 const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
 const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
 const { ZamowieniaInfo } = require('./wykonania/ZamowieniaInfo');
 const { SendMailPlaner } = require('./mail/SendMailPlaner');
 const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
+const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUpdate_restore');
 
 
 
@@ -55,7 +55,6 @@ router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKa
 
 
     // technologie promise
-    router.get('/createPliki/:token',verifyToken, cratePliki); // zapisuje technologie
     router.post('/zapiszTechnologieInsertDane/:token',verifyToken, zapiszTechnologieInsertDane); // zapisuje technologie
     router.post('/zapiszTechnologieInsertProdukty/:token',verifyToken, zapiszTechnologieInsertProdukty); 
     router.post('/zapiszTechnologieInsertElementy/:token',verifyToken, zapiszTechnologieInsertElementy); 
@@ -70,6 +69,7 @@ router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKa
     router.post('/zapiszTechnologieInsertGrupyOprawaHarmonogram/:token',verifyToken, zapiszTechnologieInsertGrupyOprawaHarmonogram); 
     router.post('/zapiszTechnologieInsertWykonania/:token',verifyToken, zapiszTechnologieInsertWykonania); 
     router.post('/zapiszTechnologieInsertProcesyElementow/:token',verifyToken, zapiszTechnologieInsertProcesyElementow); 
+    router.get('/restoreTechnologia/:zamowienie_id/:token',verifyToken, ZapiszTechnologieUpdate_restore); 
 
     router.put('/zapiszTechnologieUpdate/:token',verifyToken, zapiszTechnologieUpdate); // aktualizacja zamowienia
     router.get('/technologie/:token',verifyToken,connections.getTechnologie);    

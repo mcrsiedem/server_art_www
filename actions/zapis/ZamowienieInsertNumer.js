@@ -8,7 +8,7 @@ const zamowienieInsertNumer = (req,res) =>{
     promises.push(     new Promise((resolve, reject) => {
       connection.query(sql, (err, results) => {
       if (err) {
-        throw err
+        // throw err
           resolve([{zapis: false},err]);               
       } else {
           resolve([{zapis: true},{zamowienie_nr:results.insertId}])

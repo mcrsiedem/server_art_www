@@ -72,7 +72,7 @@ const zamowienieInsertDane = (req, res) => {
     new Promise((resolve, reject) => {
       connection.query(sql, (err, results) => {
         if (err) {
-          throw err;
+          // throw err;
           resolve([{ zapis: false }, err]);
         } else {
           // resolve([results,"ok arkusz"])
