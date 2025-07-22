@@ -2,7 +2,7 @@ const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const zapiszTechnologieInsertLegiFragmenty = (req,res) =>{
 
-  let legiFragmenty = req.body[0]
+  let legiFragmenty = req.body[0].filter((x) => x.delete != true )
   let promises = [];
 
 

@@ -4,7 +4,7 @@ const zapiszTechnologieInsertArkusze = (req,res) =>{
 
 
 
-  let arkusze = req.body[0]
+  let arkusze = req.body[0].filter((x) => x.delete != true )
 
   let promises = [];
 
