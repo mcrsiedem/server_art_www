@@ -10,15 +10,23 @@ class Connections {
 
     getUser(req,res){
 
-        const login = req.params['login']
-        const haslo = req.params['haslo']
+        function usunApostrofyICudzyslowy(tekst) {
+  // Wyrażenie regularne:
+  // /['"]/g
+  //   - ['"] dopasowuje pojedynczy apostrof (') LUB cudzysłów (")
+  //   - g (global) sprawia, że dopasowane zostaną WSZYSTKIE wystąpienia,
+  //     a nie tylko pierwsze.
+  return tekst.replace(/['"]/g, '');
+}
+
+        const login = usunApostrofyICudzyslowy(req.params['login'])
+        const haslo = usunApostrofyICudzyslowy(req.params['haslo'])
     
 
     
-    
         var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
         // var sql = "select * from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
- 
+ console.log(sql)
         connection.query(sql,  (err, result) => {
     
             if(err) return res.json({Status: "Error", Error: "Error in running query"})
