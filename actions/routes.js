@@ -48,7 +48,8 @@ const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUp
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:token',verifyToken,connections.getZamowienia);
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
-router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
+    router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
+    router.get('/zabezpiecz/:token',verifyToken,connections.zabezpiecz);     
 
 
     

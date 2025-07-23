@@ -686,10 +686,7 @@ class Connections {
             getZamowieniaKalendarz(req,res){
             let dane=[];
 
-
              const procesor_id = req.params['procesor_id']
-          
-
 
              var sql = "select * from artdruk.view_zamowienia_kalendarz ORDER BY data_spedycji";
              connection.query(sql, function (err, doc) {
@@ -704,13 +701,21 @@ class Connections {
              res.status(200).json(dane);
 
              } );
-
-
-
      
          }
 
 
+            zabezpiecz(req,res){
+    
+
+             const procesor_id = req.params['procesor_id']
+ const token = req.params['token']
+
+             console.log(token)
+
+                res.status(200).json("OK");
+     
+         }
 
 
 
