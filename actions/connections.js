@@ -19,15 +19,16 @@ class Connections {
   return tekst.replace(/['"]/g, '');
 }
 
-        const login = usunApostrofyICudzyslowy(req.params['login'])
-        const haslo = usunApostrofyICudzyslowy(req.params['haslo'])
+        // const login = usunApostrofyICudzyslowy(req.params['login'])
+        // const haslo = usunApostrofyICudzyslowy(req.params['haslo'])
     
-
+        const login = req.params['login']
+        const haslo = req.params['haslo']
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny from artdruk.users where login =? and haslo = ?;";
         // var sql = "select * from artdruk.users where login ='" + login + "' and haslo = '" + haslo + "';";
  console.log(sql)
-        connection.query(sql,  (err, result) => {
+        connection.execute(sql, [login,haslo], (err, result) => {
     
             if(err) return res.json({Status: "Error", Error: "Error in running query"})
             if(result.length >0 ){
@@ -82,15 +83,20 @@ class Connections {
            
                const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
 
-
-               var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria) values ("+ id +",'" + imie +" "+nazwisko+ "','Logowanie'); ";
+var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria) values ("+ id +",'" + imie +" "+nazwisko+ "','Logowanie'); ";
                connection.query(sql, function (err, result) {            if (err) throw err;            })
+      
     
                 return res.status(200).json(token)
                 
         
             } else {
+                var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria,event) values (?,?,?,?); ";
+               connection.execute(sql, [0,"","Logowanie",login+" "+haslo], (err, result) => {            if (err) throw err;            })
+
                 return res.json({Status: "Error", Error: "Wrong Email or Password"})
+
+
             }
     }
     );
