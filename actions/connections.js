@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { teraz } = require("./czas/teraz");
 const { dodaj_minuty } = require("./czas/dodaj_minuty");
 const { ACCESS_TOKEN } = require("./logowanie/ACCESS_TOKEN");
-
+const dataStore = require('./uprawnienia/dataStore');
 
 class Connections {
 
@@ -711,7 +711,8 @@ class Connections {
              const procesor_id = req.params['procesor_id']
  const token = req.params['token']
 
-             console.log(token)
+             console.log(dataStore.getMyData())
+
 
                 res.status(200).json("OK");
      
