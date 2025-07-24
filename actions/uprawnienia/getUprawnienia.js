@@ -12,7 +12,7 @@ const dataStore = require('./dataStore');
 
             //  console.log(dataStore.getUsers())
              console.log("No kurwa!")
-
+              dataStore.loadPrivileges()
 
                 res.status(200).json("OK");
      

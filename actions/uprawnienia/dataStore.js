@@ -21,10 +21,9 @@ async function loadMyDataFromDatabase() {
         var sql  = "select * from artdruk.users";
         connection.query(sql, function (err, result) {
         if (err) throw err;
-      //   users = []
-      //  users.push(result)
-      users = [...result]
-      // console.log(users)
+
+        users = [...result]
+
        
     });
     }

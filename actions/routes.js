@@ -51,7 +51,7 @@ const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
     router.get('/zamowienia/:orderby/:token',verifyToken,connections.getZamowienia);
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
-    router.get('/uprawnienia/:token',verifyTokenParams('zamowienie_zapis'),uprawnienia);     
+    router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
     // router.get('/uprawnienia/:token',verifyToken,uprawnienia);     
 
 
