@@ -707,18 +707,18 @@ class Connections {
          }
 
 
-            zabezpiecz(req,res){
+        //     uprawnienia(req,res){
     
 
-             const procesor_id = req.params['procesor_id']
- const token = req.params['token']
+        //      const procesor_id = req.params['procesor_id']
+        //     const token = req.params['token']
 
-             console.log(dataStore.getMyData())
+        //      console.log(dataStore.getMyData())
 
 
-                res.status(200).json("OK");
+        //         res.status(200).json("OK");
      
-         }
+        //  }
 
 
 

@@ -6,7 +6,7 @@ const connection = require("../mysql");
 const verifyToken=(req,res,next) =>{
     const token = req.params['token']
 
-
+// console.log(req)
     if(!token){
         return res.json({Error: "You are not Authenticated"});
     } else {

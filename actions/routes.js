@@ -32,6 +32,8 @@ const { ZamowieniaInfo } = require('./wykonania/ZamowieniaInfo');
 const { SendMailPlaner } = require('./mail/SendMailPlaner');
 const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
 const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUpdate_restore');
+const { uprawnienia } = require('./uprawnienia/getUprawnienia');
+const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
 
 
 
@@ -49,7 +51,8 @@ const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUp
     router.get('/zamowienia/:orderby/:token',verifyToken,connections.getZamowienia);
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
-    router.get('/zabezpiecz/:token',verifyToken,connections.zabezpiecz);     
+    router.get('/uprawnienia/:token',verifyTokenParams('zamowienie_zapis'),uprawnienia);     
+    // router.get('/uprawnienia/:token',verifyToken,uprawnienia);     
 
 
     
