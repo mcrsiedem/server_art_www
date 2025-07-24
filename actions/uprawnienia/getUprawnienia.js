@@ -10,7 +10,8 @@ const dataStore = require('./dataStore');
              const procesor_id = req.params['procesor_id']
             const token = req.params['token']
 
-             console.log(dataStore.getUsers())
+            //  console.log(dataStore.getUsers())
+             console.log("No kurwa!")
 
 
                 res.status(200).json("OK");

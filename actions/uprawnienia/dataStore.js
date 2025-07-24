@@ -21,8 +21,10 @@ async function loadMyDataFromDatabase() {
         var sql  = "select * from artdruk.users";
         connection.query(sql, function (err, result) {
         if (err) throw err;
-        users = []
-       users.push(result[0])
+      //   users = []
+      //  users.push(result)
+      users = [...result]
+      // console.log(users)
        
     });
     }
@@ -37,29 +39,16 @@ function getUsers() {
 }
 
 
-function checkPrivileges(decoded,uprawnienie) {
+function checkPrivileges(id,uprawnienie) {
 
-  
-  // console.log("dane: "+ findValueByKey(decoded,uprawnienie) )
-if(findValueByKey(decoded,uprawnienie) == 1){
+  if( users.find(x => x.id == id)[uprawnienie]==1){
   return true
-}
-
-return false
+  }else return false
   
 }
 
 
-function findValueByKey(obj, keyName) {
-  if (typeof obj !== 'object' || obj === null) {
-    console.warn("The first argument must be an object.");
-    return undefined;
-  }
 
-
-  return obj[keyName];
-  // return obj.keyName;
-}
 
 
 module.exports = {
@@ -67,5 +56,6 @@ module.exports = {
   getMyData,
   loadPrivileges,
   getUsers,
-  checkPrivileges
+  checkPrivileges,
+  
 };
