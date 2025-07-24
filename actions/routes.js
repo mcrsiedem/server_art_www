@@ -206,9 +206,9 @@ router.get('/zmienCzasTrwaniaGrupyOprawaPrzerwa/:drop_grupa_global_id/:nowy_koni
 
 router.get('/zmienCzasTrwaniaGrupyPrzerwa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyPrzerwa);
 
-router.get('/skasujGrupe/:global_id_grupa/:token',verifyToken,connections.skasujGrupe);
-router.get('/skasujGrupeOprawa/:global_id_grupa/:token',verifyToken,connections.skasujGrupeOprawa);
-router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyToken,connections.skasujTechnologie);
+router.get('/skasujGrupe/:global_id_grupa/:token',verifyTokenParams('technologia_zapis'),connections.skasujGrupe);
+router.get('/skasujGrupeOprawa/:global_id_grupa/:token',verifyTokenParams('technologia_zapis'),connections.skasujGrupeOprawa);
+router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),connections.skasujTechnologie);
 
 
 

@@ -1314,28 +1314,33 @@ skasujTechnologie(req,res){
     });
 }
 
+
+
+
 skasujGrupe(req,res){
 
     const global_id_grupa = req.params['global_id_grupa']
 
 
     // kasowanie grupy wykonan wg global_id grupy
-    var sql = "select artdruk.delete_grupa_wykonan("+ global_id_grupa +") as procesor_id_grupy";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
+    var sql = "select artdruk.delete_grupa_wykonan(?) as procesor_id_grupy";
+    // console.log(sql)
+    connection.execute(sql, [global_id_grupa],function (err, result) {
        if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
 }
+
+
 skasujGrupeOprawa(req,res){
 
     const global_id_grupa = req.params['global_id_grupa']
 
 
     // kasowanie grupy wykonan wg global_id grupy
-    var sql = "select artdruk.delete_grupa_wykonan_oprawa("+ global_id_grupa +") as procesor_id_grupy";
+    var sql = "select artdruk.delete_grupa_wykonan_oprawa(?) as procesor_id_grupy";
     console.log(sql)
-    connection.query(sql, function (err, result) {
+    connection.execute(sql,  [global_id_grupa],function (err, result) {
        if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
