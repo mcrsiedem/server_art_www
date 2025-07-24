@@ -1,20 +1,12 @@
-const connection = require("../mysql");
 const dataStore = require('./dataStore');
 
+// ładuje ponownie uprawnienia z bazy do serwera
 
+     const uprawnienia = (req,res) =>{
 
-
-     const       uprawnienia = (req,res) =>{
-    
-
-             const procesor_id = req.params['procesor_id']
-            const token = req.params['token']
-
-            //  console.log(dataStore.getUsers())
-             console.log("No kurwa!")
-              dataStore.loadPrivileges()
-
-                res.status(200).json("OK");
+            console.log("Uprawnienia załadowane!")
+            dataStore.loadPrivileges()
+            res.status(200).json("OK");
      
          }
 
