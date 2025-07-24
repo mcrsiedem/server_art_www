@@ -1,5 +1,7 @@
 const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
+const { DecodeToken } = require("../logowanie/DecodeToken");
+
 
 const zamowienieInsertDane = (req, res) => {
   let promises = [];
@@ -12,6 +14,9 @@ const zamowienieInsertDane = (req, res) => {
   // procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id:result.insertId} })
   // skonto: daneZamowienia.skonto,
   //     nr_kalkulacji: daneZamowienia.nr_kalkulacji,
+  const token = req.params['token']
+  // console.log("insert token:"+ DecodeToken(token).id)
+
   var sql =
     "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) " +
     "values ('" +
@@ -31,7 +36,7 @@ const zamowienieInsertDane = (req, res) => {
     ",'" +
     daneZamowienia.opiekun_id +
     "','" +
-    daneZamowienia.user +
+    DecodeToken(token).id +
     "'," +
     daneZamowienia.stan +
     "," +

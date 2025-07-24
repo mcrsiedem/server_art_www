@@ -1360,46 +1360,38 @@ deleteZamowienie(req,res){
     //usun na zawsze
     const rowsToDelete = req.body.row
 
-    var sql = "start transaction";
-    connection.query(sql, function (err, result) {
-    if (err) res.status(203).json(err)  });
 
     for(let row of rowsToDelete){
 
-        var sql =   "delete from artdruk.zamowienia where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia where id = ?"
+        connection.execute(sql,[row.id], function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_produkty  where global_id !=0 and zamowienie_id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_produkty  where global_id !=0 and zamowienie_id = ?"
+        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_elementy where  global_id !=0 and zamowienie_id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_elementy where  global_id !=0 and zamowienie_id = ?"
+        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_fragmenty where global_id !=0 and zamowienie_id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_fragmenty where global_id !=0 and zamowienie_id = ?"
+        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_koszty_dodatkowe where global_id !=0 and zamowienie_id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_koszty_dodatkowe where global_id !=0 and zamowienie_id = ?"
+        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
 
-        var sql =   "delete from artdruk.zamowienia_oprawa where global_id !=0 and zamowienie_id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_pakowanie where global_id !=0 and zamowienie_id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_procesy_elementow where global_id !=0 and zamowienie_id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_historia where id !=0 and zamowienie_id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_oprawa where global_id !=0 and zamowienie_id = ?"
+        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_pakowanie where global_id !=0 and zamowienie_id = ?"
+        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_procesy_elementow where global_id !=0 and zamowienie_id = ?"
+        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
+        var sql =   "delete from artdruk.zamowienia_historia where id !=0 and zamowienie_id = ?"
+        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
 
 
         }
+console.log("Zlecenie skasowane! ");
+res.status(201).json("OK");
 
-
-    var sql = "commit";
-    connection.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("Zlecenie skasowane! ");
-res.status(201).json(result);
-});
 }
 
 odblokujZamowienie(req,res){

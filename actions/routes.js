@@ -41,9 +41,9 @@ const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 
     // zamówienia
-    router.post('/zamowienieInsertDane/:token',verifyToken, zamowienieInsertDane); // dodaje nowe zmówienie
-    router.post('/zamowienieNumer/:token',verifyToken, zamowienieInsertNumer); // dodaje nowe zmówienie
-    router.post('/zamowienieInsertParametry/:token',verifyToken, zamowienieInsertParametry); // dodaje nowe zmówienie
+    router.post('/zamowienieInsertDane/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertDane); // dodaje nowe zmówienie
+    router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertNumer); // dodaje nowe zmówienie
+    router.post('/zamowienieInsertParametry/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertParametry); // dodaje nowe zmówienie
 
     router.put('/zapiszZamowienieUpdate/:token',verifyToken, zamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
@@ -146,11 +146,8 @@ router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz/:procesor_id
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz_oprawa/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa);     
 router.get('/technologie_grupyWykonan/:token',verifyToken,connections.getGrupyAll);     
 router.get('/technologie_grupy_oprawa_for_procesor/:procesor_id',connections.getGrupy_oprawa_for_procesor);     
- 
-
 router.get('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);
 router.get('/drag_drop_proces_grupa_oprawa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrupOprawa);
-
 router.get('/drag_drop_proces_grupa_to_procesor/:id_drag_grupa_proces/:id',connections.dragDropProcesGrupToProcesor);
 router.get('/updateWykonania/:global_id_wykonania/:kolumna/:wartosc',connections.updateWykonania);
 router.get('/updateWydzielWykonanieZgrupy/:global_id_wykonania',connections.updateWydzielWykonanieZgrupy);
@@ -162,30 +159,16 @@ router.get('/updateDeletePrzerwaOprawa/:global_id_grupa',connections.updateDelet
 router.get('/zmienCzasTrwaniaGrupy/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupy);
 router.get('/zmienCzasTrwaniaGrupyOprawa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyOprawa);
 router.get('/zmienCzasTrwaniaGrupyOprawaPrzerwa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyOprawaPrzerwa);
-
 router.get('/zmienCzasTrwaniaGrupyPrzerwa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyPrzerwa);
 
+//Technologia
 router.get('/skasujGrupe/:global_id_grupa/:token',verifyTokenParams('technologia_zapis'),connections.skasujGrupe);
 router.get('/skasujGrupeOprawa/:global_id_grupa/:token',verifyTokenParams('technologia_zapis'),connections.skasujGrupeOprawa);
 router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),connections.skasujTechnologie);
 
-
-
-
-
-
-// aktualizacja ilość blach w druku row.js
-
-//  aktualizacja statusów druku w row.js
-// router.put('/updateStatusWWW',verifyTokenBody,connections.updateStatusWWW);
-
-
-
-// nie wiem czy sie udalo 
-// zlecenia
-
+//Zamowienie
 router.delete('/delete_zamowienie/:token',verifyTokenParams('zamowienie_skasuj'),connections.deleteZamowienie);
-router.delete('/odblokuj_zamowienie',connections.odblokujZamowienie);
+router.delete('/odblokuj_zamowienie/:token',verifyTokenParams('zamowienie_odblokuj'),connections.odblokujZamowienie);
 
 
 module.exports = router;
