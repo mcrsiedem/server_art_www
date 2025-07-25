@@ -3,7 +3,7 @@ const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const { DecodeToken } = require("../logowanie/DecodeToken");
 
 // nowy zapis zamówienia - dane i parametry w jednym
-const zamowienieInsert = (req,res) =>{
+const zamowienieInsert = async (req,res) =>{
   const token = req.params['token']
 
   let zamowienie_id
@@ -20,6 +20,8 @@ const zamowienieInsert = (req,res) =>{
   let faktury = req.body[8]
   let daneZamowienia = req.body[9]
 
+   daneZamowienia = {...daneZamowienia, utworzyl_user_id:  DecodeToken(token).id}
+
           if(daneZamowienia.etap<3){
             if(daneZamowienia.stan==1){
               daneZamowienia = {...daneZamowienia, nr:"",stan:1,status:1}
@@ -34,45 +36,9 @@ const zamowienieInsert = (req,res) =>{
               daneZamowienia = {...daneZamowienia, nr:"",stan:1,status:1, etap:2}
               }
 
+await save({daneZamowienia}).then(res=>{
 
-  // var sql = "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
-  // let dane = [daneZamowienia.rok, daneZamowienia.firma_id,  daneZamowienia.klient_id, daneZamowienia.tytul, daneZamowienia.data_przyjecia, daneZamowienia.data_materialow,  daneZamowienia.data_spedycji,daneZamowienia.opiekun_id,  DecodeToken(token).id, daneZamowienia.stan,  daneZamowienia.status,  daneZamowienia.uwagi, daneZamowienia.etap, daneZamowienia.waluta_id,daneZamowienia.vat_id, daneZamowienia.przedplata ,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.nr_stary,daneZamowienia.kod_pracy,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.isbn]
-  
-  // connection.execute(sql, dane, (err, results) => {
-  //       if (err) {
-  //        throw err;
-         
-  //       } else {
-
-  //       zamowienie_id: results.insertId
-
-  //             produkty = produkty.map((obj) => {return{...obj, zamowienie_id} })
-  //             elementy = elementy.map((obj) => {return{...obj, zamowienie_id} })
-  //             fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id} })
-  //             oprawa = oprawa.map((obj) => {return{...obj, zamowienie_id} })
-  //             procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id} })
-  //             pakowanie = pakowanie.map((obj) => {return{...obj, zamowienie_id} })
-  //             kosztyDodatkoweZamowienia = kosztyDodatkoweZamowienia.map((obj) => {return{...obj, zamowienie_id} })
-  //             ksiegowosc = {...ksiegowosc, zamowienie_id} 
-  //             faktury = faktury.map((obj) => {return{...obj, zamowienie_id} })
-
-
-
-  //       }
-  //     });
-
-process.nextTick(() => {
-
-  var sql = "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
-  let dane = [daneZamowienia.rok, daneZamowienia.firma_id,  daneZamowienia.klient_id, daneZamowienia.tytul, daneZamowienia.data_przyjecia, daneZamowienia.data_materialow,  daneZamowienia.data_spedycji,daneZamowienia.opiekun_id,  DecodeToken(token).id, daneZamowienia.stan,  daneZamowienia.status,  daneZamowienia.uwagi, daneZamowienia.etap, daneZamowienia.waluta_id,daneZamowienia.vat_id, daneZamowienia.przedplata ,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.nr_stary,daneZamowienia.kod_pracy,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.isbn]
-  
-  connection.execute(sql, dane, (err, results) => {
-        if (err) {
-         throw err;
-         
-        } else {
-
-        zamowienie_id: results.insertId
+       zamowienie_id = res
 
               produkty = produkty.map((obj) => {return{...obj, zamowienie_id} })
               elementy = elementy.map((obj) => {return{...obj, zamowienie_id} })
@@ -84,56 +50,10 @@ process.nextTick(() => {
               ksiegowosc = {...ksiegowosc, zamowienie_id} 
               faktury = faktury.map((obj) => {return{...obj, zamowienie_id} })
 
-
-
-        }
-      });
-
-
-
-
-});
-
-
-
-  // var sql = "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
-  // let dane = [daneZamowienia.rok, daneZamowienia.firma_id,  daneZamowienia.klient_id, daneZamowienia.tytul, daneZamowienia.data_przyjecia, daneZamowienia.data_materialow,  daneZamowienia.data_spedycji,daneZamowienia.opiekun_id,  DecodeToken(token).id, daneZamowienia.stan,  daneZamowienia.status,  daneZamowienia.uwagi, daneZamowienia.etap, daneZamowienia.waluta_id,daneZamowienia.vat_id, daneZamowienia.przedplata ,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.nr_stary,daneZamowienia.kod_pracy,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.isbn]
-  
-
-  //   promises.push(     new Promise((resolve, reject) => {
-  //     connection.execute(sql, dane, (err, results) => {
-  //     if (err) {
-  //         resolve([{zapis: false},err]);               
-  //     } else {
-
-  //               zamowienie_id: results.insertId
-
-  //             produkty = produkty.map((obj) => {return{...obj, zamowienie_id} })
-  //             elementy = elementy.map((obj) => {return{...obj, zamowienie_id} })
-  //             fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id} })
-  //             oprawa = oprawa.map((obj) => {return{...obj, zamowienie_id} })
-  //             procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id} })
-  //             pakowanie = pakowanie.map((obj) => {return{...obj, zamowienie_id} })
-  //             kosztyDodatkoweZamowienia = kosztyDodatkoweZamowienia.map((obj) => {return{...obj, zamowienie_id} })
-  //             ksiegowosc = {...ksiegowosc, zamowienie_id} 
-  //             faktury = faktury.map((obj) => {return{...obj, zamowienie_id} })
-   
-  //         resolve([{ zapis: true }, { zamowienie_id: results.insertId }]);
-
-  //     }
-  // });
-  // })) 
-
-
-
-
-
-
-
-
-
-
-
+              //  resolve([{ zapis: false }, err]);
+      
+            // return "OK"
+}).then(x =>{
 
 
 
@@ -164,7 +84,9 @@ process.nextTick(() => {
           resolve([{zapis: false},err]);               
       } else {
           // resolve([results,"ok arkusz"])
-          resolve([{zapis: true}])
+          // resolve([{zapis: true}])
+          resolve([{ zapis: true }, { zamowienie_id: results.insertId }]);
+
       }
   });
   })) 
@@ -409,7 +331,153 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
 
 
   Promise.all(promises).then((data) => res.status(201).json(data));
+  // Promise.all(promises).then((data) => res.json(data));
 
+
+
+
+})
+  // var sql = "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+  // let dane = [daneZamowienia.rok, daneZamowienia.firma_id,  daneZamowienia.klient_id, daneZamowienia.tytul, daneZamowienia.data_przyjecia, daneZamowienia.data_materialow,  daneZamowienia.data_spedycji,daneZamowienia.opiekun_id,  DecodeToken(token).id, daneZamowienia.stan,  daneZamowienia.status,  daneZamowienia.uwagi, daneZamowienia.etap, daneZamowienia.waluta_id,daneZamowienia.vat_id, daneZamowienia.przedplata ,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.nr_stary,daneZamowienia.kod_pracy,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.isbn]
+  
+  // connection.execute(sql, dane, (err, results) => {
+  //       if (err) {
+  //        throw err;
+         
+  //       } else {
+
+  //       zamowienie_id: results.insertId
+
+  //             produkty = produkty.map((obj) => {return{...obj, zamowienie_id} })
+  //             elementy = elementy.map((obj) => {return{...obj, zamowienie_id} })
+  //             fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id} })
+  //             oprawa = oprawa.map((obj) => {return{...obj, zamowienie_id} })
+  //             procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id} })
+  //             pakowanie = pakowanie.map((obj) => {return{...obj, zamowienie_id} })
+  //             kosztyDodatkoweZamowienia = kosztyDodatkoweZamowienia.map((obj) => {return{...obj, zamowienie_id} })
+  //             ksiegowosc = {...ksiegowosc, zamowienie_id} 
+  //             faktury = faktury.map((obj) => {return{...obj, zamowienie_id} })
+
+
+
+  //       }
+  //     });
+
+
+  // var sql = "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+  // let dane = [daneZamowienia.rok, daneZamowienia.firma_id,  daneZamowienia.klient_id, daneZamowienia.tytul, daneZamowienia.data_przyjecia, daneZamowienia.data_materialow,  daneZamowienia.data_spedycji,daneZamowienia.opiekun_id,  DecodeToken(token).id, daneZamowienia.stan,  daneZamowienia.status,  daneZamowienia.uwagi, daneZamowienia.etap, daneZamowienia.waluta_id,daneZamowienia.vat_id, daneZamowienia.przedplata ,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.nr_stary,daneZamowienia.kod_pracy,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.isbn]
+  
+  // connection.execute(sql, dane, (err, results) => {
+  //       if (err) {
+  //        throw err;
+         
+  //       } else {
+
+  //       zamowienie_id: results.insertId
+
+  //             produkty = produkty.map((obj) => {return{...obj, zamowienie_id} })
+  //             elementy = elementy.map((obj) => {return{...obj, zamowienie_id} })
+  //             fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id} })
+  //             oprawa = oprawa.map((obj) => {return{...obj, zamowienie_id} })
+  //             procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id} })
+  //             pakowanie = pakowanie.map((obj) => {return{...obj, zamowienie_id} })
+  //             kosztyDodatkoweZamowienia = kosztyDodatkoweZamowienia.map((obj) => {return{...obj, zamowienie_id} })
+  //             ksiegowosc = {...ksiegowosc, zamowienie_id} 
+  //             faktury = faktury.map((obj) => {return{...obj, zamowienie_id} })
+
+
+
+  //       }
+  //     });
+
+
+
+
+
+
+
+  // var sql = "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+  // let dane = [daneZamowienia.rok, daneZamowienia.firma_id,  daneZamowienia.klient_id, daneZamowienia.tytul, daneZamowienia.data_przyjecia, daneZamowienia.data_materialow,  daneZamowienia.data_spedycji,daneZamowienia.opiekun_id,  DecodeToken(token).id, daneZamowienia.stan,  daneZamowienia.status,  daneZamowienia.uwagi, daneZamowienia.etap, daneZamowienia.waluta_id,daneZamowienia.vat_id, daneZamowienia.przedplata ,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.nr_stary,daneZamowienia.kod_pracy,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.isbn]
+  
+
+  //   promises.push(     new Promise((resolve, reject) => {
+  //     connection.execute(sql, dane, (err, results) => {
+  //     if (err) {
+  //         resolve([{zapis: false},err]);               
+  //     } else {
+
+  //               zamowienie_id: results.insertId
+
+  //             produkty = produkty.map((obj) => {return{...obj, zamowienie_id} })
+  //             elementy = elementy.map((obj) => {return{...obj, zamowienie_id} })
+  //             fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id} })
+  //             oprawa = oprawa.map((obj) => {return{...obj, zamowienie_id} })
+  //             procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id} })
+  //             pakowanie = pakowanie.map((obj) => {return{...obj, zamowienie_id} })
+  //             kosztyDodatkoweZamowienia = kosztyDodatkoweZamowienia.map((obj) => {return{...obj, zamowienie_id} })
+  //             ksiegowosc = {...ksiegowosc, zamowienie_id} 
+  //             faktury = faktury.map((obj) => {return{...obj, zamowienie_id} })
+   
+  //         resolve([{ zapis: true }, { zamowienie_id: results.insertId }]);
+
+  //     }
+  // });
+  // })) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+// const save = ({produkty,elementy,fragmenty,oprawa,procesyElementow,pakowanie,kosztyDodatkoweZamowienia,ksiegowosc,faktury,daneZamowienia}) =>{
+const save = ({daneZamowienia}) =>{
+  return new Promise((resolve,reject)=>{
+
+  var sql = "INSERT INTO artdruk.zamowienia (rok,firma_id,klient_id,tytul,data_przyjecia,data_materialow,data_spedycji,opiekun_id,utworzyl_user_id,stan,status,uwagi,etap,waluta_id,vat_id,przedplata,cena,wartosc_zamowienia,termin_platnosci,fsc,skonto,nr_kalkulacji,nr_stary,kod_pracy,nr_zamowienia_klienta,isbn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+  let dane = [daneZamowienia.rok, daneZamowienia.firma_id,  daneZamowienia.klient_id, daneZamowienia.tytul, daneZamowienia.data_przyjecia, daneZamowienia.data_materialow,  daneZamowienia.data_spedycji,daneZamowienia.opiekun_id,  daneZamowienia.utworzyl_user_id, daneZamowienia.stan,  daneZamowienia.status,  daneZamowienia.uwagi, daneZamowienia.etap, daneZamowienia.waluta_id,daneZamowienia.vat_id, daneZamowienia.przedplata ,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.nr_stary,daneZamowienia.kod_pracy,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.isbn]
+  
+  connection.execute(sql, dane, (err, results) => {
+        if (err) {
+         throw err;
+         
+        } else {
+
+        // zamowienie_id: results.insertId
+
+        //       produkty = produkty.map((obj) => {return{...obj, zamowienie_id} })
+        //       elementy = elementy.map((obj) => {return{...obj, zamowienie_id} })
+        //       fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id} })
+        //       oprawa = oprawa.map((obj) => {return{...obj, zamowienie_id} })
+        //       procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id} })
+        //       pakowanie = pakowanie.map((obj) => {return{...obj, zamowienie_id} })
+        //       kosztyDodatkoweZamowienia = kosztyDodatkoweZamowienia.map((obj) => {return{...obj, zamowienie_id} })
+        //       ksiegowosc = {...ksiegowosc, zamowienie_id} 
+        //       faktury = faktury.map((obj) => {return{...obj, zamowienie_id} })
+
+
+resolve(results.insertId)
+        }
+      });
+
+
+
+
+
+
+//zwraca zamowienie_id
+
+
+  })
 }
 
 module.exports = {
