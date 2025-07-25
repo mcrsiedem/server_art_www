@@ -5,8 +5,8 @@ const connections = require('./connections');
 const { verifyToken } = require("./logowanie/verifyToken");
 const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
 
-const { zamowienieInsertDane } = require("./zapis/ZamowienieInsertDane");
-const { zamowienieInsertParametry } = require("./zapis/ZamowienieInsertParametry");
+// const { zamowienieInsertDane } = require("./zapis/ZamowienieInsertDane");
+// const { zamowienieInsertParametry } = require("./zapis/ZamowienieInsertParametry");
 const { zamowienieUpdate } = require("./zapis/ZamowienieUpdate");
 
 
@@ -42,9 +42,9 @@ const { zamowienieInsert } = require('./zapis/ZamowienieInsert');
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 
     // zamówienia
-    router.post('/zamowienieInsertDane/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertDane); // dodaje nowe zmówienie
-    router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertNumer); // dodaje nowe zmówienie
-    router.post('/zamowienieInsertParametry/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertParametry); // dodaje nowe zmówienie
+    // router.post('/zamowienieInsertDane/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertDane); // dodaje nowe zmówienie
+    router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_przyjmij'), zamowienieInsertNumer); // dodaje nowe zmówienie
+    // router.post('/zamowienieInsertParametry/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertParametry); // dodaje nowe zmówienie
     router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
 
 
