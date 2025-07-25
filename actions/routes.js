@@ -34,6 +34,7 @@ const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
 const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUpdate_restore');
 const { uprawnienia } = require('./uprawnienia/getUprawnienia');
 const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
+const { zamowienieInsert } = require('./zapis/ZamowienieInsert');
 
 
 
@@ -44,6 +45,9 @@ const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
     router.post('/zamowienieInsertDane/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertDane); // dodaje nowe zmówienie
     router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertNumer); // dodaje nowe zmówienie
     router.post('/zamowienieInsertParametry/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertParametry); // dodaje nowe zmówienie
+    router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
+
+
 
     router.put('/zapiszZamowienieUpdate/:token',verifyToken, zamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
