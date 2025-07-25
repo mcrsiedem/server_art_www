@@ -7,7 +7,7 @@ const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
 
 // const { zamowienieInsertDane } = require("./zapis/ZamowienieInsertDane");
 // const { zamowienieInsertParametry } = require("./zapis/ZamowienieInsertParametry");
-const { zamowienieUpdate } = require("./zapis/ZamowienieUpdate");
+const { zamowienieUpdate } = require("./zamowienia/ZamowienieUpdate");
 
 
 const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
@@ -24,7 +24,7 @@ const { zapiszTechnologieInsertGrupyHarmonogram } = require("./zapis/ZapiszTechn
 const { zapiszTechnologieInsertGrupyOprawa } = require("./zapis/ZapiszTechnologieInsertGrupyOprawa");
 const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
-const { zamowienieInsertNumer } = require("./zapis/ZamowienieInsertNumer");
+const { zamowienieInsertNumer } = require("./zamowienia/ZamowienieInsertNumer");
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
 const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
 const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
@@ -34,7 +34,7 @@ const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
 const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUpdate_restore');
 const { uprawnienia } = require('./uprawnienia/getUprawnienia');
 const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
-const { zamowienieInsert } = require('./zapis/ZamowienieInsert');
+const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
 
 
 
