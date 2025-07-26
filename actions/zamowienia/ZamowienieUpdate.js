@@ -169,8 +169,7 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
   
     for(let row of oprawa.filter(x => x.insert == true && x.delete != true) ){
       let data=[row.id,row.zamowienie_id,row.produkt_id,row.oprawa,row.naklad,row.bok_oprawy,ifNoDateSetNull_exec(row.data_spedycji),row.uwagi,row.wersja,ifNoDateSetNull_exec(row.data_czystodrukow),row.indeks]
-      var sql =   "INSERT INTO artdruk.zamowienia_oprawa (id,zamowienie_id,produkt_id,oprawa,naklad,bok_oprawy,data_spedycji,uwagi,wersja,data_czystodrukow,indeks) "+
-      "values (?,?,?,?,?,?,?,?,?,?,?); ";
+      var sql =   "INSERT INTO artdruk.zamowienia_oprawa (id,zamowienie_id,produkt_id,oprawa,naklad,bok_oprawy,data_spedycji,uwagi,wersja,data_czystodrukow,indeks) values (?,?,?,?,?,?,?,?,?,?,?); ";
       connection.execute(sql,data, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
       }
   
@@ -183,17 +182,18 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
 //-------------- historia zamówienia
 if(historiaZamowienia !=null){
         for(let row of historiaZamowienia?.filter(x => x.insert == true).sort((a,c)=>a.id-c.id) ){
-            var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) "+
-            "values (" + row.user_id + ",'" + row.kategoria + "','" + row.event + "'," + row.zamowienie_id + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+          let data =[row.user_id,row.kategoria,row.event,row.zamowienie_id]
+            var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
+            connection.execute(sql,data, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
             }
 
 }
 
      //-------------- pakowanie
      for(let row of pakowanie.filter(x => x.update == true) ){
-      var sql =   "update  artdruk.zamowienia_pakowanie set  id = '" + row.id+ "', zamowienie_id = " + row.zamowienie_id+ ", naklad = '" + row.naklad+ "', nazwa = '" + row.nazwa+ "', uwagi = '" + row.uwagi+ "', sztuki_w_paczce = '" + row.sztuki_w_paczce + "', rodzaj_pakowania = '" +row.rodzaj_pakowania+ "', indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
-      connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+      let data=[row.id,row.zamowienie_id,row.naklad,row.nazwa,row.uwagi,row.sztuki_w_paczce,row.rodzaj_pakowania,row.indeks,row.global_id]
+      var sql =   "update  artdruk.zamowienia_pakowanie set  id = ?, zamowienie_id = ?, naklad = ?, nazwa = ?, uwagi =?, sztuki_w_paczce =?, rodzaj_pakowania = ?, indeks = ? where global_id = ?"
+      connection.execute(sql,data, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
       }
    //-------------- koszty dodatkowe
       //    id: 1,
@@ -210,45 +210,41 @@ if(historiaZamowienia !=null){
       // dodal: DecodeToken(sessionStorage.getItem("token")).id,
 
         for(let row of kosztyDodatkoweZamowienia.filter(x => x.update == true && x.insert != true) ){
-          var sql =   "update  artdruk.zamowienia_koszty_dodatkowe set  id = " + row.id+ ", nazwa = '" + row.nazwa+ "', ilosc = '" + row.ilosc+ "', cena = '" + row.cena+ "', suma = '" + row.suma+ "', info = '" + row.info+ "', status = " + row.status+ ", stan = " + row.stan+ ", dodal = " + row.dodal+ ", zmienil = '" + row.zmienil+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
-          connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+          let data=[row.id,row.nazwa,row.ilosc,row.cena,row.suma,row.info,row.status,row.stan,row.dodal,row.zmienil,row.indeks,row.global_id]
+          
+          var sql =   "update  artdruk.zamowienia_koszty_dodatkowe set  id =?, nazwa =?, ilosc =?, cena =?, suma =?, info =?, status =?, stan =?, dodal =?, zmienil =?,  indeks =? where global_id =? "
+          connection.execute(sql,data, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
           }
         
           for(let row of kosztyDodatkoweZamowienia.filter(x => x.insert == true && x.delete != true) ){
-            var sql =   "INSERT INTO artdruk.zamowienia_koszty_dodatkowe (id,zamowienie_id,indeks,nazwa,ilosc,cena,suma,info,status,stan,dodal) "+
-            "values (" + row.id + "," + row.zamowienie_id + "," + row.indeks + ",'" + row.nazwa + "','" + row.ilosc + "','" + row.cena + "','" + row.suma + "','" + row.info + "'," + row.status + "," + row.stan + "," + row.dodal + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+            let data=[row.id,row.zamowienie_id,row.indeks,row.nazwa,row.ilosc,row.cena,row.suma,row.info,row.status,row.stan,row.dodal]
+            var sql =   "INSERT INTO artdruk.zamowienia_koszty_dodatkowe (id,zamowienie_id,indeks,nazwa,ilosc,cena,suma,info,status,stan,dodal) values (?,?,?,?,?,?,?,?,?,?,?); ";
+            connection.execute(sql,data, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
             }
         
             for(let row of kosztyDodatkoweZamowienia.filter(x => x.delete == true && x.insert != true) ){
-                var sql =   "DELETE from artdruk.zamowienia_koszty_dodatkowe where global_id=" + row.global_id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+              let data=[row.global_id]
+                var sql =   "DELETE from artdruk.zamowienia_koszty_dodatkowe where global_id=?";
+                connection.execute(sql,data, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
                 } 
 
-
-
-
-
+ //-------------- faktury
                         for(let row of faktury.filter(x => x.update == true && x.insert != true) ){
           var sql =   "update  artdruk.zamowienia_faktury set  id = " + row.id+ ", nazwa = '" + row.nazwa+ "', wz = '" + row.wz+ "', ilosc = '" + row.ilosc+ "', cena = '" + row.cena+ "', suma = '" + row.suma+ "', info = '" + row.info+ "', status = " + row.status+ ", stan = " + row.stan+ ", dodal = " + row.dodal+ ", zmienil = '" + row.zmienil+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
-          connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+          connection.execute(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
           }
         
           for(let row of faktury.filter(x => x.insert == true && x.delete != true) ){
             var sql =   "INSERT INTO artdruk.zamowienia_faktury (id,zamowienie_id,indeks,nazwa,wz,ilosc,cena,suma,info,status,stan,dodal) "+
             "values (" + row.id + "," + row.zamowienie_id + "," + row.indeks + ",'" + row.nazwa + "','" + row.wz + "','" + row.ilosc + "','" + row.cena + "','" + row.suma + "','" + row.info + "'," + row.status + "," + row.stan + "," + row.dodal + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+            connection.execute(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
             }
         
             for(let row of faktury.filter(x => x.delete == true && x.insert != true) ){
                 var sql =   "DELETE from artdruk.zamowienia_faktury where global_id=" + row.global_id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+                connection.execute(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
                 } 
     
-    
-
-
-
 
 odpowiedz = [daneZamowienia,produkty,elementy,fragmenty,oprawa,procesyElementow]
 res.status(201).json(odpowiedz);
