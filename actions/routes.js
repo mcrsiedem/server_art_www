@@ -52,23 +52,23 @@ const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
 
 
     // technologie promise
-    router.post('/zapiszTechnologieInsertDane/:token',verifyToken, zapiszTechnologieInsertDane); // zapisuje technologie
-    router.post('/zapiszTechnologieInsertProdukty/:token',verifyToken, zapiszTechnologieInsertProdukty); 
-    router.post('/zapiszTechnologieInsertElementy/:token',verifyToken, zapiszTechnologieInsertElementy); 
-    router.post('/zapiszTechnologieInsertFragmenty/:token',verifyToken, zapiszTechnologieInsertFragmenty);
-    router.post('/zapiszTechnologieInsertOprawa/:token',verifyToken, zapiszTechnologieInsertOprawa); 
-    router.post('/zapiszTechnologieInsertArkusze/:token',verifyToken, zapiszTechnologieInsertArkusze); 
-    router.post('/zapiszTechnologieInsertLegi/:token',verifyToken, zapiszTechnologieInsertLegi); 
-    router.post('/zapiszTechnologieInsertLegiFragmenty/:token',verifyToken, zapiszTechnologieInsertLegiFragmenty);
-    router.post('/zapiszTechnologieInsertGrupyZammowienia/:token',verifyToken, zapiszTechnologieInsertGrupyZamowienia); 
-    router.post('/zapiszTechnologieInsertGrupyHarmonogram/:token',verifyToken, zapiszTechnologieInsertGrupyHarmonogram); 
-    router.post('/zapiszTechnologieInsertGrupyOprawa/:token',verifyToken, zapiszTechnologieInsertGrupyOprawa); 
-    router.post('/zapiszTechnologieInsertGrupyOprawaHarmonogram/:token',verifyToken, zapiszTechnologieInsertGrupyOprawaHarmonogram); 
-    router.post('/zapiszTechnologieInsertWykonania/:token',verifyToken, zapiszTechnologieInsertWykonania); 
-    router.post('/zapiszTechnologieInsertProcesyElementow/:token',verifyToken, zapiszTechnologieInsertProcesyElementow); 
-    router.get('/restoreTechnologia/:zamowienie_id/:token',verifyToken, ZapiszTechnologieUpdate_restore); 
+    router.post('/zapiszTechnologieInsertDane/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertDane); // zapisuje technologie
+    router.post('/zapiszTechnologieInsertProdukty/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProdukty); 
+    router.post('/zapiszTechnologieInsertElementy/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertElementy); 
+    router.post('/zapiszTechnologieInsertFragmenty/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertFragmenty);
+    router.post('/zapiszTechnologieInsertOprawa/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertOprawa); 
+    router.post('/zapiszTechnologieInsertArkusze/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertArkusze); 
+    router.post('/zapiszTechnologieInsertLegi/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertLegi); 
+    router.post('/zapiszTechnologieInsertLegiFragmenty/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertLegiFragmenty);
+    router.post('/zapiszTechnologieInsertGrupyZammowienia/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyZamowienia); 
+    router.post('/zapiszTechnologieInsertGrupyHarmonogram/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyHarmonogram); 
+    router.post('/zapiszTechnologieInsertGrupyOprawa/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyOprawa); 
+    router.post('/zapiszTechnologieInsertGrupyOprawaHarmonogram/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyOprawaHarmonogram); 
+    router.post('/zapiszTechnologieInsertWykonania/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertWykonania); 
+    router.post('/zapiszTechnologieInsertProcesyElementow/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProcesyElementow); 
+    router.get('/restoreTechnologia/:zamowienie_id/:token',verifyTokenParams('technologia_zapis'), ZapiszTechnologieUpdate_restore); 
 
-    router.put('/zapiszTechnologieUpdate/:token',verifyToken, zapiszTechnologieUpdate); // aktualizacja zamowienia
+    router.put('/zapiszTechnologieUpdate/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieUpdate); // aktualizacja zamowienia
     router.get('/technologie/:token',verifyToken,connections.getTechnologie);    
     router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
 
@@ -107,6 +107,7 @@ const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
     
     router.put('/mail/:token',verifyToken,SendMailPlaner);
 
+    // co to ????
     router.post('/zapis_kosztow_dodatkowych',connections.zapisKosztowDodatkowych);
     router.post('/zapis_kosztow_dodatkowych_zamowienia',connections.zapisKosztowDodatkowychZamowienia);
     router.post('/addKosztDodatkowy',connections.postKoszty);
