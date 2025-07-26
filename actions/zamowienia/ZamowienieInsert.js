@@ -51,10 +51,17 @@ await save({daneZamowienia}).then(res=>{
               ksiegowosc = {...ksiegowosc, zamowienie_id} 
               faktury = faktury.map((obj) => {return{...obj, zamowienie_id} })
 
-      
+   
             // return "OK"
+}).catch((er) => {
+  // błąd w zapisie daneZamowienie powoduje przekazanie error
+
+  return "error"
 }).then(x =>{
 
+
+if(x!="error"){
+//jeśli nie ma error to zapisuj dalej, a jeśli będzie to zwróć następny error
 
 
   for (let produkt of produkty) {
@@ -217,7 +224,15 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
     return data
   })
   .then((data) => res.status(201).json(data));
-})
+}else return   "error"
+
+}
+
+)
+.then((x) => {
+
+  if(x=="error") {  res.status(201).json("error");}
+});
 
 }
 
@@ -229,7 +244,8 @@ const save = ({daneZamowienia}) =>{
   
   connection.execute(sql, dane, (err, results) => {
     if (err) {
-      throw err;
+      // throw err;
+      reject(err)
     } else {
       resolve(results.insertId);
     }
