@@ -113,7 +113,7 @@ for (let fragment of fragmenty.filter(x =>  x.delete != true)) {
 
 for (let opr of oprawa.filter(x =>  x.delete != true)) {
   var sql =  "INSERT INTO artdruk.zamowienia_oprawa (id,zamowienie_id,produkt_id,oprawa,naklad,bok_oprawy,data_spedycji,uwagi,wersja,data_czystodrukow,indeks) values (?,?,?,?,?,?,?,?,?,?,?); ";
-  let dane = [opr.id ,opr.zamowienie_id,opr.produkt_id,opr.oprawa,opr.naklad,opr.bok_oprawy,opr.data_spedycji,opr.uwagi,opr.wersja,opr.data_czystodrukow,opr.indeks]
+  let dane = [opr.id ,opr.zamowienie_id,opr.produkt_id,opr.oprawa,opr.naklad,opr.bok_oprawy,ifNoDateSetNull_exec(opr.data_spedycji),opr.uwagi,opr.wersja,ifNoDateSetNull_exec(opr.data_czystodrukow),opr.indeks]
 
   promises.push(     new Promise((resolve, reject) => {
     connection.execute(sql,dane, (err, results) => {
