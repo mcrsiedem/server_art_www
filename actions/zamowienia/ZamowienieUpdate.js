@@ -66,62 +66,56 @@ connection.execute(sql, dane,function (err, result) {       if (err){connection.
 
 
 //---------------- produkty
+ 
+
 for(let row of produkty.filter(x => x.update == true && x.insert != true) ){
-  var sql =   "update  artdruk.zamowienia_produkty set  id = " + row.id+ ", zamowienie_id = " + row.zamowienie_id+ ", nazwa = '" + row.nazwa+ "', opiekun_zamowienia_id = " + row.opiekun_zamowienia_id+ ", uwagi = '" + row.uwagi+ "', stan = " + row.stan+ ", status = " + row.status+ ", etap = " + row.etap+ ", typ = '" + row.typ+ "', ilosc_stron = '" + row.ilosc_stron+ "', format_x = '" + row.format_x+ "', format_y = '" + row.format_y+ "', oprawa = '" + row.oprawa+ "', naklad = '" + row.naklad+ "',  indeks = " + row.indeks+ " where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+  let dane =   [row.id,row.zamowienie_id,row.nazwa,row.opiekun_zamowienia_id,row.uwagi,row.stan,row.status,row.etap,row.typ,row.ilosc_stron,row.format_x,row.format_y,row.oprawa,row.naklad,row.indeks,row.global_id]
+  
+  var sql =   "update  artdruk.zamowienia_produkty set  id =?, zamowienie_id =?, nazwa =?, opiekun_zamowienia_id =?, uwagi =?, stan =?, status =?, etap =?, typ =?, ilosc_stron =?, format_x =?, format_y =?, oprawa =?, naklad =?,  indeks =? where global_id =?"
+  connection.execute(sql,dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
   }
 
 
-    for(let row of produkty.filter(x => x.delete == true && x.insert != true) ){
-        var sql =   "DELETE from artdruk.zamowienia_produkty where global_id=" + row.global_id;
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
-        }
+    // for(let row of produkty.filter(x => x.delete == true && x.insert != true) ){
+    //     let dane = [row.global_id]
+    //     var sql =   "DELETE from artdruk.zamowienia_produkty where global_id=?";
+    //     connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+    //     }
 
   
 //---------------- elementy
 for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
-  var sql =   "update  artdruk.zamowienia_elementy set  id = " + element.id+ ", zamowienie_id = " + element.zamowienie_id+ ", produkt_id = " + element.produkt_id+ ", nazwa = '" + element.nazwa+ "', typ = " + element.typ+ ", ilosc_stron = " + element.ilosc_stron+ ", format_x = '" + element.format_x+ "', format_y = '" + element.format_y+ "', papier_id = " + element.papier_id+ ", papier_postac_id = " + element.papier_postac_id+ ", naklad = " + element.naklad+ ", stan = " + element.stan+ ", status = " + element.status+ ", etap = " + element.etap+ ", info = '" + element.info+ "', uwagi = '" + element.uwagi+ "' where global_id = " + element.global_id + ""
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+
+  let dane =   [element.id,element.zamowienie_id,element.produkt_id,element.nazwa,element.typ,element.ilosc_stron,element.format_x,element.format_y,element.papier_id,element.papier_postac_id,element.naklad,element.stan,element.status,element.etap,element.info,element.uwagi,element.global_id]
+
+  var sql =   "update  artdruk.zamowienia_elementy set  id =?, zamowienie_id =?, produkt_id =?, nazwa =?, typ =?, ilosc_stron =?, format_x =?, format_y =?, papier_id =?, papier_postac_id =?, naklad =?, stan =?, status =?, etap =?, info =?, uwagi =? where global_id =?"
+  // var sql =   "update  artdruk.zamowienia_elementy set  id = " + element.id+ ", zamowienie_id = " + element.zamowienie_id+ ", produkt_id = " + element.produkt_id+ ", nazwa = '" + element.nazwa+ "', typ = " + element.typ+ ", ilosc_stron = " + element.ilosc_stron+ ", format_x = '" + element.format_x+ "', format_y = '" + element.format_y+ "', papier_id = " + element.papier_id+ ", papier_postac_id = " + element.papier_postac_id+ ", naklad = " + element.naklad+ ", stan = " + element.stan+ ", status = " + element.status+ ", etap = " + element.etap+ ", info = '" + element.info+ "', uwagi = '" + element.uwagi+ "' where global_id = " + element.global_id + ""
+  connection.execute(sql, dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
   }
 
   for(let row of elementy.filter(x => x.insert == true && x.delete != true) ){
-    var sql =   "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,papier_postac_id,naklad,info,uwagi,stan,status,etap,tytul,papier_info,indeks) "+
-    "values (" + row.id + "," + row.zamowienie_id + "," + row.produkt_id + ",'" + row.nazwa + "'," + row.typ + ",'" + row.ilosc_stron + "','" + row.kolory + "','" + row.format_x + "','" + row.format_y + "'," + row.papier_id + "," + row.papier_postac_id + "," + row.naklad + ",'" + row.info + "','" + row.uwagi + "'," + row.stan + "," + row.status + "," + row.etap + ",'" + row.tytul + "','" + row.papier_info + "','" + row.indeks + "'); ";
-    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+    let dane =[row.id,row.zamowienie_id,row.produkt_id,row.nazwa,row.typ,row.ilosc_stron,row.kolory,row.format_x,row.format_y,row.papier_id,row.papier_postac_id,row.naklad,row.info,row.uwagi,row.stan,row.status,row.etap ,row.tytul,row.papier_info,row.indeks]
+
+    var sql =   "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,papier_postac_id,naklad,info,uwagi,stan,status,etap,tytul,papier_info,indeks) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+    connection.execute(sql,dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
     }
 
             //--
             if(technologieID !=null && technologieID.length > 0  ){
               for ( let tech_id of technologieID){
                     for(let row of elementy.filter(x => x.insert == true && x.delete != true) ){
-                      var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,papier_postac_id,naklad,uwagi,stan,status,etap,indeks) "+
-                      "values (" 
-                      + row.id + "," 
-                      + row.zamowienie_id + "," 
-                      + tech_id.technologia_id + "," 
-                      + row.produkt_id + ",'" 
-                      + row.nazwa + "'," 
-                      + row.typ + "," 
-                      + row.ilosc_stron + "," 
-                      + row.format_x + "," 
-                      + row.format_y + "," 
-                      + row.papier_id + "," 
-                      + row.papier_postac_id + "," 
-                      + row.naklad + ",'" 
-                      + row.uwagi + "'," 
-                      + row.stan + "," 
-                      + row.status + "," 
-                      + row.etap + "," 
-                      + row.indeks + "); ";
-                          connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+                      let dane=[row.id,row.zamowienie_id,tech_id.technologia_id,row.produkt_id,row.nazwa,row.typ,row.ilosc_stron,row.format_x,row.format_y,row.papier_id,row.papier_postac_id,row.naklad,row.uwagi,row.stan,row.status,row.etap,row.indeks]
+                      var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,papier_postac_id,naklad,uwagi,stan,status,etap,indeks) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+                          connection.execute(sql, dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
                           }
               }
             }
             //----
 
     for(let element of elementy.filter(x => x.delete == true && x.insert != true) ){
-        var sql =   "DELETE from artdruk.zamowienia_elementy where global_id=" + element.global_id;
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+      dane=[element.global_id]
+        var sql =   "DELETE from artdruk.zamowienia_elementy where global_id=?";
+        connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
         }
 //-------------- fragmenty
 
