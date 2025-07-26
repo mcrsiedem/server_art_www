@@ -7,7 +7,7 @@ const ifNoDateSetNull_exec = (data) =>{
     if(data == '' ^ data == null) {
       return null
     } else {
-      return ""+data+""
+      return data
     }
     
     }

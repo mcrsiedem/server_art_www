@@ -1,5 +1,6 @@
 const connection = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
+const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
 
 
 
@@ -31,25 +32,31 @@ const zamowienieUpdate = (req,res) =>{
 
 
 if( daneZamowienia.update == true){
-var sql =   "update  artdruk.zamowienia set isbn='" + daneZamowienia.isbn + "', nr_zamowienia_klienta='" + daneZamowienia.nr_zamowienia_klienta + "',  kod_pracy='" + daneZamowienia.kod_pracy + "', nr_stary='" + daneZamowienia.nr_stary + "', nr=" + daneZamowienia.nr + ",  rok = '" + daneZamowienia.rok + "',firma_id=" + daneZamowienia.firma_id+ ",klient_id='" + daneZamowienia.klient_id + "',tytul='" + daneZamowienia.tytul + "',data_przyjecia=" +ifNoDateSetNull( daneZamowienia.data_przyjecia) + ",data_materialow=" +ifNoDateSetNull(daneZamowienia.data_materialow ) + ",data_spedycji=" + ifNoDateSetNull(daneZamowienia.data_spedycji ) + ",opiekun_id='" + daneZamowienia.opiekun_id + "',stan=" + daneZamowienia.stan + ",status=" + daneZamowienia.status + ",etap=" + daneZamowienia.etap + ",uwagi='" + daneZamowienia.uwagi + "',etap='" + daneZamowienia.etap + "',waluta_id='" + daneZamowienia.waluta_id + "',vat_id='" + daneZamowienia.vat_id + "',przedplata='" + daneZamowienia.przedplata + "',cena='" + daneZamowienia.cena + "',wartosc_zamowienia='" + daneZamowienia.wartosc_zamowienia + "',termin_platnosci='" + daneZamowienia.termin_platnosci + "',fsc='" + daneZamowienia.fsc + "',skonto='" + daneZamowienia.skonto + "',nr_kalkulacji='" + daneZamowienia.nr_kalkulacji + "' where id = '" + daneZamowienia.id + "'"
-connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+
+let dane = [ daneZamowienia.isbn,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.kod_pracy,daneZamowienia.nr_stary,daneZamowienia.nr,daneZamowienia.rok,daneZamowienia.firma_id,daneZamowienia.klient_id,daneZamowienia.tytul,ifNoDateSetNull_exec(daneZamowienia.data_przyjecia),ifNoDateSetNull_exec(daneZamowienia.data_materialow),ifNoDateSetNull_exec(daneZamowienia.data_spedycji),daneZamowienia.opiekun_id,daneZamowienia.stan,daneZamowienia.status,daneZamowienia.etap,daneZamowienia.uwagi,daneZamowienia.etap,daneZamowienia.waluta_id,daneZamowienia.vat_id,daneZamowienia.przedplata,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.id]
+
+var sql =   "update  artdruk.zamowienia set isbn=?, nr_zamowienia_klienta=?,  kod_pracy=?, nr_stary=?, nr=?,  rok =?,firma_id=?,klient_id=?,tytul=?,data_przyjecia=?,data_materialow=?,data_spedycji=?,opiekun_id=?,stan=?,status=?,etap=?,uwagi=?,etap=?,waluta_id=?,vat_id=?,przedplata=?,cena=?,wartosc_zamowienia=?,termin_platnosci=?,fsc=?,skonto=?,nr_kalkulacji=? where id =?"
+connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
 
 if(daneZamowienia.status > 2  ){
-  // if(daneZamowienia.status > 2 && daneZamowienia.status < 6 ){
-var sql =   "call artdruk.zamowienie_set_alert(" + daneZamowienia.id + ")"
-connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+  let dane = [daneZamowienia.id]
+var sql =   "call artdruk.zamowienie_set_alert(?)"
+connection.execute(sql,dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
 }
 if(daneZamowienia.status == 2 ){
-  var sql =   "call artdruk.zamowienie_set_null_alert(" + daneZamowienia.id + ")"
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+  let dane = [daneZamowienia.id]
+  var sql =   "call artdruk.zamowienie_set_null_alert(?)"
+  connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
   }
 
 }
-// console.log(ksiegowosc)
+
 
 if( ksiegowosc.update == true){
-var sql =   "update  artdruk.zamowienia_ksiegowosc set koszty_status=" + ksiegowosc.koszty_status + ", koszty_wartosc='" + ksiegowosc.koszty_wartosc + "',  faktury_status=" + ksiegowosc.faktury_status + ", faktury_wartosc='" + ksiegowosc.faktury_wartosc + "', faktury_naklad=" + ksiegowosc.faktury_naklad + ",  info = '" + ksiegowosc.info + "' where global_id = '" + ksiegowosc.global_id + "'"
-connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+  let dane = [ksiegowosc.koszty_status,ksiegowosc.koszty_wartosc,ksiegowosc.faktury_status,ksiegowosc.faktury_wartosc,ksiegowosc.faktury_naklad,ksiegowosc.info,ksiegowosc.global_id]
+
+var sql =   "update  artdruk.zamowienia_ksiegowosc set koszty_status=?, koszty_wartosc=?,  faktury_status=?, faktury_wartosc=?, faktury_naklad=?,  info =? where global_id = ?"
+connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
 
 
 }
