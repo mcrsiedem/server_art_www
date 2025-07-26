@@ -27,10 +27,6 @@ const zamowienieUpdate = (req,res) =>{
 // console.log("SaveAs: ", req.body[0].saveAs)
 
 
-var sql = "begin";
-connection.query(sql, function (err, result) {
-if (err) res.status(203).json(err)  });
-
 
 
 
@@ -242,18 +238,10 @@ if(historiaZamowienia !=null){
     
 
 
-  connection.query("commit ", function (err, result) {
-  });
 
 
 odpowiedz = [daneZamowienia,produkty,elementy,fragmenty,oprawa,procesyElementow]
 res.status(201).json(odpowiedz);
-
-// setTimeout(()=>{
-//   res.status(201).json(odpowiedz);
-//   console.log("Już")
-// }, 3000);
-
 
 }
 

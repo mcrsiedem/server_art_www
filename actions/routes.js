@@ -5,8 +5,6 @@ const connections = require('./connections');
 const { verifyToken } = require("./logowanie/verifyToken");
 const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
 
-// const { zamowienieInsertDane } = require("./zapis/ZamowienieInsertDane");
-// const { zamowienieInsertParametry } = require("./zapis/ZamowienieInsertParametry");
 const { zamowienieUpdate } = require("./zamowienia/ZamowienieUpdate");
 
 
@@ -42,14 +40,10 @@ const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 
     // zamówienia
-    // router.post('/zamowienieInsertDane/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertDane); // dodaje nowe zmówienie
     router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_przyjmij'), zamowienieInsertNumer); // dodaje nowe zmówienie
-    // router.post('/zamowienieInsertParametry/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsertParametry); // dodaje nowe zmówienie
     router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
+    router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdate); // aktualizacja zamowienia
 
-
-
-    router.put('/zapiszZamowienieUpdate/:token',verifyToken, zamowienieUpdate); // aktualizacja zamowienia
     router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:token',verifyToken,connections.getZamowienia);
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
