@@ -1,8 +1,16 @@
+const { DecodeToken } = require("../logowanie/DecodeToken");
 const connection = require("../mysql");
 
 const zakonczWykonanie = (req, res) => {
   let wykonanieRow = req.body;
   let technologia_id = wykonanieRow.technologia_id;
+
+  const zamowienie_id = wykonanieRow.zamowienie_id;
+    const nazwa = wykonanieRow.nazwa;
+    const stary_status = wykonanieRow.stary_status;
+    const id_wykonania = wykonanieRow.id;
+    const token = req.params['token']
+       let ID_SPRAWCY =  DecodeToken(token).id;
 
      let global_id_next;
      let next_proces_indeks = parseInt(wykonanieRow.proces_indeks)+1
@@ -128,22 +136,18 @@ connection.query(sql, function (err, result) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
 }
+
+
+
+    let STATUSY = {1:"NIEDOSTĘPNE",2:"OCZEKUJĄCE",3:"W TRAKCIE",4:"ZAKOŃCZONE"}
+    let data=[ID_SPRAWCY,nazwa,"Zmiana statusu wykonania ID:"+ id_wykonania+" z "+STATUSY[stary_status]+" na "+STATUSY[wykonanieRow.status],zamowienie_id]
+    var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
+    connection.execute(sql,data, function (err, result) {    
+           if (err) throw err;   })
+
+
 
 
     var sql = "commit"

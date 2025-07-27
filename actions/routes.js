@@ -96,10 +96,10 @@ const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
     router.post('/insertWydaniePapieru_status/:token',verifyToken,connections.insertWydaniePapieru_status);
     router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connections.insertWydaniePapieru_status_multiselect);
     
-    router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny);
+    router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny); //historia
     router.put('/zakoncz_oprawe/:token',verifyToken,connections.zakoncz_oprawe);
     router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
-    router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie);
+    router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie); //historia
     router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
     router.put('/zamowieniaInfo/:token',verifyToken,ZamowieniaInfo);
     router.put('/zamowieniaInfoGrupy/:token',verifyToken,ZamowieniaInfoGrupy);
