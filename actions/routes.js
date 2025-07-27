@@ -34,6 +34,7 @@ const { uprawnienia } = require('./uprawnienia/getUprawnienia');
 const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
 const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
 const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWykonan');
+const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
 
 
 
@@ -89,9 +90,13 @@ const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWyk
     router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);
     router.get('/nadkomplety/:token',verifyToken,connections.getNadkomplety);
     
-    router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,updatePlikiEtapGrupyWykonan); // hitosria
-    router.put('/updatePlikiEtapZamowienia/:token',verifyToken,connections.updatePlikiEtapZamowienia);
-    router.put('/updateZamowienieEtap/:token',verifyToken,connections.updateZamowienieEtap);
+
+    // pliki 
+    router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,updatePlikiEtapGrupyWykonan); // historia
+    router.put('/updatePlikiEtapZamowienia/:token',verifyToken,updatePlikiEtapZamowienia); // historia
+    //-----------------------------------------------------------------------------------
+
+
     router.put('/updateHistoria/:token',verifyToken,connections.updateHistoria);
     router.put('/updateWydaniePapieru_status/:token',verifyToken,connections.updateWydaniePapieru_status);
     router.post('/insertWydaniePapieru_status/:token',verifyToken,connections.insertWydaniePapieru_status);

@@ -5,15 +5,15 @@ const { nazwaElementu } = require("../nazwy/nazwaElementu");
 const { nazwaEtapPlikow } = require("../nazwy/nazwaEtapPlikow");
 
 
- const updatePlikiEtapGrupyWykonan = async (req,res)=>{
+ const updatePlikiEtapZamowienia = async (req,res)=>{
   
-    //aktualizacja etapu plikow z widoku grupy wykonan tj z maszyn
+    //aktualizacja etapu plikow z widoku zamówień 
     const zamowienie_id = req.body.zamowienie_id;
     const element_id = req.body.element_id;
     const etap= req.body.etap;
-    const global_id_grupa_row= req.body.global_id_grupa_row;
     const stary_etap= req.body.stary_etap;
-    
+    const global_id_pliki_row= req.body.global_id_pliki_row;
+
        const token = req.params['token']
        let ID_SPRAWCY =  DecodeToken(token).id;
 
@@ -23,18 +23,25 @@ let save = () =>{
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
            if (err) throw err; 
-        console.log("zapis")
            resolve("OK")
         })
+
+
 })
 }
 let save2 = () =>{ 
     return new Promise((resolve,reject)=>{
-    var sql =   "select artdruk.update_pliki_etap_grupy_wykonan (" + zamowienie_id+ "," + element_id+ "," + global_id_grupa_row+ "," + etap+ ")"
+
+     var sql =   "select artdruk.update_pliki_etap_zamowienia (" + zamowienie_id+ "," + element_id+ "," + global_id_pliki_row+ "," + etap+ ")"
     connection.query(sql, function (err, result) {
     if (err) throw err;
     resolve("OK")
+
+
 })
+
+
+
 })
 }
 
@@ -45,7 +52,10 @@ let min
         var sql = "select * from artdruk.view_zamowienia_pliki where zamowienie_id="+zamowienie_id;
         connection.query(sql, function (err, doc) {
         if (err) throw err;
+
          min = Math.min(...doc.filter(x=> x.zamowienie_id == zamowienie_id ).map((f) => f.etap)) 
+        
+
 
         resolve(min)
     }
@@ -57,7 +67,8 @@ let min
 
 let  save4 = (min) => { 
     return new Promise((resolve,reject)=>{
-       
+       console.log("min: "+min)
+       console.log("zamowienie_id: "+zamowienie_id)
     var sql = "update artdruk.zamowienia set etap =" +min+ " where id ="+zamowienie_id;
     connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -71,12 +82,14 @@ let res1 = await  save()
 let res2 = await  save2()
 let min = await  save3()
 let res4 = await  save4(min)
+
  res.status(200).json(min);
 }
 
 
 module.exports = {
-    updatePlikiEtapGrupyWykonan
+    updatePlikiEtapZamowienia
     
 }
  
+
