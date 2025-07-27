@@ -88,7 +88,7 @@ const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
     router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);
     router.get('/nadkomplety/:token',verifyToken,connections.getNadkomplety);
     
-    router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,connections.updatePlikiEtapGrupyWykonan);
+    router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,connections.updatePlikiEtapGrupyWykonan); // hitosria
     router.put('/updatePlikiEtapZamowienia/:token',verifyToken,connections.updatePlikiEtapZamowienia);
     router.put('/updateZamowienieEtap/:token',verifyToken,connections.updateZamowienieEtap);
     router.put('/updateHistoria/:token',verifyToken,connections.updateHistoria);
@@ -97,7 +97,7 @@ const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
     router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connections.insertWydaniePapieru_status_multiselect);
     
     router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny); //historia
-    router.put('/zakoncz_oprawe/:token',verifyToken,connections.zakoncz_oprawe);
+    router.put('/zakoncz_oprawe/:token',verifyToken,connections.zakoncz_oprawe); // historia
     router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
     router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie); //historia
     router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
