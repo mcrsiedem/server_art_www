@@ -33,6 +33,7 @@ const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUp
 const { uprawnienia } = require('./uprawnienia/getUprawnienia');
 const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
 const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
+const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWykonan');
 
 
 
@@ -88,7 +89,7 @@ const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
     router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);
     router.get('/nadkomplety/:token',verifyToken,connections.getNadkomplety);
     
-    router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,connections.updatePlikiEtapGrupyWykonan); // hitosria
+    router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,updatePlikiEtapGrupyWykonan); // hitosria
     router.put('/updatePlikiEtapZamowienia/:token',verifyToken,connections.updatePlikiEtapZamowienia);
     router.put('/updateZamowienieEtap/:token',verifyToken,connections.updateZamowienieEtap);
     router.put('/updateHistoria/:token',verifyToken,connections.updateHistoria);
