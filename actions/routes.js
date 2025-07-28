@@ -85,9 +85,9 @@ const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia
     router.get('/lista-papierow-wykonczenia/:token',verifyToken,connections.getListaPapierowWykonczenia);
     router.get('/lista-papierow-powleczenie/:token',verifyToken,connections.getListaPapierowPowleczenie);
     
-    router.put('/updatePaper/:token',verifyToken,connections.updatePapiery);
-    router.put('/updatePaperNazwy/:token',verifyToken,connections.updatePapieryNazwy);
-    router.put('/updatePaperGrupa/:token',verifyToken,connections.updatePapieryGrupa);
+    router.put('/updatePaper/:token',verifyTokenParams('papier_zapis'),connections.updatePapiery);
+    router.put('/updatePaperNazwy/:token',verifyTokenParams('papier_zapis'),connections.updatePapieryNazwy);
+    router.put('/updatePaperGrupa/:token',verifyTokenParams('papier_zapis'),connections.updatePapieryGrupa);
     router.get('/nadkomplety/:token',verifyToken,connections.getNadkomplety);
     
 
