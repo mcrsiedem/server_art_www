@@ -35,6 +35,7 @@ const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
 const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
 const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWykonan');
 const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
+const { zamowieniePobierzPojedyncze } = require('./zamowienia/ZamowieniePobierzPojedyncze');
 
 
 
@@ -46,7 +47,7 @@ const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia
     router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
     router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdate); // aktualizacja zamowienia
 
-    router.get('/parametry/:idZamowienia/:token',verifyToken,connections.getParametry); // pojedyncze zamówienie do edycji
+    router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:token',verifyToken,connections.getZamowienia);
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
