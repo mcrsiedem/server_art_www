@@ -22,7 +22,7 @@ const { zapiszTechnologieInsertGrupyHarmonogram } = require("./zapis/ZapiszTechn
 const { zapiszTechnologieInsertGrupyOprawa } = require("./zapis/ZapiszTechnologieInsertGrupyOprawa");
 const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
-const { zamowienieInsertNumer } = require("./zamowienia/zamowienieInsertNumer");
+
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
 const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
 const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
@@ -39,6 +39,7 @@ const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzP
 const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWszystkie');
 const { klienciPobierzWszystkich } = require('./klienci/KlienciPobierzWszystkich');
 const { zamowienieUpdate } = require('./zamowienia/ZamowienieUpdate');
+const { zamowienieInsertNumer } = require('./zamowienia/zamowienieInsertNumer');
 
 
 
