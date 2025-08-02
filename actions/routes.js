@@ -37,6 +37,8 @@ const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWyk
 const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
 const { zamowieniePobierzPojedyncze } = require('./zamowienia/ZamowieniePobierzPojedyncze');
 const { zamowieniePobierzWszystkie } = require('./zamowienia/ZamowieniePobierzWszystkie');
+const { klienciPobierzWszystkich } = require('./klienci/KlienciPobierzWszystkich');
+
 
 
 
@@ -50,7 +52,7 @@ const { zamowieniePobierzWszystkie } = require('./zamowienia/ZamowieniePobierzWs
 
     router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:token',verifyToken,zamowieniePobierzWszystkie);
-    
+
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
     router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
@@ -135,7 +137,8 @@ const { zamowieniePobierzWszystkie } = require('./zamowienia/ZamowieniePobierzWs
     
     router.get('/lista-userow',connections.getUsersM);
 // end
-router.get('/lista-klientow/:token',verifyToken,connections.getKlienci);
+// router.get('/lista-klientow/:token',verifyToken,connections.getKlienci);
+router.get('/lista-klientow/:token',verifyToken,klienciPobierzWszystkich);
 
 router.get('/lista-produktow',connections.getProdukty);
 router.post('/klienci',connections.postKlient);

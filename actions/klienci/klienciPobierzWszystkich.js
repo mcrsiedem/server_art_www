@@ -8,19 +8,17 @@ const dataStore = require('../uprawnienia/dataStore');
 
 
 // nowy zapis zamówienia - dane i parametry w jednym
-const zamowieniePobierzWszystkie =(req,res)=>{
+const klienciPobierzWszystkich =(req,res)=>{
         const token = req.params['token']
-        const orderby = req.params['orderby']
         let results
-        let biala_lista = ["nr asc","naklad","ilosc_stron","data_przyjecia","data_spedycji","oprawa_id"]
-        let id, asystent1, asystent2,zamowienia_wszystkie,dostep;
+        let id,klienci_wszyscy;
 
 
              jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
                 if(decoded){
-                dostep = true
+       
                 id = decoded.id
-                zamowienia_wszystkie = dataStore.checkPrivileges(decoded.id,"zamowienia_wszystkie")
+                klienci_wszyscy = dataStore.checkPrivileges(decoded.id,"klienci_wszyscy")
 
                 }
                 if(err){
@@ -31,12 +29,11 @@ const zamowieniePobierzWszystkie =(req,res)=>{
 
              })
 
-             if(biala_lista.includes(orderby)){
+    
 
 
-                    if(zamowienia_wszystkie){
-                        var sql =
-                            "select * from artdruk.view_zamowienia where final is null ORDER BY " + orderby;
+                    if(klienci_wszyscy){
+                     var sql  = "select * from artdruk.view_klienci ORDER BY firma_nazwa ASC";
                         connection.execute(sql, function (err, doc) {
                             results = doc
                             if (err) throw err;
@@ -46,7 +43,7 @@ const zamowieniePobierzWszystkie =(req,res)=>{
                     }else {
                     
                         var sql =
-                            "select * from artdruk.view_zamowienia where (opiekun_id ="+ id +" or asystent1 ="+ id +"  or asystent1 ="+ id +")  and final is null ORDER BY " + orderby;
+                            "select * from artdruk.view_klienci where (opiekun_id ="+ id +" or asystent1 ="+ id +"  or asystent1 ="+ id +")  ORDER BY firma_nazwa ASC" ;
                         connection.execute(sql, function (err, doc) {
                             results = doc
                             if (err) throw err;
@@ -55,10 +52,7 @@ const zamowieniePobierzWszystkie =(req,res)=>{
 
                     }
 
-             }else{
-                            res.status(200).json(results)
-
-             }
+ 
 
 
 
@@ -69,7 +63,7 @@ const zamowieniePobierzWszystkie =(req,res)=>{
 
 
 module.exports = {
-  zamowieniePobierzWszystkie
+  klienciPobierzWszystkich
     
 }
  

@@ -612,14 +612,14 @@ class Connections {
     });
     }
 
-    getKlienci(req,res){
+    // getKlienci(req,res){
    
-        var sql  = "select * from artdruk.view_klienci ORDER BY firma_nazwa ASC";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        res.status(200).json(doc);
-    });
-    }
+    //     var sql  = "select * from artdruk.view_klienci ORDER BY firma_nazwa ASC";
+    //     connection.query(sql, function (err, doc) {
+    //     if (err) throw err;
+    //     res.status(200).json(doc);
+    // });
+    // }
 
     getProdukty(req,res){
    
