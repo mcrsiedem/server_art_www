@@ -32,7 +32,7 @@ const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
 const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUpdate_restore');
 const { uprawnienia } = require('./uprawnienia/getUprawnienia');
 const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
-const { zamowienieInsert } = require('./zamowienia/zamowienieInsert');
+
 const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWykonan');
 const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
 const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzPojedyncze');
@@ -40,6 +40,8 @@ const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWs
 const { klienciPobierzWszystkich } = require('./klienci/KlienciPobierzWszystkich');
 const { zamowienieUpdate } = require('./zamowienia/ZamowienieUpdate');
 const { zamowienieInsertNumer } = require('./zamowienia/zamowienieInsertNumer');
+const { zamowienieInsert } = require('./zamowienia/zamowienieInsert');
+
 
 
 
