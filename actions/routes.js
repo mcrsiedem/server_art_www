@@ -5,7 +5,7 @@ const connections = require('./connections');
 const { verifyToken } = require("./logowanie/verifyToken");
 const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
 
-const { zamowienieUpdate } = require("./zamowienia/ZamowienieUpdate");
+
 
 
 const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
@@ -22,7 +22,7 @@ const { zapiszTechnologieInsertGrupyHarmonogram } = require("./zapis/ZapiszTechn
 const { zapiszTechnologieInsertGrupyOprawa } = require("./zapis/ZapiszTechnologieInsertGrupyOprawa");
 const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
-const { zamowienieInsertNumer } = require("./zamowienia/ZamowienieInsertNumer");
+const { zamowienieInsertNumer } = require("./zamowienia/zamowienieInsertNumer");
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
 const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
 const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
@@ -32,12 +32,13 @@ const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
 const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUpdate_restore');
 const { uprawnienia } = require('./uprawnienia/getUprawnienia');
 const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
-const { zamowienieInsert } = require('./zamowienia/ZamowienieInsert');
+const { zamowienieInsert } = require('./zamowienia/zamowienieInsert');
 const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWykonan');
 const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
-const { zamowieniePobierzPojedyncze } = require('./zamowienia/ZamowieniePobierzPojedyncze');
-const { zamowieniePobierzWszystkie } = require('./zamowienia/ZamowieniePobierzWszystkie');
+const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzPojedyncze');
+const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWszystkie');
 const { klienciPobierzWszystkich } = require('./klienci/KlienciPobierzWszystkich');
+const { zamowienieUpdate } = require('./zamowienia/ZamowienieUpdate');
 
 
 
