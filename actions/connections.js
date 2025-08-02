@@ -17,7 +17,7 @@ class Connections {
         const login = req.params['login']
         const haslo = req.params['haslo']
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw from artdruk.users where login =? and haslo = ?;";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,zastepca1,zastepca2 from artdruk.users where login =? and haslo = ?;";
 
         connection.execute(sql, [login,haslo], (err, result) => {
     
@@ -54,6 +54,8 @@ class Connections {
                         const manage_inne = result[0].manage_inne;
                         const procesor_domyslny = result[0].procesor_domyslny;
                         const uprawnienia_ustaw = result[0].uprawnienia_ustaw;
+                        const zastepca1 = result[0].zastepca1;
+                        const zastepca2 = result[0].zastepca2;
                         
                         
             
@@ -69,7 +71,8 @@ class Connections {
                             papier_zapis,papier_usun,
                             procesy_edycja,
                             zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
-                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw
+                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,zastepca1,zastepca2
+                            
                         }
      
                               
@@ -571,16 +574,6 @@ class Connections {
     });
     }
 
-    //pobierz zamowienia do głownego widoku
-    getZamowienia(req,res){
-        const orderby = req.params['orderby']
-        var sql  = "select * from artdruk.view_zamowienia where final is null ORDER BY "+orderby
-        // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
-        connection.query(sql, function (err, doc) {
-        if (err) throw err;
-        res.status(200).json(doc);
-    });
-    }
 
 
             getZamowieniaKalendarz(req,res){
@@ -605,18 +598,6 @@ class Connections {
          }
 
 
-        //     uprawnienia(req,res){
-    
-
-        //      const procesor_id = req.params['procesor_id']
-        //     const token = req.params['token']
-
-        //      console.log(dataStore.getMyData())
-
-
-        //         res.status(200).json("OK");
-     
-        //  }
 
 
 
