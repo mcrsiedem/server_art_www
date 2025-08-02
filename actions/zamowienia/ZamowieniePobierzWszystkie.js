@@ -13,15 +13,15 @@ const zamowieniePobierzWszystkie =(req,res)=>{
         const orderby = req.params['orderby']
         let results
         let biala_lista = ["nr asc","naklad","ilosc_stron","data_przyjecia","data_spedycji","oprawa_id"]
-        let id, zastepca1, zastepca2,zamowienia_wszystkie,dostep;
+        let id, asystent1, asystent2,zamowienia_wszystkie,dostep;
 
 
              jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
                 if(decoded){
                 dostep = true
                 id = decoded.id
-                zastepca1 = decoded.zastepca1 | 0
-                zastepca2 = decoded.zastepca2 | 0  
+                asystent1 = decoded.asystent1 | 0
+                asystent2 = decoded.asystent2 | 0  
                 zamowienia_wszystkie = dataStore.checkPrivileges(decoded.id,"zamowienia_wszystkie")
 
                 }
@@ -48,7 +48,7 @@ const zamowieniePobierzWszystkie =(req,res)=>{
                     }else {
                     
                         var sql =
-                            "select * from artdruk.view_zamowienia where (opiekun_id ="+ id +" or zastepca1 ="+ id +"  or zastepca1 ="+ id +")  and final is null ORDER BY " + orderby;
+                            "select * from artdruk.view_zamowienia where (opiekun_id ="+ id +" or asystent1 ="+ id +"  or asystent1 ="+ id +")  and final is null ORDER BY " + orderby;
                         connection.execute(sql, function (err, doc) {
                             results = doc
                             if (err) throw err;
