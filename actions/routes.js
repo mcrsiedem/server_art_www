@@ -36,7 +36,7 @@ const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
 const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWykonan');
 const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
 
-const { klienciPobierzWszystkich } = require('./klienci/KlienciPobierzWszystkich');
+const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich2');
 const { zamowienieUpdate } = require('./zamowienia/ZamowienieUpdate');
 const { zamowienieInsertNumer } = require('./zamowienia/zamowienieInsertNumer');
 const { zamowienieInsert } = require('./zamowienia/zamowienieInsert2');
