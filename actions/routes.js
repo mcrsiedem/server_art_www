@@ -37,8 +37,8 @@ const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWyk
 const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
 
 const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich2');
-const { zamowienieUpdate } = require('./zamowienia/ZamowienieUpdate');
-const { zamowienieInsertNumer } = require('./zamowienia/zamowienieInsertNumer');
+const { zamowienieUpdate } = require('./zamowienia/zamowienieUpdate2');
+const { zamowienieInsertNumer } = require('./zamowienia/zamowienieInsertNumer2');
 const { zamowienieInsert } = require('./zamowienia/zamowienieInsert2');
 const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzPojedyncze2');
 const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWszystkie2');
