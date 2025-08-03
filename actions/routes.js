@@ -41,7 +41,7 @@ const { zamowienieInsertNumer } = require('./zamowienia/zamowienieInsertNumer2')
 const { zamowienieInsert } = require('./zamowienia/zamowienieInsert2');
 const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzPojedyncze2');
 const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWszystkie2');
-const { klienciPobierzWszystkich } = require('./klienci/KlienciPobierzWszystkich2');
+const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich');
 
 
 
