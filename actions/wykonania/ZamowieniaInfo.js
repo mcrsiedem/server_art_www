@@ -11,6 +11,7 @@ let suma_przelotow_druk =0;
 let suma_przelotow_falc =0;
 let suma_przelotow_druk_zakonczone =0;
 let suma_przelotow_falc_zakonczone =0;
+let suma_nakladow =0;
 
 // console.log(zamowienia)
 
@@ -46,7 +47,12 @@ let suma_przelotow_falc_zakonczone =0;
     if (err) throw err
     });
 
-
+ var sql = " SELECT sum(naklad) as naklad FROM artdruk.zamowienia_produkty where zamowienie_id = "+ zamowienie.id 
+ connection.query(sql, function (err, result) {
+  suma_nakladow = suma_nakladow + parseInt(result[0].naklad || 0)
+    // console.log(result[0].przeloty)
+    if (err) throw err
+    });
 
 
 
@@ -57,7 +63,7 @@ let suma_przelotow_falc_zakonczone =0;
 connection.query(sql, function (err, result) {
     if (err) throw err
         // res.status(200).json([suma_przelotow_druk,suma_przelotow_falc,suma_przelotow_druk_zakonczone,suma_przelotow_falc_zakonczone])  
-        res.status(200).json({przeloty_druk:suma_przelotow_druk,przeloty_falc: suma_przelotow_falc, przeloty_druk_zakonczone:suma_przelotow_druk_zakonczone, przeloty_falc_zakonczone:suma_przelotow_falc_zakonczone})  
+        res.status(200).json({przeloty_druk:suma_przelotow_druk,przeloty_falc: suma_przelotow_falc, przeloty_druk_zakonczone:suma_przelotow_druk_zakonczone, przeloty_falc_zakonczone:suma_przelotow_falc_zakonczone,naklad:suma_nakladow})  
 
  })
 
