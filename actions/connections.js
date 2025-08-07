@@ -8,6 +8,7 @@ const dataStore = require('./uprawnienia/dataStore');
 const { DecodeToken } = require("./logowanie/DecodeToken");
 const { nazwaEtapPlikow } = require("./nazwy/nazwaEtapPlikow");
 const { nazwaElementu } = require("./nazwy/nazwaElementu");
+const { exec } = require('child_process');
 
 class Connections {
 
@@ -1227,6 +1228,30 @@ skasujGrupe(req,res){
        if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
+}
+
+
+backup(req,res){
+
+const scriptPath = './mb.sh';
+
+exec(scriptPath, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Błąd podczas wykonywania skryptu: ${error.message}`);
+      // Zwracamy błąd 500, jeśli coś poszło nie tak
+      return res.status(500).json({ error: 'Failed to run script', details: stderr });
+    }
+
+    if (stderr) {
+      console.warn(`Skrypt zwrócił ostrzeżenia: ${stderr}`);
+    }
+
+    console.log(`Skrypt zwrócił: ${stdout}`);
+    // Zwracamy odpowiedź 200 z wynikiem działania skryptu
+    res.status(200).json({ message: 'Script executed successfully', output: stdout });
+  });
+
+
 }
 
 

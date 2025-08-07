@@ -187,4 +187,10 @@ router.delete('/delete_zamowienie/:token',verifyTokenParams('zamowienie_skasuj')
 router.delete('/odblokuj_zamowienie/:token',verifyTokenParams('zamowienie_odblokuj'),connections.odblokujZamowienie);
 
 
+
+
+router.get('/backup/:token',verifyTokenParams('technologia_zapis'),connections.backup);
+
+
+
 module.exports = router;

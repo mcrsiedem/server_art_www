@@ -92,7 +92,6 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
   let dane =   [element.id,element.zamowienie_id,element.produkt_id,element.nazwa,element.typ,element.ilosc_stron,element.format_x,element.format_y,element.papier_id,element.papier_postac_id,element.naklad,element.stan,element.status,element.etap,element.info,element.uwagi,element.global_id]
 
   var sql =   "update  artdruk.zamowienia_elementy set  id =?, zamowienie_id =?, produkt_id =?, nazwa =?, typ =?, ilosc_stron =?, format_x =?, format_y =?, papier_id =?, papier_postac_id =?, naklad =?, stan =?, status =?, etap =?, info =?, uwagi =? where global_id =?"
-  // var sql =   "update  artdruk.zamowienia_elementy set  id = " + element.id+ ", zamowienie_id = " + element.zamowienie_id+ ", produkt_id = " + element.produkt_id+ ", nazwa = '" + element.nazwa+ "', typ = " + element.typ+ ", ilosc_stron = " + element.ilosc_stron+ ", format_x = '" + element.format_x+ "', format_y = '" + element.format_y+ "', papier_id = " + element.papier_id+ ", papier_postac_id = " + element.papier_postac_id+ ", naklad = " + element.naklad+ ", stan = " + element.stan+ ", status = " + element.status+ ", etap = " + element.etap+ ", info = '" + element.info+ "', uwagi = '" + element.uwagi+ "' where global_id = " + element.global_id + ""
   connection.execute(sql, dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
   }
 
@@ -101,6 +100,12 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
 
     var sql =   "INSERT INTO artdruk.zamowienia_elementy (id,zamowienie_id,produkt_id,nazwa,typ,ilosc_stron,kolory,format_x,format_y,papier_id,papier_postac_id,naklad,info,uwagi,stan,status,etap,tytul,papier_info,indeks) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
     connection.execute(sql,dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+
+  var sql2 =    "INSERT INTO artdruk.zamowienia_pliki (id,zamowienie_id,produkt_id,element_id,uwagi,stan,status,etap,indeks) values (?,?,?,?,?,?,?,?,?); ";
+  let dane2 = [    row.id,row.zamowienie_id,row.produkt_id,row.id,row.uwagi,row.stan,row.status,2,row.indeks];
+    connection.execute(sql2,dane2, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
+
+
     }
 
             //--
