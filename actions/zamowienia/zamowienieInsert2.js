@@ -22,6 +22,7 @@ const zamowienieInsert = async (req,res) =>{
   let daneZamowienia = req.body[9]
 
    daneZamowienia = {...daneZamowienia, utworzyl_user_id:  DecodeToken(token).id}
+   ksiegowosc = {...ksiegowosc, koszty_wartosc:"",faktury_wartosc:"",faktury_status:1,koszty_status:1}
 
           if(daneZamowienia.etap<3){
             if(daneZamowienia.stan==1){
