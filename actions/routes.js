@@ -79,6 +79,10 @@ const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich
     router.post('/zapiszTechnologieInsertWykonania/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertWykonania); 
     router.post('/zapiszTechnologieInsertProcesyElementow/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProcesyElementow); 
     router.get('/restoreTechnologia/:zamowienie_id/:token',verifyTokenParams('technologia_zapis'), ZapiszTechnologieUpdate_restore); 
+    
+    // aktualizacja grupy - dodruk arkusza - zmiana parametrów
+    router.post('/aktualizuj_grupe_wykonan/:token',verifyTokenParams('manage_druk'), zapiszTechnologieInsertProcesyElementow); 
+    
 
     router.put('/zapiszTechnologieUpdate/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieUpdate); // aktualizacja zamowienia
     router.get('/technologie/:token',verifyToken,connections.getTechnologie);    
