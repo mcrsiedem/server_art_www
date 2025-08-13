@@ -13,12 +13,11 @@ const aktualizujGrupe = (req, res) => {
   let wykonania = data[2] // różnica miedzy starym czasem a nowym
 
 
-  console.log(rowGrupa)
-
     let val=[rowGrupa_global_id,kierunek,roznica_czasu]
     var sql = "select artdruk.zmien_czas_trwania_grupy_minuty(?,?,?) as procesor_id";
     connection.execute(sql, val ,function (err, result) { if (err) throw err });
 
+    
   // rozepchać inne grupy
   // update grupy
   // update wykonan 
