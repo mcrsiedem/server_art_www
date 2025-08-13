@@ -42,6 +42,7 @@ const { zamowienieInsert } = require('./zamowienia/zamowienieInsert2');
 const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzPojedyncze2');
 const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWszystkie2');
 const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich');
+const { aktualizujGrupe } = require('./grupa/aktualizujGrupe');
 
 
 
@@ -81,7 +82,7 @@ const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich
     router.get('/restoreTechnologia/:zamowienie_id/:token',verifyTokenParams('technologia_zapis'), ZapiszTechnologieUpdate_restore); 
     
     // aktualizacja grupy - dodruk arkusza - zmiana parametrów
-    router.post('/aktualizuj_grupe_wykonan/:token',verifyTokenParams('manage_druk'), zapiszTechnologieInsertProcesyElementow); 
+    router.post('/aktualizuj_grupe_wykonan/:token',verifyTokenParams('manage_druk'), aktualizujGrupe); 
     
 
     router.put('/zapiszTechnologieUpdate/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieUpdate); // aktualizacja zamowienia
