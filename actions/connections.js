@@ -96,8 +96,9 @@ class Connections {
 
             }
     }
+   
     );
-    
+     connection.release();
     }  
 
      isLogged(req,res){
