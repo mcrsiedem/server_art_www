@@ -82,7 +82,6 @@ class Connections {
 
                 var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria) values (?,?,?); ";
                connection.query(sql, [id,imie+ " "+nazwisko,"Logowanie"],function (err, result) {            if (err) throw err;            })
-      
     
                 return res.status(200).json(token)
                 
@@ -98,7 +97,7 @@ class Connections {
     }
    
     );
-     connection.release();
+   
     }  
 
      isLogged(req,res){
