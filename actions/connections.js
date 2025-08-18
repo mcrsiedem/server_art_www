@@ -947,37 +947,30 @@ connection.query(sql, function (err, result) {
 }
 
 zakoncz_oprawe(req,res){
-console.log("tuuuuu")
-    const technologia_id = req.body.technologia_id;
-    const proces_id = req.body.proces_id;
-    const element_id = req.body.element_id;
+// console.log("tuuuuu")
     const grupa_id = req.body.grupa_id;
     const status = req.body.status;
     const grupa_global_id = req.body.global_id;
     const stary_status = req.body.stary_status;
     const zamowienie_id = req.body.zamowienie_id;
+    let info;
 
      let indeks_procesu;
-     let global_id_procesu;
-     let id_procesu;
-     let grupyWykonan =[]
-     let grupyAktualnegoProcesu = []
-
-     let indeks_nastepnego_procesu;
-     let id_nastepnego_procesu;
 const token = req.params['token']
        let ID_SPRAWCY =  DecodeToken(token).id;
  var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status ="+ status +" where global_id ="+grupa_global_id
 connection.query(sql, function (err, result) {
+       info = "OK"
+
     if (err) throw err
  });
 
  
      let STATUSY = {1:"NIEDOSTĘPNE",2:"OCZEKUJĄCE",3:"W TRAKCIE",4:"ZAKOŃCZONE"}
      let data=[ID_SPRAWCY,"Oprawa","Zmiana statusu grupy ID:"+ grupa_id+" z "+STATUSY[stary_status]+" na "+STATUSY[status],zamowienie_id]
-     console.log(data)
+    //  console.log(data)
      var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
-    connection.execute(sql,data, function (err, result) {    
+    connection.execute(sql,data, function (err, result) {  
            if (err) throw err;   })
 
  var sql = "commit";
@@ -987,7 +980,7 @@ connection.query(sql, function (err, result) {
 
 
      
- res.status(200).json(indeks_procesu)  
+ res.status(200).json(info)  
  });
 
  
