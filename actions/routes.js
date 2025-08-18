@@ -64,6 +64,7 @@ const { aktualizujGrupe } = require('./grupa/aktualizujGrupe');
     router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
 
 
+
     // technologie promise
     router.post('/zapiszTechnologieInsertDane/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertDane); // zapisuje technologie
     router.post('/zapiszTechnologieInsertProdukty/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProdukty); 
@@ -151,9 +152,14 @@ const { aktualizujGrupe } = require('./grupa/aktualizujGrupe');
 router.get('/lista-klientow/:token',verifyToken,klienciPobierzWszystkich);
 
 router.get('/lista-produktow',connections.getProdukty);
-router.post('/klienci',connections.postKlient);
-router.put('/klient',connections.deleteKlient);
-router.put('/updateKlient',connections.updateKlient);
+
+//Klienci
+
+
+
+
+
+
 router.put('/setOrderOpen',connections.setOrderOpen);
 router.put('/setOrderClosed',connections.setOrderClosed);
 
@@ -197,5 +203,9 @@ router.delete('/odblokuj_zamowienie/:token',verifyTokenParams('zamowienie_odblok
 router.get('/backup/:token',verifyTokenParams('technologia_zapis'),connections.backup);
 
 
+    // klienci
+    router.post('/klienci/:token',verifyTokenParams('klienci_zapis'),connections.postKlient);
+    router.put('/klient/:token',verifyTokenParams('klienci_usun'),connections.deleteKlient);
+    router.put('/updateKlient/:token',verifyTokenParams('klienci_zapis'),connections.updateKlient);
 
 module.exports = router;

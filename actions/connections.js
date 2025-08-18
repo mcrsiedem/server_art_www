@@ -670,17 +670,19 @@ class Connections {
         const nip = req.body.nip;
         const opiekun_id = req.body.opiekun_id;
         const utworzyl_user_id = req.body.utworzyl_user_id;
+        let deleted = 0
+
+        let dane=[firma,firma_nazwa,adres,kod,nip,opiekun_id,utworzyl_user_id,deleted ]
 
         var sql =   "INSERT INTO artdruk.klienci (firma,firma_nazwa,adres,kod,nip,opiekun_id,utworzyl_user_id,deleted) "+
-        "values ('" + firma+ "','" + firma_nazwa + "','" + adres + "','" + kod + "','" + nip + "','" + opiekun_id + "','" + utworzyl_user_id + "',0); ";
-        connection.query(sql, function (err, result) {
+        "values (?,?,?,?,?,?,?,?); ";
+        connection.execute(sql,dane, function (err, result) {
         if (err) throw err;
         // console.log(" 1 record inserted "+result.insertId);
         res.status(201).json(result);
 
     });}
 
-;
 
 setOrderOpen(req,res){
     // sprawdza czy zamówienie jest już otwarte przez kogoś
@@ -1460,10 +1462,11 @@ updateKlient(req,res){
     const nip= req.body.nip;
     const opiekun_id= req.body.opiekun_id;
 
-    var sql = "update artdruk.klienci set firma = '" + firma+ "', firma_nazwa = '" + firma_nazwa+ "', adres = '" + adres+ "', kod = '" + kod+ "', nip = '" + nip+ "', opiekun_id = " + opiekun_id+ " where id = " + id+ "";
-    connection.query(sql, function (err, result) {
+    let dane=[firma,firma_nazwa,adres,kod,nip,opiekun_id,id ]
+
+    var sql = "update artdruk.klienci set firma =?, firma_nazwa =?, adres =?, kod =?, nip =?, opiekun_id =? where id =?";
+    connection.execute(sql,dane, function (err, result) {
     if (err) throw err;
-    // console.log("1 record delete ");
     res.status(200).json(result);
 })
 }
