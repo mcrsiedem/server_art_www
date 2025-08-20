@@ -126,15 +126,20 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
         connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
         }
 //-------------- fragmenty
+const zamienUndefine = (dane) =>{
+  if(dane.toLowerCase() == 'undefined'){
+    return ''
+  }else return dane
 
+}
         for(let row of fragmenty.filter(x => x.update == true && x.insert != true) ){
-          let dane =[row.id,row.zamowienie_id,row.produkt_id,row.element_id,row.oprawa_id,row.naklad,row.ilosc_stron,row.wersja,row.info,row.typ,row.indeks,row.global_id]
+          let dane =[row.id,row.zamowienie_id,row.produkt_id,row.element_id,row.oprawa_id,row.naklad,row.ilosc_stron,row.wersja,zamienUndefine(row.info),row.typ,row.indeks,row.global_id]
           var sql =   "update  artdruk.zamowienia_fragmenty set  id =?, zamowienie_id =?, produkt_id =?, element_id =?, oprawa_id =?, naklad =?, ilosc_stron =?, wersja =?, info =?, typ =?,  indeks =? where global_id =?"
           connection.execute(sql, dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
           }
         
           for(let row of fragmenty.filter(x => x.insert == true && x.delete != true) ){
-            let dane=[row.id,row.zamowienie_id,row.produkt_id,row.element_id,row.oprawa_id,row.naklad,row.ilosc_stron,row.wersja,row.info,row.typ,row.indeks]
+            let dane=[row.id,row.zamowienie_id,row.produkt_id,row.element_id,row.oprawa_id,row.naklad,row.ilosc_stron,row.wersja,zamienUndefine(row.info),row.typ,row.indeks]
             var sql =   "INSERT INTO artdruk.zamowienia_fragmenty (id,zamowienie_id,produkt_id,element_id,oprawa_id,naklad,ilosc_stron,wersja,info,typ,indeks) values (?,?,?,?,?,?,?,?,?,?,?); ";
             connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
             }
