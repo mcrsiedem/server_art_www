@@ -125,7 +125,7 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.zamowienia_elementy where global_id=?";
         connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
         }
-//-------------- fragmenty
+//-------------- fragmentyy
 const zamienUndefine = (dane) =>{
   if(dane.toLowerCase() == 'undefined'){
     return ''
