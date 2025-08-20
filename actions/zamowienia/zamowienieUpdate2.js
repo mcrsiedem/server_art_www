@@ -127,7 +127,7 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
         }
 //-------------- fragmentyy
 const zamienUndefine = (dane) =>{
-  if(dane.toLowerCase() == 'undefined'){
+  if(dane == 'undefined'){
     return ''
   }else return dane
 
