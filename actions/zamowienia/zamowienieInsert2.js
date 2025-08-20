@@ -99,7 +99,12 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
 })) 
 
 }
+const zamienUndefine = (dane) =>{
+  if(dane.toLowerCase() == 'undefined'){
+    return ''
+  }else return dane
 
+}
 
 for (let fragment of fragmenty.filter(x =>  x.delete != true)) {
   var sql =
@@ -117,12 +122,7 @@ for (let fragment of fragmenty.filter(x =>  x.delete != true)) {
 })) 
 }
 
-const zamienUndefine = (dane) =>{
-  if(dane.toLowerCase() == 'undefined'){
-    return ''
-  }else return dane
 
-}
 
 
 for (let opr of oprawa.filter(x =>  x.delete != true)) {
