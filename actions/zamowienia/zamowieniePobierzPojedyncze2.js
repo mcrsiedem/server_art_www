@@ -33,7 +33,7 @@ const zamowieniePobierzPojedyncze =(req,res)=>{
    
         } );
 
-        var sql = "select * from artdruk.zamowienia_fragmenty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
+        var sql = "select * from artdruk.view_zamowienia_fragmenty where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
         dane.push(doc)

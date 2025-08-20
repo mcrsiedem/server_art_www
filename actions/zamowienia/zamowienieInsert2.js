@@ -99,17 +99,12 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
 })) 
 
 }
-const zamienUndefine = (dane) =>{
-  if(dane == 'undefined'){
-    return ''
-  }else return dane
 
-}
 
 for (let fragment of fragmenty.filter(x =>  x.delete != true)) {
   var sql =
     "INSERT INTO artdruk.zamowienia_fragmenty (id,zamowienie_id,produkt_id,element_id,oprawa_id,naklad,ilosc_stron,wersja,info,typ,indeks) values (?,?,?,?,?,?,?,?,?,?,?); ";
-  let dane = [fragment.id,fragment.zamowienie_id,fragment.produkt_id,fragment.element_id,fragment.oprawa_id,fragment.naklad,fragment.ilosc_stron,fragment.wersja,zamienUndefine(fragment.info),fragment.typ,fragment.indeks]
+  let dane = [fragment.id,fragment.zamowienie_id,fragment.produkt_id,fragment.element_id,fragment.oprawa_id,fragment.naklad,fragment.ilosc_stron,fragment.wersja,fragment.info,fragment.typ,fragment.indeks]
 
   promises.push(     new Promise((resolve, reject) => {
     connection.execute(sql, dane,(err, results) => {
