@@ -43,6 +43,7 @@ const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzP
 const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWszystkie2');
 const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich');
 const { aktualizujGrupe } = require('./grupa/aktualizujGrupe');
+const { aktualizujGrupeOprawaUwagi } = require('./grupa/aktualizujGrupeOprawaUwagi');
 
 
 
@@ -84,6 +85,7 @@ const { aktualizujGrupe } = require('./grupa/aktualizujGrupe');
     
     // aktualizacja grupy - dodruk arkusza - zmiana parametrów
     router.post('/aktualizuj_grupe_wykonan/:token',verifyTokenParams('manage_druk'), aktualizujGrupe); 
+    router.put('/grupa_wykonan_oprawa_uwagi/:token',verifyTokenParams('manage_oprawa'), aktualizujGrupeOprawaUwagi); 
     
 
     router.put('/zapiszTechnologieUpdate/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieUpdate); // aktualizacja zamowienia
