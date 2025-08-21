@@ -33,7 +33,7 @@ const klienciPobierzWszystkich =(req,res)=>{
 
 
                     if(klienci_wszyscy){
-                     var sql  = "select * from artdruk.view_klienci ORDER BY firma_nazwa ASC";
+                     var sql  = "select * from artdruk.view_klienci ORDER BY firma ASC";
                         connection.execute(sql, function (err, doc) {
                             results = doc
                             if (err) throw err;
@@ -43,7 +43,7 @@ const klienciPobierzWszystkich =(req,res)=>{
                     }else {
                     
                         var sql =
-                            "select * from artdruk.view_klienci where (opiekun_id ="+ id +" or asystent1 ="+ id +"  or asystent1 ="+ id +")  ORDER BY firma_nazwa ASC" ;
+                            "select * from artdruk.view_klienci where (opiekun_id ="+ id +" or asystent1 ="+ id +"  or asystent1 ="+ id +")  ORDER BY firma ASC" ;
                         connection.execute(sql, function (err, doc) {
                             results = doc
                             if (err) throw err;
