@@ -32,8 +32,11 @@ let save2 = () =>{
     return new Promise((resolve,reject)=>{
     var sql =   "select artdruk.update_pliki_etap_grupy_wykonan (" + zamowienie_id+ "," + element_id+ "," + global_id_grupa_row+ "," + etap+ ")"
     connection.query(sql, function (err, result) {
-    if (err) throw err;
-    resolve("OK")
+    // if (err) throw err;
+    if (err) {
+        resolve("NIE")
+    }else{resolve("OK")}
+    
 })
 })
 }
@@ -71,6 +74,8 @@ let res1 = await  save()
 let res2 = await  save2()
 let min = await  save3()
 let res4 = await  save4(min)
+console.log(res1)
+console.log(res2)
 if ( res1 == 'OK' && res2 == 'OK'){
     res.json('OK');
 }else{
