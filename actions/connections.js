@@ -79,6 +79,7 @@ class Connections {
                               
            
                const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
+            //    const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
 
                 var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria) values (?,?,?); ";
                connection.query(sql, [id,imie+ " "+nazwisko,"Logowanie"],function (err, result) {            if (err) throw err;            })
@@ -976,11 +977,8 @@ connection.query(sql, function (err, result) {
  var sql = "commit";
  connection.query(sql, function (err, result) {
      if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-
-
-
      
- res.status(200).json(info)  
+ res.json(info)  
  });
 
  

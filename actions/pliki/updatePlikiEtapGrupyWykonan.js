@@ -71,7 +71,11 @@ let res1 = await  save()
 let res2 = await  save2()
 let min = await  save3()
 let res4 = await  save4(min)
- res.status(200).json(min);
+if ( res1 == 'OK' && res2 == 'OK'){
+    res.json('OK');
+}else{
+    res.json('ERROR');
+}
 }
 
 

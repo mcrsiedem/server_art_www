@@ -10,7 +10,7 @@ const aktualizujGrupeOprawaUwagi = (req, res) => {
       var sql =   "update artdruk.technologie_grupy_wykonan_oprawa set  uwagi=? where global_id =?"
       connection.execute(sql, data,function (err, result) {
                 if (err) throw err; 
-              res.status(200).json("OK")  
+              res.json("OK")  
               });
       }
 
