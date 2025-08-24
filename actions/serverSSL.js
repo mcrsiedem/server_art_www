@@ -46,8 +46,8 @@ app.use(cors(
 //--------------------------
 
 const serverSSL = https.createServer({
-// key: fs.readFileSync(path.join(__dirname,'cert','privkey.pem')),
-key: fs.readFileSync(path.join(__dirname,'cert','key.pem')),
+key: fs.readFileSync(path.join(__dirname,'cert','privkey.pem')),
+// key: fs.readFileSync(path.join(__dirname,'cert','key.pem')),
 cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 },app)
 
