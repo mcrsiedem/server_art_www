@@ -776,7 +776,7 @@ console.log("tuuuuu")
     const zamowienie_id = req.body.zamowienie_id;
     const grupa_nazwa = req.body.grupa_nazwa;
     const stary_status = req.body.stary_status;
-    
+    let info="stop";
     
     
 
@@ -930,7 +930,9 @@ connection.query(sql, function (err, result) {
     let data=[ID_SPRAWCY,grupa_nazwa,"Zmiana statusu grupy ID:"+ grupa_id+" z "+STATUSY[stary_status]+" na "+STATUSY[status],zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
-           if (err) throw err;   })
+           if (err) throw err; 
+        info = "OK"
+        })
               
            
 
@@ -941,7 +943,8 @@ connection.query(sql, function (err, result) {
 
 
      
- res.status(200).json(indeks_procesu)  
+//  res.status(200).json(indeks_procesu)  
+ res.status(200).json(info)  
  });
 
  
