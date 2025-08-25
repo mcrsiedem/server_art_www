@@ -22,6 +22,9 @@ const zapiszTechnologieInsertDane = (req,res) =>{
 
 
 
+
+
+
   Promise.all(promises).then((data) => res.status(201).json(data));
 }
 

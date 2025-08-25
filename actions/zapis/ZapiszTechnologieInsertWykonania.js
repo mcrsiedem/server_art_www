@@ -8,9 +8,9 @@ const zapiszTechnologieInsertWykonania = (req,res) =>{
 
   let promises = [];
 
-
-
-  //------------------------------
+  // jeśli są
+  
+      //------------------------------
   for (let wykonanie of wykonania) {
     var sql =
     "INSERT INTO artdruk.technologie_wykonania(id,indeks,technologia_id,zamowienie_id,nazwa_wykonania, grupa_id,element_id,arkusz_id,typ_elementu,nazwa,naklad,przeloty,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) " +
@@ -40,17 +40,24 @@ const zapiszTechnologieInsertWykonania = (req,res) =>{
     wykonanie.uwagi +        "'); ";
 
       promises.push(     new Promise((resolve, reject) => {
-        connection.query(sql, (err, results) => {
-        if (err) {
-            resolve([{zapis: false},err]);               
+        
+        if (wykonania.length != 0) {
+          connection.query(sql, (err, results) => {
+            if (err) {
+              resolve([{ zapis: false }, err]);
+            } else {
+              resolve([{ zapis: true }]);
+            }
+          });
         } else {
-            // resolve([results,"ok arkusz"])
-            resolve([{zapis: true}])
+          resolve([{ zapis: true }]);
         }
-    });
+
     })) 
 
   }
+  
+
 
 
 

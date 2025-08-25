@@ -40,6 +40,19 @@ const zapiszTechnologieInsertProdukty = (req,res) =>{
 }
 
 
+  var sql =   "update  artdruk.zamowienia set  technologia_id=" + produkty[0].technologia_id+ ",stan=3,status=2 where id = '" + produkty[0].zamowienie_id + "'"
+
+  promises.push(     new Promise((resolve, reject) => {
+      connection.query(sql, (err, results) => {
+      if (err) {
+          resolve([{zapis: false},err]);               
+      } else {
+          resolve([{zapis: true}])
+      }
+  });
+  })) 
+
+
   Promise.all(promises).then((data) => res.status(201).json(data));
 }
 

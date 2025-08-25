@@ -41,6 +41,8 @@ grupa.stan +        "',2,'" +
 grupa.uwagi +        "'; ";
 
       promises.push(     new Promise((resolve, reject) => {
+
+        if (grypy.length != 0) {
         connection.query(sql, (err, results) => {
         if (err) {
           // throw err
@@ -51,6 +53,12 @@ grupa.uwagi +        "'; ";
             resolve([{zapis: true}])
         }
     });
+
+
+  }else {
+          resolve([{ zapis: true }]);
+        }
+
     })) 
 
   }
