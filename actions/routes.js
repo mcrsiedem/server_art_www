@@ -197,7 +197,7 @@ router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verify
 
 //Zamowienie
 router.delete('/delete_zamowienie/:token',verifyTokenParams('zamowienie_skasuj'),connections.deleteZamowienie);
-router.delete('/odblokuj_zamowienie/:token',verifyTokenParams('zamowienie_odblokuj'),connections.odblokujZamowienie);
+router.delete('/odblokuj_zamowienie/:token',verifyToken,connections.odblokujZamowienie);
 
 
 
