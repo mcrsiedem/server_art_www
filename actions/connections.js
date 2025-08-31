@@ -702,9 +702,16 @@ setOrderOpen(req,res){
 
     var sql  = "select * from artdruk.view_zamowienia_stan_otwarcia where id = '" + id+ "' ORDER BY id ASC ";
     connection.query(sql, function (err, doc) {
-
+        console.log("user"+user)
+//         console.log("Wartość doc[0].open_user_id:", doc[0].open_user_id);
+// console.log("Typ doc[0].open_user_id:", typeof doc[0].open_user_id);
+// console.log("Wartość id:", id);
+// console.log("Typ id:", typeof id);
+// console.log("Wynik porównania doc[0].open_user_id == id:", doc[0].open_user_id == id);
+// console.log("Wartość doc[0].open_stan:", doc[0].open_stan);
+// console.log("Wynik porównania doc[0].open_stan != 1:", doc[0].open_stan != 1);
         if (err) throw err;
-        if(doc[0].open_stan != 1)
+        if(doc[0].open_user_id == user || doc[0].open_stan != 1  )
         {
                 var sql = "update artdruk.zamowienia set open_token = '" + token+ "', open_user = '" + user+ "', open_data = now(), open_stan = 1 where id = " + id+ "";
                 connection.query(sql, function (err, result) {
