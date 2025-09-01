@@ -87,7 +87,7 @@ const { dodajRealizacjeOprawy } = require('./grupa/dodajRealizacjeOprawy');
     // aktualizacja grupy - dodruk arkusza - zmiana parametrów
     router.post('/aktualizuj_grupe_wykonan/:token',verifyTokenParams('manage_druk'), aktualizujGrupe); 
     router.put('/grupa_wykonan_oprawa_uwagi/:token',verifyTokenParams('manage_oprawa'), aktualizujGrupeOprawaUwagi); 
-    router.post('/dodaj_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOprawy); 
+    router.post('/dodaj_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOprawy); // try catch
 
     
 
