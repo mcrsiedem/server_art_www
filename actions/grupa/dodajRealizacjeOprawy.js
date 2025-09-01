@@ -42,13 +42,14 @@ let Historia = () =>{
 
 
 try {
-
 let res1 = await  Insert();
 let res2 = await  Historia();
+//CALL aktualizacja_statusu_oprawy_vs_realizacja(12345, 6789);
+// pobierz tylko nowy status i odeślij go aby zaaktualizować
 res.status(200).json({status:"OK",insertId : id });
     } catch (error) {
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
-        // z dowolnej z twoich funkcji (save, save2, save3, save4).
+        // z dowolnej z funkcji (Insert, Historia).
         console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
         res.status(200).json({ status: error});
     }

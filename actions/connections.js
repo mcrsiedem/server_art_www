@@ -192,10 +192,6 @@ class Connections {
             //  const technologia_prime_id = req.params['technologia_prime_id']
 
 
-            var sql = "start transaction";
-            connection.query(sql, function (err, result) {
-            if (err) throw err;
-            });
      
              var sql  = "select * from artdruk.view_technologie  where id = '" + idTechnologii + "'  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
