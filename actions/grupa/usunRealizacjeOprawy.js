@@ -1,21 +1,23 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const connection = require("../mysql");
 
-const dodajRealizacjeOprawy = async (req, res) => {
+const usunRealizacjeOprawy = async (req, res) => {
 let row = req.body;
 let id;
 const token = req.params['token']
 let ID_SPRAWCY =  DecodeToken(token).id;
 
 const zamowienie_id = req.body.zamowienie_id;
-const grupa_id = req.body.id;
-const global_id = req.body.global_id;
+const id_grupy = req.body.id_grupy;
+const global_id_grupy = req.body.global_id_grupy;
+
+const global_id_wykonania_oprawy = req.body.global_id;
 
 
-let Insert = () =>{ 
+let Delete = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[row.id,row.technologia_id,row.zamowienie_id,row.id,row.oprawa_id,row.naklad,row.proces_id,row.procesor_id]
-      var sql =   "INSERT INTO artdruk.technologie_wykonania_oprawa (id,technologia_id,zamowienie_id, grupa_id,oprawa_id,naklad,proces_id,procesor_id) values (?,?,?,?,?,?,?,?); ";
+  let data=[global_id_wykonania_oprawy]
+      var sql =   "DELETE from artdruk.technologie_wykonania_oprawa where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
           //  if (err) throw err; 
             if (err) reject(err); 
@@ -28,7 +30,7 @@ let Insert = () =>{
 
 let Historia = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,"Oprawa","Oprawiono: "+row.naklad+" szt.",zamowienie_id]
+    let data=[ID_SPRAWCY,"Oprawa","Usunięto realizację oprawy : "+row.naklad+" szt.",zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
@@ -43,7 +45,7 @@ let Historia = () =>{
 
 let Status = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[zamowienie_id,grupa_id]
+    let data=[zamowienie_id,id_grupy]
     var sql = "call artdruk.aktualizacja_statusu_oprawy_vs_realizacja(?,?) ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
@@ -57,7 +59,7 @@ let Status = () =>{
 
 let OdwiezGrupe = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[global_id]
+  let data=[global_id_grupy]
       var sql =   "SELECT status from artdruk.view_technologie_grupy_wykonan_oprawa where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
@@ -70,7 +72,7 @@ let OdwiezGrupe = () =>{
 
 
 try {
-let res1 = await  Insert();  // wstaw wykonanie
+let res1 = await  Delete();  // wstaw wykonanie
 let res2 = await  Historia(); // dodaj do historii
 let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
 let nowy_status = await  OdwiezGrupe();  // sprawdza nowy status grupy
@@ -88,7 +90,7 @@ res.status(200).json({status:"OK",insertId : id,status_grupy:nowy_status });
 
 
 module.exports = {
-  dodajRealizacjeOprawy
+  usunRealizacjeOprawy
 };
 
 
