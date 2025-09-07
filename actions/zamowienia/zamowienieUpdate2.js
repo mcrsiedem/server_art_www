@@ -33,12 +33,11 @@ const zamowienieUpdate = (req,res) =>{
 
 
 
-
 if( daneZamowienia.update == true){
 
-let dane = [ daneZamowienia.isbn,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.kod_pracy,daneZamowienia.nr_stary,daneZamowienia.nr,daneZamowienia.rok,daneZamowienia.firma_id,daneZamowienia.klient_id,daneZamowienia.tytul,ifNoDateSetNull_exec(daneZamowienia.data_przyjecia),ifNoDateSetNull_exec(daneZamowienia.data_materialow),ifNoDateSetNull_exec(daneZamowienia.data_spedycji),daneZamowienia.opiekun_id,daneZamowienia.stan,daneZamowienia.status,daneZamowienia.etap,daneZamowienia.uwagi,daneZamowienia.etap,daneZamowienia.waluta_id,daneZamowienia.vat_id,daneZamowienia.przedplata,daneZamowienia.cena,daneZamowienia.wartosc_zamowienia,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.id]
+let dane = [ daneZamowienia.isbn,daneZamowienia.nr_zamowienia_klienta,daneZamowienia.kod_pracy,daneZamowienia.nr_stary,daneZamowienia.nr,daneZamowienia.rok,daneZamowienia.firma_id,daneZamowienia.klient_id,daneZamowienia.tytul,ifNoDateSetNull_exec(daneZamowienia.data_przyjecia),ifNoDateSetNull_exec(daneZamowienia.data_materialow),ifNoDateSetNull_exec(daneZamowienia.data_spedycji),daneZamowienia.opiekun_id,daneZamowienia.stan,daneZamowienia.status,daneZamowienia.etap,daneZamowienia.uwagi,daneZamowienia.etap,daneZamowienia.waluta_id,daneZamowienia.vat_id,daneZamowienia.przedplata,daneZamowienia.cena,daneZamowienia.cena_z_kosztami,daneZamowienia.wartosc_zamowienia,daneZamowienia.wartosc_koncowa,daneZamowienia.termin_platnosci,daneZamowienia.fsc,daneZamowienia.skonto,daneZamowienia.nr_kalkulacji,daneZamowienia.id]
 
-var sql =   "update  artdruk.zamowienia set isbn=?, nr_zamowienia_klienta=?,  kod_pracy=?, nr_stary=?, nr=?,  rok =?,firma_id=?,klient_id=?,tytul=?,data_przyjecia=?,data_materialow=?,data_spedycji=?,opiekun_id=?,stan=?,status=?,etap=?,uwagi=?,etap=?,waluta_id=?,vat_id=?,przedplata=?,cena=?,wartosc_zamowienia=?,termin_platnosci=?,fsc=?,skonto=?,nr_kalkulacji=? where id =?"
+var sql =   "update  artdruk.zamowienia set isbn=?, nr_zamowienia_klienta=?,  kod_pracy=?, nr_stary=?, nr=?,  rok =?,firma_id=?,klient_id=?,tytul=?,data_przyjecia=?,data_materialow=?,data_spedycji=?,opiekun_id=?,stan=?,status=?,etap=?,uwagi=?,etap=?,waluta_id=?,vat_id=?,przedplata=?,cena=?,cena_z_kosztami=?,wartosc_zamowienia=?,wartosc_koncowa=?,termin_platnosci=?,fsc=?,skonto=?,nr_kalkulacji=? where id =?"
 connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }});
 
 if(daneZamowienia.status > 2  ){
