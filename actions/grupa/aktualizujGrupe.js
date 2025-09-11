@@ -4,12 +4,15 @@ const aktualizujGrupe = (req, res) => {
   let data = req.body;
 
  console.log(data[0])
+   let koniec 
+  let kierunek 
+  let roznica_czasu 
 
  // data[0] == null oznacza, że aktualizacja jest tylko samej grupy bez wykonan
 if(data[0]!=null){
-  let koniec = data[0][0]
-  let kierunek = data[0][1] // dodaj - odejmij
-  let roznica_czasu = data[0][2] // różnica miedzy starym czasem a nowym
+   koniec = data[0][0]
+  kierunek = data[0][1] // dodaj - odejmij
+   roznica_czasu = data[0][2] // różnica miedzy starym czasem a nowym
 }
   let rowGrupa = data[1] // rowGrupa  - wszystko nowe, tylko stary poczatek i koniec
    let rowGrupa_global_id = data[1].global_id 
