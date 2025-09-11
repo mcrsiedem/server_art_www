@@ -14,6 +14,7 @@ const aktualizujGrupe = (req, res) => {
    let rowGrupa_narzad = data[1].narzad 
    let rowGrupa_przeloty = data[1].przeloty
    let rowGrupa_ilosc_narzadow = data[1].ilosc_narzadow
+   let rowGrupa_naklad= data[1].naklad
   let wykonania = data[2] 
 
     //nowy czas grupy
@@ -22,8 +23,8 @@ const aktualizujGrupe = (req, res) => {
     connection.execute(sql, val ,function (err, result) { if (err) throw err });
 
     // aktualizacja samej grupy
-    let dane=[rowGrupa_predkosc,rowGrupa_narzad,rowGrupa_przeloty,rowGrupa_ilosc_narzadow,rowGrupa_global_id]
-    var sql =   "update  artdruk.technologie_grupy_wykonan set  predkosc =?, narzad =?, przeloty =?, ilosc_narzadow=? where global_id =?"
+    let dane=[rowGrupa_predkosc,rowGrupa_narzad,rowGrupa_przeloty,rowGrupa_ilosc_narzadow,rowGrupa_naklad,rowGrupa_global_id]
+    var sql =   "update  artdruk.technologie_grupy_wykonan set  predkosc =?, narzad =?, przeloty =?, ilosc_narzadow=? , naklad =? where global_id =?"
     connection.execute(sql, dane,function (err, result) {       if (err) throw err;       });
 
 
