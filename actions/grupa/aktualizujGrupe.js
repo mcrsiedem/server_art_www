@@ -3,31 +3,41 @@ const connection = require("../mysql");
 const aktualizujGrupe = (req, res) => {
   let data = req.body;
 
+ console.log(data[0])
 
+ // data[0] == null oznacza, że aktualizacja jest tylko samej grupy bez wykonan
+if(data[0]!=null){
   let koniec = data[0][0]
   let kierunek = data[0][1] // dodaj - odejmij
   let roznica_czasu = data[0][2] // różnica miedzy starym czasem a nowym
-
+}
   let rowGrupa = data[1] // rowGrupa  - wszystko nowe, tylko stary poczatek i koniec
    let rowGrupa_global_id = data[1].global_id 
    let rowGrupa_predkosc = data[1].predkosc 
    let rowGrupa_narzad = data[1].narzad 
    let rowGrupa_przeloty = data[1].przeloty
    let rowGrupa_ilosc_narzadow = data[1].ilosc_narzadow
-   let rowGrupa_naklad= data[1].naklad
+   let rowGrupa_naklad= parseInt(data[1].naklad)
   let wykonania = data[2] 
 
+
+
+
     //nowy czas grupy
-    let val=[rowGrupa_global_id,kierunek,roznica_czasu]
+    if(data[0]!=null){
+let val=[rowGrupa_global_id,kierunek,roznica_czasu]
     var sql = "select artdruk.zmien_czas_trwania_grupy_minuty(?,?,?) as procesor_id";
     connection.execute(sql, val ,function (err, result) { if (err) throw err });
+    }
+    
+
 
     // aktualizacja samej grupy
     let dane=[rowGrupa_predkosc,rowGrupa_narzad,rowGrupa_przeloty,rowGrupa_ilosc_narzadow,rowGrupa_naklad,rowGrupa_global_id]
-    var sql =   "update  artdruk.technologie_grupy_wykonan set  predkosc =?, narzad =?, przeloty =?, ilosc_narzadow=? , naklad =? where global_id =?"
+    var sql =   "update  artdruk.technologie_grupy_wykonan set  predkosc =?, narzad =?, przeloty =?, ilosc_narzadow=?, naklad=? where global_id =?"
     connection.execute(sql, dane,function (err, result) {       if (err) throw err;       });
 
-
+ if(data[0]!=null){
     // aktualizacja wykonan
       for(let row of wykonania.filter(x => x.update == true && x.insert != true) ){
             let data2=[row.indeks,row.nazwa_wykonania,row.nazwa,row.naklad,row.przeloty,row.czas,row.narzad,row.predkosc,row.global_id]
@@ -48,7 +58,7 @@ const aktualizujGrupe = (req, res) => {
       var sql =   "DELETE from artdruk.technologie_wykonania where global_id=?";
       connection.execute(sql, data,function (err, result) {       if (err)throw err;       });
       } 
-
+    }
     
 
     var sql = "commit"
