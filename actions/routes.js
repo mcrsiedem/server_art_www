@@ -60,7 +60,9 @@ const { zakonczOpraweDodajRealizacje } = require('./grupa/zakonczOprawe');
     router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
     router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdate); // aktualizacja zamowienia
 
-    router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji
+        router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji
+
+
     router.get('/zamowienia/:orderby/:token',verifyToken,zamowieniePobierzWszystkie);
 
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
@@ -70,6 +72,8 @@ const { zakonczOpraweDodajRealizacje } = require('./grupa/zakonczOprawe');
 
 
     // technologie promise
+        router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
+
     router.post('/zapiszTechnologieInsertDane/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertDane); // zapisuje technologie
     router.post('/zapiszTechnologieInsertProdukty/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProdukty); 
     router.post('/zapiszTechnologieInsertElementy/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertElementy); 
@@ -97,7 +101,6 @@ const { zakonczOpraweDodajRealizacje } = require('./grupa/zakonczOprawe');
 
     router.put('/zapiszTechnologieUpdate/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieUpdate); // aktualizacja zamowienia
     router.get('/technologie/:token',verifyToken,connections.getTechnologie);    
-    router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
 
     router.get('/papiery-parametry/:token',verifyToken,connections.getPapieryParametry);
     router.get('/sprawdzCzyPapierUzyty/:papier_id/:token',verifyToken,connections.sprawdzCzyPapierUzyty);
