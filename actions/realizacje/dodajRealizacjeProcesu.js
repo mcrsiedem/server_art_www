@@ -14,8 +14,8 @@ const global_id = req.body.global_id;
 
 let Insert = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[row.id,row.technologia_id, row.zamowienie_id,row.wykonanie_id,row.wykonanie_global_id,row.naklad,row.przeloty,row.proces_id,row.procesor_id,ID_SPRAWCY,1]
-      var sql =   "INSERT INTO artdruk.technologie_realizacje (id,technologia_id,zamowienie_id,wykonanie_id,wykonanie_global_id,naklad,przeloty,proces_id,procesor_id,dodal,typ) values (?,?,?,?,?,?,?,?,?,?,?); ";
+  let data=[row.id,row.wykonanie_global_id,row.zealizowano,row.procesor_id,ID_SPRAWCY,1]
+      var sql =   "INSERT INTO artdruk.technologie_realizacje (id,wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
           //  if (err) throw err; 
             if (err) reject(err); 
