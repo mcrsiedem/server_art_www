@@ -47,6 +47,7 @@ const { aktualizujGrupeOprawaUwagi } = require('./grupa/aktualizujGrupeOprawaUwa
 const { dodajRealizacjeOprawy } = require('./grupa/dodajRealizacjeOprawy');
 const { usunRealizacjeOprawy } = require('./grupa/usunRealizacjeOprawy');
 const { zakonczOpraweDodajRealizacje } = require('./grupa/zakonczOprawe');
+const { dodajRealizacjeProcesu } = require('./realizacje/dodajRealizacjeProcesu');
 
 
 
@@ -96,6 +97,8 @@ const { zakonczOpraweDodajRealizacje } = require('./grupa/zakonczOprawe');
     router.post('/dodaj_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOprawy); // try catch
     router.post('/usun_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), usunRealizacjeOprawy); // try catch
     router.post('/zakoncz_oprawe_dodaj_realizacje/:token',verifyTokenParams('mini_oprawa'), zakonczOpraweDodajRealizacje); // try catch
+    router.post('/dodaj_realizacje_procesu/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesu); // try catch
+
 
     
 

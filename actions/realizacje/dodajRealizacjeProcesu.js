@@ -2,26 +2,32 @@ const { DecodeToken } = require("../logowanie/DecodeToken");
 const connection = require("../mysql");
 
 const dodajRealizacjeProcesu = async (req, res) => {
-let row = req.body;
-let id;
+// let row = req.body;
 const token = req.params['token']
+let id;
 let ID_SPRAWCY =  DecodeToken(token).id;
 
-const zamowienie_id = req.body.zamowienie_id;
-const grupa_id = req.body.id;
-const global_id = req.body.global_id;
+const wykonanie_global_id = req.body.global_id;
+const zrealizowano = req.body.zrealizowano;
+// const grupa_id = req.body.id;
+// const global_id = req.body.global_id;
 
 
 let Insert = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[row.id,row.wykonanie_global_id,row.zealizowano,row.procesor_id,ID_SPRAWCY,1]
-      var sql =   "INSERT INTO artdruk.technologie_realizacje (id,wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?,?); ";
-      connection.execute(sql, data,function (err, result) {     
-          //  if (err) throw err; 
-            if (err) reject(err); 
-            id = result.insertId
+
+  // let data=[row.id,row.wykonanie_global_id,row.zealizowano,row.procesor_id,ID_SPRAWCY,1]
+  //     var sql =   "INSERT INTO artdruk.technologie_realizacje (id,wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?,?); ";
+  //     connection.execute(sql, data,function (err, result) {     
+  //         //  if (err) throw err; 
+  //           if (err) reject(err); 
+  //           id = result.insertId
+  //          resolve("OK")
+  //       })
+
+console.log("wykonanie_global_id "+wykonanie_global_id)
            resolve("OK")
-        })
+
 })
 }
 
@@ -71,13 +77,14 @@ let OdwiezGrupe = () =>{
 
 try {
 let res1 = await  Insert();  // wstaw wykonanie
-let res2 = await  Historia(); // dodaj do historii
-let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
-let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
+// let res2 = await  Historia(); // dodaj do historii
+// let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
+// let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 
 
 // pobierz tylko nowy status i odeślij go aby zaaktualizować
-res.status(200).json({status:"OK",insertId : id,status_grupy:res4.status,zrealizowano:res4.zrealizowano });
+res.status(200).json({status:"OK",insertId : id});
+// res.status(200).json({status:"OK",insertId : id,status_grupy:res4.status,zrealizowano:res4.zrealizowano });
     } catch (error) {
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
         // z dowolnej z funkcji (Insert, Historia).

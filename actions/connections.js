@@ -18,7 +18,7 @@ class Connections {
         const login = req.params['login']
         const haslo = req.params['haslo']
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2 from artdruk.users where login =? and haslo = ?;";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun from artdruk.users where login =? and haslo = ?;";
 
         connection.execute(sql, [login,haslo], (err, result) => {
     
@@ -57,6 +57,8 @@ class Connections {
                         const uprawnienia_ustaw = result[0].uprawnienia_ustaw;
                         const asystent1 = result[0].asystent1;
                         const asystent2 = result[0].asystent2;
+                        const realizacje_dodaj = result[0].realizacje_dodaj;
+                        const realizacje_usun = result[0].realizacje_usun;
                         
                         
             
@@ -72,7 +74,7 @@ class Connections {
                             papier_zapis,papier_usun,
                             procesy_edycja,
                             zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
-                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2
+                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun
                             
                         }
      
