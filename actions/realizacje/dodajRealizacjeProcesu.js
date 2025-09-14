@@ -61,6 +61,19 @@ let Status = () =>{
 
 
 
+
+
+let OdwiezWykonanie= () =>{ 
+    return  new Promise((resolve,reject)=>{
+  let data=[row.global_id]
+      var sql =   "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=? ";
+      connection.execute(sql, data,function (err, result) {     
+            if (err) reject(err); 
+           resolve({status:result[0].status, do_wykonania:result[0].do_wykonania})
+        })
+})
+}
+
 let OdwiezGrupe = () =>{ 
     return  new Promise((resolve,reject)=>{
   let data=[global_id]
@@ -75,16 +88,17 @@ let OdwiezGrupe = () =>{
 
 
 
+
 try {
 let res1 = await  Insert();  // wstaw wykonanie
 // let res2 = await  Historia(); // dodaj do historii
 let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
-// let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
+let res4 = await  OdwiezWykonanie();  // sprawdza nowy status grupy
 
 
 // pobierz tylko nowy status i odeślij go aby zaaktualizować
-res.status(200).json({status:"OK",insertId : id});
-// res.status(200).json({status:"OK",insertId : id,status_grupy:res4.status,zrealizowano:res4.zrealizowano });
+// res.status(200).json({status:"OK",insertId : id});
+ res.status(200).json({status:"OK",insertId : id,status_wykonania:res4.status,do_wykonania:res4.do_wykonania });
     } catch (error) {
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
         // z dowolnej z funkcji (Insert, Historia).
