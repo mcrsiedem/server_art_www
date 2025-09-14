@@ -2,32 +2,32 @@ const { DecodeToken } = require("../logowanie/DecodeToken");
 const connection = require("../mysql");
 
 const dodajRealizacjeProcesu = async (req, res) => {
-// let row = req.body;
+let row = req.body;
 const token = req.params['token']
 let id;
 let ID_SPRAWCY =  DecodeToken(token).id;
 
-const wykonanie_global_id = req.body.global_id;
-const zrealizowano = req.body.zrealizowano;
+// const wykonanie_global_id = req.body.global_id;
+// const zrealizowano = req.body.zrealizowano;
+
 // const grupa_id = req.body.id;
 // const global_id = req.body.global_id;
+// console.log("wykonanie_global_id "+row.global_id)
+// console.log("zealizowano "+row.zrealizowano)
+// console.log("procesor_id "+row.procesor_id)
+// console.log("ID_SPRAWCY "+ID_SPRAWCY)
 
 
 let Insert = () =>{ 
     return  new Promise((resolve,reject)=>{
 
-  // let data=[row.id,row.wykonanie_global_id,row.zealizowano,row.procesor_id,ID_SPRAWCY,1]
-  //     var sql =   "INSERT INTO artdruk.technologie_realizacje (id,wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?,?); ";
-  //     connection.execute(sql, data,function (err, result) {     
-  //         //  if (err) throw err; 
-  //           if (err) reject(err); 
-  //           id = result.insertId
-  //          resolve("OK")
-  //       })
-
-console.log("wykonanie_global_id "+wykonanie_global_id)
+  let data=[row.global_id,row.zrealizowano,row.procesor_id,ID_SPRAWCY,1]
+      var sql =   "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?); ";
+      connection.execute(sql, data,function (err, result) {     
+            if (err) reject(err); 
+            id = result.insertId
            resolve("OK")
-
+        })
 })
 }
 
@@ -49,8 +49,8 @@ let Historia = () =>{
 
 let Status = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[zamowienie_id,grupa_id]
-    var sql = "call artdruk.aktualizacja_statusu_oprawy_vs_realizacja(?,?) ";
+    let data=[row.global_id]
+    var sql = "call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?) ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
            resolve("OK")
@@ -78,7 +78,7 @@ let OdwiezGrupe = () =>{
 try {
 let res1 = await  Insert();  // wstaw wykonanie
 // let res2 = await  Historia(); // dodaj do historii
-// let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
+let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
 // let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 
 
