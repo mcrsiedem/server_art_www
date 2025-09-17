@@ -1,11 +1,12 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const connection = require("../mysql");
 
-const dodajRealizacjeProcesu = async (req, res) => {
+const usunRealizacjeProcesu = async (req, res) => {
 let row = req.body;
 const token = req.params['token']
 let id;
-let ID_SPRAWCY =  DecodeToken(token).id;
+let ID_SPRAWCY =  DecodeToken(token).id ;
+let REALIZACJE_USUN =  DecodeToken(token).realizacje_usun || 0;
 
 // const wykonanie_global_id = req.body.global_id;
 // const zrealizowano = req.body.zrealizowano;
@@ -18,15 +19,16 @@ let ID_SPRAWCY =  DecodeToken(token).id;
 // console.log("ID_SPRAWCY "+ID_SPRAWCY)
 
 
-let Insert = () =>{ 
+let Usun = () =>{ 
     return  new Promise((resolve,reject)=>{
 
-      console.log(" Nazwa + id "+ row.nazwa)
-  let data=[row.global_id,row.zrealizowano,row.procesor_id,ID_SPRAWCY,1]
-      var sql =   "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?); ";
+    //   console.log(" Nazwa + id "+ row.nazwa,REALIZACJE_USUN)
+  let data=[row.global_id,ID_SPRAWCY,REALIZACJE_USUN]
+
+      var sql =   "delete from artdruk.technologie_realizacje where global_id=?  and (dodal=? or 1=?); ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
-            id = result.insertId
+           
            resolve("OK")
         })
 })
@@ -35,7 +37,7 @@ let Insert = () =>{
 
 let Historia = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,row.nazwa,"Zrealizowano: "+row.zrealizowano+" ark. "+"grupa id: "+row.id,row.zamowienie_id]
+    let data=[ID_SPRAWCY,row.nazwa,"Skasowano realizację: "+row.zrealizowano+" ark. "+"grupa id: "+row.id_grupy,row.zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
@@ -50,7 +52,7 @@ let Historia = () =>{
 
 let Status = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[row.global_id]
+    let data=[row.global_id_wykonania]
     var sql = "call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?) ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
@@ -66,7 +68,7 @@ let Status = () =>{
 
 let OdwiezWykonanie= () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[row.global_id]
+  let data=[row.global_id_wykonania]
       var sql =   "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
@@ -77,7 +79,7 @@ let OdwiezWykonanie= () =>{
 
 let OdwiezGrupe = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[row.technologia_id,row.grupa_id]
+  let data=[row.technologia_id,row.id_grupy]
       var sql =   "SELECT status from artdruk.view_technologie_grupy_wykonan where technologia_id=? and id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
@@ -91,7 +93,7 @@ let OdwiezGrupe = () =>{
 
 
 try {
-let res1 = await  Insert();  // wstaw wykonanie
+let res1 = await  Usun();  // wstaw wykonanie
 let res2 = await  Historia(); // dodaj do historii
 let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
 let res4 = await  OdwiezWykonanie();  // sprawdza nowy status grupy
@@ -100,7 +102,7 @@ let res5 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 
 // pobierz tylko nowy status i odeślij go aby zaaktualizować
 // res.status(200).json({status:"OK",insertId : id});
- res.status(200).json({status:"OK",insertId : id,status_wykonania:res4.status,do_wykonania:res4.do_wykonania, status_grupy: res5.status_grupy });
+ res.status(200).json({status:"OK",status_wykonania:res4.status,do_wykonania:res4.do_wykonania, status_grupy: res5.status_grupy });
     } catch (error) {
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
         // z dowolnej z funkcji (Insert, Historia).
@@ -111,7 +113,7 @@ let res5 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 
 
 module.exports = {
-  dodajRealizacjeProcesu
+  usunRealizacjeProcesu
 };
 
 
