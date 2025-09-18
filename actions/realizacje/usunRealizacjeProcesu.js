@@ -28,7 +28,9 @@ let Usun = () =>{
       var sql =   "delete from artdruk.technologie_realizacje where global_id=?  and (dodal=? or 1=?); ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
-           
+
+            if(result.affectedRows==0) reject("Brak uprawnień do skasowania realizacji")
+
            resolve("OK")
         })
 })
