@@ -102,8 +102,8 @@ const { usunRealizacjeProcesu } = require('./realizacje/usunRealizacjeProcesu');
     // router.post('/usun_realizacje_procesu/:token',verifyTokenParams('realizacje_usun'), usunRealizacjeProcesu); // try catch
     router.post('/usun_realizacje_procesu/:token',verifyToken, usunRealizacjeProcesu); // try catch
 
-
-    
+        //Gant
+        router.get('/gantGrupy/:token',verifyToken,connections.getGantGrupy);    
 
     router.put('/zapiszTechnologieUpdate/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieUpdate); // aktualizacja zamowienia
     router.get('/technologie/:token',verifyToken,connections.getTechnologie);    

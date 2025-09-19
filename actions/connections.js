@@ -586,6 +586,15 @@ class Connections {
     });
     }
 
+        getGantGrupy(req,res){
+        const idzlecenia = req.params['idzlecenia']
+        var sql  = "select * from artdruk.view_gant_grupy where status <4 and typ_grupy= 2  and (proces_nazwa_id = 1 or proces_nazwa_id = 1)  ORDER BY start ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+
 
 
             getZamowieniaKalendarz(req,res){
