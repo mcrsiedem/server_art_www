@@ -8,6 +8,7 @@ let id;
 let ID_SPRAWCY =  DecodeToken(token).id ;
 let REALIZACJE_USUN =  DecodeToken(token).realizacje_usun || 0;
 
+
 // const wykonanie_global_id = req.body.global_id;
 // const zrealizowano = req.body.zrealizowano;
 
@@ -39,7 +40,13 @@ let Usun = () =>{
 
 let Historia = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,row.nazwa,"Skasowano realizację: "+row.zrealizowano+" ark. "+"grupa id: "+row.id_grupy,row.zamowienie_id]
+      let data
+    if(row.typ==1) {
+     data=[ID_SPRAWCY,row.nazwa,"Skasowano realizację: "+row.zrealizowano+" ark. "+"grupa id: "+row.id_grupy,row.zamowienie_id]
+    }
+        if(row.typ==2) {
+     data=[ID_SPRAWCY,row.nazwa,"Skasowano brak: "+row.zrealizowano+" ark. "+"grupa id: "+row.id_grupy,row.zamowienie_id]
+    }
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
