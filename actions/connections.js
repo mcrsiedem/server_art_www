@@ -179,7 +179,7 @@ class Connections {
          var sql = "commit";
          connection.query(sql, function (err, result) {
              if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         console.log("Pobranie papierów oraz paramaterów");
+        //  console.log("Pobranie papierów oraz paramaterów");
          res.status(200).json(dane);
          });
  
@@ -416,7 +416,7 @@ class Connections {
             var sql = "commit";
             connection.query(sql, function (err, result) {
                 if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-            console.log("Get Grupy i Wykonania dla procesora "+ procesor_id);
+            // console.log("Get Grupy i Wykonania dla procesora "+ procesor_id);
             res.status(200).json(dane);
             });
      
