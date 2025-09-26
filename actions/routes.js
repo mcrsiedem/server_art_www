@@ -56,6 +56,8 @@ const { dodajRealizacjeProcesuBrak } = require('./realizacje/dodajRealizacjeProc
 
 
     router.get('/users/:login/:haslo',connections.getUser);
+    router.get('/all_users/:token',verifyToken,connections.getAllUsers);
+
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 
     // zamówienia

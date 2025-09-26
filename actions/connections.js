@@ -623,7 +623,14 @@ class Connections {
 
 
 
-
+    getAllUsers(req,res){
+        const orderby = req.params['orderby']
+        var sql  = "select * from artdruk.view_user" ;
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
 
     getZamowieniaPliki(req,res){
         const orderby = req.params['orderby']
