@@ -2,26 +2,14 @@ const { DecodeToken } = require("../logowanie/DecodeToken");
 const connection = require("../mysql");
 
 const dodajRealizacjeProcesu = async (req, res) => {
-let row = req.body;
+let row = req.body;  // wykonanie do którego dodawana jest realizacja rozszerzona o zrealizowano
 const token = req.params['token']
 let id;
 let ID_SPRAWCY =  DecodeToken(token).id;
 
-// const wykonanie_global_id = req.body.global_id;
-// const zrealizowano = req.body.zrealizowano;
-
-// const grupa_id = req.body.id;
-// const global_id = req.body.global_id;
-// console.log("wykonanie_global_id "+row.global_id)
-// console.log("zealizowano "+row.zrealizowano)
-// console.log("procesor_id "+row.procesor_id)
-// console.log("ID_SPRAWCY "+ID_SPRAWCY)
-
-
+console.log("global id wykonania"+row.global_id)
 let Insert = () =>{ 
     return  new Promise((resolve,reject)=>{
-
-      console.log(" Nazwa + id "+ row.nazwa)
   let data=[row.global_id,row.zrealizowano,row.procesor_id,ID_SPRAWCY,1]
       var sql =   "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
@@ -43,9 +31,6 @@ let Historia = () =>{
         })
 })
 }
-
-
-
 
 
 let Status = () =>{ 
@@ -73,8 +58,6 @@ let AktualizacjaNastepnejGrupy = () =>{
 }
 
 
-
-
 let OdwiezWykonanie= () =>{ 
     return  new Promise((resolve,reject)=>{
   let data=[row.global_id]
@@ -98,22 +81,16 @@ let OdwiezGrupe = () =>{
 }
 
 
-
-
-
 try {
 let res1 = await  Insert();  // wstaw wykonanie
 let res2 = await  Historia(); // dodaj do historii
 let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
-let res4 = await  OdwiezWykonanie();  // sprawdza nowy status grupy
+let res4 = await  OdwiezWykonanie();  // sprawdza nowy status wykonania
 let res5 = await  OdwiezGrupe();  // sprawdza nowy status grupy
-let res6 = await  AktualizacjaNastepnejGrupy();  // sprawdza nowy status grupy
+let res6 = await  AktualizacjaNastepnejGrupy();  // aktualizuj statusy wszystkich grup
 
 
 
-
-// pobierz tylko nowy status i odeślij go aby zaaktualizować
-// res.status(200).json({status:"OK",insertId : id});
  res.status(200).json({status:"OK",insertId : id,status_wykonania:res4.status,do_wykonania:res4.do_wykonania, status_grupy: res5.status_grupy });
     } catch (error) {
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
@@ -128,8 +105,3 @@ module.exports = {
   dodajRealizacjeProcesu
 };
 
-
-// let res1 = await save().catch(error => {
-//         console.error("Błąd w save():", error);
-//         res.status(500).json({ error: "Błąd podczas zapisywania." });
-//     });

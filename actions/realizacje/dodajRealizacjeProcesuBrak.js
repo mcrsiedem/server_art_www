@@ -35,7 +35,7 @@ let SprawdzIleBrakuje = () =>{
                 // throw err
             reject(err); 
             }
-            console.log("Zrealizowano: "+result[0].realizacje)
+            // console.log("Zrealizowano: "+result[0].realizacje)
            resolve(result[0].realizacje || 0)
         })
 })
@@ -45,7 +45,7 @@ let Insert = (SUMA_REALIZACJI) =>{
     return  new Promise((resolve,reject)=>{
 
               let BRAKUJACE_PRZELOTY = parseInt(row.przeloty) - parseInt(SUMA_REALIZACJI || 0)
-              console.log(" BRAKUJACE_PRZELOTY: "+ BRAKUJACE_PRZELOTY)
+              // console.log(" BRAKUJACE_PRZELOTY: "+ BRAKUJACE_PRZELOTY)
       if(BRAKUJACE_PRZELOTY>0){
 
   let data=[row.global_id,BRAKUJACE_PRZELOTY,row.procesor_id,ID_SPRAWCY,2]
