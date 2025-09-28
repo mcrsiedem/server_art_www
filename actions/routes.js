@@ -75,6 +75,8 @@ const { dodajInfoDostepnoscPapieru } = require('./grupa/dodajInfoDostepnoscPapie
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
     router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
 
+    //ODDANIA   
+    router.get('/oddania_grupy/:token',verifyToken,connections.getOddaniaGrupy);
 
 
     // technologie promise

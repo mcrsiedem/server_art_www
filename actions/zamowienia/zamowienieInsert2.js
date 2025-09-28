@@ -205,9 +205,30 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
     new Promise((resolve, reject) => {
       connection.execute(sql, dane,(err, results) => {
         if (err) {
-          throw err;
+          // throw err;
+          resolve([{ zapis: false }, err]);
+
         } else {
           resolve([{ zapis: true }, { zamowienie_id: results.insertId }]);
+        }
+      });
+    })
+  );
+
+
+
+    var sql = "INSERT INTO artdruk.oddania_grupy (zamowienie_id,id,status,typ) values (?,?,?,?); ";
+  let daneOddane = [zamowienie_id,1,1,1]
+
+  promises.push(
+    new Promise((resolve, reject) => {
+      connection.execute(sql, daneOddane,(err, results) => {
+        if (err) {
+          // throw err;
+          resolve([{ zapis: false }, err]);
+
+        } else {
+          resolve([{ zapis: true }]);
         }
       });
     })
