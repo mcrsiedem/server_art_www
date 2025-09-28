@@ -643,8 +643,18 @@ class Connections {
     }
 
         getOddaniaGrupy(req,res){
-        const orderby = req.params['orderby']
-        var sql  = "select * from artdruk.view_oddania_grupy order by rok,nr" ;
+        const widok = req.params['widok']
+
+        if(widok==1){
+            var sql  = "select * from artdruk.view_oddania_grupy where status !=4 order by rok,nr" ;
+        }
+            if(widok==2){
+            var sql  = "select * from artdruk.view_oddania_grupy where status =4 order by rok,nr" ;
+        }
+                    if(widok==3){
+            var sql  = "select * from artdruk.view_oddania_grupy order by rok,nr" ;
+        }
+        // var sql  = "select * from artdruk.view_oddania_grupy where status !=4 order by rok,nr" ;
         // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
         if (err) throw err;
