@@ -52,6 +52,7 @@ const { usunRealizacjeProcesu } = require('./realizacje/usunRealizacjeProcesu');
 const { dodajRealizacjeProcesuBrak } = require('./realizacje/dodajRealizacjeProcesuBrak');
 const { dodajInfoDostepnoscPapieru } = require('./grupa/dodajInfoDostepnoscPapieru');
 const { zakonczOddanieDodajeWykonanie } = require('./oddania/zakonczOddanieDodajeWykonanie');
+const { zakonczArkusz } = require('./realizacje/zakonczArkusz');
 
 
 
@@ -110,6 +111,7 @@ const { zakonczOddanieDodajeWykonanie } = require('./oddania/zakonczOddanieDodaj
 
     router.post('/dodaj_realizacje_procesu/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesu); // try catch
     router.post('/dodaj_realizacje_procesu_brak/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesuBrak); // try catch
+    router.post('/dodaj_realizajce_zakoncz_arkusz/:token',verifyTokenParams('realizacje_dodaj'), zakonczArkusz); // try catch
     // router.post('/usun_realizacje_procesu/:token',verifyTokenParams('realizacje_usun'), usunRealizacjeProcesu); // try catch
     router.post('/usun_realizacje_procesu/:token',verifyToken, usunRealizacjeProcesu); // try catch
 

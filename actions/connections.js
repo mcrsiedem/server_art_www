@@ -646,13 +646,13 @@ class Connections {
         const widok = req.params['widok']
 
         if(widok==1){
-            var sql  = "select * from artdruk.view_oddania_grupy where status !=4 order by rok,nr" ;
+            var sql  = "select * from artdruk.view_oddania_grupy where status !=4 and status_zamowienia <7 order by rok,nr" ;
         }
             if(widok==2){
-            var sql  = "select * from artdruk.view_oddania_grupy where status =4 order by rok,nr" ;
+            var sql  = "select * from artdruk.view_oddania_grupy where status =4 and status_zamowienia <7 order by rok,nr" ;
         }
                     if(widok==3){
-            var sql  = "select * from artdruk.view_oddania_grupy order by rok,nr" ;
+            var sql  = "select * from artdruk.view_oddania_grupy order by rok,nr " ;
         }
         // var sql  = "select * from artdruk.view_oddania_grupy where status !=4 order by rok,nr" ;
         // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
