@@ -47,6 +47,10 @@ let Historia = () =>{
         if(row.typ==2) {
      data=[ID_SPRAWCY,row.nazwa,"Skasowano brak: "+row.zrealizowano+" ark. "+"grupa id: "+row.id_grupy,row.zamowienie_id]
     }
+            if(row.typ==3) {
+     data=[ID_SPRAWCY,row.nazwa,"Skasowano rozjazd: "+row.zrealizowano+" ark. "+"grupa id: "+row.id_grupy,row.zamowienie_id]
+    }
+
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
