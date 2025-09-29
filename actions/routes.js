@@ -105,7 +105,7 @@ const { zakonczArkusz } = require('./realizacje/zakonczArkusz');
     router.put('/grupa_wykonan_oprawa_uwagi/:token',verifyTokenParams('manage_oprawa'), aktualizujGrupeOprawaUwagi); 
     router.put('/dodaj_info_dostepnosc_papieru/:token',verifyToken, dodajInfoDostepnoscPapieru); 
     router.post('/dodaj_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOprawy); // try catch
-    router.post('/usun_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), usunRealizacjeOprawy); // try catch
+    router.post('/usun_realizacje_oprawy/:token',verifyToken, usunRealizacjeOprawy); // try catch
     router.post('/zakoncz_oprawe_dodaj_realizacje/:token',verifyTokenParams('mini_oprawa'), zakonczOpraweDodajRealizacje); // try catch
     router.post('/zakoncz_oddanie_dodaj_wykonanie/:token',verifyTokenParams('mini_oprawa'), zakonczOddanieDodajeWykonanie); // try catch
 

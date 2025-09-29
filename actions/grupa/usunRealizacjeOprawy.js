@@ -6,7 +6,7 @@ let row = req.body;
 let id;
 const token = req.params['token']
 let ID_SPRAWCY =  DecodeToken(token).id;
-
+let REALIZACJE_USUN =  DecodeToken(token).realizacje_usun || 0;
 const zamowienie_id = req.body.zamowienie_id;
 const id_grupy = req.body.id_grupy;
 const global_id_grupy = req.body.global_id_grupy;
@@ -16,8 +16,8 @@ const global_id_wykonania_oprawy = req.body.global_id;
 
 let Delete = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[global_id_wykonania_oprawy]
-      var sql =   "DELETE from artdruk.technologie_wykonania_oprawa where global_id=? ";
+  let data=[global_id_wykonania_oprawy,ID_SPRAWCY,REALIZACJE_USUN]
+      var sql =   "DELETE from artdruk.technologie_wykonania_oprawa where global_id=? and (dodal=? or 1=?)";
       connection.execute(sql, data,function (err, result) {     
           //  if (err) throw err; 
             if (err) reject(err); 
