@@ -53,6 +53,8 @@ const { dodajRealizacjeProcesuBrak } = require('./realizacje/dodajRealizacjeProc
 const { dodajInfoDostepnoscPapieru } = require('./grupa/dodajInfoDostepnoscPapieru');
 const { zakonczOddanieDodajeWykonanie } = require('./oddania/zakonczOddanieDodajeWykonanie');
 const { zakonczArkusz } = require('./realizacje/zakonczArkusz');
+const { aktualizujOddaniaUwagi } = require('./oddania/aktualizujOddaniaUwagi');
+const { dodajRealizacjeOddania } = require('./oddania/dodajRealizacjeOddania');
 
 
 
@@ -79,6 +81,8 @@ const { zakonczArkusz } = require('./realizacje/zakonczArkusz');
 
     //ODDANIA   
     router.get('/oddania_grupy/:widok/:token',verifyToken,connections.getOddaniaGrupy);
+    router.put('/oddania_uwagi/:token',verifyTokenParams('manage_oprawa'), aktualizujOddaniaUwagi); 
+ router.post('/dodaj_realizacje_oddania/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOddania); // try catch
 
 
     // technologie promise
