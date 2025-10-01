@@ -794,6 +794,7 @@ dragDropProcesGrup(req,res){
     const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
 
     
+    // console.log(id_drag_grupa_proces)
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
     var sql = "select artdruk.drag("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") as procesor_id";
     console.log(sql)
@@ -801,7 +802,64 @@ dragDropProcesGrup(req,res){
        if (err) res.status(203).json(err)  
             res.status(200).json(result);
     });
+
+
+
 }
+dragDropProcesGrupMulti(req,res){
+let promises = [];
+    // const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
+    // const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
+    let row = req.body;
+
+    let multiSelect =row[0]
+    let id_drop_grupa_proces =row[1]
+
+    const token = req.params['token']
+// let ID_SPRAWCY =  DecodeToken(token).id;
+
+
+// const zamowienie_id = req.body.zamowienie_id;
+
+    console.log(multiSelect)
+    console.log(id_drop_grupa_proces)
+
+    // var sql = "select artdruk.drag("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") ";
+    // // console.log(sql)
+    // connection.query(sql, function (err, result) {
+    //    if (err) res.status(203).json(err)  
+    //         res.status(200).json(result);
+    // });
+
+
+
+
+  for (let element of multiSelect) {
+    var sql = "select artdruk.drag("+ element +", "+ id_drop_grupa_proces +") ";
+
+    promises.push(     new Promise((resolve, reject) => {
+      connection.query(sql, (err, results) => {
+      if (err) {
+          resolve([{zapis: false},err]);               
+      } else {
+          // resolve([results,"ok arkusz"])
+          resolve([{zapis: true}])
+      }
+  });
+  })) 
+
+}
+
+
+  Promise.all(promises).then((data) => res.status(200).json("OK"));
+
+
+
+
+// res.status(200).json("OK");
+
+}
+
 
 dragDropProcesGrupOprawa(req,res){
 

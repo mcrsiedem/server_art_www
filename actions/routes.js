@@ -209,6 +209,11 @@ router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz_oprawa/:proc
 router.get('/technologie_grupyWykonan/:token',verifyToken,connections.getGrupyAll);     
 router.get('/technologie_grupy_oprawa_for_procesor/:procesor_id',connections.getGrupy_oprawa_for_procesor);     
 router.get('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);
+
+
+router.put('/drag_drop_proces_grupa_multi/:token',verifyToken,connections.dragDropProcesGrupMulti);
+
+
 router.get('/drag_drop_proces_grupa_oprawa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrupOprawa);
 router.get('/drag_drop_proces_grupa_to_procesor/:id_drag_grupa_proces/:id',connections.dragDropProcesGrupToProcesor);
 router.get('/updateWykonania/:global_id_wykonania/:kolumna/:wartosc',connections.updateWykonania);
