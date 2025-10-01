@@ -808,28 +808,15 @@ dragDropProcesGrup(req,res){
 }
 dragDropProcesGrupMulti(req,res){
 let promises = [];
-    // const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
-    // const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
-    let row = req.body;
 
+    let row = req.body;
     let multiSelect =row[0]
     let id_drop_grupa_proces =row[1]
 
     const token = req.params['token']
-// let ID_SPRAWCY =  DecodeToken(token).id;
-
-
-// const zamowienie_id = req.body.zamowienie_id;
 
     console.log(multiSelect)
     console.log(id_drop_grupa_proces)
-
-    // var sql = "select artdruk.drag("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") ";
-    // // console.log(sql)
-    // connection.query(sql, function (err, result) {
-    //    if (err) res.status(203).json(err)  
-    //         res.status(200).json(result);
-    // });
 
 
 
@@ -842,7 +829,7 @@ let promises = [];
       if (err) {
           resolve([{zapis: false},err]);               
       } else {
-          // resolve([results,"ok arkusz"])
+
           resolve([{zapis: true}])
       }
   });
@@ -850,13 +837,7 @@ let promises = [];
 
 }
 
-
   Promise.all(promises).then((data) => res.status(200).json("OK"));
-
-
-
-
-// res.status(200).json("OK");
 
 }
 
