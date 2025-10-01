@@ -1153,6 +1153,8 @@ updateAddPrzerwa(req,res){
     });
 }
 
+
+
 updateAddPrzerwaOprawa(req,res){
 
     const global_id_grupa = req.params['global_id_grupa']
@@ -1167,6 +1169,19 @@ updateAddPrzerwaOprawa(req,res){
     });
 }
 
+updateAddPrzerwaMagic(req,res){
+
+    const global_id_grupa = req.params['global_id_grupa']
+
+    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
+    var sql = "call artdruk.add_magic_przerwa("+ global_id_grupa +")";
+       
+    console.log(sql)
+    connection.query(sql, function (err, result) {
+       if (err) res.status(203).json(err)  
+            res.status(200).json(result);
+    });
+}
 updateDeletePrzerwa(req,res){
 
     const global_id_grupa = req.params['global_id_grupa']
