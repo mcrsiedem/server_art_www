@@ -815,8 +815,8 @@ let promises = [];
 
     const token = req.params['token']
 
-    console.log(multiSelect)
-    console.log(id_drop_grupa_proces)
+    // console.log(multiSelect)
+    // console.log(id_drop_grupa_proces)
 
 
 
