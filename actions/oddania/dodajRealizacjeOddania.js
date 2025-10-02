@@ -61,11 +61,11 @@ let Status = () =>{
 
 let OdwiezGrupe = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[globalreq.body.global_id_id]
-      var sql =   "SELECT status,zrealizowano from artdruk.view_oddania_grupy where global_id=? ";
+  let data=[req.body.global_id]
+      var sql =   "SELECT status,oddano from artdruk.view_oddania_grupy where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
-           resolve({status:result[0].status, zrealizowano:result[0].zrealizowano})
+           resolve({status:result[0].status, oddano:result[0].oddano})
         })
 })
 }
@@ -75,14 +75,14 @@ let OdwiezGrupe = () =>{
 
 try {
 let res1 = await  Insert();  // wstaw wykonanie
-// let res2 = await  Historia(); // dodaj do historii
-// let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
-// let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
+let res2 = await  Historia(); // dodaj do historii
+let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
+let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 
 
 // pobierz tylko nowy status i odeślij go aby zaaktualizować
-res.status(200).json({status:"OK"});
-// res.status(200).json({status:"OK",insertId : id,status_grupy:res4.status,zrealizowano:res4.zrealizowano });
+// res.status(200).json({status:"OK"});
+res.status(200).json({status:"OK",insertId : id,status_grupy:res4.status,oddano:res4.oddano });
     } catch (error) {
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
         // z dowolnej z funkcji (Insert, Historia).

@@ -32,7 +32,7 @@ let save = () =>{
 let save2 = () =>{ 
     return new Promise((resolve,reject)=>{
 
-     var sql =   "select artdruk.update_pliki_etap_zamowienia (" + zamowienie_id+ "," + element_id+ "," + global_id_pliki_row+ "," + etap+ ")"
+     var sql =   "call artdruk.update_pliki_etap_zamowienia (" + zamowienie_id+ "," + element_id+ "," + global_id_pliki_row+ "," + etap+ ")"
     connection.query(sql, function (err, result) {
     if (err) throw err;
     resolve("OK")
