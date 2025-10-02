@@ -14,25 +14,25 @@ const grupa_global_id = req.body.global_id;
 
 let Insert = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[row.zamowienie_id,row.global_id,row.zrealizowano,ID_SPRAWCY,1]
-      // var sql =   "INSERT INTO artdruk.oddania_wykonania (zamowienie_id, oddanie_global_id,zrealizowano,dodal,typ) values (?,?,?,?,?); ";
-      // connection.execute(sql, data,function (err, result) {     
-      //     //  if (err) throw err; 
-      //       if (err) reject(err); 
-      //       id = result.insertId
-      //      resolve("OK")
-      //   })
+  let data=[row.zamowienie_id,row.global_id,row.zrealizowano,ID_SPRAWCY,row.typ]
+      var sql =   "INSERT INTO artdruk.oddania_wykonania (zamowienie_id, oddanie_global_id,zrealizowano,dodal,typ) values (?,?,?,?,?); ";
+      connection.execute(sql, data,function (err, result) {     
+          //  if (err) throw err; 
+            if (err) reject(err); 
+            id = result.insertId
+           resolve("OK")
+        })
 
 
-  console.log(data)
-resolve("OK")
+//   console.log(data)
+// resolve("OK")
 })
 }
 
 
 let Historia = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,"Oprawa","Oprawiono: "+row.naklad+" szt.",zamowienie_id]
+    let data=[ID_SPRAWCY,"Oddania","Oddano: "+row.naklad+" szt.",zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
@@ -47,8 +47,8 @@ let Historia = () =>{
 
 let Status = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[zamowienie_id,grupa_id]
-    var sql = "call artdruk.aktualizacja_statusu_oprawy_vs_realizacja(?,?) ";
+    let data=[zamowienie_id,req.body.global_id]
+    var sql = "call artdruk.aktualizacja_statusu_oddania(?,?) ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
            resolve("OK")
@@ -61,8 +61,8 @@ let Status = () =>{
 
 let OdwiezGrupe = () =>{ 
     return  new Promise((resolve,reject)=>{
-  let data=[global_id]
-      var sql =   "SELECT status,zrealizowano from artdruk.view_technologie_grupy_wykonan_oprawa where global_id=? ";
+  let data=[globalreq.body.global_id_id]
+      var sql =   "SELECT status,zrealizowano from artdruk.view_oddania_grupy where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
            resolve({status:result[0].status, zrealizowano:result[0].zrealizowano})

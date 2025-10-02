@@ -79,7 +79,7 @@ let Status = () =>{
 let OdwiezGrupe = () =>{ 
     return  new Promise((resolve,reject)=>{
   let data=[req.body.global_id]
-      var sql =   "SELECT status,zostalo from artdruk.view_oddania_grupy where global_id=? ";
+      var sql =   "SELECT status,oddano from artdruk.view_oddania_grupy where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
            resolve({status:result[0].status, zrealizowano:result[0].zostalo})
