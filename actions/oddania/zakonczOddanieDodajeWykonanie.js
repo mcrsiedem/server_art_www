@@ -82,7 +82,7 @@ let OdwiezGrupe = () =>{
       var sql =   "SELECT status,oddano from artdruk.view_oddania_grupy where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err) reject(err); 
-           resolve({status:result[0].status, zrealizowano:result[0].zostalo})
+           resolve({status:result[0].status, oddano:result[0].oddano})
         })
 })
 }
@@ -99,7 +99,7 @@ let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 
 
 // pobierz tylko nowy status i odeślij go aby zaaktualizować
-res.status(200).json({status:"OK",insertId : id || 0,status_grupy:res4.status, brakujacy_naklad:BRAKUJACY_NAKLAD,zrealizowano:res4.zrealizowano });
+res.status(200).json({status:"OK",insertId : id || 0,status_grupy:res4.status, brakujacy_naklad:BRAKUJACY_NAKLAD,oddano:res4.oddano });
     } catch (error) {
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
         // z dowolnej z funkcji (Insert, Historia).
