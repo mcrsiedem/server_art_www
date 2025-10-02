@@ -82,7 +82,12 @@ const { dodajRealizacjeOddania } = require('./oddania/dodajRealizacjeOddania');
     //ODDANIA   
     router.get('/oddania_grupy/:widok/:token',verifyToken,connections.getOddaniaGrupy);
     router.put('/oddania_uwagi/:token',verifyTokenParams('manage_oprawa'), aktualizujOddaniaUwagi); 
- router.post('/dodaj_realizacje_oddania/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOddania); // try catch
+    router.post('/dodaj_realizacje_oddania/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOddania); // try catch
+
+    router.get('/oddania_wykonania/:grupa_global_id/:token',verifyToken,connections.getOddaniaWykonania);
+
+    
+
 
 
     // technologie promise

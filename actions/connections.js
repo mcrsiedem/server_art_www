@@ -642,6 +642,17 @@ class Connections {
     });
     }
 
+        getOddaniaWykonania(req,res){
+        const grupa_global_id = req.params['grupa_global_id']
+        
+        var sql  = "select * from artdruk.view_oddania_wykonania where oddanie_global_id= "+ grupa_global_id  ;
+        // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
+        connection.query(sql, function (err, doc) {
+        if (err) throw err;
+        res.status(200).json(doc);
+    });
+    }
+
         getOddaniaGrupy(req,res){
         const widok = req.params['widok']
 
