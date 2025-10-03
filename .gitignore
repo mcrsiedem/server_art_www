@@ -3,5 +3,7 @@ config.js
 cert
 ACCESS_TOKEN.js
 SendMailPlaner.js
+SendMail.js
+mail.js
 mb.sh
 artdruk_*
