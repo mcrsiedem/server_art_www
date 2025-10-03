@@ -10,14 +10,16 @@ const token = req.params['token']
 let id;
 let ID_SPRAWCY =  DecodeToken(token).id;
 
-console.log("global id wykonania"+row.global_id)
+let wizytowka = "User: "+ ID_SPRAWCY+ " Wykonanie global_id: "+row.global_id + " Procesor: "+row.procesor_id
+
+// console.log("global id wykonania"+row.global_id)
 let Insert = () =>{ 
     return  new Promise((resolve,reject)=>{
   let data=[row.global_id,row.zrealizowano,row.procesor_id,ID_SPRAWCY,1]
       var sql =   "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
        if (err){
-                reject("Insert "+err); 
+                reject(wizytowka+" Insert "+err); 
             } resolve("OK")
         })
 })
@@ -30,7 +32,7 @@ let Historia = () =>{
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
         if (err){
-                reject("Historia "+err); 
+                reject(wizytowka+" Historia "+err); 
             }  resolve("OK")
         })
 })
@@ -43,7 +45,7 @@ let Status = () =>{
     var sql = "call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?) ";
     connection.execute(sql,data, function (err, result) {    
          if (err){
-                reject("Status "+err); 
+                reject(wizytowka+" Status "+err); 
             }  resolve("OK")
         })
 })
@@ -56,7 +58,7 @@ let AktualizacjaNastepnejGrupy = () =>{
     var sql = "call artdruk.aktualizacja_statusow_grup(?) ";
     connection.execute(sql,data, function (err, result) {    
         if (err){
-                reject("AktualizacjaNastepnejGrupy "+err); 
+                reject(wizytowka+" AktualizacjaNastepnejGrupy "+err); 
             } else resolve("OK")
         })
 })
@@ -71,7 +73,7 @@ let OdwiezWykonanie= () =>{
       connection.execute(sql, data,function (err, result) {     
             if (err){
 
-                reject("OdwiezWykonanie "+err); 
+                reject(wizytowka+" OdwiezWykonanie "+err); 
             } else            resolve({status:result[0]?.status ||0, do_wykonania:result[0]?.do_wykonania ||0})
         })
 })
@@ -83,7 +85,7 @@ let OdwiezGrupe = () =>{
       var sql =   "SELECT status from artdruk.view_technologie_grupy_wykonan where technologia_id=? and id=? ";
       connection.execute(sql, data,function (err, result) {     
                   if (err){
-                reject("OdwiezGrupe "+err); 
+                reject(wizytowka+" OdwiezGrupe "+err); 
             } else  resolve({status_grupy:result[0].status })
         })
 })
