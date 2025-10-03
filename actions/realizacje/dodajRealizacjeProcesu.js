@@ -69,7 +69,7 @@ let AktualizacjaNastepnejGrupy = () =>{
 let OdwiezWykonanie= () =>{ 
     return  new Promise((resolve,reject)=>{
   let data=[row.global_id]
-      var sql =   "SELECT status, do_wykonania from artdruk.technologie_wykonania2 where global_id=? ";
+      var sql =   "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err){
 
