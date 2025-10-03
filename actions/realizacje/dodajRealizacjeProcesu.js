@@ -38,7 +38,7 @@ let Status = () =>{
     let data=[row.global_id]
     var sql = "call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?) ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
+          if (err) reject("MR_Status "+err); 
            resolve("OK")
         })
 })
@@ -50,7 +50,7 @@ let AktualizacjaNastepnejGrupy = () =>{
     let data=[row.technologia_id]
     var sql = "call artdruk.aktualizacja_statusow_grup(?) ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
+          if (err) reject("MR_AktualizacjaNastepnejGrupy"+err); 
            resolve("OK")
         })
 })
