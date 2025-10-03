@@ -1,4 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
+const { SendMail } = require("../mail/SendMail");
 const connection = require("../mysql");
 
 const zakonczArkusz = async (req, res) => {
@@ -138,6 +139,8 @@ let res6 = await  AktualizacjaNastepnejGrupy();  // aktualizuj statusy wszystkic
 
  res.status(200).json({status:"OK",insertId : id,status_wykonania:res4.status,do_wykonania:res4.do_wykonania, status_grupy: res5.status_grupy, idRozjazdu:idRozjazdu,brakujace_przeloty:BRAKUJACE_PRZELOTY  });
     } catch (error) {
+
+       SendMail(error)
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
         // z dowolnej z funkcji (Insert, Historia).
         console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
