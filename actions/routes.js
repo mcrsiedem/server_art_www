@@ -55,6 +55,7 @@ const { zakonczOddanieDodajeWykonanie } = require('./oddania/zakonczOddanieDodaj
 const { zakonczArkusz } = require('./realizacje/zakonczArkusz');
 const { aktualizujOddaniaUwagi } = require('./oddania/aktualizujOddaniaUwagi');
 const { dodajRealizacjeOddania } = require('./oddania/dodajRealizacjeOddania');
+const { usunRealizacjeOddania } = require('./oddania/usunRealizacjeOddania');
 
 
 
@@ -85,6 +86,7 @@ const { dodajRealizacjeOddania } = require('./oddania/dodajRealizacjeOddania');
     router.post('/dodaj_realizacje_oddania/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOddania); // try catch
 
     router.get('/oddania_wykonania/:grupa_global_id/:token',verifyToken,connections.getOddaniaWykonania);
+    router.post('/usun_realizacje_oddania/:token',verifyToken, usunRealizacjeOddania); // try catch
 
     
 
@@ -158,10 +160,10 @@ const { dodajRealizacjeOddania } = require('./oddania/dodajRealizacjeOddania');
     router.post('/insertWydaniePapieru_status/:token',verifyToken,connections.insertWydaniePapieru_status);
     router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connections.insertWydaniePapieru_status_multiselect);
     
-    router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny); //historia
-    router.put('/zakoncz_oprawe/:token',verifyToken,connections.zakoncz_oprawe); // historia
+    // router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny); //historia         UWAGA
+    // router.put('/zakoncz_oprawe/:token',verifyToken,connections.zakoncz_oprawe); // historia
     router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
-    router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie); //historia
+    // router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie); //historia
     router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
     router.put('/zamowieniaInfo/:token',verifyToken,ZamowieniaInfo);
     router.put('/zamowieniaInfoGrupy/:token',verifyToken,ZamowieniaInfoGrupy);
