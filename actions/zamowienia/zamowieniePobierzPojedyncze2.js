@@ -109,7 +109,7 @@ const zamowieniePobierzPojedyncze =(req,res)=>{
         var sql = "commit";
         connection.query(sql, function (err, result) {
             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-        console.log("get OK");
+        // console.log("get OK");
         res.status(200).json(dane);
         });
 

@@ -8,7 +8,7 @@ const apiRouter = require("../actions/routes");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { Server } = require("socket.io");
-
+const now = new Date();
 require("../actions/mysql");
 
 // app.use(bodyParser.json());
@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
   console.log(`User disconnected `, socket.id);
   });
-  console.log(`User Connected: ${socket.id}`);
+  console.log(now.toString()+ ` User Connected: ${socket.id}`);
 
 
   socket.on("send_mesage", (data) => {

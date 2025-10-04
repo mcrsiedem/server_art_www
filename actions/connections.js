@@ -302,7 +302,7 @@ class Connections {
             var sql = "commit";
             connection.query(sql, function (err, result) {
             if (err) throw err;
-            console.log("odczyt technologi OK");
+            // console.log("odczyt technologi OK");
             res.status(200).json(dane);
             });
      
@@ -364,12 +364,13 @@ class Connections {
                  connection.query(sql, function (err, doc) {
                  if (err) throw err;
                  dane.push(doc)
+                 
                  } );
     
                 var sql = "commit";
                 connection.query(sql, function (err, result) {
                 if (err) throw err;
-                console.log("odczyt technologi OK");
+                // console.log("odczyt technologi OK");
                 res.status(200).json(dane);
                 });
          
