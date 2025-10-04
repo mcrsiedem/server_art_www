@@ -364,7 +364,7 @@ class Connections {
                  connection.query(sql, function (err, doc) {
                  if (err) throw err;
                  dane.push(doc)
-                 
+
                  } );
     
                 var sql = "commit";
@@ -755,7 +755,7 @@ setOrderOpen(req,res){
 
     var sql  = "select * from artdruk.view_zamowienia_stan_otwarcia where id = '" + id+ "' ORDER BY id ASC ";
     connection.query(sql, function (err, doc) {
-        console.log("user"+user)
+        // console.log("user"+user)
 //         console.log("Wartość doc[0].open_user_id:", doc[0].open_user_id);
 // console.log("Typ doc[0].open_user_id:", typeof doc[0].open_user_id);
 // console.log("Wartość id:", id);
@@ -1183,7 +1183,7 @@ updatePrzeniesWykonanieDoInnejGrupy(req,res){
     const ostatnie_wykonania = req.params['ostatnie_wykonania']
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
     var sql = "select artdruk.przenies_wykonanie("+ global_id_wykonania +","+ grupa_id_drop +","+ ostatnie_wykonania +") as technologia_id";
-    console.log(sql)
+    // console.log(sql)
     connection.query(sql, function (err, result) {
        if (err) res.status(203).json(err)  
             res.status(200).json(result);

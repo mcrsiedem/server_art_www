@@ -20,7 +20,7 @@ let Insert = () =>{
       connection.execute(sql, data,function (err, result) {     
        if (err){
                 reject(wizytowka+" Insert "+err); 
-            } resolve("OK")
+            } else resolve("OK")
         })
 })
 }
@@ -33,7 +33,7 @@ let Historia = () =>{
     connection.execute(sql,data, function (err, result) {    
         if (err){
                 reject(wizytowka+" Historia "+err); 
-            }  resolve("OK")
+            } else resolve("OK")
         })
 })
 }
@@ -46,7 +46,7 @@ let Status = () =>{
     connection.execute(sql,data, function (err, result) {    
          if (err){
                 reject(wizytowka+" Status "+err); 
-            }  resolve("OK")
+            }  else resolve("OK")
         })
 })
 

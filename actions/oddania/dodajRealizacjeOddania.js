@@ -32,7 +32,7 @@ let Insert = () =>{
 
 let Historia = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,"Oddania","Oddano: "+row.naklad+" szt.",zamowienie_id]
+    let data=[ID_SPRAWCY,"Oddania","Oddano: "+row.zrealizowano+" szt.",zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
