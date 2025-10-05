@@ -11,7 +11,6 @@ const apiRouter = require('../actions/routes');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const {Server} = require("socket.io")
-const now = new Date();
 
 require('../actions/mysql');
 // app.use(cors());
@@ -62,7 +61,7 @@ const io = new Server(serverSSL,{
 })
 
 io.on("connection", (socket)=>{
-  console.log(now.toString()+ `User Connected: ${socket.id}`)
+  console.log(new Date().toString()+ `User Connected: ${socket.id}`)
   socket.on("send_mesage", (data) => {
     console.log(`Wiadomość: ${data.message}`)
     socket.broadcast.emit("receive_message", data)
