@@ -30,7 +30,13 @@ let Delete = () =>{
 
 let Historia = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,"Oddania","Usunięto realizację oddania : "+row.zrealizowano+" szt.",zamowienie_id]
+   let data;
+      if(row.typ==1){
+        data=[ID_SPRAWCY,"Oddania","Usunięto realizację oddania : "+row.zrealizowano+" szt.",zamowienie_id]
+      }
+  if(row.typ==2){
+        data=[ID_SPRAWCY,"Oddania","Usunięto brak nakładu : "+row.zrealizowano+" szt.",zamowienie_id]
+      }
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
                 if (err){

@@ -14,6 +14,7 @@ const grupa_global_id = req.body.global_id;
 
 let Insert = () =>{ 
     return  new Promise((resolve,reject)=>{
+  
   let data=[row.zamowienie_id,row.global_id,row.zrealizowano,ID_SPRAWCY,row.typ]
       var sql =   "INSERT INTO artdruk.oddania_wykonania (zamowienie_id, oddanie_global_id,zrealizowano,dodal,typ) values (?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
@@ -32,7 +33,16 @@ let Insert = () =>{
 
 let Historia = () =>{ 
     return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,"Oddania","Oddano: "+row.zrealizowano+" szt.",zamowienie_id]
+      // row.typ == 1 oddanie
+      // row.typ == 2 brak
+    let data;
+
+    if(row.typ==1){
+      data=[ID_SPRAWCY,"Oddania","Oddano: "+row.zrealizowano+" szt.",zamowienie_id]
+    }
+    if(row.typ==2){
+      data=[ID_SPRAWCY,"Oddania","Brak nakładu: "+row.zrealizowano+" szt.",zamowienie_id]
+    }
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
           if (err) reject(err); 
