@@ -172,10 +172,8 @@ const { usunRealizacjeOddania } = require('./oddania/usunRealizacjeOddania');
     router.put('/mail/:token',verifyToken,SendMailPlaner);
 
     // co to ????
-    router.post('/zapis_kosztow_dodatkowych',connections.zapisKosztowDodatkowych);
-    router.post('/zapis_kosztow_dodatkowych_zamowienia',connections.zapisKosztowDodatkowychZamowienia);
-    router.post('/addKosztDodatkowy',connections.postKoszty);
-    router.post('/addKosztDodatkowyZamowienia',connections.postKosztyDodatkoweZamowienia);
+    // router.post('/addKosztDodatkowy',connections.postKoszty);
+    // router.post('/addKosztDodatkowyZamowienia',connections.postKosztyDodatkoweZamowienia);
     
     router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);
     router.put('/delete_zamowienie_kosz',connections.updateSetOrderToDeleted);
