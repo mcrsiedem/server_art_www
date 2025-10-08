@@ -14,9 +14,12 @@ let Insert = () =>{
   let data=[row.global_id,row.zrealizowano,row.procesor_id,ID_SPRAWCY,1]
       var sql =   "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
-            if (err) reject(err); 
-            id = result.insertId
-           resolve("OK")
+            if (err){
+              reject(err); 
+            } else{
+               id = result.insertId
+               resolve("OK") 
+            }
         })
 })
 }
@@ -28,11 +31,11 @@ let SprawdzIleBrakuje = () =>{
       var sql =   "SELECT sum(zrealizowano) as realizacje from artdruk.view_technologie_realizacje where wykonanie_global_id=?  ";
       connection.execute(sql, data,function (err, result) {     
                   if (err) {
-                // throw err
-            reject(err); 
-            }
-            // console.log("Zrealizowano: "+result[0].realizacje)
-           resolve(result[0].realizacje || 0)
+                    reject(err);
+                  } else {
+                    resolve(result[0].realizacje || 0);
+                  }
+           
         })
 })
 }
@@ -50,11 +53,13 @@ let InsertRozjazd = (SUMA_REALIZACJI) =>{
       connection.execute(sql, data,function (err, result) {     
             // if (err) reject(err); 
                     if (err) {
-                // throw err
-            reject(err); 
-            }
-            idRozjazdu = result.insertId
-           resolve(BRAKUJACE_PRZELOTY)
+                      reject(err);
+                    }
+                    {
+                      idRozjazdu = result.insertId;
+                      resolve(BRAKUJACE_PRZELOTY);
+                    }
+           
         })
       }else{
         resolve(0)
@@ -70,8 +75,12 @@ let Historia = () =>{
     let data=[ID_SPRAWCY,row.nazwa,"Zrealizowano: "+row.zrealizowano+" ark. "+"grupa id: "+row.id,row.zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
-           resolve("OK")
+          if (err){
+            reject(err); 
+          } else{
+            resolve("OK")
+          }
+           
         })
 })
 }
@@ -82,8 +91,12 @@ let Status = () =>{
     let data=[row.global_id]
     var sql = "call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?) ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
-           resolve("OK")
+          if (err) {
+            reject(err); 
+          } else{
+            resolve("OK")
+          }
+           
         })
 })
 
@@ -94,8 +107,12 @@ let AktualizacjaNastepnejGrupy = () =>{
     let data=[row.technologia_id]
     var sql = "call artdruk.aktualizacja_statusow_grup(?) ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
-           resolve("OK")
+          if (err){
+            reject(err);
+          }  else{
+             resolve("OK")
+          }
+          
         })
 })
 
@@ -107,8 +124,15 @@ let OdwiezWykonanie= () =>{
   let data=[row.global_id]
       var sql =   "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
-            if (err) reject(err); 
-           resolve({status:result[0].status, do_wykonania:result[0].do_wykonania})
+            if (err) {
+              reject(err);
+            } else {
+              resolve({
+                status: result[0].status,
+                do_wykonania: result[0].do_wykonania,
+              });
+            }
+           
         })
 })
 }
@@ -118,8 +142,12 @@ let OdwiezGrupe = () =>{
   let data=[row.technologia_id,row.grupa_id]
       var sql =   "SELECT status from artdruk.view_technologie_grupy_wykonan where technologia_id=? and id=? ";
       connection.execute(sql, data,function (err, result) {     
-            if (err) reject(err); 
-           resolve({status_grupy:result[0].status})
+            if (err) {
+              reject(err);
+            } else {
+              resolve({ status_grupy: result[0].status });
+            }
+           
         })
 })
 }
@@ -141,8 +169,7 @@ let res6 = await  AktualizacjaNastepnejGrupy();  // aktualizuj statusy wszystkic
     } catch (error) {
 
        SendMail(error)
-        // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
-        // z dowolnej z funkcji (Insert, Historia).
+
         console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
         res.status(200).json({ status: error});
     }

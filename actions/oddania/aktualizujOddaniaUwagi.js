@@ -1,4 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
+const { SendMail } = require("../mail/SendMail");
 const connection = require("../mysql");
 
 const aktualizujOddaniaUwagi = async (req, res) => {
@@ -17,8 +18,9 @@ let Update = () =>{
     return  new Promise((resolve,reject)=>{
       var sql =   "update artdruk.oddania_grupy set  uwagi=? where global_id =?"
       connection.execute(sql, [text,global_id],function (err, result) {
-                if (err) reject(err); 
-           resolve("OK") 
+                if (err) {
+                          reject(err);
+                        } else resolve("OK"); 
               });
 })
 }
@@ -29,8 +31,9 @@ let Historia = () =>{
     let data=[ID_SPRAWCY,"Oddania","Uwagi do oddania : "+text,zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
-           resolve("OK")
+          if (err) {
+                          reject(err);
+                        } else resolve("OK");
         })
 })
 }
@@ -41,12 +44,10 @@ try {
 let res1 = await  Update();  // wstaw wykonanie
 let res2 = await  Historia(); // dodaj do historii
 
-
-// pobierz tylko nowy status i odeślij go aby zaaktualizować
 res.status(200).json("OK");
     } catch (error) {
-        // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
-        // z dowolnej z funkcji (Insert, Historia).
+      
+        SendMail(error)
         console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
         res.status(200).json({ status: error});
     }

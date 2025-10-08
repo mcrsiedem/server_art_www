@@ -1,4 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
+const { SendMail } = require("../mail/SendMail");
 const connection = require("../mysql");
 
 const zakonczOddanieDodajeWykonanie = async (req, res) => {
@@ -19,8 +20,9 @@ let SprawdzIleBrakuje = () =>{
   let data=[oddanie_global_id]
       var sql =   "SELECT sum(zrealizowano) as realizacje from artdruk.oddania_wykonania where oddanie_global_id=?";
       connection.execute(sql, data,function (err, result) {     
-            if (err) reject(err); 
-           resolve(result[0].realizacje)
+              if (err) {
+                          reject(err);
+                        } else  resolve(result[0].realizacje)
         })
 })
 }
@@ -34,9 +36,13 @@ let Insert = (SUMA_REALIZACJI) =>{
       var sql =   "INSERT INTO artdruk.oddania_wykonania (zamowienie_id,oddanie_global_id, zrealizowano,dodal,typ) values (?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
           //  if (err) throw err; 
-            if (err) reject(err); 
-            id = result.insertId
-           resolve(BRAKUJACY_NAKLAD)
+              if (err) {
+                          reject(err);
+                        } else {
+                          id = result.insertId
+                          resolve(BRAKUJACY_NAKLAD)
+                        }
+            
         })
       }else {
         resolve("OK")
@@ -52,8 +58,9 @@ let Historia = (BRAKUJACY_NAKLAD) =>{
     let data=[ID_SPRAWCY,"Oddanie","Oddano "+BRAKUJACY_NAKLAD+" szt.",zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
-           resolve("OK")
+          if (err) {
+                          reject(err);
+                        } else resolve("OK");
         })
 })
 }
@@ -67,8 +74,9 @@ let Status = () =>{
     let data=[zamowienie_id,req.body.global_id]
     var sql = "call artdruk.aktualizacja_statusu_oddania(?,?) ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
-           resolve("OK")
+          if (err) {
+                          reject(err);
+                        } else resolve("OK");
         })
 })
 
@@ -81,8 +89,9 @@ let OdwiezGrupe = () =>{
   let data=[req.body.global_id]
       var sql =   "SELECT status,oddano from artdruk.view_oddania_grupy where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
-            if (err) reject(err); 
-           resolve({status:result[0].status, oddano:result[0].oddano})
+            if (err) {
+                          reject(err);
+                        } else resolve({status:result[0].status, oddano:result[0].oddano})
         })
 })
 }
@@ -98,11 +107,10 @@ let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
 let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 
 
-// pobierz tylko nowy status i odeślij go aby zaaktualizować
 res.status(200).json({status:"OK",insertId : id || 0,status_grupy:res4.status, brakujacy_naklad:BRAKUJACY_NAKLAD,oddano:res4.oddano });
     } catch (error) {
-        // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
-        // z dowolnej z funkcji (Insert, Historia).
+
+        SendMail(error)
         console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
         res.status(200).json({ status: error});
     }

@@ -1,4 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
+const { SendMail } = require("../mail/SendMail");
 const connection = require("../mysql");
 
 const dodajRealizacjeOddania = async (req, res) => {
@@ -19,14 +20,16 @@ let Insert = () =>{
       var sql =   "INSERT INTO artdruk.oddania_wykonania (zamowienie_id, oddanie_global_id,zrealizowano,dodal,typ) values (?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
           //  if (err) throw err; 
-            if (err) reject(err); 
-            id = result.insertId
+            if (err) {
+                          reject(err);
+                        } else {
+                             id = result.insertId
            resolve("OK")
+                        }
+         
         })
 
 
-//   console.log(data)
-// resolve("OK")
 })
 }
 
@@ -45,8 +48,9 @@ let Historia = () =>{
     }
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
-           resolve("OK")
+          if (err) {
+                          reject(err);
+                        } else resolve("OK");
         })
 })
 }
@@ -60,8 +64,9 @@ let Status = () =>{
     let data=[zamowienie_id,req.body.global_id]
     var sql = "call artdruk.aktualizacja_statusu_oddania(?,?) ";
     connection.execute(sql,data, function (err, result) {    
-          if (err) reject(err); 
-           resolve("OK")
+          if (err) {
+                          reject(err);
+                        } else resolve("OK");
         })
 })
 
@@ -74,8 +79,9 @@ let OdwiezGrupe = () =>{
   let data=[req.body.global_id]
       var sql =   "SELECT status,oddano from artdruk.view_oddania_grupy where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
-            if (err) reject(err); 
-           resolve({status:result[0].status, oddano:result[0].oddano})
+            if (err) {
+                          reject(err);
+                        } else  resolve({status:result[0].status, oddano:result[0].oddano})
         })
 })
 }
@@ -94,8 +100,8 @@ let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 // res.status(200).json({status:"OK"});
 res.status(200).json({status:"OK",insertId : id,status_grupy:res4.status,oddano:res4.oddano });
     } catch (error) {
-        // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
-        // z dowolnej z funkcji (Insert, Historia).
+
+        SendMail(error)
         console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
         res.status(200).json({ status: error});
     }
@@ -107,7 +113,3 @@ module.exports = {
 };
 
 
-// let res1 = await save().catch(error => {
-//         console.error("Błąd w save():", error);
-//         res.status(500).json({ error: "Błąd podczas zapisywania." });
-//     });

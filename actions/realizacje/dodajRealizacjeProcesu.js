@@ -5,14 +5,12 @@ const { SendMailPlaner } = require("../mail/SendMailPlaner");
 const connection = require("../mysql");
 
 const dodajRealizacjeProcesu = async (req, res) => {
+let id;
 let row = req.body;  // wykonanie do którego dodawana jest realizacja rozszerzona o zrealizowano
 const token = req.params['token']
-let id;
 let ID_SPRAWCY =  DecodeToken(token).id;
-
 let wizytowka = "User: "+ ID_SPRAWCY+ " Wykonanie global_id: "+row.global_id + " Procesor: "+row.procesor_id
 
-// console.log("global id wykonania"+row.global_id)
 let Insert = () =>{ 
     return  new Promise((resolve,reject)=>{
   let data=[row.global_id,row.zrealizowano,row.procesor_id,ID_SPRAWCY,1]
@@ -72,7 +70,6 @@ let OdwiezWykonanie= () =>{
       var sql =   "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=? ";
       connection.execute(sql, data,function (err, result) {     
             if (err){
-
                 reject(wizytowka+" OdwiezWykonanie "+err); 
             } else            resolve({status:result[0]?.status ||0, do_wykonania:result[0]?.do_wykonania ||0})
         })
@@ -107,7 +104,6 @@ let res6 = await  AktualizacjaNastepnejGrupy();  // aktualizuj statusy wszystkic
     } catch (error) {
 
         SendMail(error)
-
         console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
         res.status(200).json({ status: error});
     }

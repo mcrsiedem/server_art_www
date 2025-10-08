@@ -1,4 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
+const { SendMail } = require("../mail/SendMail");
 const connection = require("../mysql");
 
 const usunRealizacjeOddania = async (req, res) => {
@@ -81,6 +82,7 @@ let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
 // pobierz tylko nowy status i odeślij go aby zaaktualizować
 res.status(200).json({status:"OK",status_grupy:res4.status,oddano:res4.oddano });
     } catch (error) {
+      SendMail(error)
         // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
         // z dowolnej z funkcji (Insert, Historia).
         console.error(error);
