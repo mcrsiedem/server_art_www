@@ -114,6 +114,11 @@ io.on("connection", (socket) => {
         socketId: socket.id,
       });
   });
+
+    socket.on("ktotam", () => {
+    // socket.broadcast.emit("receive_message", onlineUsers);
+    socket.emit("onlineUsers", onlineUsers);
+  });
 });
 
 module.exports = {
