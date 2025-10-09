@@ -71,12 +71,31 @@ io.use((socket, next) => {
 });
 
 let onlineUsers = [];
+const addUser = (socket) =>{
+    // !onlineUsers.some((user => user.userId === userId)) &&
 
+      onlineUsers.push({
+        userId:socket.userData.id,
+        socketId: socket.id,
+        zalogowany: new Date().toString()
+      });
+
+   console.log(onlineUsers)
+}
+const removeUser = (socket) =>{
+
+onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
+       console.log(onlineUsers)
+}
 io.on("connection", (socket) => {
   // Tutaj możesz mieć pewność, że użytkownik jest zalogowany
-  console.log(`Zalogowany użytkownik ${socket.userData.id} połączony!`);
+  addUser(socket)
+  console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);
+  
   socket.on("disconnect", () => {
   console.log(`User disconnected `, socket.id);
+  removeUser(socket)
+
   });
   // console.log(new Date().toString()+ ` User Connected: ${socket.id}`);
 
