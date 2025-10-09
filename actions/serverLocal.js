@@ -2,12 +2,14 @@ const express = require("express");
 const http = require("http");
 const app = express();
 const { port } = require("../config");
+const jwt = require("jsonwebtoken");
 
 const connection = require("../actions/mysql");
 const apiRouter = require("../actions/routes");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { Server } = require("socket.io");
+const { ACCESS_TOKEN } = require("./logowanie/ACCESS_TOKEN");
 require("../actions/mysql");
 
 // app.use(bodyParser.json());
@@ -39,13 +41,44 @@ const io = new Server(server, {
     origin: ["http://localhost:3000"],
   },
 });
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  // console.log("TOKEN: "+token)
+
+  if (token) {
+    try {
+      // Weryfikacja tokenu
+      const decoded = jwt.verify(token, ACCESS_TOKEN);
+      
+      // Token poprawny. Dodaj dane użytkownika do obiektu socket
+      socket.userData = decoded; 
+      next(); // Kontynuuj połączenie
+    } catch (err) {
+      // Błąd weryfikacji (np. token wygasł lub jest nieprawidłowy)
+      console.log('Błąd autoryzacji JWT:', err.message);
+      const authError = new Error("Authentication error: Invalid or expired token.");
+      authError.data = { type: "INVALID_TOKEN" };
+      next(authError); // Odrzuć połączenie z błędem
+    }
+  } else {
+    // Brak tokenu w żądaniu
+    console.log('Błąd autoryzacji: Brak tokenu.');
+    const authError = new Error("Authentication error: Token missing.");
+    authError.data = { type: "TOKEN_MISSING" };
+    next(authError); // Odrzuć połączenie
+  }
+});
+
 let onlineUsers = [];
 
 io.on("connection", (socket) => {
+  // Tutaj możesz mieć pewność, że użytkownik jest zalogowany
+  console.log(`Zalogowany użytkownik ${socket.userData.id} połączony!`);
   socket.on("disconnect", () => {
   console.log(`User disconnected `, socket.id);
   });
-  console.log(new Date().toString()+ ` User Connected: ${socket.id}`);
+  // console.log(new Date().toString()+ ` User Connected: ${socket.id}`);
 
 
   socket.on("send_mesage", (data) => {

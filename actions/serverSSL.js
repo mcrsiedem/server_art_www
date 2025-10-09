@@ -62,10 +62,17 @@ const io = new Server(serverSSL,{
 
 io.on("connection", (socket)=>{
   console.log(new Date().toString()+ `User Connected: ${socket.id}`)
+
   socket.on("send_mesage", (data) => {
     console.log(`Wiadomość: ${data.message}`)
     socket.broadcast.emit("receive_message", data)
   })
+
+
+
+
+  
+
 })
 
 module.exports = {
