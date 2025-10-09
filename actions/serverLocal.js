@@ -85,7 +85,7 @@ const addUser = (socket) =>{
       });
 
    console.log(onlineUsers)
-   socket.emit("onlineUsers", onlineUsers);
+  io.emit("onlineUsers", onlineUsers);
 }
 const removeUser = (socket) =>{
 
@@ -100,7 +100,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
   console.log(`User disconnected `, socket.id);
   removeUser(socket)
-socket.emit("onlineUsers", onlineUsers);
+io.emit("onlineUsers", onlineUsers);
   });
   // console.log(new Date().toString()+ ` User Connected: ${socket.id}`);
 
