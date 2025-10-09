@@ -10,6 +10,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const { ACCESS_TOKEN } = require("./logowanie/ACCESS_TOKEN");
+const { teraz } = require("./czas/teraz");
 require("../actions/mysql");
 
 // app.use(bodyParser.json());
@@ -76,11 +77,15 @@ const addUser = (socket) =>{
 
       onlineUsers.push({
         userId:socket.userData.id,
+        imie:socket.userData.imie,
+        nazwisko:socket.userData.nazwisko,
         socketId: socket.id,
-        zalogowany: new Date().toString()
+        // zalogowany: new Date().toString()
+        zalogowany: teraz()
       });
 
    console.log(onlineUsers)
+   socket.emit("onlineUsers", onlineUsers);
 }
 const removeUser = (socket) =>{
 
@@ -95,7 +100,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
   console.log(`User disconnected `, socket.id);
   removeUser(socket)
-
+socket.emit("onlineUsers", onlineUsers);
   });
   // console.log(new Date().toString()+ ` User Connected: ${socket.id}`);
 
