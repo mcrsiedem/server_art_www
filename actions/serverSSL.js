@@ -60,7 +60,7 @@ cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 //   },
 // })
 
-const io = new Server(server, {
+const io = new Server(serverSSL, {
   // ostatnio dodane na próbe
   connectionStateRecovery: {},
   cors: {
