@@ -52,14 +52,21 @@ cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 
 
 
-const io = new Server(serverSSL,{
-  // withCredential: true,
-  cors:{
-     origin:["https://planer.artdruk.eu"]
-     //ss
-  },
-})
+// const io = new Server(serverSSL,{
+//   // withCredential: true,
+//   cors:{
+//      origin:["https://planer.artdruk.eu"]
+//      //ss
+//   },
+// })
 
+const io = new Server(server, {
+  // ostatnio dodane na próbe
+  connectionStateRecovery: {},
+  cors: {
+    origin: ["https://planer.artdruk.eu"],
+  },
+});
 // io.on("connection", (socket)=>{
 //   console.log(new Date().toString()+ `User Connected: ${socket.id}`)
 
