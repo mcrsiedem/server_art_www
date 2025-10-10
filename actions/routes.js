@@ -113,6 +113,7 @@ const { usunRealizacjeOddania } = require('./oddania/usunRealizacjeOddania');
     
     // aktualizacja grupy - dodruk arkusza - zmiana parametrów
     router.post('/aktualizuj_grupe_wykonan/:token',verifyTokenParams('manage_druk'), aktualizujGrupe); 
+    router.post('/aktualizuj_grupe_wykonan_falc/:token',verifyTokenParams('manage_falc'), aktualizujGrupe); 
     router.put('/grupa_wykonan_oprawa_uwagi/:token',verifyTokenParams('manage_oprawa'), aktualizujGrupeOprawaUwagi); 
     router.put('/dodaj_info_dostepnosc_papieru/:token',verifyToken, dodajInfoDostepnoscPapieru); 
     router.post('/dodaj_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOprawy); // try catch
