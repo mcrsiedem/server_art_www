@@ -80,9 +80,10 @@ const addUser = (socket) =>{
         imie:socket.userData.imie,
         nazwisko:socket.userData.nazwisko,
         socketId: socket.id,
+        // zalogowany: new Date().toString()
         zalogowany: teraz(),
-        ostatnia_aktywnosc: teraz()
-  
+        ostatnia_aktywnosc: teraz(),
+        status: "Aktywny"
       });
 
    console.log(onlineUsers)
@@ -131,7 +132,7 @@ io.emit("onlineUsers", onlineUsers);
         updateUsers(data,onlineUsers).then((res)=>{
           onlineUsers=res
           io.emit("onlineUsers", onlineUsers);
-        // console.log(onlineUsers);
+        console.log(onlineUsers);
 
         })
   });
@@ -153,6 +154,7 @@ onlineUsers = onlineUsers.map(user=>{
   }
 
   })
+
 
   resolve(onlineUsers)
   })}
