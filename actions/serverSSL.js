@@ -117,13 +117,12 @@ const addUser = (socket) =>{
     // !onlineUsers.some((user => user.userId === userId)) &&
 
       onlineUsers.push({
-        userId:socket.userData.id,
+    userId:socket.userData.id,
         imie:socket.userData.imie,
         nazwisko:socket.userData.nazwisko,
         socketId: socket.id,
-        // zalogowany: new Date().toString()
         zalogowany: teraz(),
-        aktywny: true
+        ostatnia_aktywnosc: teraz()
       });
 
    console.log(onlineUsers)
@@ -166,7 +165,38 @@ io.emit("onlineUsers", onlineUsers);
     // socket.broadcast.emit("receive_message", onlineUsers);
     socket.emit("onlineUsers", onlineUsers);
   });
+
+        socket.on("userActivity", (data) => {
+        console.log(`Aktywność użytkownika ID: ${data.userId} Status: ${data.status}`);
+        updateUsers(data,onlineUsers).then((res)=>{
+          onlineUsers=res
+          io.emit("onlineUsers", onlineUsers);
+        // console.log(onlineUsers);
+
+        })
+  });
 });
+
+
+const updateUsers = (data,onlineUsers) =>{
+  return new Promise(async(resolve,reject)=>{
+
+onlineUsers = onlineUsers.map(user=>{
+  if(user.userId==data.userId){
+    return {
+      ...user,
+      status:data.status,
+      ostatnia_aktywnosc:teraz()
+    }
+  }else{
+    return user
+  }
+
+  })
+
+  resolve(onlineUsers)
+  })}
+
 
 module.exports = {
     serverSSL
