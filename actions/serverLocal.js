@@ -81,7 +81,8 @@ const addUser = (socket) =>{
         nazwisko:socket.userData.nazwisko,
         socketId: socket.id,
         // zalogowany: new Date().toString()
-        zalogowany: teraz()
+        zalogowany: teraz(),
+        aktywny: true
       });
 
    console.log(onlineUsers)
