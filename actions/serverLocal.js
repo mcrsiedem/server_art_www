@@ -124,6 +124,12 @@ io.emit("onlineUsers", onlineUsers);
     // socket.broadcast.emit("receive_message", onlineUsers);
     socket.emit("onlineUsers", onlineUsers);
   });
+
+      socket.on("userActivity", () => {
+        console.log(`Aktywność użytkownika ID: ${socket.userData.id}`);
+    // socket.broadcast.emit("receive_message", onlineUsers);
+    // socket.emit("onlineUsers", onlineUsers);
+  });
 });
 
 module.exports = {
