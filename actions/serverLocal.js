@@ -11,6 +11,7 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const { ACCESS_TOKEN } = require("./logowanie/ACCESS_TOKEN");
 const { teraz } = require("./czas/teraz");
+const { DecodeToken } = require("./logowanie/DecodeToken");
 require("../actions/mysql");
 
 // app.use(bodyParser.json());
@@ -111,19 +112,27 @@ io.emit("onlineUsers", onlineUsers);
     socket.broadcast.emit("receive_message", data);
   });
 
-  socket.on("addNewUser", (userId) => {
+  socket.on("addNewUser", (data) => {
     // jeśli istnieje w tablicy user to go nie dodawaj
     // jeśli lewa strona && jest nieprawdziwa to zrób prawą
-    !onlineUsers.some((user = user.userId === userId)) &&
-      onlineUsers.push({
-        userId,
-        socketId: socket.id,
-      });
-  });
+    addNewUser(data,onlineUsers).then((res)=>{
+      onlineUsers=res
+      io.emit("onlineUsers", onlineUsers);
+  });});
 
     socket.on("ktotam", () => {
     // socket.broadcast.emit("receive_message", onlineUsers);
     socket.emit("onlineUsers", onlineUsers);
+  });
+
+      socket.on("logout", (data) => {
+        // console.log(`Aktywność użytkownika ID: ${data.userId} Status: ${data.status}`);
+        deleteUser(data,onlineUsers).then((res)=>{
+          onlineUsers=res
+          io.emit("onlineUsers", onlineUsers);
+        // console.log(onlineUsers);
+
+        })
   });
 
       socket.on("userActivity", (data) => {
@@ -135,6 +144,8 @@ io.emit("onlineUsers", onlineUsers);
 
         })
   });
+
+
 });
 
 
@@ -153,6 +164,33 @@ onlineUsers = onlineUsers.map(user=>{
   }
 
   })
+
+
+  resolve(onlineUsers)
+  })}
+
+
+const deleteUser = (data,onlineUsers) =>{
+  return new Promise(async(resolve,reject)=>{
+
+onlineUsers = onlineUsers.filter(user=>user.userId!=data.userId)
+
+
+  resolve(onlineUsers)
+  })}
+
+const addNewUser = (data,onlineUsers) =>{
+  return new Promise(async(resolve,reject)=>{
+    !onlineUsers.some((user => user.userId == data.userId)) &&
+      onlineUsers.push({
+        userId:DecodeToken(data.token).id,
+        imie:DecodeToken(data.token).imie,
+        nazwisko:DecodeToken(data.token).nazwisko,
+        socketId: data.socketId,
+        zalogowany: teraz(),
+        ostatnia_aktywnosc: teraz(),
+        status: "Aktywny"
+      });
 
 
   resolve(onlineUsers)
