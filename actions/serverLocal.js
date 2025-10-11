@@ -80,24 +80,23 @@ const addUser = (socket) =>{
         imie:socket.userData.imie,
         nazwisko:socket.userData.nazwisko,
         socketId: socket.id,
-        // zalogowany: new Date().toString()
         zalogowany: teraz(),
         ostatnia_aktywnosc: teraz(),
         status: "Aktywny"
       });
 
-   console.log(onlineUsers)
+  //  console.log(onlineUsers)
   io.emit("onlineUsers", onlineUsers);
 }
 const removeUser = (socket) =>{
 
 onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
-       console.log(onlineUsers)
+      //  console.log(onlineUsers)
 }
 io.on("connection", (socket) => {
   // Tutaj możesz mieć pewność, że użytkownik jest zalogowany
   addUser(socket)
-  console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);
+  // console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);
   
   socket.on("disconnect", () => {
   console.log(`User disconnected `, socket.id);
@@ -128,11 +127,11 @@ io.emit("onlineUsers", onlineUsers);
   });
 
       socket.on("userActivity", (data) => {
-        console.log(`Aktywność użytkownika ID: ${data.userId} Status: ${data.status}`);
+        // console.log(`Aktywność użytkownika ID: ${data.userId} Status: ${data.status}`);
         updateUsers(data,onlineUsers).then((res)=>{
           onlineUsers=res
           io.emit("onlineUsers", onlineUsers);
-        console.log(onlineUsers);
+        // console.log(onlineUsers);
 
         })
   });
