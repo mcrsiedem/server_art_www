@@ -35,6 +35,7 @@ app.use(function (req, res, next) {
   next();
 });
 
+let socketOut;
 const server = http.createServer(app);
 const io = new Server(server, {
   // ostatnio dodane na próbe
@@ -71,6 +72,7 @@ io.use((socket, next) => {
     next(authError); // Odrzuć połączenie
   }
 });
+
 
 let onlineUsers = [];
 const addUser = (socket) =>{
@@ -112,6 +114,10 @@ io.emit("onlineUsers", onlineUsers);
     socket.broadcast.emit("receive_message", data);
   });
 
+      socket.on("realizacja", () => {
+   // po dodaniu realizacji odświeża się dashboard
+    io.emit("pobierz_podglad_realizacji");
+  });
   socket.on("addNewUser", (data) => {
     // jeśli istnieje w tablicy user to go nie dodawaj
     // jeśli lewa strona && jest nieprawdziwa to zrób prawą
@@ -198,5 +204,5 @@ const addNewUser = (data,onlineUsers) =>{
 
 
 module.exports = {
-  server,
+  server,io
 };

@@ -152,6 +152,11 @@ io.emit("onlineUsers", onlineUsers);
     socket.broadcast.emit("receive_message", data);
   });
 
+    socket.on("realizacja", () => {
+   // po dodaniu realizacji odświeża się dashboard
+    io.emit("pobierz_podglad_realizacji");
+  });
+
   socket.on("addNewUser", (data) => {
     // jeśli istnieje w tablicy user to go nie dodawaj
     // jeśli lewa strona && jest nieprawdziwa to zrób prawą

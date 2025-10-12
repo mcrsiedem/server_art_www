@@ -462,6 +462,29 @@ class Connections {
      
          }
 
+   getPodgladRealizacji(req,res){
+
+            let dane=[];
+
+
+         
+             const dniWstecz = req.params['dniWstecz']
+
+     
+             var sql = "select * from artdruk.view_podglad_realizacji_dzien where utworzono >  '"+dniWstecz+"'  ORDER BY utworzono";
+             connection.query(sql, function (err, doc) {
+                if (err){ res.status(203).json(err) 
+
+                } else{
+                    console.log("podglad")
+            dane.push(doc)
+            res.status(200).json(dane);
+                }
+      
+             } );
+
+    
+         }
 
          //-----
                      getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa(req,res){

@@ -154,6 +154,10 @@ const { usunRealizacjeOddania } = require('./oddania/usunRealizacjeOddania');
     router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,updatePlikiEtapGrupyWykonan); // historia
     router.put('/updatePlikiEtapZamowienia/:token',verifyToken,updatePlikiEtapZamowienia); // historia
     //-----------------------------------------------------------------------------------
+    //Podgląd realizacji
+    router.get('/podglad_realizacji_dzien/:dniWstecz/:token',verifyToken,connections.getPodgladRealizacji);  
+
+
 
 
     router.put('/updateHistoria/:token',verifyToken,connections.updateHistoria);
