@@ -217,7 +217,7 @@ onlineUsers = onlineUsers.map(user=>{
 const deleteUser = (data,onlineUsers) =>{
   return new Promise(async(resolve,reject)=>{
 
-onlineUsers = onlineUsers.filter(user=>user.userId!=data.userId)
+onlineUsers = onlineUsers.filter(user=>user.socketId!=data.socketId)
 
 
   resolve(onlineUsers)
