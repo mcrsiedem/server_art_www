@@ -470,13 +470,38 @@ class Connections {
          
              const dniWstecz = req.params['dniWstecz']
 
-     
-             var sql = "select * from artdruk.view_podglad_realizacji_dzien where utworzono >  '"+dniWstecz+"'  ORDER BY utworzono";
+            var sql = "select * from artdruk.view_podglad_realizacji_dzien where utworzono >  '"+dniWstecz+"'  ORDER BY utworzono";
              connection.query(sql, function (err, doc) {
                 if (err){ res.status(203).json(err) 
 
                 } else{
-                    console.log("podglad")
+                    console.log("podglad1")
+            dane.push(doc)
+                }
+      
+             } );
+
+
+            var sql = "select * from artdruk.view_podglad_zamowienia_historia where utworzono >  '"+dniWstecz+"' and dzial_id <5 ORDER BY utworzono";
+             connection.query(sql, function (err, doc) {
+                if (err){ res.status(203).json(err) 
+
+                } else{
+                    console.log("podglad2")
+            dane.push(doc)
+                }
+      
+             } );
+
+
+
+     
+             var sql = "select * from artdruk.view_podglad_wykonania_oprawa where utworzono >  '"+dniWstecz+"'  ORDER BY utworzono";
+             connection.query(sql, function (err, doc) {
+                if (err){ res.status(203).json(err) 
+
+                } else{
+                    console.log("podglad3")
             dane.push(doc)
             res.status(200).json(dane);
                 }
