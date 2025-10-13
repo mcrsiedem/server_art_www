@@ -135,8 +135,55 @@ onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
       //  console.log(onlineUsers)
 }
 io.on("connection", (socket) => {
+
+
+
+
+
+
+ // === LOGIKA WERYFIKACJI MUTACJI (DO USUNIĘCIA PO TESTACH) ===
+const connectedUserId = socket.userData.id;
+const otherUsersBefore = onlineUsers
+.filter(user => user.userId !== connectedUserId)
+.map(user => ({ userId: user.userId, zalogowany: user.zalogowany }));
+
+console.log(`[LOG] Stan ZALOGOWANIA innych użytkowników PRZED:`);
+otherUsersBefore.forEach(u => console.log(` - ID ${u.userId}: ${u.zalogowany}`));
+console.log("-------------------------------------------------");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // Tutaj możesz mieć pewność, że użytkownik jest zalogowany
   addUser(socket)
+
+
+console.log(`[LOG] Stan ZALOGOWANIA innych użytkowników PO (po dodaniu ${connectedUserId}):`);
+onlineUsers
+.filter(user => user.userId !== connectedUserId)
+.forEach(user => {
+const before = otherUsersBefore.find(u => u.userId === user.userId);
+const resetInfo = (before && before.zalogowany !== user.zalogowany) ? "!!! CZAS ZOSTAŁ ZRESETOWANY !!!" : "czas OK";
+console.log(` - ID ${user.userId}: ${user.zalogowany} (${resetInfo})`);
+});
+console.log("=================================================");
+// === KONIEC LOGIKI WERYFIKACJI MUTACJI ===
+
+
   // console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);
   
   socket.on("disconnect", () => {
