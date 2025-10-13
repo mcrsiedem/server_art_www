@@ -114,7 +114,7 @@ io.use((socket, next) => {
 
 let onlineUsers = [];
 const addUser = (socket) =>{
-    // !onlineUsers.some((user => user.userId === userId)) &&
+    !onlineUsers.some((user => user.socketId === socket.id)) &&
 
       onlineUsers.push({
         userId:socket.userData.id,
@@ -136,53 +136,8 @@ onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
 }
 io.on("connection", (socket) => {
 
-
-
-
-
-
- // === LOGIKA WERYFIKACJI MUTACJI (DO USUNIĘCIA PO TESTACH) ===
-const connectedUserId = socket.userData.id;
-const otherUsersBefore = onlineUsers
-.filter(user => user.userId !== connectedUserId)
-.map(user => ({ userId: user.userId, zalogowany: user.zalogowany }));
-
-console.log(`[LOG] Stan ZALOGOWANIA innych użytkowników PRZED:`);
-otherUsersBefore.forEach(u => console.log(` - ID ${u.userId}: ${u.zalogowany}`));
-console.log("-------------------------------------------------");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // Tutaj możesz mieć pewność, że użytkownik jest zalogowany
   addUser(socket)
-
-
-console.log(`[LOG] Stan ZALOGOWANIA innych użytkowników PO (po dodaniu ${connectedUserId}):`);
-onlineUsers
-.filter(user => user.userId !== connectedUserId)
-.forEach(user => {
-const before = otherUsersBefore.find(u => u.userId === user.userId);
-const resetInfo = (before && before.zalogowany !== user.zalogowany) ? "!!! CZAS ZOSTAŁ ZRESETOWANY !!!" : "czas OK";
-console.log(` - ID ${user.userId}: ${user.zalogowany} (${resetInfo})`);
-});
-console.log("=================================================");
-// === KONIEC LOGIKI WERYFIKACJI MUTACJI ===
-
 
   // console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);
   
@@ -213,9 +168,27 @@ io.emit("onlineUsers", onlineUsers);
   });});
 
 
-    socket.on("ktotam", () => {
-    // socket.broadcast.emit("receive_message", onlineUsers);
-    socket.emit("onlineUsers", onlineUsers);
+
+    socket.on("ktotam",async () => {
+    const sockets = await io.fetchSockets();
+
+console.log(`Liczba połączonych użytkowników: ${sockets.length}`);
+
+sockets.forEach((socket) => {
+  // 'socket.id' to unikalne ID połączenia Socket.IO
+  console.log(socket.id); 
+});
+
+// 2. Sprawdzenie użytkowników połączonych do konkretnego 'pokoju'
+// const roomName = 'nazwa_pokoju';
+// const roomSockets = await io.in(roomName).fetchSockets();
+
+// console.log(`Liczba połączonych w pokoju ${roomName}: ${roomSockets.length}`);
+// roomSockets.forEach((socket) => {
+//   console.log(socket.id); 
+// });
+    // socket.emit("onlineUsers", onlineUsers);
+    socket.emit("wysylamsocket", sockets);
   });
 
         socket.on("logout", (data) => {

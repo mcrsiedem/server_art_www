@@ -76,7 +76,7 @@ io.use((socket, next) => {
 
 let onlineUsers = [];
 const addUser = (socket) =>{
-    // !onlineUsers.some((user => user.userId === userId)) &&
+     !onlineUsers.some((user => user.socketId === socket.id)) &&
 
       onlineUsers.push({
         userId:socket.userData.id,
@@ -126,10 +126,29 @@ io.emit("onlineUsers", onlineUsers);
       io.emit("onlineUsers", onlineUsers);
   });});
 
-    socket.on("ktotam", () => {
-    // socket.broadcast.emit("receive_message", onlineUsers);
-    socket.emit("onlineUsers", onlineUsers);
+    socket.on("ktotam",async () => {
+    const sockets = await io.fetchSockets();
+
+console.log(`Liczba połączonych użytkowników: ${sockets.length}`);
+
+sockets.forEach((socket) => {
+  // 'socket.id' to unikalne ID połączenia Socket.IO
+  console.log(socket.id); 
+});
+
+// 2. Sprawdzenie użytkowników połączonych do konkretnego 'pokoju'
+// const roomName = 'nazwa_pokoju';
+// const roomSockets = await io.in(roomName).fetchSockets();
+
+// console.log(`Liczba połączonych w pokoju ${roomName}: ${roomSockets.length}`);
+// roomSockets.forEach((socket) => {
+//   console.log(socket.id); 
+// });
+    // socket.emit("onlineUsers", onlineUsers);
+    socket.emit("wysylamsocket", sockets);
   });
+
+
 
       socket.on("logout", (data) => {
         // console.log(`Aktywność użytkownika ID: ${data.userId} Status: ${data.status}`);
