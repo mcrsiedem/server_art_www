@@ -145,7 +145,7 @@ sockets.forEach((socket) => {
 //   console.log(socket.id); 
 // });
     // socket.emit("onlineUsers", onlineUsers);
-    socket.emit("wysylamsocket", sockets);
+    socket.emit("wysylamsocket", {ilosc_polaczonych:`Liczba połączonych użytkowników: ${sockets.length}` });
   });
 
 
