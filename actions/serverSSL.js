@@ -174,8 +174,11 @@ io.emit("onlineUsers", onlineUsers);
 
 console.log(`Liczba połączonych użytkowników: ${sockets.length}`);
 
+let polaczeni_uzytkownicy = []
+ polaczeni_uzytkownicy.push({ilosc_uzytkownikow : sockets.length})
 sockets.forEach((socket) => {
   // 'socket.id' to unikalne ID połączenia Socket.IO
+ polaczeni_uzytkownicy.push({socketId : socket.id, data_polaczenia: new Date(socket.handshake.issued).toLocaleString('pl-PL') })
   console.log(socket.id); 
 });
 
@@ -188,8 +191,9 @@ sockets.forEach((socket) => {
 //   console.log(socket.id); 
 // });
     // socket.emit("onlineUsers", onlineUsers);
-     socket.emit("wysylamsocket", {ilosc_polaczonych:`Liczba połączonych użytkowników: ${sockets.length}` });
+    socket.emit("wysylamsocket", polaczeni_uzytkownicy);
   });
+
 
         socket.on("logout", (data) => {
         // console.log(`Aktywność użytkownika ID: ${data.userId} Status: ${data.status}`);
