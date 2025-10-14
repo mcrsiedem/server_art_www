@@ -21,9 +21,10 @@ app.use(bodyParser.urlencoded({limit: '200mb', extended: true}));
 
 app.use(
   cors({
+     origin: "*", // Pozwala na połączenia z dowolnego adresu.
     // origin:["https://www.printforce.pl"],
     // credentials: true
-    origin: ["http://localhost:3000"],
+    // origin: ["http://localhost:3000","http://localhost:3002"],
   })
 );
 
@@ -41,7 +42,8 @@ const io = new Server(server, {
   // ostatnio dodane na próbe
   connectionStateRecovery: {},
   cors: {
-    origin: ["http://localhost:3000"],
+         origin: "*", // Pozwala na połączenia z dowolnego adresu.
+    // origin: ["http://localhost:3000"],
   },
 });
 
