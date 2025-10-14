@@ -30,7 +30,7 @@ app.use(
 
 app.use("/api_www", apiRouter);
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "http://192.168.0.195:3000");
   
 
   next();
@@ -77,22 +77,52 @@ io.use((socket, next) => {
 
 
 let onlineUsers = [];
+// const addUser = (socket) =>{
+//     //  !onlineUsers.some((user => user.socketId === socket.id)) &&
+
+//       onlineUsers.push({
+//         userId:socket.userData.id,
+//         imie:socket.userData.imie,
+//         nazwisko:socket.userData.nazwisko,
+//         socketId: socket.id,
+//         zalogowany: teraz(),
+//         ostatnia_aktywnosc: teraz(),
+//         status: "Aktywny"
+//       });
+
+//   //  console.log(onlineUsers)
+//   io.emit("onlineUsers", onlineUsers);
+// }
+
+
 const addUser = (socket) =>{
-     !onlineUsers.some((user => user.socketId === socket.id)) &&
+    // *** ZABEZPIECZENIE PRZED BŁĘDEM: Sprawdź, czy dane użytkownika istnieją ***
+    if (!socket.userData || !socket.userData.id) {
+        console.warn(`[SOCKET] Odrzucono dodanie użytkownika (socket ID: ${socket.id}) - brak danych uwierzytelniających.`);
+        return; 
+    }
+    
+    // Sprawdź, czy użytkownik z tym samym socketId nie jest już dodany
+    if (!onlineUsers.some((user => user.socketId === socket.id))) {
+        onlineUsers.push({
+            userId: socket.userData.id,
+            imie: socket.userData.imie,
+            nazwisko: socket.userData.nazwisko,
+            socketId: socket.id,
+            zalogowany: teraz(),
+            ostatnia_aktywnosc: teraz(),
+            status: "Aktywny"
+        });
+    }
 
-      onlineUsers.push({
-        userId:socket.userData.id,
-        imie:socket.userData.imie,
-        nazwisko:socket.userData.nazwisko,
-        socketId: socket.id,
-        zalogowany: teraz(),
-        ostatnia_aktywnosc: teraz(),
-        status: "Aktywny"
-      });
-
-  //  console.log(onlineUsers)
-  io.emit("onlineUsers", onlineUsers);
+  //  console.log(onlineUsers)
+  io.emit("onlineUsers", onlineUsers);
 }
+
+
+
+
+
 const removeUser = (socket) =>{
 
 onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
