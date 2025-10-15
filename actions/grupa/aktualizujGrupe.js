@@ -51,8 +51,9 @@ let val=[rowGrupa_global_id,kierunek,roznica_czasu]
 
       
       for(let row of wykonania.filter(x => x.insert == true && x.delete != true) ){
-      let data=[row.id,row.indeks,row.technologia_id,row.zamowienie_id,row.nazwa_wykonania,row.grupa_id,row.element_id,row.arkusz_id,row.typ_elementu,row.nazwa,row.naklad,row.przeloty,row.poczatek,row.czas,row.koniec,row.narzad,row.predkosc,row.mnoznik,row.proces_id,row.procesor_id,row.status,row.stan,row.uwagi]
-      var sql =   "INSERT INTO artdruk.technologie_wykonania (id,indeks,technologia_id,zamowienie_id,nazwa_wykonania, grupa_id,element_id,arkusz_id,typ_elementu,nazwa,naklad,przeloty,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+      
+      let data=[row.id,row.indeks,row.technologia_id,row.zamowienie_id,row.nazwa_wykonania,row.grupa_id,row.element_id,row.arkusz_id,row.lega_id || 0,row.typ_elementu,row.nazwa,row.naklad,row.przeloty,row.poczatek,row.czas,row.koniec,row.narzad,row.predkosc,row.mnoznik,row.proces_id,row.procesor_id,row.status,row.stan,row.uwagi]
+      var sql =   "INSERT INTO artdruk.technologie_wykonania (id,indeks,technologia_id,zamowienie_id,nazwa_wykonania, grupa_id,element_id,arkusz_id,lega_id,typ_elementu,nazwa,naklad,przeloty,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {       if (err) throw err;       });
       }
 
