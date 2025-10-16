@@ -62,6 +62,7 @@ const { postVersion } = require('./logowanie/postVersion');
 
 
     router.post('/version/', postVersion); // try catch
+    
     router.get('/users/:login/:haslo',connections.getUser);
     router.get('/all_users/:token',verifyToken,connections.getAllUsers);
 
