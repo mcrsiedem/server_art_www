@@ -56,11 +56,12 @@ const { zakonczArkusz } = require('./realizacje/zakonczArkusz');
 const { aktualizujOddaniaUwagi } = require('./oddania/aktualizujOddaniaUwagi');
 const { dodajRealizacjeOddania } = require('./oddania/dodajRealizacjeOddania');
 const { usunRealizacjeOddania } = require('./oddania/usunRealizacjeOddania');
+const { postVersion } = require('./logowanie/postVersion');
 
 
 
 
-
+    router.post('/version/', postVersion); // try catch
     router.get('/users/:login/:haslo',connections.getUser);
     router.get('/all_users/:token',verifyToken,connections.getAllUsers);
 
