@@ -30,7 +30,7 @@ if(data[0]!=null){
     if(data[0]!=null){
 let val=[rowGrupa_global_id,kierunek,roznica_czasu]
     var sql = "select artdruk.zmien_czas_trwania_grupy_minuty(?,?,?) as procesor_id";
-    connection.execute(sql, val ,function (err, result) { if (err) throw err });
+    connection.execute(sql, val ,function (err, result) { if (err) console.log(err) });
     }
     
 
@@ -38,7 +38,7 @@ let val=[rowGrupa_global_id,kierunek,roznica_czasu]
     // aktualizacja samej grupy
     let dane=[rowGrupa_predkosc,rowGrupa_narzad,rowGrupa_przeloty,rowGrupa_ilosc_narzadow,rowGrupa_naklad,rowGrupa_global_id]
     var sql =   "update  artdruk.technologie_grupy_wykonan set  predkosc =?, narzad =?, przeloty =?, ilosc_narzadow=?, naklad=? where global_id =?"
-    connection.execute(sql, dane,function (err, result) {       if (err) throw err;       });
+    connection.execute(sql, dane,function (err, result) {       if (err) console.log(err);       });
 
  if(data[0]!=null){
     // aktualizacja wykonan
@@ -46,7 +46,7 @@ let val=[rowGrupa_global_id,kierunek,roznica_czasu]
             let data2=[row.indeks,row.nazwa_wykonania,row.nazwa,row.naklad,row.przeloty,row.czas,row.narzad,row.predkosc,row.global_id]
 
       var sql =   "update artdruk.technologie_wykonania set  indeks=?,nazwa_wykonania=?,nazwa=?,naklad=?,przeloty=?,czas=?,narzad=?,predkosc=? where global_id =?"
-      connection.execute(sql, data2,function (err, result) {        if (err) throw err;       });
+      connection.execute(sql, data2,function (err, result) {        if (err) console.log(err);       });
       }
 
       
@@ -54,20 +54,20 @@ let val=[rowGrupa_global_id,kierunek,roznica_czasu]
       
       let data=[row.id,row.indeks,row.technologia_id,row.zamowienie_id,row.nazwa_wykonania,row.grupa_id,row.element_id,row.arkusz_id,row.lega_id || 0,row.typ_elementu,row.nazwa,row.naklad,row.przeloty,row.poczatek,row.czas,row.koniec,row.narzad,row.predkosc,row.mnoznik,row.proces_id,row.procesor_id,row.status,row.stan,row.uwagi]
       var sql =   "INSERT INTO artdruk.technologie_wykonania (id,indeks,technologia_id,zamowienie_id,nazwa_wykonania, grupa_id,element_id,arkusz_id,lega_id,typ_elementu,nazwa,naklad,przeloty,poczatek,czas,koniec,narzad,predkosc,mnoznik,proces_id,procesor_id,status,stan,uwagi) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
-      connection.execute(sql, data,function (err, result) {       if (err) throw err;       });
+      connection.execute(sql, data,function (err, result) {       if (err) console.log(err);       });
       }
 
       for(let row of wykonania.filter(x => x.delete == true && x.insert != true) ){
       let data=[row.global_id]
       var sql =   "DELETE from artdruk.technologie_wykonania where global_id=?";
-      connection.execute(sql, data,function (err, result) {       if (err)throw err;       });
+      connection.execute(sql, data,function (err, result) {       if (err)console.log(err);       });
       } 
     }
     
 
     var sql = "commit"
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
         res.status(200).json("OK")  
  })
 

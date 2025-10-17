@@ -28,7 +28,7 @@ for(let row of arkusze.filter(x => x.update == true && x.insert != true) ){
   "', nadkomplet = '" + row.nadkomplet+ 
   "', uwagi = '" + row.uwagi+ 
   "' where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {      if (err)throw err     });
+  connection.query(sql, function (err, result) {      if (err)console.log(err)     });
   }
 
 
@@ -55,13 +55,13 @@ for(let row of arkusze.filter(x => x.update == true && x.insert != true) ){
     row.naklad +        "','" +
     row.nadkomplet +        "','" +
     row.uwagi +        "'); ";
-  connection.query(sql, function (err, result) {      if (err)throw err     });
+  connection.query(sql, function (err, result) {      if (err)console.log(err)     });
   
 }
 
     for(let row of arkusze.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.technologie_arkusze where global_id=" + row.global_id;
-        connection.query(sql, function (err, result) {      if (err)throw err     });
+        connection.query(sql, function (err, result) {      if (err)console.log(err)     });
         }
 
 }

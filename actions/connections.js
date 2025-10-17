@@ -85,14 +85,14 @@ class Connections {
             //    const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
 
                 var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria) values (?,?,?); ";
-               connection.query(sql, [id,imie+ " "+nazwisko,"Logowanie"],function (err, result) {            if (err) throw err;            })
+               connection.query(sql, [id,imie+ " "+nazwisko,"Logowanie"],function (err, result) {            if (err) console.log(err);            })
     
                 return res.status(200).json(token)
                 
         
             } else {
                 var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria,event) values (?,?,?,?); ";
-               connection.execute(sql, [0,"","Logowanie",login+" "+haslo], (err, result) => {            if (err) throw err;            })
+               connection.execute(sql, [0,"","Logowanie",login+" "+haslo], (err, result) => {            if (err) console.log(err);            })
 
                 return res.json({Status: "Error", Error: "Wrong Email or Password"})
 
@@ -198,7 +198,7 @@ class Connections {
      
              var sql  = "select * from artdruk.view_technologie  where id = '" + idTechnologii + "'  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              // res.status(200).json(dane);
          
@@ -206,19 +206,19 @@ class Connections {
      
              var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
              var sql = "select * from artdruk.view_technologie_elementy where technologia_id = '" + idTechnologii + "' ORDER BY typ ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
              var sql = "select * from artdruk.technologie_fragmenty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
@@ -226,74 +226,74 @@ class Connections {
 
              var sql = "select * from artdruk.view_technologie_oprawa where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
              var sql = "select * from artdruk.view_technologie_procesy_elementow where technologia_id =  '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
              var sql = "select * from artdruk.technologie_legi where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
              var sql = "select * from artdruk.technologie_legi_fragmenty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
      
              var sql = "select * from artdruk.technologie_arkusze where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
              // (select prime_id from  artdruk.technologie where id= '" + idTechnologii + "' ) = prime_id
              var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id =  '" + idTechnologii + "'  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
              var sql = "select * from artdruk.view_technologie_wykonania where technologia_id =  '" + idTechnologii + "'  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
 
              var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where technologia_id =  '" + idTechnologii + "'  ORDER BY id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
                      var sql = "select * from artdruk.view_technologie_wykonania_oprawa where technologia_id =  '" + idTechnologii + "'  ORDER BY global_id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
 
                                   var sql = "select * from artdruk.view_technologie_realizacje where technologia_id =  '" + idTechnologii + "'  ORDER BY global_id ASC";
              connection.query(sql, function (err, doc) {
-             if (err) throw err;
+             if (err) console.log(err);
              dane.push(doc)
              } );
             //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + prime_id + "' ORDER BY id ASC";
             //  connection.query(sql, function (err, doc) {
-            //  if (err) throw err;
+            //  if (err) console.log(err);
             //  dane.push(doc)
             //  } );
 
             //  var sql = "select * from artdruk.view_technologie_wykonania where technologia_id = '" + prime_id + "' ORDER BY id ASC";
             //  connection.query(sql, function (err, doc) {
-            //  if (err) throw err;
+            //  if (err) console.log(err);
             //  dane.push(doc)
             //  } );
 
@@ -301,7 +301,7 @@ class Connections {
 
             var sql = "commit";
             connection.query(sql, function (err, result) {
-            if (err) throw err;
+            if (err) console.log(err);
             // console.log("odczyt technologi OK");
             res.status(200).json(dane);
             });
@@ -321,14 +321,14 @@ class Connections {
     
                  var sql = "select * from artdruk.view_technologie_grupy_wykonan where status <4 and typ_grupy < 3 ORDER BY poczatek";
                  connection.query(sql, function (err, doc) {
-                 if (err) throw err;
+                 if (err) console.log(err);
                  dane.push(doc)
                  } );
     
 
      var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where status <4 and typ_grupy < 3 ORDER BY poczatek";
                  connection.query(sql, function (err, doc) {
-                 if (err) throw err;
+                 if (err) console.log(err);
                  dane.push(doc)
                  res.status(200).json(dane);
                  } );
@@ -349,12 +349,12 @@ class Connections {
     
                 var sql = "start transaction";
                 connection.query(sql, function (err, result) {
-                if (err) throw err;
+                if (err) console.log(err);
                 });
          
                  var sql  = "select * from artdruk.view_technologie_wykonania  ORDER BY id ASC";
                  connection.query(sql, function (err, doc) {
-                 if (err) throw err;
+                 if (err) console.log(err);
                  dane.push(doc)
                  // res.status(200).json(dane);
              
@@ -362,14 +362,14 @@ class Connections {
          
                  var sql = "select * from artdruk.view_technologie_grupy_wykonan  ORDER BY poczatek";
                  connection.query(sql, function (err, doc) {
-                 if (err) throw err;
+                 if (err) console.log(err);
                  dane.push(doc)
 
                  } );
     
                 var sql = "commit";
                 connection.query(sql, function (err, result) {
-                if (err) throw err;
+                if (err) console.log(err);
                 // console.log("odczyt technologi OK");
                 res.status(200).json(dane);
                 });
@@ -400,7 +400,7 @@ class Connections {
      
              var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
              connection.query(sql, function (err, doc) {
-                if (err){ throw err } 
+                if (err){ console.log(err) } 
              dane.push(doc)
              } );
 
@@ -408,7 +408,7 @@ class Connections {
             var sql = "select   DATE_FORMAT(min(poczatek) - interval 1 day, '%Y-%m-%d') AS `dni` from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = " + procesor_id ;
             // var sql = "select min(poczatek) - interval 1 day as dni from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = " + procesor_id ;
              connection.query(sql, function (err, doc) {
-                if (err){ throw err } 
+                if (err){ console.log(err) } 
              dane.push(doc)
              } );
 
@@ -576,7 +576,7 @@ class Connections {
                       var sql = "select   DATE_FORMAT(min(poczatek) - interval 1 day, '%Y-%m-%d') AS `dni` from artdruk.view_technologie_grupy_wykonan_oprawa where status <4 and procesor_id = " + procesor_id ;
             // var sql = "select min(poczatek) - interval 1 day as dni from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = " + procesor_id ;
              connection.query(sql, function (err, doc) {
-                if (err){ throw err } 
+                if (err){ console.log(err) } 
              dane.push(doc)
              res.status(200).json(dane);
 
@@ -600,14 +600,14 @@ class Connections {
         var sql  = "select count(*) as ilosc from artdruk.technologie_arkusze  where papier_id= "+ papier_id ;
         connection.query(sql, function (err, doc) {
             dane.push(doc)
-        if (err) throw err;
+        if (err) console.log(err);
         });
 
         var sql  = "select count(*) as ilosc from artdruk.zamowienia_elementy  where papier_id= "+ papier_id ;
         connection.query(sql, function (err, doc) {
             dane.push(doc)
 
-        if (err) throw err;
+        if (err) console.log(err);
         });
         
         var sql  = "select count(*) as ilosc from artdruk.technologie_elementy  where papier_id= "+ papier_id ;
@@ -617,7 +617,7 @@ class Connections {
            dane =  dane.map(x => x[0].ilosc).reduce((a, b) => a + b, 0)
 
             
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(dane);
         });
 
@@ -631,7 +631,7 @@ class Connections {
         const idzlecenia = req.params['idzlecenia']
         var sql  = "select * from artdruk.view_technologie  where final is null ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });
     }
@@ -641,7 +641,7 @@ class Connections {
         // var sql  = "select * from artdruk.view_gant_grupy where status <4 and typ_grupy= 2  and (proces_nazwa_id = 1 or proces_nazwa_id = 1)  ORDER BY start ASC";
         var sql  = "select * from artdruk.view_gant_grupy where status <4 and typ_grupy= 2   ORDER BY start ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });
     }
@@ -661,7 +661,7 @@ class Connections {
 
                       var sql = "select   DATE_FORMAT(min(data_spedycji), '%Y-%m-%d') AS `data_spedycji_min`, DATE_FORMAT(max(data_spedycji), '%Y-%m-%d') AS `data_spedycji_max`,  DateDiff((select max(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz),(select min(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz)) AS ilosc_dni  from artdruk.view_zamowienia_kalendarz  ";
              connection.query(sql, function (err, doc) {
-                if (err){ throw err } 
+                if (err){ console.log(err) } 
              dane.push(doc)
              res.status(200).json(dane);
 
@@ -683,7 +683,7 @@ class Connections {
         const orderby = req.params['orderby']
         var sql  = "select * from artdruk.view_user" ;
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });
     }
@@ -693,7 +693,7 @@ class Connections {
         var sql  = "select * from artdruk.view_zamowienia_pliki" ;
         // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });
     }
@@ -704,7 +704,7 @@ class Connections {
         var sql  = "select * from artdruk.view_oddania_wykonania where oddanie_global_id= "+ grupa_global_id  ;
         // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });
     }
@@ -725,7 +725,7 @@ class Connections {
         // var sql  = "select * from artdruk.view_oddania_grupy where status !=4 order by rok,nr" ;
         // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });
     }
@@ -733,7 +733,7 @@ class Connections {
    
     //     var sql  = "select * from artdruk.view_klienci ORDER BY firma_nazwa ASC";
     //     connection.query(sql, function (err, doc) {
-    //     if (err) throw err;
+    //     if (err) console.log(err);
     //     res.status(200).json(doc);
     // });
     // }
@@ -742,7 +742,7 @@ class Connections {
    
         var sql  = "select * from artdruk.produkty ORDER BY id";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });
     }
@@ -751,7 +751,7 @@ class Connections {
         // pobiera listę użytkowników  w App getUserList
         var sql  = "select * from artdruk.users ORDER BY Imie";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });
     }
@@ -772,7 +772,7 @@ class Connections {
         var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienie_id,typ,uwagi,ilosc_stron,format_x,format_y,oprawa,naklad,indeks) "+
         "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "','" + ilosc_stron + "','" + format_x + "','" + format_y + "','" + oprawa + "','" + naklad + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
         // console.log(" 1 record inserted "+result.insertId);
         res.status(201).json(result);
 
@@ -793,7 +793,7 @@ class Connections {
         var sql =   "INSERT INTO artdruk.klienci (firma,firma_nazwa,adres,kod,nip,opiekun_id,utworzyl_user_id,deleted) "+
         "values (?,?,?,?,?,?,?,?); ";
         connection.execute(sql,dane, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
         // console.log(" 1 record inserted "+result.insertId);
         res.status(201).json(result);
 
@@ -818,12 +818,12 @@ setOrderOpen(req,res){
 // console.log("Wynik porównania doc[0].open_user_id == id:", doc[0].open_user_id == id);
 // console.log("Wartość doc[0].open_stan:", doc[0].open_stan);
 // console.log("Wynik porównania doc[0].open_stan != 1:", doc[0].open_stan != 1);
-        if (err) throw err;
+        if (err) console.log(err);
         if(doc[0].open_user_id == user || doc[0].open_stan != 1  )
         {
                 var sql = "update artdruk.zamowienia set open_token = '" + token+ "', open_user = '" + user+ "', open_data = now(), open_stan = 1 where id = " + id+ "";
                 connection.query(sql, function (err, result) {
-                if (err) throw err;
+                if (err) console.log(err);
             
                 res.status(200).json(
                     {stan:"OK",
@@ -847,7 +847,7 @@ setOrderClosed(req,res){
                 
                 var sql = "update artdruk.zamowienia set open_stan = null, open_data = null, open_user = null where id = " + id+ "";
                 connection.query(sql, function (err, result) {
-                if (err) throw err;
+                if (err) console.log(err);
             
                 res.status(200).json(
                     {stan:"closed"
@@ -955,11 +955,11 @@ console.log("tuuuuu")
 
  var sql = " update artdruk.technologie_grupy_wykonan set status ="+ status +" where global_id ="+grupa_global_id
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
  var sql = " update artdruk.technologie_wykonania set status ="+ status +" where technologia_id ="+technologia_id+" and global_id !=0 and grupa_id="+grupa_id
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
   
     
@@ -971,7 +971,7 @@ indeks_nastepnego_procesu= parseInt(indeks_procesu)+1
 global_id_procesu = result[0].global_id
 id_procesu = result[0].id
 
-    if (err) throw err
+    if (err) console.log(err)
  });
 
 
@@ -988,7 +988,7 @@ let max_status = Math.max(...grupyAktualnegoProcesu.map((f) => f.status))
 //  zmien status procesu na najwyzszy status grupy 
 var sql = " update artdruk.technologie_procesy_elementow set status ="+ max_status +" where global_id ="+global_id_procesu
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
  
 
@@ -1002,7 +1002,7 @@ connection.query(sql, function (err, result) {
 
 var sql = " update artdruk.technologie_procesy_elementow set status =4 where global_id ="+global_id_procesu
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
 //  console.log('id_nastepnego_procesu XX --'+result[0].id)
  var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+") and (status=1 or status is null)"
@@ -1020,21 +1020,21 @@ connection.query(sql, function (err, result) {
         var sql =
         " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and id ="+id_nastepnego_procesu
       connection.query(sql, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
       });
         var sql =
         " update artdruk.technologie_grupy_wykonan set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and proces_id ="+id_nastepnego_procesu
       connection.query(sql, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
       });
 
         var sql =
         " update artdruk.technologie_wykonania set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and proces_id ="+id_nastepnego_procesu
       connection.query(sql, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
       });
 
-     if (err) throw err
+     if (err) console.log(err)
   });
     }
 
@@ -1048,10 +1048,10 @@ connection.query(sql, function (err, result) {
         if(result.every(x=>x.status == 4)){
         var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status = CASE WHEN status = '1' THEN 2 ELSE status END where global_id !=0 and technologia_id ="+ technologia_id 
         connection.query(sql, function (err, result) {
-            if (err) throw err
+            if (err) console.log(err)
         });
             }
-            if (err) throw err
+            if (err) console.log(err)
      });
 
 
@@ -1062,10 +1062,10 @@ connection.query(sql, function (err, result) {
         if(result.every(x=> x.status == 4)){
         var sql = " update artdruk.zamowienia set etap = CASE WHEN etap < 8 THEN 8 ELSE etap END where id !=0 and technologia_id ="+ technologia_id 
         connection.query(sql, function (err, result) {
-            if (err) throw err
+            if (err) console.log(err)
         });
             }
-            if (err) throw err
+            if (err) console.log(err)
      });
 // nr1 end
 // nr2 sprawdz czy cały falc zakonczony, jeśli tak to zmień etap zamowienia na wydrukowane
@@ -1074,24 +1074,24 @@ connection.query(sql, function (err, result) {
         if(result.every(x=> x.status == 4)){
         var sql = " update artdruk.zamowienia set etap = CASE WHEN etap < 10 THEN 10 ELSE etap END where id !=0 and technologia_id ="+ technologia_id 
         connection.query(sql, function (err, result) {
-            if (err) throw err
+            if (err) console.log(err)
         });
             }
-            if (err) throw err
+            if (err) console.log(err)
      });
 // nr2 end
 
 
   }
 
-  if (err) throw err
+  if (err) console.log(err)
   });
 
     let STATUSY = {1:"NIEDOSTĘPNE",2:"OCZEKUJĄCE",3:"W TRAKCIE",4:"ZAKOŃCZONE"}
     let data=[ID_SPRAWCY,grupa_nazwa,"Zmiana statusu grupy ID:"+ grupa_id+" z "+STATUSY[stary_status]+" na "+STATUSY[status],zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
-           if (err) throw err; 
+           if (err) console.log(err); 
         info = "OK"
         })
               
@@ -1127,7 +1127,7 @@ const token = req.params['token']
 connection.query(sql, function (err, result) {
        info = "OK"
 
-    if (err) throw err
+    if (err) console.log(err)
  });
 
  
@@ -1136,7 +1136,7 @@ connection.query(sql, function (err, result) {
     //  console.log(data)
      var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {  
-           if (err) throw err;   })
+           if (err) console.log(err);   })
 
  var sql = "commit";
  connection.query(sql, function (err, result) {
@@ -1160,7 +1160,7 @@ zmien_status_przerwy(req,res){
 
  var sql = " update artdruk.technologie_grupy_wykonan set status ="+ status +" where global_id ="+grupa_global_id
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  res.status(200).json("OK")  
  });
 
@@ -1446,7 +1446,7 @@ deleteKlient(req,res){
 
     var sql = "update artdruk.klienci set deleted = 1 where id = " + id+ "";
     connection.query(sql, function (err, result) {
-    if (err) throw err;
+    if (err) console.log(err);
     // console.log("1 record delete ");
     res.status(201).json(result);
 })
@@ -1510,7 +1510,7 @@ odblokujZamowienie(req,res){
 
     var sql = "commit";
     connection.query(sql, function (err, result) {
-    if (err) throw err;
+    if (err) console.log(err);
     console.log("Zlecenie odblokowane! ");
 res.status(201).json(result);
 });
@@ -1528,18 +1528,18 @@ updatePapiery(req,res){
 
     for(let row of rows.filter(x => x.update == true && x.insert != true) ){
         var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = " + row.grupa_id+ ", nazwa_id = " + row.nazwa_id+ ", gramatura = '" + row.gramatura+ "', bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ ", powleczenie_id = " + row.powleczenie_id+ " where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err       }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)       }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery (dodal,zmienil,grupa_id,nazwa_id,gramatura,bulk,info,wykonczenie_id,powleczenie_id) "+
             "values (" + row.dodal + "," + row.zmienil + "," + row.grupa_id + "," + row.nazwa_id + ",'" + row.gramatura + "','" + row.bulk + "','" + row.info + "'," + row.wykonczenie_id + "," + row.powleczenie_id + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err       }});
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)       }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err        }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)        }});
                 }
 
 
@@ -1562,17 +1562,17 @@ updatePapieryNazwy(req,res){
 
     for(let row of rows.filter(x => x.update == true && x.insert != true) ){
         var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "', grupa_id = " + row.grupa_id+ ", powleczenie_id = " + row.powleczenie_id+ " where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err     }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)     }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa,grupa_id,powleczenie_id) value ('" + row.nazwa + "'," + row.grupa_id + "," + row.powleczenie_id + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err       }});
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  console.log(err)       }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery_nazwy where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err          }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)          }});
                 }
 
 
@@ -1596,17 +1596,17 @@ updatePapieryGrupa(req,res){
 
     for(let row of rows.filter(x => x.update == true && x.insert != true) ){
         var sql =   "update  artdruk.papiery_grupa set  grupa = '" + row.grupa+ "' where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err        }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)        }});
         }
 
         for(let row of rows.filter(x => x.insert == true) ){
             var sql =   "INSERT INTO artdruk.papiery_grupa (grupa) value ('" + row.grupa + "'); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err        }});
+            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  console.log(err)        }});
             }
 
             for(let row of rows.filter(x => x.delete == true) ){
                 var sql =   "DELETE from artdruk.papiery_grupa where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err         }});
+                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  console.log(err)         }});
                 }
 
 
@@ -1636,7 +1636,7 @@ updateKlient(req,res){
 
     var sql = "update artdruk.klienci set firma =?, firma_nazwa =?, adres =?, kod =?, nip =?, opiekun_id =? where id =?";
     connection.execute(sql,dane, function (err, result) {
-    if (err) throw err;
+    if (err) console.log(err);
     res.status(200).json(result);
 })
 }
@@ -1652,7 +1652,7 @@ updateHistoria(req,res){
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) "+
     "values (" + user_id+ ",'" + kategoria + "','" + event + "'," + zamowienie_id+ "); ";
     connection.query(sql, function (err, result) {    
-           if (err) throw err;   
+           if (err) console.log(err);   
                res.status(200).json(result);   
         });
 }
@@ -1665,7 +1665,7 @@ updateWydaniePapieru_status(req,res){
  var sql = "update artdruk.technologie_wydanie_papieru set status = " + status+ " where global_id !=0 and global_id_grupa = '" + global_id_grupa+ "' ";
 
     connection.query(sql, function (err, result) {    
-           if (err) throw err;   
+           if (err) console.log(err);   
                res.status(200).json(result);   
         });
 }
@@ -1679,7 +1679,7 @@ insertWydaniePapieru_status(req,res){
        
 
     connection.query(sql, function (err, result) {    
-           if (err) throw err;   
+           if (err) console.log(err);   
                res.status(200).json(result);   
         });
 }
@@ -1694,7 +1694,7 @@ insertWydaniePapieru_status_multiselect(req,res){
                     "values ('" + grupa.global_id+ "',3); ";
                 
                         connection.query(sql, function (err, result) {    
-                    if (err) throw err;   
+                    if (err) console.log(err);   
                     });
 
 
@@ -1707,7 +1707,7 @@ insertWydaniePapieru_status_multiselect(req,res){
         var sql = "update artdruk.technologie_wydanie_papieru set status = 3 where global_id !=0 and global_id_grupa = '" + grupa.global_id+ "' ";
 
     connection.query(sql, function (err, result) {    
-           if (err) throw err;   
+           if (err) console.log(err);   
         });
 
            }
@@ -1736,7 +1736,7 @@ insertWydaniePapieru_status_multiselect(req,res){
         var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id,typ,indeks,wersja,ilosc_stron) "+
         "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "','" + typ + "','" + indeks + "','" + wersja + "','" + ilosc_stron + "'); ";
         connection.query(sql, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(201).json(result);
 
     });}
@@ -1761,7 +1761,7 @@ insertWydaniePapieru_status_multiselect(req,res){
         var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y,uwagi,papier_info,indeks) "+
         "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "','" + format_x + "','" + format_y + "','" + uwagi + "','" + papier_info + "','" + indeks + "'); ";
         connection.query(sql, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
         // console.log(" 1 record inserted "+result.insertId);
         res.status(201).json(result);
 
@@ -1837,7 +1837,7 @@ insertWydaniePapieru_status_multiselect(req,res){
 
             var sql = "update artdruk.zamowienia set final = 0 where id = '" + zamowienie_id+ "' ";
             connection.query(sql, function (err, result) {
-            if (err) throw err;
+            if (err) console.log(err);
             res.status(201).json(result);
             });
         }
@@ -1863,7 +1863,7 @@ insertWydaniePapieru_status_multiselect(req,res){
         
             var sql = "commit";
             connection.query(sql, function (err, result) {
-            if (err) throw err;
+            if (err) console.log(err);
             console.log("Przeniesione do kosza! ");
         res.status(201).json(result);
         });
@@ -1884,12 +1884,12 @@ insertWydaniePapieru_status_multiselect(req,res){
     
             var sql = "start transaction";
                     connection.query(sql, function (err, result) {
-                    if (err) throw err;
+                    if (err) console.log(err);
                     });
             // console.log("zapis ok"+req.body.kosztyDodatkoweZamowienia[0].suma)
                     var sql = "update artdruk.koszty_dodatkowe set final= 0 where zamowienie_prime_id="+kosztyDodatkoweZamowienia[0].zamowienie_prime_id;
                     connection.query(sql, function (err, result) {
-                    if (err) throw err;
+                    if (err) console.log(err);
                     });
     
                     for(let koszt of kosztyDodatkoweTemporary){
@@ -1903,13 +1903,13 @@ insertWydaniePapieru_status_multiselect(req,res){
 
                     var sql = "update artdruk.zamowienia_koszty_dodatkowe set suma= '" + kosztyDodatkoweZamowienia[0].suma + "' where id="+kosztyDodatkoweZamowienia[0].id;
                     connection.query(sql, function (err, result) {
-                    if (err) throw err;
+                    if (err) console.log(err);
                     });
          
     
     var sql = "commit";
     connection.query(sql, function (err, result) {
-    if (err) throw err;
+    if (err) console.log(err);
     // console.log("1 record update ");
       res.status(201).json(result);
     });
@@ -1926,7 +1926,7 @@ zapisKosztowDodatkowychZamowienia(req,res){
     
                         var sql = "update artdruk.zamowienia_koszty_dodatkowe set status= '" + value + "' where id="+id;
                         connection.query(sql, function (err, result) {
-                        if (err) throw err;
+                        if (err) console.log(err);
                         res.status(201).json(result);
                         });
              
@@ -1939,7 +1939,7 @@ zapisKosztowDodatkowychZamowienia(req,res){
     getNadkomplety(req,res){
         var sql = "SELECT * FROM artdruk.nadkomplety;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
@@ -1947,14 +1947,14 @@ zapisKosztowDodatkowychZamowienia(req,res){
     getListaPapierow(req,res){
         var sql = "SELECT * FROM artdruk.view_papiery ;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
     getListaPapierowNazwy(req,res){
         var sql = "SELECT * FROM artdruk.papiery_nazwy;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
@@ -1962,7 +1962,7 @@ zapisKosztowDodatkowychZamowienia(req,res){
     getListaPapierowGrupa(req,res){
         var sql = "SELECT * FROM artdruk.papiery_grupa;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
@@ -1970,41 +1970,41 @@ zapisKosztowDodatkowychZamowienia(req,res){
     getListaPapierowPostac(req,res){
         var sql = "SELECT * FROM artdruk.papiery_postac;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });}
     getListaPapierowRodzaj(req,res){
         var sql = "SELECT * FROM artdruk.papiery_rodzaj;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });}
 
     getListaPapierowWykonczenia(req,res){
         var sql = "SELECT * FROM artdruk.papiery_wykonczenia;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });}
 
     getListaPapierowPowleczenie(req,res){
         var sql = "SELECT * FROM artdruk.papiery_powleczenie;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         res.status(200).json(doc);
     });}
 
     getListaProcesow(req,res){
         var sql = "SELECT * FROM artdruk.view_procesy ;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
     getListaProcesowNazwa(req,res){
         var sql = "SELECT id,nazwa FROM artdruk.procesy_nazwa ;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
@@ -2012,7 +2012,7 @@ zapisKosztowDodatkowychZamowienia(req,res){
     getProcesyElementow(req,res){
         var sql = "SELECT artdruk.zamowienia_procesy.id,zamowienie_id,produkt_id,element_id,proces_id,front, front_info,back,back_info, uwagi,artdruk.lista_procesow.proces,artdruk.lista_procesow.typ,artdruk.lista_procesow.rodzaj FROM artdruk.zamowienia_procesy INNER JOIN artdruk.lista_procesow ON zamowienia_procesy.proces_id = lista_procesow.id ORDER BY id ASC;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}
@@ -2020,7 +2020,7 @@ zapisKosztowDodatkowychZamowienia(req,res){
     getProcesory(req,res){
         var sql = "SELECT * from artdruk.procesory ORDER BY indeks ASC;";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         //sconsole.log(doc);
         res.status(200).json(doc);
     });}

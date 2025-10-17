@@ -39,7 +39,7 @@ const zamowieniePobierzWszystkie =(req,res)=>{
                             "select * from artdruk.view_zamowienia where final is null ORDER BY " + orderby;
                         connection.execute(sql, function (err, doc) {
                             results = doc
-                            if (err) throw err;
+                            if (err) console.log(err);
                             res.status(200).json(doc)
                         });
 
@@ -49,7 +49,7 @@ const zamowieniePobierzWszystkie =(req,res)=>{
                             "select * from artdruk.view_zamowienia where (opiekun_id ="+ id +" or asystent1 ="+ id +"  or asystent1 ="+ id +")  and final is null ORDER BY " + orderby;
                         connection.execute(sql, function (err, doc) {
                             results = doc
-                            if (err) throw err;
+                            if (err) console.log(err);
                             res.status(200).json(doc)
                         });
 

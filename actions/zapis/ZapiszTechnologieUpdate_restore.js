@@ -19,11 +19,11 @@ for(let re of result){
  console.log("global_id grupy: "+ re.global_id)
             var sql = " select artdruk.delete_grupa_wykonan(" + re.global_id + ")"
                 connection.query(sql, function (err, result) {
-                if (err) throw err
+                if (err) console.log(err)
                 });
 
     }
- if (err) throw err
+ if (err) console.log(err)
  });
 
 
@@ -34,24 +34,24 @@ for(let re of result){
  console.log("global_id grupy oprawa: "+ re.global_id)
             var sql = " select artdruk.delete_grupa_wykonan_oprawa(" + re.global_id + ")"
                 connection.query(sql, function (err, result) {
-                if (err) throw err
+                if (err) console.log(err)
                 });
 
     }
- if (err) throw err
+ if (err) console.log(err)
  });
 
 
 
 
         var sql =   "call artdruk.delete_technologia_from_zamowienie_id(" + zamowienie_id + ")"
-connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) throw err;       }
+connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) console.log(err);       }
 });
 
 
     var sql = "commit"
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
         res.status(200).json("OK")  
 
  })

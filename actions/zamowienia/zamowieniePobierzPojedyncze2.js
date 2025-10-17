@@ -67,42 +67,42 @@ const zamowieniePobierzPojedyncze =(req,res)=>{
         } );
         var sql = "select * from artdruk.zamowienia_pakowanie where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         dane.push(doc)
         } );
 
 
         var sql = "select * from artdruk.zamowienia_koszty_dodatkowe where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         dane.push(doc)
 
         } );
 
              var sql = "select * from artdruk.zamowienia_ksiegowosc where zamowienie_id = " + idZamowienia ;
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         dane.push(doc)
 
         } );
 
                 var sql = "select * from artdruk.view_zamowienia_faktury where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         dane.push(doc)
 
         } );
 
                         var sql = "select * from artdruk.view_zamowienia_pliki where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         connection.query(sql, function (err, doc) {
-        if (err) throw err;
+        if (err) console.log(err);
         dane.push(doc)
 
         } );
 
         // var sql = "select * from artdruk.koszty_dodatkowe where zamowienie_id = '" + idZamowienia + "' ORDER BY id ASC";
         // connection.query(sql, function (err, doc) {
-        // if (err) throw err;
+        // if (err) console.log(err);
         // dane.push(doc)
         // } );
 

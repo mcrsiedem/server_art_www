@@ -28,7 +28,7 @@ function  verifyTokenParams(uprawnienie){
                 if( dataStore.checkPrivileges(decoded.id,uprawnienie)){
                 var sql = "INSERT INTO artdruk.monitoring (user_id,imie,nazwisko) values ('" + decoded.id+ "','" + decoded.imie+ "','" + decoded.nazwisko+ "') ";
                 connection.query(sql, function (err, result) {
-                  if (err) throw err;
+                  if (err) console.log(err);
                 })
 
                 next();  

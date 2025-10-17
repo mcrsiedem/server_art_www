@@ -16,7 +16,7 @@ const zakonczWykonanie = (req, res) => {
      let next_proces_indeks = parseInt(wykonanieRow.proces_indeks)+1
     var sql = " update artdruk.technologie_wykonania set status ="+ wykonanieRow.status +" where global_id ="+wykonanieRow.global_id
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
 
  })
 
@@ -34,14 +34,14 @@ grupa_id_next = res3?.grupa_id || 0
 connection.query(sql, function (err, result) {
 
 
-    if (err) throw err
+    if (err) console.log(err)
  });
 
  // zmienia grupe na oczekujący gdy wykonanie robi się oczekujące przez zakończenie wykonania z poprzedniego procesu
             var sql = " update artdruk.technologie_grupy_wykonan set status = CASE WHEN status = 1 THEN 2 ELSE status END where technologia_id ="+ wykonanieRow.technologia_id+" and global_id !=0 and id="+grupa_id_next
 
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
 
   }
@@ -49,7 +49,7 @@ connection.query(sql, function (err, result) {
 
 
 
-    if (err) throw err
+    if (err) console.log(err)
  });
 
 
@@ -71,14 +71,14 @@ connection.query(sql, function (err, result) {
  if(wykonaniaGrupy.every(x=>x.status == 4)){
  var sql = " update artdruk.technologie_grupy_wykonan set status =4 where id ="+wykonanieRow.grupa_id+" and global_id !=0 and technologia_id ="+ wykonanieRow.technologia_id 
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
     }
 //-----------
  if(wykonaniaProcesu.every(x=>x.status == 4)){
  var sql = " update artdruk.technologie_procesy_elementow set status =4 where id ="+wykonanieRow.proces_id+" and global_id !=0 and technologia_id ="+ wykonanieRow.technologia_id +" and element_id ="+ wykonanieRow.element_id 
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
 
 
@@ -89,10 +89,10 @@ connection.query(sql, function (err, result) {
         if(result.every(x=> x.status == 4)){
         var sql = " update artdruk.zamowienia set etap = CASE WHEN etap < 8 THEN 8 ELSE etap END where id !=0 and technologia_id ="+ technologia_id 
         connection.query(sql, function (err, result) {
-            if (err) throw err
+            if (err) console.log(err)
         });
             }
-            if (err) throw err
+            if (err) console.log(err)
      });
 // nr1 end
 // nr2 sprawdz czy cały falc zakonczony, jeśli tak to zmień etap zamowienia na wydrukowane
@@ -101,10 +101,10 @@ connection.query(sql, function (err, result) {
         if(result.every(x=> x.status == 4)){
         var sql = " update artdruk.zamowienia set etap = CASE WHEN etap < 10 THEN 10 ELSE etap END where id !=0 and technologia_id ="+ technologia_id 
         connection.query(sql, function (err, result) {
-            if (err) throw err
+            if (err) console.log(err)
         });
             }
-            if (err) throw err
+            if (err) console.log(err)
      });
 // nr2 end
 
@@ -114,14 +114,14 @@ connection.query(sql, function (err, result) {
  if(wykonaniaElementu.every(x=>x.status == 4)){
  var sql = " update artdruk.technologie_elementy set status =4 where id ="+wykonanieRow.element_id+" and global_id !=0 and technologia_id ="+ wykonanieRow.technologia_id 
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
     }
 //-------------
          if(WSZYTKIE_WYKONANIA.every(x=>x.status == 4)){
  var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status = CASE WHEN status = '1' THEN 2 ELSE status END where global_id !=0 and technologia_id ="+ wykonanieRow.technologia_id 
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
  });
     }
 //-----------
@@ -129,7 +129,7 @@ connection.query(sql, function (err, result) {
 
 
 
-    if (err) throw err
+    if (err) console.log(err)
   });
 
 
@@ -145,14 +145,14 @@ connection.query(sql, function (err, result) {
     let data=[ID_SPRAWCY,nazwa,"Zmiana statusu wykonania ID:"+ id_wykonania+" z "+STATUSY[stary_status]+" na "+STATUSY[wykonanieRow.status],zamowienie_id]
     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
     connection.execute(sql,data, function (err, result) {    
-           if (err) throw err;   })
+           if (err) console.log(err);   })
 
 
 
 
     var sql = "commit"
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
         res.status(200).json("OK")  
 
  })

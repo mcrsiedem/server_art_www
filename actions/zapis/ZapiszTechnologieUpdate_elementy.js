@@ -28,7 +28,7 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
   ", arkusz_szerokosc = '" + row.arkusz_szerokosc+ 
   "', arkusz_wysokosc = '" + row.arkusz_wysokosc+ 
   "' where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   throw err     }});
+  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)     }});
   }
 
   for(let row of elementyTechEdit.filter(x => x.insert == true && x.delete != true) ){
@@ -55,12 +55,12 @@ for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true
     + row.status + "," 
     + row.etap + "," 
     + row.indeks + "); ";
-    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });    throw err         }});
+    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });    console.log(err)         }});
     }
 
     for(let row of elementyTechEdit.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.technologie_elementy where global_id=" + row.global_id;
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  throw err          }});
+        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  console.log(err)          }});
         }
 
 }

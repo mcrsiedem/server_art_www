@@ -16,11 +16,11 @@ const ZmienEtapWydrukowane = (req, res) => {
 //druk
             var sql = " update artdruk.zamowienia set etap = 8 where id !=0 and technologia_id ="+technologia.technologia_id 
                 connection.query(sql, function (err, result) {
-                if (err) throw err
+                if (err) console.log(err)
                 });
 //   console.log("Druk zakonczony")
     }
- if (err) throw err
+ if (err) console.log(err)
  });
 
 
@@ -32,11 +32,11 @@ const ZmienEtapWydrukowane = (req, res) => {
 //falc
             var sql = " update artdruk.zamowienia set etap = 10 where id !=0 and technologia_id ="+technologia.technologia_id 
                 connection.query(sql, function (err, result) {
-                if (err) throw err
+                if (err) console.log(err)
                 });
 //   console.log("Druk zakonczony")
     }
- if (err) throw err
+ if (err) console.log(err)
  });
 
 
@@ -48,7 +48,7 @@ const ZmienEtapWydrukowane = (req, res) => {
 
     var sql = "commit"
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
         res.status(200).json("OK")  
 
  })

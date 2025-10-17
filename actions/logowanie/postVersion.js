@@ -12,7 +12,7 @@ const postVersion = (req,res) =>{
     promises.push(     new Promise((resolve, reject) => {
       connection.execute(sql,dane, (err, results) => {
       if (err) {
-        // throw err
+        // console.log(err)
           resolve([{zapis: false},err]);               
       } else {
           resolve([{zapis: true},{zamowienie_nr:results.insertId}])

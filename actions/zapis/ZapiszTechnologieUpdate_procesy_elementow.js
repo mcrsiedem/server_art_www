@@ -24,7 +24,7 @@ const zapiszTechnologieUpdate_procesy_elementow=(procesyElementow) =>{
     "', nazwa_id = " + row.nazwa_id+ 
     ",  indeks = " + row.indeks+ 
     " where global_id = " + row.global_id + ""
-    connection.query(sql, function (err, result) {      if (err)throw err     });;
+    connection.query(sql, function (err, result) {      if (err)console.log(err)     });;
     }
   
   
@@ -47,12 +47,12 @@ const zapiszTechnologieUpdate_procesy_elementow=(procesyElementow) =>{
       row.nazwa_id +        "','" +
       row.proces_id +        "'); ";
       
-      connection.query(sql, function (err, result) {      if (err)throw err     });
+      connection.query(sql, function (err, result) {      if (err)console.log(err)     });
       }
   
       for(let row of procesyElementow.filter(x => x.delete == true && x.insert != true) ){
           var sql =   "DELETE from artdruk.technologie_procesy_elementow where global_id=" + row.global_id;
-          connection.query(sql, function (err, result) {      if (err)throw err     });
+          connection.query(sql, function (err, result) {      if (err)console.log(err)     });
           }
 
 }

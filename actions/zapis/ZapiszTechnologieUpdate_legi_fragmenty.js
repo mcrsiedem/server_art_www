@@ -21,7 +21,7 @@ for(let row of legiFragmentyEdit.filter(x => x.update == true && x.insert != tru
   ", nr_legi = '" + row.nr_legi+ 
   "', wersja = '" + row.wersja+ 
   "' where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {      if (err)throw err     });
+  connection.query(sql, function (err, result) {      if (err)console.log(err)     });
   }
 
 
@@ -42,7 +42,7 @@ for(let row of legiFragmentyEdit.filter(x => x.update == true && x.insert != tru
     row.oprawa_id +        ",'" +
     row.typ +        "','" +
     row.wersja +        "'); ";
-    connection.query(sql, function (err, result) {      if (err)throw err     });
+    connection.query(sql, function (err, result) {      if (err)console.log(err)     });
   
 
 
@@ -50,7 +50,7 @@ for(let row of legiFragmentyEdit.filter(x => x.update == true && x.insert != tru
 
     for(let row of legiFragmentyEdit.filter(x => x.delete == true && x.insert != true) ){
         var sql =   "DELETE from artdruk.technologie_legi_fragmenty where global_id=" + row.global_id;
-        connection.query(sql, function (err, result) {      if (err)throw err     });
+        connection.query(sql, function (err, result) {      if (err)console.log(err)     });
         }
 
 

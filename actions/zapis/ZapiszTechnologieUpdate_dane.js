@@ -27,7 +27,7 @@ const zapiszTechnologieUpdate_dane=(daneTechEdit,res) =>{
            ",etap=" + daneTechEdit.etap + 
            " where id = '" + daneTechEdit.id + "'"
         
-           connection.query(sql, function (err, result) {      if (err)throw err     });
+           connection.query(sql, function (err, result) {      if (err)console.log(err)     });
         }
 
 }

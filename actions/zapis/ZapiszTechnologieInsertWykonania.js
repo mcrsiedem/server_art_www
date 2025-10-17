@@ -46,6 +46,7 @@ const zapiszTechnologieInsertWykonania = (req,res) =>{
         if (wykonania.length != 0) {
           connection.query(sql, (err, results) => {
             if (err) {
+               console.log(err)
               resolve([{ zapis: false }, err]);
             } else {
               resolve([{ zapis: true }]);

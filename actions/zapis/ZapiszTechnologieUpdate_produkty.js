@@ -23,7 +23,7 @@ for(let row of produktyTechEdit.filter(x => x.update == true && x.insert != true
      "', naklad = " + row.naklad+ 
      ",  indeks = " + row.indeks+ 
      " where global_id = " + row.global_id + ""
-     connection.query(sql, function (err, result) {      if (err)throw err     });
+     connection.query(sql, function (err, result) {      if (err)console.log(err)     });
   }
 
 

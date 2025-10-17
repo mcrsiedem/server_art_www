@@ -19,7 +19,7 @@ let Delete = () =>{
   let data=[global_id_wykonania_oprawy,ID_SPRAWCY,REALIZACJE_USUN]
       var sql =   "DELETE from artdruk.technologie_wykonania_oprawa where global_id=? and (dodal=? or 1=?)";
       connection.execute(sql, data,function (err, result) {     
-          //  if (err) throw err; 
+          //  if (err) console.log(err); 
             if (err) reject(err); 
             id = result.insertId
            resolve("OK")

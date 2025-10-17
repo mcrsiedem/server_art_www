@@ -35,7 +35,7 @@ let Insert = (SUMA_REALIZACJI) =>{
           let data=[row.zamowienie_id,req.body.global_id,BRAKUJACY_NAKLAD,ID_SPRAWCY,1]
       var sql =   "INSERT INTO artdruk.oddania_wykonania (zamowienie_id,oddanie_global_id, zrealizowano,dodal,typ) values (?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
-          //  if (err) throw err; 
+          //  if (err) console.log(err); 
               if (err) {
                           reject(err);
                         } else {

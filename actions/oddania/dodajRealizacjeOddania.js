@@ -19,7 +19,7 @@ let Insert = () =>{
   let data=[row.zamowienie_id,row.global_id,row.zrealizowano,ID_SPRAWCY,row.typ]
       var sql =   "INSERT INTO artdruk.oddania_wykonania (zamowienie_id, oddanie_global_id,zrealizowano,dodal,typ) values (?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
-          //  if (err) throw err; 
+          //  if (err) console.log(err); 
             if (err) {
                           reject(err);
                         } else {

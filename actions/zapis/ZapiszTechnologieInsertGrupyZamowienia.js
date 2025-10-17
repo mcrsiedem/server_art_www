@@ -8,7 +8,8 @@ const zapiszTechnologieInsertGrupyZamowienia = (req,res) =>{
 
   let promises = [];
 
-console.log("grupa", grypy)
+console.log("grupa xxx", grypy)
+console.log("grypy.length", grypy.length)
 
   //------------------------------
   for (let grupa of grypy) {
@@ -46,7 +47,8 @@ grupa.uwagi +        "'; ";
         if (grypy.length != 0) {
         connection.query(sql, (err, results) => {
         if (err) {
-          // throw err
+          // console.log(err)
+          console.log(err)
             resolve([{zapis: false},err]);       
 
         } else {

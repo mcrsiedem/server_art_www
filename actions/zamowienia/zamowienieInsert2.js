@@ -186,7 +186,7 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
     new Promise((resolve, reject) => {
       connection.execute(sql, dane, (err, results) => {
         if (err) {
-          // throw err
+          // console.log(err)
           resolve([{ zapis: false }, err]);
         } else {
           resolve([{ zapis: true }]);
@@ -205,7 +205,7 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
     new Promise((resolve, reject) => {
       connection.execute(sql, dane,(err, results) => {
         if (err) {
-          // throw err;
+          // console.log(err);
           resolve([{ zapis: false }, err]);
 
         } else {
@@ -224,7 +224,7 @@ for (let element of elementy.filter(x =>  x.delete != true)) {
     new Promise((resolve, reject) => {
       connection.execute(sql, daneOddane,(err, results) => {
         if (err) {
-          // throw err;
+          // console.log(err);
           resolve([{ zapis: false }, err]);
 
         } else {
@@ -267,7 +267,7 @@ const save = ({daneZamowienia}) =>{
   
   connection.execute(sql, dane, (err, results) => {
     if (err) {
-      // throw err;
+      // console.log(err);
       reject(err)
     } else {
       resolve(results.insertId);

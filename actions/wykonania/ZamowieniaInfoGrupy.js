@@ -17,14 +17,14 @@ let suma_przelotow =0;
  var sql = " SELECT sum(przeloty) as przeloty FROM artdruk.technologie_grupy_wykonan where global_id = "+ grupa.global_id
  connection.query(sql, function (err, result) {
   suma_przelotow = suma_przelotow + parseInt(result[0].przeloty || 0)
-    if (err) throw err
+    if (err) console.log(err)
     });
   }
 
 
     var sql = "commit"
 connection.query(sql, function (err, result) {
-    if (err) throw err
+    if (err) console.log(err)
         res.status(200).json({suma_przelotow:suma_przelotow})  
 
  })

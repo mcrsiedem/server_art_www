@@ -17,7 +17,7 @@ let Insert = () =>{
   let data=[row.id,row.technologia_id,row.zamowienie_id,row.id,row.oprawa_id,row.naklad,row.proces_id,row.procesor_id,ID_SPRAWCY]
       var sql =   "INSERT INTO artdruk.technologie_wykonania_oprawa (id,technologia_id,zamowienie_id, grupa_id,oprawa_id,naklad,proces_id,procesor_id,dodal) values (?,?,?,?,?,?,?,?,?); ";
       connection.execute(sql, data,function (err, result) {     
-          //  if (err) throw err; 
+          //  if (err) console.log(err); 
             if (err) reject(err); 
             id = result.insertId
            resolve("OK")

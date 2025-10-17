@@ -36,7 +36,7 @@ const klienciPobierzWszystkich =(req,res)=>{
                      var sql  = "select * from artdruk.view_klienci ORDER BY firma ASC";
                         connection.execute(sql, function (err, doc) {
                             results = doc
-                            if (err) throw err;
+                            if (err) console.log(err);
                             res.status(200).json(doc)
                         });
 
@@ -46,7 +46,7 @@ const klienciPobierzWszystkich =(req,res)=>{
                             "select * from artdruk.view_klienci where (opiekun_id ="+ id +" or asystent1 ="+ id +"  or asystent1 ="+ id +")  ORDER BY firma ASC" ;
                         connection.execute(sql, function (err, doc) {
                             results = doc
-                            if (err) throw err;
+                            if (err) console.log(err);
                             res.status(200).json(doc)
                         });
 
