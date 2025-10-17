@@ -9,7 +9,7 @@ const zapiszTechnologieInsertWykonania = (req,res) =>{
   let promises = [];
 
   // jeśli są
-  
+  console.log("wykonania xxx", wykonania)
       //------------------------------
   for (let wykonanie of wykonania) {
     let lega = wykonanie.lega_id || 0

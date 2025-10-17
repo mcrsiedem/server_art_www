@@ -8,7 +8,7 @@ const zapiszTechnologieInsertGrupyZamowienia = (req,res) =>{
 
   let promises = [];
 
-console.log("grupa xxx", grypy)
+// console.log("grupa xxx", grypy)
 console.log("grypy.length", grypy.length)
 
   //------------------------------
