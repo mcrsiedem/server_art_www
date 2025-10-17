@@ -670,7 +670,14 @@ class Connections {
          }
 
 
-
+    getVersion(req,res){
+        const orderby = req.params['orderby']
+        var sql  = "select ver,utworzono from artdruk.version  ORDER BY id DESC LIMIT 1";
+        connection.query(sql, function (err, doc) {
+        if (err) console.log(err);
+        res.status(200).json(doc);
+    });
+    }
 
     getAllUsers(req,res){
         const orderby = req.params['orderby']
