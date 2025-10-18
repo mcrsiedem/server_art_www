@@ -17,7 +17,7 @@ class Connections {
 
         const login = req.params['login']
         const haslo = req.params['haslo']
-        const hash = req.params['hash']
+        const hash = req.params['hash'] 
         console.log("Logowanie. Login: "+login )
     
         var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun,gant from artdruk.users where login =? and haslo = ?;";
@@ -88,8 +88,17 @@ class Connections {
 
                 var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria,version) values (?,?,?,?); ";
                connection.query(sql, [id,imie+ " "+nazwisko,"Logowanie",hash],function (err, result) {            if (err) console.log(err);            })
+
+                let version;
+                         var sql  = "select ver,utworzono from artdruk.version  ORDER BY id DESC LIMIT 1";
+                        connection.query(sql, function (err, ver) {
+                        if (err) console.log(err);
+                            version =ver
+                    });
+
+
     
-                return res.status(200).json(token)
+                return res.status(200).json([token,version])
                 
         
             } else {
