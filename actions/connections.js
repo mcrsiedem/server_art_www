@@ -17,6 +17,8 @@ class Connections {
 
         const login = req.params['login']
         const haslo = req.params['haslo']
+        const hash = req.params['hash']
+        console.log("Logowanie. Login: "+login )
     
         var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun,gant from artdruk.users where login =? and haslo = ?;";
 
@@ -84,15 +86,15 @@ class Connections {
                const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
             //    const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
 
-                var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria) values (?,?,?); ";
-               connection.query(sql, [id,imie+ " "+nazwisko,"Logowanie"],function (err, result) {            if (err) console.log(err);            })
+                var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria,version) values (?,?,?,?); ";
+               connection.query(sql, [id,imie+ " "+nazwisko,"Logowanie",hash],function (err, result) {            if (err) console.log(err);            })
     
                 return res.status(200).json(token)
                 
         
             } else {
-                var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria,event) values (?,?,?,?); ";
-               connection.execute(sql, [0,"","Logowanie",login+" "+haslo], (err, result) => {            if (err) console.log(err);            })
+                var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria,event,version) values (?,?,?,?,?); ";
+               connection.execute(sql, [0,"","Logowanie",login+" "+haslo,hash], (err, result) => {            if (err) console.log(err);            })
 
                 return res.json({Status: "Error", Error: "Wrong Email or Password"})
 
