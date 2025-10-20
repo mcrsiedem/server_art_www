@@ -1255,7 +1255,7 @@ updatePrzeniesWykonanieDoInnejGrupy(req,res){
     const ostatnie_wykonania = req.params['ostatnie_wykonania']
     // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
     var sql = "select artdruk.przenies_wykonanie("+ global_id_wykonania +","+ grupa_id_drop +","+ ostatnie_wykonania +") as technologia_id";
-    // console.log(sql)
+
     connection.query(sql, function (err, result) {
        if (err) res.status(203).json(err)  
             res.status(200).json(result);
