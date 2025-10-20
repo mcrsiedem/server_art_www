@@ -18,7 +18,10 @@ let Insert = () =>{
       connection.execute(sql, data,function (err, result) {     
        if (err){
                 reject(wizytowka+" Insert "+err); 
-            } else resolve("OK")
+            } else {
+                      id = result.insertId;
+                      resolve("OK");
+                    }
         })
 })
 }
