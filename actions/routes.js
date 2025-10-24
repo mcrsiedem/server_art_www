@@ -66,6 +66,7 @@ const { postVersion } = require('./logowanie/postVersion');
     
     router.get('/users/:login/:haslo/:hash',connections.getUser);
     router.get('/all_users/:token',verifyToken,connections.getAllUsers);
+        router.get('/lista-userow',connections.getUsersM);
 
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 
@@ -194,7 +195,7 @@ const { postVersion } = require('./logowanie/postVersion');
     router.get('/procesyElementow',connections.getProcesyElementow);
     router.get('/procesory',connections.getProcesory);
     
-    router.get('/lista-userow',connections.getUsersM);
+
 // end
 // router.get('/lista-klientow/:token',verifyToken,connections.getKlienci);
 router.get('/lista-klientow/:token',verifyToken,klienciPobierzWszystkich);

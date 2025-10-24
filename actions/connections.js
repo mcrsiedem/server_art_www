@@ -765,8 +765,9 @@ class Connections {
     }
 
     getUsersM(req,res){
-        // pobiera listę użytkowników  w App getUserList
-        var sql  = "select * from artdruk.users ORDER BY Imie";
+        // lista dość publiczna
+        var sql  = "select id,Imie,Nazwisko,zamowienie_zapis from artdruk.users ORDER BY Imie";
+
         connection.query(sql, function (err, doc) {
         if (err) console.log(err);
         res.status(200).json(doc);
