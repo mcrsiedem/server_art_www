@@ -20,6 +20,7 @@ const zamowienieUpdate = (req,res) =>{
     let kosztyDodatkoweZamowienia = req.body[9]
     let ksiegowosc = req.body[10]
     let faktury = req.body[11]
+    let procesyProduktow = req.body[12]
 
       const token = req.params['token']
       const token_id = DecodeToken(token).id
@@ -164,6 +165,40 @@ for(let element of elementy.filter(x => x.update == true && x.insert != true) ){
           var sql =   "DELETE from artdruk.zamowienia_procesy_elementow where global_id=?";
           connection.execute(sql,dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) console.log(err);       }});
           }
+
+
+
+
+
+
+  //-------------- procesy produktow
+  for(let row of procesyProduktow.filter(x => x.update == true && x.insert != true) ){
+    let dane=[row.id,row.indeks,token_id,row.zamowienie_id,row.oprawa_id,row.proces_id,row.nazwa_id,row.naklad,row.ilosc_uzytkow,row.info,row.global_id]
+    var sql =   "update  artdruk.zamowienia_procesy_produktow set  id =?, indeks =?,zmodyfikowal=?, zamowienie_id =?,oprawa_id=?, proces_id =?, nazwa_id =?, naklad=?,ilosc_uzytkow =?, info =? where global_id =?"
+    connection.execute(sql, dane, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) console.log(err);       }});
+    }
+  
+  
+    for(let row of procesyProduktow.filter(x => x.insert == true && x.delete != true) ){
+      let dane=[row.id,row.indeks,token_id,row.zamowienie_id,row.oprawa_id,row.proces_id,row.nazwa_id,row.naklad,row.ilosc_uzytkow,row.info]
+      var sql =   "INSERT INTO artdruk.zamowienia_procesy_produktow (id,indeks,utworzyl,zamowienie_id,oprawa_id,proces_id,nazwa_id,naklad,ilosc_uzytkow,info) values (?,?,?,?,?,?,?,?,?,?); ";
+      connection.execute(sql, dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) console.log(err);       }});
+      }
+  
+      for(let row of procesyProduktow.filter(x => x.delete == true && x.insert != true) ){
+        let dane=[row.global_id]
+          var sql =   "DELETE from artdruk.zamowienia_procesy_produktow where global_id=?";
+          connection.execute(sql,dane,function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) console.log(err);       }});
+          }
+
+
+
+
+
+
+
+
+
 
      //-------------- oprawa
      
