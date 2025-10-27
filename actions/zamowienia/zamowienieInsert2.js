@@ -20,6 +20,9 @@ const zamowienieInsert = async (req,res) =>{
   let ksiegowosc = req.body[7]
   let faktury = req.body[8]
   let daneZamowienia = req.body[9]
+  let procesyProduktow = req.body[10]
+
+  
 
    daneZamowienia = {...daneZamowienia, utworzyl_user_id:  DecodeToken(token).id}
    ksiegowosc = {...ksiegowosc, koszty_wartosc:"",faktury_wartosc:"",faktury_status:1,koszty_status:1}
@@ -47,6 +50,7 @@ await save({daneZamowienia}).then(res=>{
               fragmenty = fragmenty.map((obj) => {return{...obj, zamowienie_id} })
               oprawa = oprawa.map((obj) => {return{...obj, zamowienie_id} })
               procesyElementow = procesyElementow.map((obj) => {return{...obj, zamowienie_id} })
+              procesyProduktow = procesyProduktow.map((obj) => {return{...obj, zamowienie_id} })
               pakowanie = pakowanie.map((obj) => {return{...obj, zamowienie_id} })
               kosztyDodatkoweZamowienia = kosztyDodatkoweZamowienia.map((obj) => {return{...obj, zamowienie_id} })
               ksiegowosc = {...ksiegowosc, zamowienie_id} 
@@ -138,6 +142,23 @@ for (let opr of oprawa.filter(x =>  x.delete != true)) {
 for (let procesy of procesyElementow.filter(x =>  x.delete != true)) {
   var sql =    "INSERT INTO artdruk.zamowienia_procesy_elementow (id,zamowienie_id,ilosc_uzytkow,produkt_id,element_id,proces_id,front_ilosc,back_ilosc,front_kolor,back_kolor,info,nazwa_id,indeks) values (?,?,?,?,?,?,?,?,?,?,?,?,?); ";
   let dane = [procesy.id ,procesy.zamowienie_id,procesy.ilosc_uzytkow,procesy.produkt_id,procesy.element_id ,procesy.proces_id,procesy.front_ilosc,procesy.back_ilosc,procesy.front_kolor,procesy.back_kolor,procesy.info,procesy.nazwa_id,procesy.indeks]
+
+  promises.push(     new Promise((resolve, reject) => {
+    connection.execute(sql, dane,(err, results) => {
+    if (err) {
+        resolve([{zapis: false},err]);               
+    } else {
+        resolve([{zapis: true}])
+    }
+});
+})) 
+}
+
+
+for (let row of procesyProduktow.filter(x =>  x.delete != true)) {
+  let dane=[row.id,row.indeks, DecodeToken(token).id,row.zamowienie_id,row.oprawa_id,row.proces_id,row.nazwa_id,row.naklad,row.ilosc_uzytkow,row.info]
+      var sql =   "INSERT INTO artdruk.zamowienia_procesy_produktow (id,indeks,utworzyl,zamowienie_id,oprawa_id,proces_id,nazwa_id,naklad,ilosc_uzytkow,info) values (?,?,?,?,?,?,?,?,?,?); ";
+ 
 
   promises.push(     new Promise((resolve, reject) => {
     connection.execute(sql, dane,(err, results) => {
