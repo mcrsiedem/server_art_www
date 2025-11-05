@@ -57,6 +57,7 @@ const { aktualizujOddaniaUwagi } = require('./oddania/aktualizujOddaniaUwagi');
 const { dodajRealizacjeOddania } = require('./oddania/dodajRealizacjeOddania');
 const { usunRealizacjeOddania } = require('./oddania/usunRealizacjeOddania');
 const { postVersion } = require('./logowanie/postVersion');
+const { getZestawienieUser } = require('./zestawienia/getZestawienieUser');
 
 
 
@@ -83,6 +84,7 @@ const { postVersion } = require('./logowanie/postVersion');
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
     router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
+    router.get('/zestawienie_user/:od/:do/:kto/:token',verifyTokenParams('zestawienia'),getZestawienieUser);     
 
     //ODDANIA   
     router.get('/oddania_grupy/:widok/:token',verifyToken,connections.getOddaniaGrupy);

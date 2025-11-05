@@ -29,7 +29,7 @@ class Connections {
                    
                     });
     
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun,gant from artdruk.users where login =? and haslo = ?;";
+        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun,gant,zestawienia from artdruk.users where login =? and haslo = ?;";
 
         connection.execute(sql, [login,haslo], (err, result) => {
     
@@ -71,6 +71,7 @@ class Connections {
                         const realizacje_dodaj = result[0].realizacje_dodaj;
                         const realizacje_usun = result[0].realizacje_usun;
                         const gant = result[0].gant;
+                        const zestawienia = result[0].zestawienia;
                         
                         
             
@@ -86,7 +87,7 @@ class Connections {
                             papier_zapis,papier_usun,
                             procesy_edycja,
                             zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
-                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun,gant
+                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun,gant,zestawienia
                             
                         }
      

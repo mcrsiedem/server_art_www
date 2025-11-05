@@ -1,13 +1,13 @@
 const { DecodeToken } = require('../logowanie/DecodeToken');
-const dataStore = require('./dataStore');
+
 
 // ładuje ponownie uprawnienia z bazy do serwera
 
-     const uprawnienia = (req,res) =>{
+     const getZestawienieUser = (req,res) =>{
+        const OD_KIEDY = req.params['od']
+        const DO_KIEDY = req.params['do']
+        const KTO = req.params['kto'] 
 
-
-            // console.log("Uprawnienia załadowane!")
-            // dataStore.loadPrivileges()
 
             //do testowania
             // const token = req.params['token']
@@ -19,7 +19,7 @@ const dataStore = require('./dataStore');
 
 
 module.exports = {
-  uprawnienia
+  getZestawienieUser
     
 }
  
