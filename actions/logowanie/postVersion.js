@@ -1,4 +1,4 @@
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 const postVersion = (req,res) =>{
   let promises = [];
   let body = req.body

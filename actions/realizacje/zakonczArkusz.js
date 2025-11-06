@@ -1,6 +1,6 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { SendMail } = require("../mail/SendMail");
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 const zakonczArkusz = async (req, res) => {
 let row = req.body;  // wykonanie do którego dodawana jest realizacja rozszerzona o zrealizowano

@@ -1,4 +1,4 @@
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 let myLoadedData = []; // Tutaj będą twoje dane z bazy
 let users = []; // Tutaj będą twoje dane z bazy

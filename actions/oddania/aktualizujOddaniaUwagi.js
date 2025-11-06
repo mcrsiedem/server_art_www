@@ -1,6 +1,6 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { SendMail } = require("../mail/SendMail");
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 const aktualizujOddaniaUwagi = async (req, res) => {
   let data = req.body; // [text,global_id,zamowienie_id]

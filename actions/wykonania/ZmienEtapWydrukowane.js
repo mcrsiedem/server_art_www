@@ -1,4 +1,4 @@
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 const ZmienEtapWydrukowane = (req, res) => {
   let techologie = req.body;

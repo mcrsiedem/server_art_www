@@ -1,4 +1,4 @@
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 const ZamowieniaInfoGrupy = (req, res) => {
   let grupy = req.body;

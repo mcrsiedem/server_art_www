@@ -1,5 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 const usunRealizacjeOprawy = async (req, res) => {
 let row = req.body;

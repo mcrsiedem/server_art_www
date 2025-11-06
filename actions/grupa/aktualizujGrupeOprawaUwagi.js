@@ -1,5 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 const aktualizujGrupeOprawaUwagi = async (req, res) => {
   let data = req.body; // [text,global_id,zamowienie_id]

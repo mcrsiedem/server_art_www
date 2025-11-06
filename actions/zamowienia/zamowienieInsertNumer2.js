@@ -1,4 +1,4 @@
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 const zamowienieInsertNumer = (req,res) =>{
   let promises = [];
   let daneZamowienia = req.body[0]

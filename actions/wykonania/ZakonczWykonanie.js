@@ -1,5 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 const zakonczWykonanie = (req, res) => {
   let wykonanieRow = req.body;

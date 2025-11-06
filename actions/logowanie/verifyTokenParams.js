@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN } = require("./ACCESS_TOKEN");
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 const dataStore = require('../uprawnienia/dataStore');
 
 

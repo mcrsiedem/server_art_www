@@ -1,5 +1,5 @@
 
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 
 

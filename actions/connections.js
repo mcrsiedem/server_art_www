@@ -1,5 +1,6 @@
 
-const connection = require("./mysql");
+
+const { connection, pool } = require("./mysql");
 const jwt = require("jsonwebtoken");
 const { teraz } = require("./czas/teraz");
 const { dodaj_minuty } = require("./czas/dodaj_minuty");

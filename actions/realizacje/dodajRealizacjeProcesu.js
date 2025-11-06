@@ -2,7 +2,7 @@ const { DecodeToken } = require("../logowanie/DecodeToken");
 const { transporter } = require("../mail/mail");
 const { SendMail } = require("../mail/SendMail");
 const { SendMailPlaner } = require("../mail/SendMailPlaner");
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 
 const dodajRealizacjeProcesu = async (req, res) => {
 let id;

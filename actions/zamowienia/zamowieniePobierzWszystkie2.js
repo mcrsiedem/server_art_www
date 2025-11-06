@@ -1,4 +1,4 @@
-const connection = require("../mysql");
+const { connection, pool } = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
