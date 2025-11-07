@@ -58,6 +58,7 @@ const { dodajRealizacjeOddania } = require('./oddania/dodajRealizacjeOddania');
 const { usunRealizacjeOddania } = require('./oddania/usunRealizacjeOddania');
 const { postVersion } = require('./logowanie/postVersion');
 const { getZestawienieUser } = require('./zestawienia/getZestawienieUser');
+const { zamowieniePobierzSingle } = require('./zamowienia/zamowieniePobierzSingle');
 
 
 
@@ -76,7 +77,8 @@ const { getZestawienieUser } = require('./zestawienia/getZestawienieUser');
     router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
     router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdate); // aktualizacja zamowienia
 
-        router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji
+    // router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji
+    router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingle); // pojedyncze zamówienie do edycji
 
 
     router.get('/zamowienia/:orderby/:token',verifyToken,zamowieniePobierzWszystkie);
