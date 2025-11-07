@@ -370,65 +370,19 @@ class Connections {
          
              }
 
-              //pobierz wszystkie objekty do TECHNOLOGI nr...
-              getWykonania_i_grupyAll(req,res){
-                let dane=[];
-    
-                //idTechnologii/:technologia_prime_id
-                //  const idTechnologii = req.params['idTechnologii']
-                //  const technologia_prime_id = req.params['technologia_prime_id']
-    
-    
-                var sql = "start transaction";
-                connection.query(sql, function (err, result) {
-                if (err) console.log(err);
-                });
-         
-                 var sql  = "select * from artdruk.view_technologie_wykonania  ORDER BY id ASC";
-                 connection.query(sql, function (err, doc) {
-                 if (err) console.log(err);
-                 dane.push(doc)
-                 // res.status(200).json(dane);
-             
-                 });
-         
-                 var sql = "select * from artdruk.view_technologie_grupy_wykonan  ORDER BY poczatek";
-                 connection.query(sql, function (err, doc) {
-                 if (err) console.log(err);
-                 dane.push(doc)
 
-                 } );
-    
-                var sql = "commit";
-                connection.query(sql, function (err, result) {
-                if (err) console.log(err);
-                // console.log("odczyt technologi OK");
-                res.status(200).json(dane);
-                });
-         
-             }
         //-----
 
         getWykonania_i_grupy_for_procesor(req,res){
             let dane=[];
-
-            //idTechnologii/:technologia_prime_id
              const procesor_id = req.params['procesor_id']
-            //  const dniWstecz = req.params['dniWstecz']
-            //  const technologia_prime_id = req.params['technologia_prime_id']
 
-
-            var sql = "begin";
-            connection.query(sql, function (err, result) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-            });
-     
-             var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-             dane.push(doc)
+            //  var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
+            //  connection.query(sql, function (err, doc) {
+            //     if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+            //  dane.push(doc)
          
-             });
+            //  });
      
              var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
              connection.query(sql, function (err, doc) {

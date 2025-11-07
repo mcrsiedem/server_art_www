@@ -206,7 +206,7 @@ router.get('/lista-klientow/:token',verifyToken,klienciPobierzWszystkich);
 
 router.get('/lista-produktow',connections.getProdukty);
 
-//Klienci
+
 
 
 
@@ -220,7 +220,7 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 
 
 // Technologie nowe2
-router.get('/technologie_grupy_an_wykonania_all',connections.getWykonania_i_grupyAll);     
+   
 router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);     
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz);     
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz_oprawa/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa);     
