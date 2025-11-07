@@ -36,16 +36,16 @@ function  verifyTokenParamsZamowienie(uprawnienie){
                 
 
                 if( dataStore.checkPrivileges(decoded.id,uprawnienie)){
-                var sql = "INSERT INTO artdruk.monitoring (user_id,imie,nazwisko) values ('" + decoded.id+ "','" + decoded.imie+ "','" + decoded.nazwisko+ "') ";
-                connection.query(sql, function (err, result) {
-                  if (err) console.log(err);
-                })
+                // var sql = "INSERT INTO artdruk.monitoring (user_id,imie,nazwisko) values ('" + decoded.id+ "','" + decoded.imie+ "','" + decoded.nazwisko+ "') ";
+                // connection.query(sql, function (err, result) {
+                //   if (err) console.log(err);
+                // })
 
                 next();  
 
 
                 }else{
-                  console.log("Brak uprawnień do tej czynności")
+                  console.log(uprawnienie+ " - brak uprawnień do tej czynności:"+  decoded.id + " " + decoded.imie+ " " + decoded.nazwisko )
                   return res.json({Error: "Brak uprawnień do tej czynności"});  
 
                 }

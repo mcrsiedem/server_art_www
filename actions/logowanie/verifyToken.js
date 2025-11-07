@@ -8,17 +8,20 @@ const verifyToken=(req,res,next) =>{
 
 // console.log(req)
     if(!token){
+      console.log("Brak tokenu" )
         return res.json({Error: "You are not Authenticated"});
     } else {
         jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
             if(err){
+              console.log("Błąd weryfikacji tokenu error: "+err )
               return res.json({Error: "Wrong token"});  
             } else{
 
-                var sql = "INSERT INTO artdruk.monitoring (user_id,imie,nazwisko) values ('" + decoded.id+ "','" + decoded.imie+ "','" + decoded.nazwisko+ "') ";
-                connection.query(sql, function (err, result) {
-                  if (err) console.log(err);
-                })
+
+                // var sql = "INSERT INTO artdruk.monitoring (user_id,imie,nazwisko) values ('" + decoded.id+ "','" + decoded.imie+ "','" + decoded.nazwisko+ "') ";
+                // connection.query(sql, function (err, result) {
+                //   if (err) console.log(err);
+                // })
 
               next();  
             }
