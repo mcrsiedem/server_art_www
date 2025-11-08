@@ -3,11 +3,6 @@ const router = express.Router();
 const connections = require('./connections');
 
 const { verifyToken } = require("./logowanie/verifyToken");
-const { verifyTokenBody } = require("./logowanie/verifyTokenBody");
-
-
-
-
 const { zapiszTechnologieUpdate } = require("./zapis/ZapiszTechnologieUpdate");
 const { zapiszTechnologieInsertDane } = require("./zapis/ZapiszTechnologieInsertDane");
 const { zapiszTechnologieInsertProdukty } = require("./zapis/ZapiszTechnologieInsertProdukty");
@@ -22,9 +17,7 @@ const { zapiszTechnologieInsertGrupyHarmonogram } = require("./zapis/ZapiszTechn
 const { zapiszTechnologieInsertGrupyOprawa } = require("./zapis/ZapiszTechnologieInsertGrupyOprawa");
 const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
-
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
-const { zakonczWykonanie } = require('./wykonania/ZakonczWykonanie');
 const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
 const { ZamowieniaInfo } = require('./wykonania/ZamowieniaInfo');
 const { SendMailPlaner } = require('./mail/SendMailPlaner');
@@ -32,14 +25,11 @@ const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
 const { ZapiszTechnologieUpdate_restore } = require('./zapis/ZapiszTechnologieUpdate_restore');
 const { uprawnienia } = require('./uprawnienia/getUprawnienia');
 const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
-
 const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWykonan');
 const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
-
 const { zamowienieUpdate } = require('./zamowienia/zamowienieUpdate2');
 const { zamowienieInsertNumer } = require('./zamowienia/zamowienieInsertNumer2');
 const { zamowienieInsert } = require('./zamowienia/zamowienieInsert2');
-const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzPojedyncze2');
 const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWszystkie2');
 const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich');
 const { aktualizujGrupe } = require('./grupa/aktualizujGrupe');
@@ -62,16 +52,11 @@ const { zamowieniePobierzSingle } = require('./zamowienia/zamowieniePobierzSingl
 const { getGrupyForProcesor } = require('./grupa/getGrupyForProcesor');
 const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDniWstecz');
 
-
-
-
     router.post('/version/', postVersion); // try catch
     router.get('/version/', connections.getVersion); 
-    
     router.get('/users/:login/:haslo/:hash',connections.getUser);
     router.get('/all_users/:token',verifyToken,connections.getAllUsers);
     router.get('/lista-userow',connections.getUsersM);
-
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 
     // zamówienia
@@ -81,10 +66,7 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
 
     // router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji
     router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingle); // pojedyncze zamówienie do edycji
-
-
     router.get('/zamowienia/:orderby/:token',verifyToken,zamowieniePobierzWszystkie);
-
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
     router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
@@ -94,17 +76,11 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
     router.get('/oddania_grupy/:widok/:token',verifyToken,connections.getOddaniaGrupy);
     router.put('/oddania_uwagi/:token',verifyTokenParams('manage_oprawa'), aktualizujOddaniaUwagi); 
     router.post('/dodaj_realizacje_oddania/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOddania); // try catch
-
     router.get('/oddania_wykonania/:grupa_global_id/:token',verifyToken,connections.getOddaniaWykonania);
     router.post('/usun_realizacje_oddania/:token',verifyToken, usunRealizacjeOddania); // try catch
 
-    
-
-
-
     // technologie promise
-        router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
-
+    router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
     router.post('/zapiszTechnologieInsertDane/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertDane); // zapisuje technologie
     router.post('/zapiszTechnologieInsertProdukty/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProdukty); 
     router.post('/zapiszTechnologieInsertElementy/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertElementy); 
@@ -134,18 +110,14 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
     router.post('/dodaj_realizacje_procesu/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesu); // try catch
     router.post('/dodaj_realizacje_procesu_brak/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesuBrak); // try catch
     router.post('/dodaj_realizajce_zakoncz_arkusz/:token',verifyTokenParams('realizacje_dodaj'), zakonczArkusz); // try catch
-    // router.post('/usun_realizacje_procesu/:token',verifyTokenParams('realizacje_usun'), usunRealizacjeProcesu); // try catch
     router.post('/usun_realizacje_procesu/:token',verifyToken, usunRealizacjeProcesu); // try catch
 
         //Gant
-        router.get('/gantGrupy/:token',verifyToken,connections.getGantGrupy);    
-
+    router.get('/gantGrupy/:token',verifyToken,connections.getGantGrupy);    
     router.put('/zapiszTechnologieUpdate/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieUpdate); // aktualizacja zamowienia
     router.get('/technologie/:token',verifyToken,connections.getTechnologie);    
-
     router.get('/papiery-parametry/:token',verifyToken,connections.getPapieryParametry);
     router.get('/sprawdzCzyPapierUzyty/:papier_id/:token',verifyToken,connections.sprawdzCzyPapierUzyty);
-
     router.get('/lista-papierow/:token',verifyToken,connections.getListaPapierow);
     router.get('/lista-papierow-nazwy/:token',verifyToken,connections.getListaPapierowNazwy);
     router.get('/lista-papierow-grupa/:token',verifyToken,connections.getListaPapierowGrupa);
@@ -153,7 +125,6 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
     router.get('/lista-papierow-rodzaj/:token',verifyToken,connections.getListaPapierowRodzaj);
     router.get('/lista-papierow-wykonczenia/:token',verifyToken,connections.getListaPapierowWykonczenia);
     router.get('/lista-papierow-powleczenie/:token',verifyToken,connections.getListaPapierowPowleczenie);
-    
     router.put('/updatePaper/:token',verifyTokenParams('papier_zapis'),connections.updatePapiery);
     router.put('/updatePaperNazwy/:token',verifyTokenParams('papier_zapis'),connections.updatePapieryNazwy);
     router.put('/updatePaperGrupa/:token',verifyTokenParams('papier_zapis'),connections.updatePapieryGrupa);
@@ -163,50 +134,27 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
     // pliki 
     router.put('/updatePlikiEtapGrupyWykonan/:token',verifyToken,updatePlikiEtapGrupyWykonan); // historia
     router.put('/updatePlikiEtapZamowienia/:token',verifyToken,updatePlikiEtapZamowienia); // historia
+
     //-----------------------------------------------------------------------------------
     //Podgląd realizacji
     router.get('/podglad_realizacji_dzien/:dniWstecz/:token',verifyToken,connections.getPodgladRealizacji);  
-
-
-
-
     router.put('/updateHistoria/:token',verifyToken,connections.updateHistoria);
     router.put('/updateWydaniePapieru_status/:token',verifyToken,connections.updateWydaniePapieru_status);
     router.post('/insertWydaniePapieru_status/:token',verifyToken,connections.insertWydaniePapieru_status);
     router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connections.insertWydaniePapieru_status_multiselect);
-    
-    // router.put('/zakoncz_proces_elementu_uwolnij_nastepny/:token',verifyToken,connections.zakoncz_proces_elementu_uwolnij_nastepny); //historia         UWAGA
-    // router.put('/zakoncz_oprawe/:token',verifyToken,connections.zakoncz_oprawe); // historia
     router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
-    // router.put('/zakoncz_wykonanie_uwolnij_dalej/:token',verifyToken,zakonczWykonanie); //historia
     router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
     router.put('/zamowieniaInfo/:token',verifyToken,ZamowieniaInfo);
     router.put('/zamowieniaInfoGrupy/:token',verifyToken,ZamowieniaInfoGrupy);
-
-    
     router.put('/mail/:token',verifyToken,SendMailPlaner);
-
-    // co to ????
-    // router.post('/addKosztDodatkowy',connections.postKoszty);
-    // router.post('/addKosztDodatkowyZamowienia',connections.postKosztyDodatkoweZamowienia);
-    
     router.put('/zamowienia_not_final',connections.updateSetOrderNotFinal);
     router.put('/delete_zamowienie_kosz',connections.updateSetOrderToDeleted);
-
-   
-
-    
     router.get('/lista-procesow',connections.getListaProcesow);
     router.get('/lista-procesow-nazwa',connections.getListaProcesowNazwa);
     router.get('/procesyElementow',connections.getProcesyElementow);
     router.get('/procesory',connections.getProcesory);
-    
-
-// end
-// router.get('/lista-klientow/:token',verifyToken,connections.getKlienci);
-router.get('/lista-klientow/:token',verifyToken,klienciPobierzWszystkich);
-
-router.get('/lista-produktow',connections.getProdukty);
+    router.get('/lista-klientow/:token',verifyToken,klienciPobierzWszystkich);
+    router.get('/lista-produktow',connections.getProdukty);
 
 
 
@@ -228,6 +176,9 @@ router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',getGrupyF
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz/:procesor_id/:dniWstecz', getGrupyForProcesorDniWstecz);  // #GRUPY_02   
 router.get('/technologie_grupyWykonan/:token',verifyToken,connections.getGrupyAll);    // niezakonczone grupy wykonan i oprawy  do widoku mini
 // ---------
+
+
+
 
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz_oprawa/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa);     
 router.get('/technologie_grupy_oprawa_for_procesor/:procesor_id',connections.getGrupy_oprawa_for_procesor);     
@@ -259,11 +210,7 @@ router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verify
 router.delete('/delete_zamowienie/:token',verifyTokenParams('zamowienie_skasuj'),connections.deleteZamowienie);
 router.delete('/odblokuj_zamowienie/:token',verifyToken,connections.odblokujZamowienie);
 
-
-
-
 router.get('/backup/:token',verifyTokenParams('technologia_zapis'),connections.backup);
-
 
     // klienci
     router.post('/klienci/:token',verifyTokenParams('klienci_zapis'),connections.postKlient);
