@@ -317,17 +317,6 @@ class Connections {
              if (err) console.log(err);
              dane.push(doc)
              } );
-            //  var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id = '" + prime_id + "' ORDER BY id ASC";
-            //  connection.query(sql, function (err, doc) {
-            //  if (err) console.log(err);
-            //  dane.push(doc)
-            //  } );
-
-            //  var sql = "select * from artdruk.view_technologie_wykonania where technologia_id = '" + prime_id + "' ORDER BY id ASC";
-            //  connection.query(sql, function (err, doc) {
-            //  if (err) console.log(err);
-            //  dane.push(doc)
-            //  } );
 
              
 
@@ -373,40 +362,40 @@ class Connections {
 
         //-----
 
-        getWykonania_i_grupy_for_procesor(req,res){
-            // #GRUPY_01
-            // ProcesyView - używane w momencie zmiany procesora  
-            let dane=[];
-             const procesor_id = req.params['procesor_id']
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-             connection.query(sql, function (err, doc) {
-                if (err){ console.log(err) } 
-                dane.push(doc)
-                res.status(200).json(dane);
-             } );
+        // getWykonania_i_grupy_for_procesor(req,res){
+        //     // #GRUPY_01
+        //     // ProcesyView - używane w momencie zmiany procesora  
+        //     let dane=[];
+        //      const procesor_id = req.params['procesor_id']
+        //      var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+        //      connection.query(sql, function (err, doc) {
+        //         if (err){ console.log(err) } 
+        //         dane.push(doc)
+        //         res.status(200).json(dane);
+        //      } );
 
            
 
      
-         }
+        //  }
     //-----
-            getWykonania_i_grupy_for_procesor_dni_wstecz(req,res){
+        //     getWykonania_i_grupy_for_procesor_dni_wstecz(req,res){
 
-            // #GRUPY_02
-            // ProcesyView - używane w momencie zmiany daty wyświetlania od...
-            let dane=[];
-             const procesor_id = req.params['procesor_id']
-             const dniWstecz = req.params['dniWstecz']
+        //     // #GRUPY_02
+        //     // ProcesyView - używane w momencie zmiany daty wyświetlania od...
+        //     let dane=[];
+        //      const procesor_id = req.params['procesor_id']
+        //      const dniWstecz = req.params['dniWstecz']
      
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-             connection.query(sql, function (err, doc) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-             dane.push(doc)
-                res.status(200).json(dane);
-             } );
+        //      var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
+        //      connection.query(sql, function (err, doc) {
+        //         if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
+        //      dane.push(doc)
+        //         res.status(200).json(dane);
+        //      } );
 
      
-         }
+        //  }
 
    getPodgladRealizacji(req,res){
 
@@ -504,15 +493,6 @@ class Connections {
 
              const procesor_id = req.params['procesor_id']
           
-
-
-
-            //  var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
-            //  connection.query(sql, function (err, doc) {
-            //     if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-            //  dane.push(doc)
-            //  });
-     
              var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan_oprawa where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
              connection.query(sql, function (err, doc) {
                 if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
@@ -520,7 +500,6 @@ class Connections {
              } );
 
                       var sql = "select   DATE_FORMAT(min(poczatek) - interval 1 day, '%Y-%m-%d') AS `dni` from artdruk.view_technologie_grupy_wykonan_oprawa where status <4 and procesor_id = " + procesor_id ;
-            // var sql = "select min(poczatek) - interval 1 day as dni from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = " + procesor_id ;
              connection.query(sql, function (err, doc) {
                 if (err){ console.log(err) } 
              dane.push(doc)

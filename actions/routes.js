@@ -59,6 +59,8 @@ const { usunRealizacjeOddania } = require('./oddania/usunRealizacjeOddania');
 const { postVersion } = require('./logowanie/postVersion');
 const { getZestawienieUser } = require('./zestawienia/getZestawienieUser');
 const { zamowieniePobierzSingle } = require('./zamowienia/zamowieniePobierzSingle');
+const { getGrupyForProcesor } = require('./grupa/getGrupyForProcesor');
+const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDniWstecz');
 
 
 
@@ -221,9 +223,10 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 
 
 // pobieranie grup wykonan 2025-11-08 korekta
-router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);   // #GRUPY_01   
-router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz);  // #GRUPY_02   
-router.get('/technologie_grupyWykonan/:token',verifyToken,connections.getGrupyAll);    // niezakonczone grupy wykonan i oprawy  
+// router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);   // #GRUPY_01   
+router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',getGrupyForProcesor);   // #GRUPY_01   
+router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz/:procesor_id/:dniWstecz', getGrupyForProcesorDniWstecz);  // #GRUPY_02   
+router.get('/technologie_grupyWykonan/:token',verifyToken,connections.getGrupyAll);    // niezakonczone grupy wykonan i oprawy  do widoku mini
 // ---------
 
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz_oprawa/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa);     
