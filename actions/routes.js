@@ -66,7 +66,7 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
 
     // router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji
     router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingle); // pojedyncze zamówienie do edycji
-    router.get('/zamowienia/:orderby/:token',verifyToken,zamowieniePobierzWszystkie);
+    router.get('/zamowienia/:orderby/:token',verifyToken,zamowieniePobierzWszystkie); // pool
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
     router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
@@ -97,7 +97,8 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
     router.post('/zapiszTechnologieInsertProcesyElementow/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProcesyElementow); 
     router.get('/restoreTechnologia/:zamowienie_id/:token',verifyTokenParams('technologia_zapis'), ZapiszTechnologieUpdate_restore); 
     
-    // aktualizacja grupy - dodruk arkusza - zmiana parametrów
+
+    // GRUPY WYKONAN - GRUPY WYKONAN OPRAWA
     router.post('/aktualizuj_grupe_wykonan/:token',verifyTokenParams('manage_druk'), aktualizujGrupe); 
     router.post('/aktualizuj_grupe_wykonan_falc/:token',verifyTokenParams('manage_falc'), aktualizujGrupe); 
     router.put('/grupa_wykonan_oprawa_uwagi/:token',verifyTokenParams('manage_oprawa'), aktualizujGrupeOprawaUwagi); 
@@ -105,12 +106,15 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
     router.post('/dodaj_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOprawy); // try catch
     router.post('/usun_realizacje_oprawy/:token',verifyToken, usunRealizacjeOprawy); // try catch
     router.post('/zakoncz_oprawe_dodaj_realizacje/:token',verifyTokenParams('mini_oprawa'), zakonczOpraweDodajRealizacje); // try catch
+    // REALIZACJE i WYKONANIA
     router.post('/zakoncz_oddanie_dodaj_wykonanie/:token',verifyTokenParams('mini_oprawa'), zakonczOddanieDodajeWykonanie); // try catch
-
     router.post('/dodaj_realizacje_procesu/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesu); // try catch
     router.post('/dodaj_realizacje_procesu_brak/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesuBrak); // try catch
     router.post('/dodaj_realizajce_zakoncz_arkusz/:token',verifyTokenParams('realizacje_dodaj'), zakonczArkusz); // try catch
     router.post('/usun_realizacje_procesu/:token',verifyToken, usunRealizacjeProcesu); // try catch
+    //--------------------------------------------------------------------------------------------------------------------------------
+
+
 
         //Gant
     router.get('/gantGrupy/:token',verifyToken,connections.getGantGrupy);    
