@@ -31,7 +31,10 @@ const zamowieniePobierzWszystkie = async (req,res)=>{
                     if(zamowienia_wszystkie){
 
 
-                var sql = "select * from artdruk.view_zamowienia where final is null ORDER BY " + orderby;
+                // var sql = "select * from artdruk.view_zamowienia where final is null ORDER BY " + orderby;
+                // var sql = "select * from artdruk.view_zamowienia ORDER BY " + orderby;
+                var sql = "SELECT * FROM artdruk.view_zamowienia where (etap > 1 and faktury_status !=3 and etap <17 and status != 7) or (etap > 1 and etap <16 and status != 7) ORDER BY " + orderby;
+                //SELECT * FROM artdruk.view_zamowienia where (etap > 1 and faktury_status !=3 and etap <17 and status != 7) or (etap > 1 and etap <16 and status != 7);
                 try {
                   const [rows] = await pool.execute(sql);
                   results = [rows];
@@ -40,12 +43,6 @@ const zamowieniePobierzWszystkie = async (req,res)=>{
                   console.error("Błąd w Kontrolerze:", err);
                   res.status(500).json({ error: "Błąd serwera." });
                 }      
-
-
-
-
-
-
 
 
                     }else {
