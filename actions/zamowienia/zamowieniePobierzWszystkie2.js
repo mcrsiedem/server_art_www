@@ -14,8 +14,8 @@ const orderby = req.params['orderby']
 const zestaw = "biezace"
 let results
 let biala_lista = ["nr asc","naklad","ilosc_stron","data_przyjecia","data_spedycji","oprawa_id"]
-let biala_lista_zestaw = ["biezace","naklad","ilosc_stron","data_przyjecia","data_spedycji","oprawa_id"]
-let id, asystent1, asystent2,zamowienia_wszystkie,dostep;
+let biala_lista_zestaw = ["biezace","wydrukowane","sfalcowane","oprawione","oddane","wszystkie"]
+let id,zamowienia_wszystkie,dostep;
 
 jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
   if(decoded){
@@ -31,13 +31,8 @@ jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
 if(biala_lista.includes(orderby) && biala_lista_zestaw.includes(zestaw)){
 
 
-
-
-
-  // var sql = "SELECT * FROM artdruk.view_zamowienia where (etap > 1 and faktury_status !=3 and etap <17 and status != 7) or (etap > 1 and etap <16 and status != 7) ORDER BY " + orderby;
-  //SELECT * FROM artdruk.view_zamowienia where (etap > 1 and faktury_status !=3 and etap <17 and status != 7) or (etap > 1 and etap <16 and status != 7);
   try {
-    const [rows] = zamowienia_wszystkie ? await pool.execute(sqlIn(zestaw,orderby,zamowienia_wszystkie)) : await pool.execute(sqlIn(zestaw,orderby,zamowienia_wszystkie), [id, id, id])
+    const [rows] = await pool.execute(sqlIn(id,zestaw,orderby,zamowienia_wszystkie)) 
     results = [rows];
     res.status(200).json(rows);
   } catch (err) {
@@ -49,70 +44,47 @@ if(biala_lista.includes(orderby) && biala_lista_zestaw.includes(zestaw)){
               res.status(200).json(results)
 }
 
-
-
 }
 
-const sqlIn = (zestaw,orderby,zamowienia_wszystkie) => {
+const sqlIn = (id,zestaw,orderby,zamowienia_wszystkie) => {
 
 let sql;
- 
-if(zamowienia_wszystkie){
+let opiekun;
+
+zamowienia_wszystkie ? opiekun = " " :  opiekun = "(opiekun_id = "+id+" or asystent1 = "+id+"  or asystent1 = "+id+")  and" 
+
+
   switch (zestaw) {
-  case "biezace":
-    // Od NOWE do ODDANE bez faktury
-    // sql = "SELECT * FROM artdruk.view_zamowienia where (etap > 1 and faktury_status !=3 and etap <17 and status != 7) or (etap > 1 and etap <16 and status != 7) ORDER BY " + orderby;
-    sql = "SELECT * FROM artdruk.view_zamowienia where (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
-
+  case "biezace":  // Od NOWE do ODDANE bez faktury
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
   break;
 
-  default:
-    sql = "SELECT * FROM artdruk.view_zamowienia where (etap > 1 and faktury_status !=3 and etap <17 and status != 7) or (etap > 1 and etap <16 and status != 7) ORDER BY " + orderby;
-}
-}else{
-
-switch (zestaw) {
-  case "biezace":
-    // Od NOWE do ODDANE bez faktury
- sql = "select * from artdruk.view_zamowienia where (opiekun_id =? or asystent1 =?  or asystent1 =?)  and (etap > 1 and etap <16 and status != 7) ORDER BY " + orderby;
+  case "wydrukowane":  // wydrukowane i nie anulowane
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =8 and status != 7)  ORDER BY " + orderby;
   break;
 
-  default:
-    sql = "select * from artdruk.view_zamowienia where (opiekun_id =? or asystent1 =?  or asystent1 =?)  and (etap > 1 and etap <16 and status != 7) ORDER BY " + orderby;
+ case "sfalcowane":  // sfalcowane i nie anulowane
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =10 and status != 7)  ORDER BY " + orderby;
+  break;
+
+   case "oprawione":  // oprawione i nie anulowane
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =11 and status != 7)  ORDER BY " + orderby;
+  break;
+
+  case "oddane":  // Oddane
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap = 16 and status != 7)  ORDER BY " + orderby;
+  break;
+
+  case "wszystkie":  // wszystkie
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" id > 1  ORDER BY " + orderby;
+  break;
+
+  default: // Od NOWE do ODDANE bez faktury
+   sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
 }
-
-
-}
-
-
 
   return sql 
 }
-
-
-
-
-
-
-// const sqlInOwn = (zestaw,orderby) => {
-//   // klienci tylko jednego handlowca
-// let sql;
- 
-// switch (zestaw) {
-//   case "biezace":
-//     // Od NOWE do ODDANE bez faktury
-//  sql = "select * from artdruk.view_zamowienia where (opiekun_id =? or asystent1 =?  or asystent1 =?)  and (etap > 1 and etap <16 and status != 7) ORDER BY " + orderby;
-//   break;
-
-//   default:
-//     sql = "select * from artdruk.view_zamowienia where (opiekun_id =? or asystent1 =?  or asystent1 =?)  and (etap > 1 and etap <16 and status != 7) ORDER BY " + orderby;
-// }
-
-//   return sql 
-// }
-
-
-
 
 
 module.exports = {
