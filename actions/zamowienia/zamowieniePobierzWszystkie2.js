@@ -1,7 +1,4 @@
-const { connection, pool } = require("../mysql");
-const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
-const { DecodeToken } = require("../logowanie/DecodeToken");
-const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
+const { pool } = require("../mysql");
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN } = require("../logowanie/ACCESS_TOKEN");
 const dataStore = require('../uprawnienia/dataStore');
@@ -11,10 +8,10 @@ const dataStore = require('../uprawnienia/dataStore');
 const zamowieniePobierzWszystkie = async (req,res)=>{
 const token = req.params['token']
 const orderby = req.params['orderby']
-const zestaw = "biezace"
+const zestaw = req.params['zestaw']
 let results
 let biala_lista = ["nr asc","naklad","ilosc_stron","data_przyjecia","data_spedycji","oprawa_id"]
-let biala_lista_zestaw = ["biezace","wydrukowane","sfalcowane","oprawione","oddane","wszystkie"]
+let biala_lista_zestaw = ["Bieżące","Harmonogram","Wydrukowane","Sfalcowane","Oprawione","Oddane","Anulowane","Wszystkie"]
 let id,zamowienia_wszystkie,dostep;
 
 jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
@@ -51,31 +48,40 @@ const sqlIn = (id,zestaw,orderby,zamowienia_wszystkie) => {
 let sql;
 let opiekun;
 
+// console.log("Zestaw: "+zestaw)
 zamowienia_wszystkie ? opiekun = " " :  opiekun = "(opiekun_id = "+id+" or asystent1 = "+id+"  or asystent1 = "+id+")  and" 
 
 
   switch (zestaw) {
-  case "biezace":  // Od NOWE do ODDANE bez faktury
+  case "Bieżące":  // Od NOWE do ODDANE bez faktury
     sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
   break;
 
-  case "wydrukowane":  // wydrukowane i nie anulowane
+    case "Harmonogram":  
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =1 and status != 7)  ORDER BY " + orderby;
+  break;
+
+  case "Wydrukowane":  // wydrukowane i nie anulowane
     sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =8 and status != 7)  ORDER BY " + orderby;
   break;
 
- case "sfalcowane":  // sfalcowane i nie anulowane
+ case "Sfalcowane":  // sfalcowane i nie anulowane
     sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =10 and status != 7)  ORDER BY " + orderby;
   break;
 
-   case "oprawione":  // oprawione i nie anulowane
+   case "Oprawione":  // oprawione i nie anulowane
     sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =11 and status != 7)  ORDER BY " + orderby;
   break;
 
-  case "oddane":  // Oddane
+  case "Oddane":  // Oddane
     sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap = 16 and status != 7)  ORDER BY " + orderby;
   break;
 
-  case "wszystkie":  // wszystkie
+    case "Anulowane":  // Oddane
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (status = 7)  ORDER BY " + orderby;
+  break;
+
+  case "Wszystkie":  // wszystkie
     sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" id > 1  ORDER BY " + orderby;
   break;
 
