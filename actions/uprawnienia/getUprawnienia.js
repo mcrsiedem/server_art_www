@@ -6,10 +6,10 @@ const dataStore = require('./dataStore');
      const uprawnienia = (req,res) =>{
 
 
-            // console.log("Uprawnienia załadowane!")
-            // dataStore.loadPrivileges()
+            console.log("Uprawnienia załadowane!")
+            dataStore.loadPrivileges()
 
-            //do testowania
+            // do testowania
             // const token = req.params['token']
             // console.log("insert token:"+ DecodeToken(token).id)
 

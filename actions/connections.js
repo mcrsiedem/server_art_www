@@ -1353,16 +1353,13 @@ exec(scriptPath, (error, stdout, stderr) => {
 }
 
 sprawdzPulePolaczen(req,res){
-// pool.pool odnosi się do wewnętrznego obiektu puli, który posiada metody statystyczne
-// console.log(pool.pool._freeConnections.length);
-// Używamy WŁAŚCIWOŚCI .length (bez nawiasów)
-const internalPool = pool.pool;
-        const allConnections = internalPool._allConnections.length; 
-        const freeConnections = internalPool._freeConnections.length;
-        const waitingConnections = internalPool._connectionQueue.length;
 
-        // Obliczamy używane połączenia
-        const usedConnections = allConnections - freeConnections;
+const internalPool = pool.pool;
+const allConnections = internalPool._allConnections.length; 
+const freeConnections = internalPool._freeConnections.length;
+const waitingConnections = internalPool._connectionQueue.length;
+// Obliczamy używane połączenia
+const usedConnections = allConnections - freeConnections;
 
     console.log(`--- Status puli ---`);
     console.log(`Wolne połączenia (free): ${freeConnections}`);
@@ -1372,20 +1369,14 @@ const internalPool = pool.pool;
     console.log(`---`);
 
     let status = {
-        free: freeConnections,
+        free: freeConnections,  
         all: allConnections,
         used: usedConnections,
         waiting: waitingConnections
 
     }
     res.status(200).json(status);
-    // res.status(200).json("OK");
-
-
-
 }
-
-
 
 
 
