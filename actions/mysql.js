@@ -14,7 +14,9 @@ const pool = mysql.createPool({
     
     // Połączenie zostanie przerwane (zakończone), jeśli baza nie odpowie
     // w ciągu tego czasu (w milisekundach).
-    connectTimeout: 10000
+    connectTimeout: 10000,
+    // maxIdle: 1 // pula będzie dążyła do utrzymania tylko jednego wolnego połączenia.
+
 }).promise(); // **Kluczowe: użycie wersji z Promise**
 
 module.exports = {

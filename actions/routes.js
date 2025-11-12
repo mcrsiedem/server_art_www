@@ -218,6 +218,7 @@ router.delete('/delete_zamowienie/:token',verifyTokenParams('zamowienie_skasuj')
 router.delete('/odblokuj_zamowienie/:token',verifyToken,connections.odblokujZamowienie);
 
 router.get('/backup/:token',verifyTokenParams('technologia_zapis'),connections.backup);
+router.get('/pool/:token',verifyTokenParams('technologia_zapis'),connections.sprawdzPulePolaczen);
 
     // klienci
     router.post('/klienci/:token',verifyTokenParams('klienci_zapis'),connections.postKlient);
