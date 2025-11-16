@@ -8,7 +8,9 @@ const { DecodeToken } = require('../logowanie/DecodeToken');
         const DO_KIEDY = req.params['do']
         const KTO = req.params['kto'] 
 
-
+   console.log("OD_KIEDY:"+ OD_KIEDY)
+   console.log("DO_KIEDY:"+ DO_KIEDY)
+   console.log("KTO:"+ KTO)
             //do testowania
             // const token = req.params['token']
             // console.log("insert token:"+ DecodeToken(token).id)
