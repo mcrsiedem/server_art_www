@@ -12,7 +12,7 @@ const { pool } = require("../mysql");
   //  console.log("DO_KIEDY:"+ DO_KIEDY)
   //  console.log("KTO:"+ KTO)
 
-    sql = "SELECT * FROM artdruk.view_realizacje_zestawienie where dodal_id = ? and utworzono > ? and utworzono < ? order by utworzono" ;
+    sql = "SELECT * FROM artdruk.view_realizacje_zestawienie where dodal_id = ? and utworzono > ? and utworzono < (? + interval 1 day) and typ = 1 order by utworzono" ;
               try {
     const [rows] = await pool.execute(sql,[KTO,OD_KIEDY,DO_KIEDY]) 
     results = [rows];
