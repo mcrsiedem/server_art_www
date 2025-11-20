@@ -52,6 +52,7 @@ const { zamowieniePobierzSingle } = require('./zamowienia/zamowieniePobierzSingl
 const { getGrupyForProcesor } = require('./grupa/getGrupyForProcesor');
 const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDniWstecz');
 const { sprawdzNiezamknieteKoszty } = require('./zamowienia/sprawdzNiezamknieteKoszty');
+const { getZestawienieGrupa } = require('./zestawienia/getZestawienieGrupa');
 
     router.post('/version/', postVersion); // try catch
     router.get('/version/', connections.getVersion); 
@@ -74,6 +75,7 @@ const { sprawdzNiezamknieteKoszty } = require('./zamowienia/sprawdzNiezamknieteK
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
     router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
     router.get('/zestawienie_user/:od/:do/:kto/:token',verifyTokenParams('zestawienia'),getZestawienieUser);     
+    router.get('/zestawienie_grupa/:od/:do/:grupa/:token',verifyTokenParams('zestawienia'),getZestawienieGrupa);     
 
     //ODDANIA   
     router.get('/oddania_grupy/:widok/:token',verifyToken,connections.getOddaniaGrupy);
