@@ -17,10 +17,13 @@ const { pool } = require("../mysql");
 const sql = `
 SELECT
             t1.procesor_id,
+            p.nazwa AS NazwaProesora,
             SUM(t1.zrealizowano) AS SumaZrealizowano,
             COUNT(*) AS LiczbaWpisow
         FROM
-            view_technologie_realizacje AS t1
+            artdruk.view_technologie_realizacje AS t1
+            INNER JOIN 
+    artdruk.procesory AS p ON t1.procesor_id = p.id
         WHERE
             t1.typ = 1 
             AND t1.utworzono >= ?
