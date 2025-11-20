@@ -31,7 +31,7 @@ SELECT
         GROUP BY
             t1.procesor_id
         ORDER BY
-            LiczbaWpisow DESC;
+            SumaZrealizowano DESC;
     `;
 
     try {

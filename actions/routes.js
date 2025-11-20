@@ -54,6 +54,7 @@ const { getGrupyForProcesorDniWstecz } = require('./grupa/getGrupyForProcesorDni
 const { sprawdzNiezamknieteKoszty } = require('./zamowienia/sprawdzNiezamknieteKoszty');
 const { getZestawienieGrupa } = require('./zestawienia/getZestawienieGrupa');
 const { getZestawienieProcesory } = require('./zestawienia/getZestawienieProcesory');
+const { getZestawienieKlienci } = require('./zestawienia/getZestawienieKlienci');
 
     router.post('/version/', postVersion); // try catch
     router.get('/version/', connections.getVersion); 
@@ -78,6 +79,7 @@ const { getZestawienieProcesory } = require('./zestawienia/getZestawienieProceso
     router.get('/zestawienie_user/:od/:do/:kto/:token',verifyTokenParams('zestawienia'),getZestawienieUser);     
     router.get('/zestawienie_grupa/:od/:do/:grupa/:token',verifyTokenParams('zestawienia'),getZestawienieGrupa);     
     router.get('/zestawienie_procesory/:od/:do/:token',verifyTokenParams('zestawienia'),getZestawienieProcesory);     
+    router.get('/zestawienie_klienci/:od/:do/:token',verifyTokenParams('zestawienia'),getZestawienieKlienci);     
 
     //ODDANIA   
     router.get('/oddania_grupy/:widok/:token',verifyToken,connections.getOddaniaGrupy);
