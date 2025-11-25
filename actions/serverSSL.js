@@ -114,6 +114,18 @@ io.use((socket, next) => {
 
 let onlineUsers = [];
 const addUser = (socket) =>{
+
+    // przetestować  
+
+
+    // if (!socket.userData || !socket.userData.id) {
+    //     console.warn(`[SOCKET] Odrzucono dodanie użytkownika (socket ID: ${socket.id}) - brak danych uwierzytelniających.`);
+    //     return; 
+    // }
+
+
+
+
     !onlineUsers.some((user => user.socketId === socket.id)) &&
 
       onlineUsers.push({
@@ -129,12 +141,25 @@ const addUser = (socket) =>{
   //  console.log(onlineUsers)
   io.emit("onlineUsers", onlineUsers);
 }
+
+
 const removeUser = (socket) =>{
 
 onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
       //  console.log(onlineUsers)
 }
 io.on("connection", (socket) => {
+
+
+// if (!socket.userData || !socket.userData.id) {
+//         console.warn(`Nieautoryzowany socket ${socket.id} (brak JWT). Odłączenie.`);
+//         // Upewniamy się, że niekompletne połączenie jest zamykane, 
+//         // aby nie zaśmiecać listy "onlineUsers" ani nie powodować błędów
+//         socket.disconnect(true); 
+//         return;
+//     }
+
+
 
   // Tutaj możesz mieć pewność, że użytkownik jest zalogowany
   addUser(socket)
