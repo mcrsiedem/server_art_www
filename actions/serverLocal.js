@@ -58,12 +58,15 @@ io.use((socket, next) => {
       
       // Token poprawny. Dodaj dane użytkownika do obiektu socket
       socket.userData = decoded; 
+      // console.log("socket ",socket)
       next(); // Kontynuuj połączenie
     } catch (err) {
       // Błąd weryfikacji (np. token wygasł lub jest nieprawidłowy)
       console.log('Błąd autoryzacji JWT:', err.message);
       const authError = new Error("Authentication error: Invalid or expired token.");
       authError.data = { type: "INVALID_TOKEN" };
+
+      
       next(authError); // Odrzuć połączenie z błędem
     }
   } else {
@@ -77,22 +80,6 @@ io.use((socket, next) => {
 
 
 let onlineUsers = [];
-// const addUser = (socket) =>{
-//     //  !onlineUsers.some((user => user.socketId === socket.id)) &&
-
-//       onlineUsers.push({
-//         userId:socket.userData.id,
-//         imie:socket.userData.imie,
-//         nazwisko:socket.userData.nazwisko,
-//         socketId: socket.id,
-//         zalogowany: teraz(),
-//         ostatnia_aktywnosc: teraz(),
-//         status: "Aktywny"
-//       });
-
-//   //  console.log(onlineUsers)
-//   io.emit("onlineUsers", onlineUsers);
-// }
 
 
 const addUser = (socket) =>{
@@ -130,7 +117,31 @@ onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
 }
 io.on("connection", (socket) => {
   // Tutaj możesz mieć pewność, że użytkownik jest zalogowany
-  addUser(socket)
+  try {
+    if (socket.userData && socket.userData.id) {
+      addUser(socket);
+    } else {
+      const token = socket.handshake?.auth?.token;
+      if (token) {
+        try {
+          const decoded = jwt.verify(token, ACCESS_TOKEN);
+          socket.userData = decoded;
+          addUser(socket);
+        } catch (err) {
+          console.warn("[SOCKET] Nie udało się zweryfikować tokenu przy połączeniu:", err.message);
+          socket.emit("auth_error", { message: "Invalid or expired token" });
+          socket.disconnect(true);
+          return;
+        }
+      } else {
+        console.warn("[SOCKET] Brak tokenu przy połączeniu - użytkownik nie zostanie dodany:", socket.id);
+      }
+    }
+  } catch (err) {
+    console.error("[SOCKET] Błąd podczas próby dodania użytkownika:", err);
+  }
+
+  //  addUser(socket);
   // console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);
   
   socket.on("disconnect", () => {
