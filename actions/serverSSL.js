@@ -151,17 +151,30 @@ onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
 io.on("connection", (socket) => {
 
 
-// if (!socket.userData || !socket.userData.id) {
-//         console.warn(`Nieautoryzowany socket ${socket.id} (brak JWT). Odłączenie.`);
-//         // Upewniamy się, że niekompletne połączenie jest zamykane, 
-//         // aby nie zaśmiecać listy "onlineUsers" ani nie powodować błędów
-//         socket.disconnect(true); 
-//         return;
-//     }
-
-
-
-  // Tutaj możesz mieć pewność, że użytkownik jest zalogowany
+  try {
+    if (socket.userData && socket.userData.id) {
+      addUser(socket);
+    } else {
+      const token = socket.handshake?.auth?.token;
+      if (token) {
+        try {
+          const decoded = jwt.verify(token, ACCESS_TOKEN);
+          socket.userData = decoded;
+            console.log("Reconnect");
+          addUser(socket);
+        } catch (err) {
+          console.warn("[SOCKET] Nie udało się zweryfikować tokenu przy połączeniu:", err.message);
+          socket.emit("auth_error", { message: "Invalid or expired token" });
+          socket.disconnect(true);
+          return;
+        }
+      } else {
+        console.warn("[SOCKET] Brak tokenu przy połączeniu - użytkownik nie zostanie dodany:", socket.id);
+      }
+    }
+  } catch (err) {
+    console.error("[SOCKET] Błąd podczas próby dodania użytkownika:", err);
+  }
   addUser(socket)
 
   // console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);

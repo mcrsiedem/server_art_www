@@ -126,6 +126,7 @@ io.on("connection", (socket) => {
         try {
           const decoded = jwt.verify(token, ACCESS_TOKEN);
           socket.userData = decoded;
+          console.log("Reconnect");
           addUser(socket);
         } catch (err) {
           console.warn("[SOCKET] Nie udało się zweryfikować tokenu przy połączeniu:", err.message);
