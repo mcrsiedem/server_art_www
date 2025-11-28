@@ -45,13 +45,9 @@ const updatePlikiEtapGrupyWykonan = async (req, res) => {
         // dla czystości kodu i bezpieczeństwa, można użyć connection.execute z placeholderami
         // jeśli procedura składowana nie akceptuje, poniższe użycie connection.query jest poprawne.
         var sql2 = "call artdruk.update_pliki_etap_grupy_wykonan (?, ?, ?, ?)";
-        await connection.query(sql2, [zamowienie_id, element_id, global_id_grupa_row, etap]);
+        await connection.execute(sql2, [zamowienie_id, element_id, global_id_grupa_row, etap]);
         // Po udanym wykonaniu, kontynuujemy
-
-        // 5. Operacje, które muszą być wykonane PO udanej aktualizacji (save3, save4)
-
-        // Operacja 3: Pobranie minimalnego etapu (save3)
-        // To jest zapytanie SELECT i nie modyfikuje stanu, ale jest częścią logiki transakcji.
+        
         var sql3 = "select etap from artdruk.view_zamowienia_pliki where zamowienie_id = ?";
         const [rows] = await connection.execute(sql3, [zamowienie_id]);
         
