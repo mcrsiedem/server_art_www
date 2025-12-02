@@ -85,7 +85,7 @@ const updatePlikiEtapGrupyWykonan = async (req, res) => {
         
         // 9. Obsługa błędu (wysłanie maila i zwrócenie odpowiedzi)
         console.error("Błąd podczas aktualizacji etapu plików:", error);
-        SendMail(error);
+        SendMail("Błąd podczas aktualizacji etapu plików: "+error);
         // Zwracamy status błędu HTTP i komunikat
         res.status(500).json('ERROR'); 
 
