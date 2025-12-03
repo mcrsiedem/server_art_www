@@ -11,7 +11,7 @@ const orderby = req.params['orderby']
 const zestaw = req.params['zestaw']
 let results
 let biala_lista = ["nr asc","naklad","ilosc_stron","data_przyjecia","data_spedycji","oprawa_id"]
-let biala_lista_zestaw = ["Bieżące","Harmonogram","Wydrukowane","Sfalcowane","Oprawione","Oddane","Anulowane","Wszystkie","Gotowe do faktury","Zafakturowane"]
+let biala_lista_zestaw = ["Bieżące","Przed drukiem","Harmonogram","Wydrukowane","Sfalcowane","Oprawione","Oddane","Anulowane","Wszystkie","Gotowe do faktury","Zafakturowane"]
 let id,zamowienia_wszystkie,dostep;
 
 jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
@@ -55,6 +55,10 @@ zamowienia_wszystkie ? opiekun = " " :  opiekun = "(opiekun_id = "+id+" or asyst
   switch (zestaw) {
   case "Bieżące":  // Od NOWE do ODDANE bez faktury
     sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
+  break;
+
+    case "Przed drukiem":  // Od NOWE do ODDANE bez faktury
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap > 1 and etap <8 and status != 7)  ORDER BY " + orderby;
   break;
 
     case "Harmonogram":  
