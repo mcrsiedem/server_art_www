@@ -99,7 +99,7 @@ zamowienia_wszystkie ? opiekun = " " :  opiekun = "(opiekun_id = "+id+" or asyst
   break;
 
       case "Brak faktury":  // wszystkie
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (faktury_status <3   and status != 7)   ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" ((faktury_status <3  or lista_faktur='') and status != 7)   ORDER BY " + orderby;
   break;
 
   default: // Od NOWE do ODDANE bez faktury
