@@ -24,7 +24,7 @@ try {
             pool.execute("select * from artdruk.zamowienia_ksiegowosc where zamowienie_id = ?  ", [idZamowienia]),
             pool.execute("select * from artdruk.view_zamowienia_faktury where zamowienie_id = ?  ORDER BY id ASC", [idZamowienia]),
             pool.execute("select * from artdruk.view_zamowienia_pliki where zamowienie_id = ?  ORDER BY id ASC", [idZamowienia]),
-            pool.execute("select * from artdruk.view_zamowienia_procesy_produktow where id = ?  ORDER BY id ASC", [idZamowienia]),
+            pool.execute("select * from artdruk.view_zamowienia_procesy_produktow where zamowienie_id  = ?  ORDER BY id ASC", [idZamowienia]),
 
         ]).then(results => results.map(r => r[0]));
 
@@ -42,4 +42,4 @@ module.exports = {
   zamowieniePobierzSingle
     
 }
- 
+   
