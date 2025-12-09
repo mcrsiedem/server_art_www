@@ -3,7 +3,9 @@ const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
 const { DecodeToken } = require("../logowanie/DecodeToken");
 
-
+//======================================================================================
+//============                           WYCOFANE                           ============
+//======================================================================================
 
 const zamowienieUpdate = (req,res) =>{
 

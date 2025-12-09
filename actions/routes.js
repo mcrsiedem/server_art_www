@@ -56,7 +56,6 @@ const { getZestawienieGrupa } = require('./zestawienia/getZestawienieGrupa');
 const { getZestawienieProcesory } = require('./zestawienia/getZestawienieProcesory');
 const { getZestawienieKlienci } = require('./zestawienia/getZestawienieKlienci');
 const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzPojedyncze2');
-const { zamowieniePobierzSingleCommit } = require('./zamowienia/zamowieniePobierzSingleCommit');
 const { zamowienieUpdatePool } = require('./zamowienia/zamowienieUpdatePool');
 
     router.post('/version/', postVersion); // try catch
@@ -72,8 +71,7 @@ const { zamowienieUpdatePool } = require('./zamowienia/zamowienieUpdatePool');
     // router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdate); // aktualizacja zamowienia
     router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdatePool); // aktualizacja zamowienia  POOL
 
-    // router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingleCommit); // pojedyncze zamówienie do edycji  z commitem
-    // router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji  działa
+    // router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji  działa  - stare- wycofane
     router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingle); // pojedyncze zamówienie do edycji
     router.get('/sprawdzNiezamknieteKoszty/:token',verifyToken,sprawdzNiezamknieteKoszty); // pojedyncze zamówienie do edycji
     

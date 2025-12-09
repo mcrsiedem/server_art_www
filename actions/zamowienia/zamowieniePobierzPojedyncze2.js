@@ -3,6 +3,11 @@ const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
 
+//======================================================================================
+//============                           WYCOFANE                           ============
+//======================================================================================
+
+
 // nowy zapis zamówienia - dane i parametry w jednym
 const zamowieniePobierzPojedyncze =(req,res)=>{
        let dane=[];
