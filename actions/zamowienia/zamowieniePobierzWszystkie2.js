@@ -90,7 +90,7 @@ zamowienia_wszystkie ? opiekun = " " :  opiekun = "(opiekun_id = "+id+" or asyst
   break;
 
     case "Gotowe do faktury":  // wszystkie
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (koszty_status = 2  and status != 7)   ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (koszty_status = 2 and faktury_status <3 and status != 7)   ORDER BY " + orderby;
   break;
 
   
