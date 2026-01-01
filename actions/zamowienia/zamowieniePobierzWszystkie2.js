@@ -10,7 +10,7 @@ const token = req.params['token']
 const orderby = req.params['orderby']
 const zestaw = req.params['zestaw']
 let results
-let biala_lista = ["nr asc","naklad","ilosc_stron","data_przyjecia","data_spedycji","oprawa_id"]
+let biala_lista = ["rok, nr asc","naklad","ilosc_stron","data_przyjecia","data_spedycji","oprawa_id"]
 let biala_lista_zestaw = ["Bieżące","Przed drukiem","Harmonogram","Wydrukowane","Sfalcowane","Oprawione","Oddane","Anulowane","Wszystkie","Gotowe do faktury","Zafakturowane","Brak faktury"]
 let id,zamowienia_wszystkie,dostep;
 
