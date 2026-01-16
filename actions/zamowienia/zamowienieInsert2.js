@@ -2,6 +2,7 @@ const { connection, pool } = require("../mysql");
 const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
+const { getShortYear } = require("../czas/getShortYear");
 
 // nowy zapis zamówienia - dane i parametry w jednym
 const zamowienieInsert = async (req,res) =>{
@@ -29,16 +30,16 @@ const zamowienieInsert = async (req,res) =>{
 
           if(daneZamowienia.etap<3){
             if(daneZamowienia.stan==1){
-              daneZamowienia = {...daneZamowienia, nr:"",stan:1,status:1}
+              daneZamowienia = {...daneZamowienia, nr:"", rok: getShortYear(),stan:1,status:1}
             }
             if(daneZamowienia.stan==2 ||daneZamowienia.stan==3){
-              daneZamowienia = {...daneZamowienia, nr:"",stan:2,status:1}
+              daneZamowienia = {...daneZamowienia, nr:"", rok: getShortYear(),stan:2,status:1}
             }
             
            
             }
             if(daneZamowienia.etap>2){
-              daneZamowienia = {...daneZamowienia, nr:"",stan:1,status:1, etap:2}
+              daneZamowienia = {...daneZamowienia, nr:"", rok: getShortYear(),stan:1,status:1, etap:2}
               }
 
 await save({daneZamowienia}).then(res=>{
