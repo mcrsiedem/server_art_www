@@ -578,19 +578,21 @@ class Connections {
 
              const procesor_id = req.params['procesor_id']
 
-             var sql = "select * from artdruk.view_zamowienia_kalendarz ORDER BY data_spedycji";
+            //  var sql = "select * from artdruk.view_zamowienia_kalendarz ORDER BY data_spedycji";
+             var sql = "select * from artdruk.view_zamowienia_kalendarz where data_spedycji > '2026-01-01' and data_spedycji < '2026-01-30' ORDER BY data_spedycji ";
              connection.query(sql, function (err, doc) {
                 if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
              dane.push(doc)
+                   res.status(200).json(dane);
              } );
 
-                      var sql = "select   DATE_FORMAT(min(data_spedycji), '%Y-%m-%d') AS `data_spedycji_min`, DATE_FORMAT(max(data_spedycji), '%Y-%m-%d') AS `data_spedycji_max`,  DateDiff((select max(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz),(select min(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz)) AS ilosc_dni  from artdruk.view_zamowienia_kalendarz  ";
-             connection.query(sql, function (err, doc) {
-                if (err){ console.log(err) } 
-             dane.push(doc)
-             res.status(200).json(dane);
+                    //   var sql = "select   DATE_FORMAT(min(data_spedycji), '%Y-%m-%d') AS `data_spedycji_min`, DATE_FORMAT(max(data_spedycji), '%Y-%m-%d') AS `data_spedycji_max`,  DateDiff((select max(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz),(select min(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz)) AS ilosc_dni  from artdruk.view_zamowienia_kalendarz  ";
+            //  connection.query(sql, function (err, doc) {
+            //     if (err){ console.log(err) } 
+            //  dane.push(doc)
+            //  res.status(200).json(dane);
 
-             } );
+            //  } );
      
          }
 
