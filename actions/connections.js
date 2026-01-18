@@ -636,6 +636,15 @@ class Connections {
     });
     }
 
+            getZamowieniaProofy(req,res){
+       
+        var sql  = "select * from artdruk.view_zamowienia_proofy ORDER BY id ASC"  ;
+        connection.query(sql, function (err, doc) {
+        if (err) console.log(err);
+        res.status(200).json(doc);
+    });
+    }
+
         getOddaniaGrupy(req,res){
         const widok = req.params['widok']
 

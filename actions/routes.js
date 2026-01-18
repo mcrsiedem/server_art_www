@@ -76,6 +76,7 @@ const { zamowienieUpdatePool } = require('./zamowienia/zamowienieUpdatePool');
     router.get('/sprawdzNiezamknieteKoszty/:token',verifyToken,sprawdzNiezamknieteKoszty); // pojedyncze zamówienie do edycji
     
     router.get('/zamowienia/:orderby/:zestaw/:token',verifyToken,zamowieniePobierzWszystkie); // pool
+    router.get('/zamowienia_proofy/:token',verifyToken,connections.getZamowieniaProofy); // pool
     router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
     router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
     router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
