@@ -163,7 +163,6 @@ const { zamowienieOddaj } = require('./zamowienia/zamowienieOddaj');
     router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connections.insertWydaniePapieru_status_multiselect);
     router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
     router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
-    router.put('/edytuj_proofa/:token',verifyToken,aktualizujProof);
     router.put('/zamowienie_oddaj/:token',verifyToken,zamowienieOddaj);
     router.put('/zamowieniaInfo/:token',verifyToken,ZamowieniaInfo);
     router.put('/zamowieniaInfoGrupy/:token',verifyToken,ZamowieniaInfoGrupy);
@@ -177,6 +176,8 @@ const { zamowienieOddaj } = require('./zamowienia/zamowienieOddaj');
     router.get('/lista-klientow/:token',verifyToken,klienciPobierzWszystkich);
     router.get('/lista-produktow',connections.getProdukty);
 
+    // Proofy
+    router.put('/edytuj_proofa/:token',verifyToken,aktualizujProof);
 
 
 
