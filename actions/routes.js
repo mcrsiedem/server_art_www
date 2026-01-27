@@ -58,6 +58,7 @@ const { getZestawienieKlienci } = require('./zestawienia/getZestawienieKlienci')
 const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzPojedyncze2');
 const { zamowienieUpdatePool } = require('./zamowienia/zamowienieUpdatePool');
 const { aktualizujProof } = require('./proofy/aktualizujProof');
+const { zamowienieOddaj } = require('./zamowienia/zamowienieOddaj');
 
     router.post('/version/', postVersion); // try catch
     router.get('/version/', connections.getVersion); 
@@ -163,6 +164,7 @@ const { aktualizujProof } = require('./proofy/aktualizujProof');
     router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
     router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
     router.put('/edytuj_proofa/:token',verifyToken,aktualizujProof);
+    router.put('/zamowienie_oddaj/:token',verifyToken,zamowienieOddaj);
     router.put('/zamowieniaInfo/:token',verifyToken,ZamowieniaInfo);
     router.put('/zamowieniaInfoGrupy/:token',verifyToken,ZamowieniaInfoGrupy);
     router.put('/mail/:token',verifyToken,SendMailPlaner);
