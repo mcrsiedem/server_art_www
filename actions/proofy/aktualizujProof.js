@@ -12,13 +12,22 @@ const token = req.params['token']
 
 let ID_SPRAWCY =  DecodeToken(token).id;
 
+let firma_id = data.firma_id
+let klient_id = data.klient_id
+let data_zamowienia = data.data_zamowienia
+let uwagi = data.uwagi
+let status = data.status
+let format = data.format
+let ilosc = data.ilosc
+let id = data.id
 
 
-let Update = () =>{ 
+let Update =  () =>{ 
     return  new Promise((resolve,reject)=>{
-      var sql =   "update artdruk.oddania_grupy set  uwagi=? where global_id =?"
-      connection.execute(sql, [text,global_id],function (err, result) {
+      var sql =   "update artdruk.zamowienia_proofy set firma_id=?,klient_id=?, data_zamowienia=?, uwagi=?, status=?, format=?, ilosc=? where id =?"
+      connection.execute(sql, [firma_id,klient_id,data_zamowienia,uwagi,status,format,ilosc,id],function (err, result) {
                 if (err) {
+                  console.log(err)
                           reject(err);
                         } else resolve("OK"); 
               });
@@ -41,9 +50,11 @@ let Historia = () =>{
 
 
 try {
-// let res1 = await  Update();  // wstaw wykonanie
+  // console.log("Próbuję wykonać Update...");
+let res1 = await  Update();  // wstaw wykonanie
+// console.log("Wynik Update:", res1); // Teraz powinno się wyświetlić
 // let res2 = await  Historia(); // dodaj do historii
-console.log(data)
+console.log(res1)
 
 res.status(200).json({ status: "ok"});
     } catch (error) {
