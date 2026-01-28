@@ -59,6 +59,7 @@ const { zamowieniePobierzPojedyncze } = require('./zamowienia/zamowieniePobierzP
 const { zamowienieUpdatePool } = require('./zamowienia/zamowienieUpdatePool');
 const { aktualizujProof } = require('./proofy/aktualizujProof');
 const { zamowienieOddaj } = require('./zamowienia/zamowienieOddaj');
+const { dodajProof } = require('./proofy/dodajProof');
 
     router.post('/version/', postVersion); // try catch
     router.get('/version/', connections.getVersion); 
@@ -178,6 +179,7 @@ const { zamowienieOddaj } = require('./zamowienia/zamowienieOddaj');
 
     // Proofy
     router.put('/edytuj_proofa/:token',verifyToken,aktualizujProof);
+    router.post('/dodaj_proofa/:token',verifyTokenParams('zamowienia_wszystkie'), dodajProof); 
 
 
 
