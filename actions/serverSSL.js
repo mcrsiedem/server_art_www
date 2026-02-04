@@ -1,3 +1,15 @@
+process.on('uncaughtException', (err) => {
+    console.error('WYSTĄPIŁ NIEOCZEKIWANY BŁĄD (Uncaught Exception):');
+    console.error(err.name, err.message);
+    console.error(err.stack);
+    
+    // Opcjonalnie: wyślij powiadomienie e-mail/Slack do administratora
+    
+    // WAŻNE: W przypadku uncaughtException aplikacja jest w stanie niestabilnym.
+    // Najbezpieczniej jest zakończyć proces i pozwolić 'Forever' lub 'PM2' go zrestartować.
+    process.exit(1); 
+});
+
 const express = require('express');
 const https = require('https');
 const http = require('http');
@@ -175,7 +187,7 @@ io.on("connection", (socket) => {
   } catch (err) {
     console.error("[SOCKET] Błąd podczas próby dodania użytkownika:", err);
   }
-  addUser(socket)
+  // addUser(socket) - zakomentowane 4-02-2026
 
   // console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);
   
@@ -243,15 +255,27 @@ sockets.forEach((socket) => {
         })
   });
 
-      socket.on("userActivity", (data) => {
-        // console.log(`Aktywność użytkownika ID: ${data.userId} Status: ${data.status}`);
-        updateUsers(data,onlineUsers).then((res)=>{
-          onlineUsers=res
-          io.emit("onlineUsers", onlineUsers);
-        // console.log(onlineUsers);
+      // socket.on("userActivity", (data) => {;
+      //   updateUsers(data,onlineUsers).then((res)=>{
+      //     onlineUsers=res
+      //     io.emit("onlineUsers", onlineUsers);
+      //   })
+      // });
 
-        })
-  });
+socket.on("userActivity", async (data) => {
+    try {
+        const res = await updateUsers(data, onlineUsers);
+        onlineUsers = res;
+        io.emit("onlineUsers", onlineUsers);
+    } catch (err) {
+        console.error("Błąd podczas aktualizacji użytkownika:", err);
+        // Aplikacja nie padnie, po prostu ten jeden event się nie uda
+    }
+});
+
+
+
+
 });
 
 

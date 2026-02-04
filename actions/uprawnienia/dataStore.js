@@ -16,16 +16,31 @@ async function loadMyDataFromDatabase() {
 
 
 
-   const  loadPrivileges = ()=>{
+   const  loadPrivileges2 = ()=>{
      
         var sql  = "select * from artdruk.users";
         connection.query(sql, function (err, result) {
         if (err) console.log(err);
 
-        users = [...result]
+        if (result && Array.isArray(result)) {
+        users = [...result];
+    }
 
        
     });
+    }
+
+       const  loadPrivileges = async ()=>{
+     
+    try {
+    const [rows] = await pool.execute("select * from artdruk.users",[]) 
+    users = [...rows];
+
+  } catch (err) {
+    console.error("Błąd w Kontrolerze:", err);
+
+  }   
+
     }
 
 
