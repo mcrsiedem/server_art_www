@@ -11,6 +11,14 @@ function  verifyTokenParams(uprawnienie){
   return (req, res, next) => {
   const token = req.params.token
 
+    // const clientApiKey = req.headers['x-api-key'];
+
+    // if (!clientApiKey || clientApiKey !== VALID_API_KEY) {
+    //   console.error(`[API KEY] Nieautoryzowany dostęp - Błędny klucz API: ${clientApiKey}`);
+    //   return res.status(403).json({ Error: "Brak dostępu: Nieprawidłowy Klucz API aplikacji." });
+    // }
+
+
 
     if(!token){
        console.log("Brak tokenu" )
