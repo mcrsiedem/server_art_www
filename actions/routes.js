@@ -61,6 +61,7 @@ const { aktualizujProof } = require('./proofy/aktualizujProof');
 const { zamowienieOddaj } = require('./zamowienia/zamowienieOddaj');
 const { dodajProof } = require('./proofy/dodajProof');
 const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
+const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPobierz');
 
     router.post('/version/', postVersion); // try catch
     router.get('/version/', connections.getVersion); 
@@ -77,6 +78,7 @@ const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
 
     // router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzPojedyncze); // pojedyncze zamówienie do edycji  działa  - stare- wycofane
     router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingle); // pojedyncze zamówienie do edycji
+    router.get('/elementy/:nr/:rok/:token',verifyToken,zamowienieElementyPobierz); // pobiera elementy do kalkulatora
     router.get('/sprawdzNiezamknieteKoszty/:token',verifyToken,sprawdzNiezamknieteKoszty); // pojedyncze zamówienie do edycji
     
     router.get('/zamowienia/:orderby/:zestaw/:token',verifyToken,zamowieniePobierzWszystkie); // pool
