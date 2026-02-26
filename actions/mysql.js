@@ -1,25 +1,42 @@
 
 const mysql = require('mysql2');
-const {database} = require('../config');
-const connection = mysql.createConnection(database);
+const { database } = require('../config');
+
+let connection;
+
+function handleDisconnect() {
+    connection = mysql.createConnection(database);
+
+    connection.connect((err) => {
+        if (err) {
+            console.error('Błąd połączenia (stare connection):', err);
+            setTimeout(handleDisconnect, 2000); // Ponów próbę za 2 sekundy
+        }
+    });
+
+    connection.on('error', (err) => {
+        console.error('Błąd bazy danych (stare connection):', err.code);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNREFUSED') {
+            handleDisconnect(); // Reanimacja połączenia
+        } else {
+            // Nie rzucamy błędu wyżej, żeby nie zabić procesu (uncaughtException)
+            console.error('Inny błąd bazy, ale trzymam proces przy życiu.');
+        }
+    });
+}
+
+handleDisconnect(); // Inicjalizacja starego połączenia
+
+// Pula - to jest Twój docelowy, bezpieczny port
 const pool = mysql.createPool({
     ...database,
-    waitForConnections: true, // Czekaj na wolne połączenie, jeśli pula jest zajęta
-    connectionLimit: 10,     // Ustal rozsądny limit np. 10-20
-    queueLimit: 0,            // Brak limitu w kolejce oczekujących żądań
-    // Nowe, kluczowe parametry:
-    // Czas bezczynności (w milisekundach) po którym połączenie jest zamykane.
-    // Ustawienie na 60 sekund (60000ms) to dobry punkt wyjścia.
-    idleTimeout: 60000, 
-    
-    // Połączenie zostanie przerwane (zakończone), jeśli baza nie odpowie
-    // w ciągu tego czasu (w milisekundach).
-    connectTimeout: 10000,
-    // maxIdle: 1 // pula będzie dążyła do utrzymania tylko jednego wolnego połączenia.
-
-}).promise(); // **Kluczowe: użycie wersji z Promise**
+    waitForConnections: true,
+    connectionLimit: 15,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 10000
+}).promise();
 
 module.exports = {
-    connection: connection, // Stara nazwa dla kompatybilności
-    pool: pool                     // Nowa pula
-}
+    connection, // Stare callbackowe połączenie (z auto-reconnectem)
+    pool        // Nowa pula (Promise)
+};
