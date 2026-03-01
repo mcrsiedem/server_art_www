@@ -24,7 +24,7 @@ function handleDisconnect() {
         }
     });
 }
-
+//moze działa
 handleDisconnect(); // Inicjalizacja starego połączenia
 
 // Pula - to jest Twój docelowy, bezpieczny port
