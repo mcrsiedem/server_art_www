@@ -448,45 +448,53 @@ class Connections {
     
          }
 
-         //-----
-                     getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa(req,res){
-
-                // tylko odświeżanie procesora po zmianie kalendarza
-            let dane=[];
-
-            //idTechnologii/:technologia_prime_id
-             const procesor_id = req.params['procesor_id']
-             const dniWstecz = req.params['dniWstecz']
-            //  const technologia_prime_id = req.params['technologia_prime_id']
-
-
-            var sql = "begin";
-            connection.query(sql, function (err, result) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-            });
-     
-             var sql  = "select * from artdruk.view_technologie_wykonania where procesor_id = '" + procesor_id + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-             dane.push(doc)
-             // res.status(200).json(dane);
          
-             });
-     
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-             connection.query(sql, function (err, doc) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-             dane.push(doc)
-             } );
 
-            var sql = "commit";
-            connection.query(sql, function (err, result) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-            console.log("Get Grupy i Wykonania dla procesora "+ procesor_id);
-            res.status(200).json(dane);
-            });
-     
-         }
+        async getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa(req, res) {
+            // tylko odświeżanie procesora po zmianie kalendarza OPRAWA
+    const procesor_id = req.params['procesor_id'];
+    const dniWstecz = req.params['dniWstecz'];
+    console.log("tu ok")
+    // Pobieramy połączenie z puli
+    const conn = await pool.getConnection();
+
+    try {
+        // Start transakcji
+        await conn.beginTransaction();
+
+        const dane = [];
+
+        // Pierwsze zapytanie - używamy placeholderów (?) dla bezpieczeństwa (SQL Injection)
+        const [rows1] = await conn.query(
+            "SELECT * FROM artdruk.view_technologie_wykonania WHERE procesor_id = ? ORDER BY id ASC", 
+            [procesor_id]
+        );
+        dane.push(rows1);
+
+        // Drugie zapytanie
+        const [rows2] = await conn.query(
+            "SELECT * FROM artdruk.view_technologie_grupy_wykonan_oprawa WHERE poczatek > ? AND procesor_id = ? ORDER BY poczatek",
+            [dniWstecz, procesor_id]
+        );
+        dane.push(rows2);
+
+        // Jeśli wszystko ok, zatwierdzamy
+        await conn.commit();
+
+        // console.log("Get Grupy i Wykonania dla procesora " + procesor_id);
+        res.status(200).json(dane);
+
+    } catch (err) {
+        // Jeśli jakikolwiek błąd wystąpi w bloku try, wycofujemy zmiany
+        await conn.rollback();
+        console.error("Błąd transakcji:", err);
+        res.status(203).json({ error: "Database error", details: err.message });
+
+    } finally {
+        // Bardzo ważne: zawsze zwalniamy połączenie z powrotem do puli!
+        conn.release();
+    }
+}
     //--------
 
         getGrupy_oprawa_for_procesor(req,res){
