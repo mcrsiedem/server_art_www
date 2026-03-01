@@ -14,129 +14,107 @@ const { exec } = require('child_process');
 class Connections {
 
 
+async getUser(req, res) {
+    const getFormattedTimestamp = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+    };
 
-    getUser(req,res){
-    const getFormattedTimestamp = ()=>{
-    const now = new Date();
+    const login = req.params['login'];
+    const haslo = req.params['haslo'];
+    const hash = req.params['hash'];
 
-    // Używamy padStart do dodania wiodącego zera, jeśli liczba jest jednocyfrowa
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
+    console.log(`${getFormattedTimestamp()} : Logowanie. Login: ${login}`);
 
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    let conn;
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // 1. Pobieramy wersję - czekamy na wynik (await)
+        const [verResult] = await conn.query("SELECT ver, utworzono FROM artdruk.version ORDER BY id DESC LIMIT 1");
+        const version = verResult;
+
+        // 2. Szukamy użytkownika
+        const sql = "SELECT id, imie, nazwisko, login, haslo, zamowienie_przyjmij, zamowienie_skasuj, zamowienie_odblokuj, zamowienie_zapis, zamowienie_oddaj, klienci_wszyscy, klienci_zapis, klienci_usun, papier_zapis, papier_usun, procesy_edycja, zamowienia_wszystkie, technologie_wszystkie, technologia_zapis, harmonogram_przyjmij, wersja_max, mini_druk, mini_falc, mini_oprawa, mini_uv, mini_inne, manage_druk, manage_falc, manage_oprawa, manage_inne, procesor_domyslny, uprawnienia_ustaw, asystent1, asystent2, realizacje_dodaj, realizacje_usun, gant, zestawienia, procesy_kooperacja FROM artdruk.users WHERE login = ? AND haslo = ?;";
+
+        const [result] = await conn.execute(sql, [login, haslo]);
+
+        if (result.length > 0) {
+            const row = result[0];
+
+            // Mapujemy wszystkie Twoje pola do payloadu (zachowując Twoją strukturę)
+            const payload = {
+                id: row.id,
+                imie: row.imie,
+                nazwisko: row.nazwisko,
+                login: row.login,
+                zamowienie_przyjmij: row.zamowienie_przyjmij,
+                zamowienie_zapis: row.zamowienie_zapis,
+                zamowienie_oddaj: row.zamowienie_oddaj,
+                zamowienie_odblokuj: row.zamowienie_odblokuj,
+                klienci_wszyscy: row.klienci_wszyscy,
+                klienci_zapis: row.klienci_zapis,
+                zamowienie_skasuj: row.zamowienie_skasuj,
+                klienci_usun: row.klienci_usun,
+                papier_zapis: row.papier_zapis,
+                papier_usun: row.papier_usun,
+                procesy_edycja: row.procesy_edycja,
+                zamowienia_wszystkie: row.zamowienia_wszystkie,
+                technologie_wszystkie: row.technologie_wszystkie,
+                technologia_zapis: row.technologia_zapis,
+                harmonogram_przyjmij: row.harmonogram_przyjmij,
+                wersja_max: row.wersja_max,
+                mini_druk: row.mini_druk,
+                mini_falc: row.mini_falc,
+                mini_oprawa: row.mini_oprawa,
+                mini_uv: row.mini_uv,
+                mini_inne: row.mini_inne,
+                manage_druk: row.manage_druk,
+                manage_falc: row.manage_falc,
+                manage_oprawa: row.manage_oprawa,
+                manage_inne: row.manage_inne,
+                procesor_domyslny: row.procesor_domyslny,
+                uprawnienia_ustaw: row.uprawnienia_ustaw,
+                asystent1: row.asystent1,
+                asystent2: row.asystent2,
+                realizacje_dodaj: row.realizacje_dodaj,
+                realizacje_usun: row.realizacje_usun,
+                gant: row.gant,
+                zestawienia: row.zestawienia,
+                procesy_kooperacja: row.procesy_kooperacja
+            };
+
+            const token = jwt.sign(payload, ACCESS_TOKEN, { expiresIn: '8h' });
+
+            // 3. Zapis do historii (Sukces)
+            const historySql = "INSERT INTO artdruk.historia (user_id, user, kategoria, version) VALUES (?, ?, ?, ?);";
+            await conn.query(historySql, [row.id, `${row.imie} ${row.nazwisko}`, "Logowanie", hash]);
+
+            return res.status(200).json([token, version]);
+
+        } else {
+            // 4. Zapis do historii (Błąd logowania)
+            const failHistorySql = "INSERT INTO artdruk.historia (user_id, user, kategoria, event, version) VALUES (?, ?, ?, ?, ?);";
+            await conn.execute(failHistorySql, [0, "", "Logowanie", `${login} ${haslo}`, hash]);
+
+            return res.json({ Status: "Error", Error: "Wrong Email or Password" });
+        }
+
+    } catch (err) {
+        console.error("Błąd bazy danych:", err);
+        return res.status(500).json({ Status: "Error", Error: "Error in running query" });
+    } finally {
+        // Bardzo ważne - zwolnienie połączenia do puli!
+        if (conn) conn.release();
+    }
 }
 
-        const login = req.params['login']
-        const haslo = req.params['haslo']
-        const hash = req.params['hash'] 
-        console.log(  getFormattedTimestamp()+ " : Logowanie. Login: "+login )
-           let version;
-
-                                var sql  = "select ver,utworzono from artdruk.version  ORDER BY id DESC LIMIT 1";
-                        connection.query(sql, function (err, ver) {
-                        if (err) console.log(err);
-                            version =ver
-
-                   
-                    });
-    
-        var sql = "select id,imie,nazwisko,login,haslo,zamowienie_przyjmij,zamowienie_skasuj,zamowienie_odblokuj,zamowienie_zapis,zamowienie_oddaj,klienci_wszyscy,klienci_zapis,klienci_usun,papier_zapis,papier_usun,procesy_edycja,zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun,gant,zestawienia,procesy_kooperacja from artdruk.users where login =? and haslo = ?;";
-
-        connection.execute(sql, [login,haslo], (err, result) => {
-    
-            if(err) return res.json({Status: "Error", Error: "Error in running query"})
-            if(result.length >0 ){
-
-                        const id = result[0].id;
-                        const imie = result[0].imie;
-                        const nazwisko = result[0].nazwisko;
-                        const zamowienie_przyjmij = result[0].zamowienie_przyjmij;
-                        const zamowienie_zapis = result[0].zamowienie_zapis;
-                        const zamowienie_skasuj = result[0].zamowienie_skasuj;
-                        const zamowienie_odblokuj = result[0].zamowienie_odblokuj;
-                        const klienci_wszyscy = result[0].klienci_wszyscy;
-                        const klienci_zapis = result[0].klienci_zapis;
-                        const klienci_usun = result[0].klienci_usun;
-                        const papier_zapis = result[0].papier_zapis;
-                        const zamowienie_oddaj = result[0].zamowienie_oddaj;
-                        const papier_usun = result[0].papier_usun;
-                        const procesy_edycja = result[0].procesy_edycja;
-                        const zamowienia_wszystkie = result[0].zamowienia_wszystkie;
-                        const technologie_wszystkie = result[0].technologie_wszystkie;
-                        const technologia_zapis = result[0].technologia_zapis;
-                        const harmonogram_przyjmij = result[0].harmonogram_przyjmij;
-                        const wersja_max = result[0].wersja_max;
-                        const mini_druk = result[0].mini_druk;
-                        const mini_falc = result[0].mini_falc;
-                        const mini_oprawa = result[0].mini_oprawa;
-                        const mini_uv = result[0].mini_uv;
-                        const mini_inne = result[0].mini_inne;
-                        const manage_druk = result[0].manage_druk;
-                        const manage_falc = result[0].manage_falc;
-                        const manage_oprawa = result[0].manage_oprawa;
-                        const manage_inne = result[0].manage_inne;
-                        const procesor_domyslny = result[0].procesor_domyslny;
-                        const uprawnienia_ustaw = result[0].uprawnienia_ustaw;
-                        const asystent1 = result[0].asystent1;
-                        const asystent2 = result[0].asystent2;
-                        const realizacje_dodaj = result[0].realizacje_dodaj;
-                        const realizacje_usun = result[0].realizacje_usun;
-                        const gant = result[0].gant;
-                        const zestawienia = result[0].zestawienia;
-                        const procesy_kooperacja = result[0].procesy_kooperacja; // tylko kooperacja
-                        
-                        
-                        
-            
-                        
-
-                        const paylod = {
-                            id,
-                            imie,
-                            nazwisko,
-                            login,
-                            zamowienie_przyjmij,zamowienie_zapis,zamowienie_oddaj,zamowienie_odblokuj,
-                            klienci_wszyscy,klienci_zapis,zamowienie_skasuj,klienci_usun,
-                            papier_zapis,papier_usun,
-                            procesy_edycja,
-                            zamowienia_wszystkie,technologie_wszystkie,technologia_zapis,
-                            harmonogram_przyjmij,wersja_max,mini_druk,mini_falc,mini_oprawa,mini_uv,mini_inne,manage_druk,manage_falc,manage_oprawa,manage_inne,procesor_domyslny,uprawnienia_ustaw,asystent1,asystent2,realizacje_dodaj,realizacje_usun,gant,zestawienia,procesy_kooperacja
-                            
-                        }
-     
-                              
-           
-               const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'8h'});
-            //    const token = jwt.sign(paylod, ACCESS_TOKEN, {expiresIn:'1m'});
-
-                var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria,version) values (?,?,?,?); ";
-               connection.query(sql, [id,imie+ " "+nazwisko,"Logowanie",hash],function (err, result) {            if (err) console.log(err);            })
-
-             
-    
-
-
-            //  console.log("ver", ver)
-                            // console.log("version", version)
-                return res.status(200).json([token,version])
-                
-        
-            } else {
-                var sql =   "INSERT INTO artdruk.historia (user_id,user,kategoria,event,version) values (?,?,?,?,?); ";
-               connection.execute(sql, [0,"","Logowanie",login+" "+haslo,hash], (err, result) => {            if (err) console.log(err);            })
-
-                return res.json({Status: "Error", Error: "Wrong Email or Password"})
-
-
-            }
-    }
-   
-    );
-   
-    }  
 
      isLogged(req,res){
         //  przed wywyłaniem tej fukncji sprawdzany jest verifyToken jako middleware w endpoincie
@@ -150,305 +128,184 @@ class Connections {
 
 
 
-    getPapieryParametry(req,res){
-        let dane=[];
-        //  const idZamowienia = req.params['idZamowienia']
-         // const zamowienie_prime_id = req.params['zamowienie_prime_id']
- 
-         var sql = "begin";
-         connection.query(sql, function (err, result) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         });
- 
-         var sql = "SELECT * FROM artdruk.view_papiery ;";
-        
-         connection.query(sql, function (err, doc) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         dane.push(doc)
-     
-         });
- 
-         var sql = "SELECT * FROM artdruk.papiery_nazwy;";
-         connection.query(sql, function (err, doc) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         dane.push(doc)
-         
-         } );
- 
-         var sql = "SELECT * FROM artdruk.papiery_grupa;";
-         connection.query(sql, function (err, doc) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         dane.push(doc)
-    
-         } );
- 
-         var sql = "SELECT * FROM artdruk.papiery_postac;";
-         connection.query(sql, function (err, doc) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         dane.push(doc)
-      
-         } );
- 
-         var sql = "SELECT * FROM artdruk.papiery_rodzaj;";
-         connection.query(sql, function (err, doc) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         dane.push(doc)
- 
-         } );
- 
-         
-         var sql = "SELECT * FROM artdruk.papiery_wykonczenia;";
-         connection.query(sql, function (err, doc) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         dane.push(doc)
-         } );
- 
-         var sql = "SELECT * FROM artdruk.papiery_powleczenie;";
-         connection.query(sql, function (err, doc) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-         dane.push(doc)
-         } );
 
- 
-         var sql = "commit";
-         connection.query(sql, function (err, result) {
-             if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-        //  console.log("Pobranie papierów oraz paramaterów");
-         res.status(200).json(dane);
-         });
- 
-     }
+
     //---
-          //pobierz wszystkie objekty do TECHNOLOGI nr...
-          getParametryTechnologii(req,res){
-            let dane=[];
-
-            //idTechnologii/:technologia_prime_id
-             const idTechnologii = req.params['idTechnologii']
-            //  const prime_id = req.params['prime_id']
-            //  const technologia_prime_id = req.params['technologia_prime_id']
-
-
-     
-             var sql  = "select * from artdruk.view_technologie  where id = '" + idTechnologii + "'  ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             // res.status(200).json(dane);
          
-             });
-     
-             var sql = "select * from artdruk.technologie_produkty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+    async getPapieryParametry(req, res) {
+    let conn;
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
 
-             var sql = "select * from artdruk.view_technologie_elementy where technologia_id = '" + idTechnologii + "' ORDER BY typ ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+        // Start transakcji
+        await conn.beginTransaction();
 
-             var sql = "select * from artdruk.technologie_fragmenty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+        const dane = [];
 
+        // Lista tabel do odpytania (zachowujemy Twoją kolejność)
+        // Używamy await przy każdym, żeby mieć pewność, że dane wskakują do tablicy po kolei
+        
+        const [viewPapiery] = await conn.query("SELECT * FROM artdruk.view_papiery;");
+        dane.push(viewPapiery);
 
+        const [papieryNazwy] = await conn.query("SELECT * FROM artdruk.papiery_nazwy;");
+        dane.push(papieryNazwy);
 
-             var sql = "select * from artdruk.view_technologie_oprawa where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+        const [papieryGrupa] = await conn.query("SELECT * FROM artdruk.papiery_grupa;");
+        dane.push(papieryGrupa);
 
-             var sql = "select * from artdruk.view_technologie_procesy_elementow where technologia_id =  '" + idTechnologii + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+        const [papieryPostac] = await conn.query("SELECT * FROM artdruk.papiery_postac;");
+        dane.push(papieryPostac);
 
-             var sql = "select * from artdruk.technologie_legi where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+        const [papieryRodzaj] = await conn.query("SELECT * FROM artdruk.papiery_rodzaj;");
+        dane.push(papieryRodzaj);
 
-             var sql = "select * from artdruk.technologie_legi_fragmenty where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
-     
-             var sql = "select * from artdruk.technologie_arkusze where technologia_id = '" + idTechnologii + "' ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+        const [papieryWykonczenia] = await conn.query("SELECT * FROM artdruk.papiery_wykonczenia;");
+        dane.push(papieryWykonczenia);
 
-             // (select prime_id from  artdruk.technologie where id= '" + idTechnologii + "' ) = prime_id
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan where technologia_id =  '" + idTechnologii + "'  ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+        const [papieryPowleczenie] = await conn.query("SELECT * FROM artdruk.papiery_powleczenie;");
+        dane.push(papieryPowleczenie);
 
-             var sql = "select * from artdruk.view_technologie_wykonania where technologia_id =  '" + idTechnologii + "'  ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
+        // Jeśli wszystko poszło ok, robimy commit
+        await conn.commit();
 
+        // console.log("Pobranie papierów oraz parametrów zakończone sukcesem");
+        res.status(200).json(dane);
 
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where technologia_id =  '" + idTechnologii + "'  ORDER BY id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
-
-                     var sql = "select * from artdruk.view_technologie_wykonania_oprawa where technologia_id =  '" + idTechnologii + "'  ORDER BY global_id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
-
-                                  var sql = "select * from artdruk.view_technologie_realizacje where technologia_id =  '" + idTechnologii + "'  ORDER BY global_id ASC";
-             connection.query(sql, function (err, doc) {
-             if (err) console.log(err);
-             dane.push(doc)
-             } );
-
-             
-
-            var sql = "commit";
-            connection.query(sql, function (err, result) {
-            if (err) console.log(err);
-            // console.log("odczyt technologi OK");
-            res.status(200).json(dane);
-            });
-     
-         }
-    //-----
-                  getGrupyAll(req,res){
-                    // uæywane do sprawdzenia na wersji mini czy w procesorze są jakieś wykonania i czy wyświetlić dany procesor
-
-                let dane=[];
-    
-                //idTechnologii/:technologia_prime_id
-                //  const idTechnologii = req.params['idTechnologii']
-                //  const technologia_prime_id = req.params['technologia_prime_id']
-
-                // typ_grupy < 3 oznacza grypy  nie z harmonogramu
-    
-                 var sql = "select * from artdruk.view_technologie_grupy_wykonan where status <4 and typ_grupy < 3 ORDER BY poczatek";
-                 connection.query(sql, function (err, doc) {
-                 if (err) console.log(err);
-                 dane.push(doc)
-                 } );
-    
-
-     var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where status <4 and typ_grupy < 3 ORDER BY poczatek";
-                 connection.query(sql, function (err, doc) {
-                 if (err) console.log(err);
-                 dane.push(doc)
-                 res.status(200).json(dane);
-                 } );
-    
-
-
-         
-             }
-
-
-        //-----
-
-        // getWykonania_i_grupy_for_procesor(req,res){
-        //     // #GRUPY_01
-        //     // ProcesyView - używane w momencie zmiany procesora  
-        //     let dane=[];
-        //      const procesor_id = req.params['procesor_id']
-        //      var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-        //      connection.query(sql, function (err, doc) {
-        //         if (err){ console.log(err) } 
-        //         dane.push(doc)
-        //         res.status(200).json(dane);
-        //      } );
-
-           
-
-     
-        //  }
-    //-----
-        //     getWykonania_i_grupy_for_procesor_dni_wstecz(req,res){
-
-        //     // #GRUPY_02
-        //     // ProcesyView - używane w momencie zmiany daty wyświetlania od...
-        //     let dane=[];
-        //      const procesor_id = req.params['procesor_id']
-        //      const dniWstecz = req.params['dniWstecz']
-     
-        //      var sql = "select * from artdruk.view_technologie_grupy_wykonan where poczatek >  '"+dniWstecz+"'  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-        //      connection.query(sql, function (err, doc) {
-        //         if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-        //      dane.push(doc)
-        //         res.status(200).json(dane);
-        //      } );
-
-     
-        //  }
-
-   getPodgladRealizacji(req,res){
-
-            let dane=[];
-
-
-         
-             const dniWstecz = req.params['dniWstecz']
-
-            var sql = "select * from artdruk.view_podglad_realizacji_dzien where utworzono >  '"+dniWstecz+"'  ORDER BY utworzono";
-             connection.query(sql, function (err, doc) {
-                if (err){ res.status(203).json(err) 
-
-                } else{
-                    console.log("podglad1")
-            dane.push(doc)
-                }
-      
-             } );
-
-
-            var sql = "select * from artdruk.view_podglad_zamowienia_historia where utworzono >  '"+dniWstecz+"' and dzial_id <5 ORDER BY utworzono";
-             connection.query(sql, function (err, doc) {
-                if (err){ res.status(203).json(err) 
-
-                } else{
-                    console.log("podglad2")
-            dane.push(doc)
-                }
-      
-             } );
+    } catch (err) {
+        // Jeśli jakikolwiek SELECT rzuci błąd, cofamy wszystko
+        if (conn) await conn.rollback();
+        
+        console.error("Błąd w getPapieryParametry:", err);
+        res.status(203).json(err);
+    } finally {
+        // Zawsze zwracamy połączenie do puli!
+        if (conn) conn.release();
+    }
+}
 
 
 
-     
-             var sql = "select * from artdruk.view_podglad_wykonania_oprawa where utworzono >  '"+dniWstecz+"'  ORDER BY utworzono";
-             connection.query(sql, function (err, doc) {
-                if (err){ res.status(203).json(err) 
 
-                } else{
-                    console.log("podglad3")
-            dane.push(doc)
-            res.status(200).json(dane);
-                }
-      
-             } );
+        async getParametryTechnologii(req, res) {
+    const idTechnologii = req.params['idTechnologii'];
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        
+        // Tablica na wyniki
+        const dane = [];
 
-    
-         }
+        // Definiujemy listę zapytań w kolejności, jakiej potrzebujesz
+        const queries = [
+            "SELECT * FROM artdruk.view_technologie WHERE id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.technologie_produkty WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.view_technologie_elementy WHERE technologia_id = ? ORDER BY typ ASC",
+            "SELECT * FROM artdruk.technologie_fragmenty WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.view_technologie_oprawa WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.view_technologie_procesy_elementow WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.technologie_legi WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.technologie_legi_fragmenty WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.technologie_arkusze WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.view_technologie_grupy_wykonan WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.view_technologie_wykonania WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.view_technologie_grupy_wykonan_oprawa WHERE technologia_id = ? ORDER BY id ASC",
+            "SELECT * FROM artdruk.view_technologie_wykonania_oprawa WHERE technologia_id = ? ORDER BY global_id ASC",
+            "SELECT * FROM artdruk.view_technologie_realizacje WHERE technologia_id = ? ORDER BY global_id ASC"
+        ];
 
-         
+        // Wykonujemy zapytania po kolei
+        for (const sql of queries) {
+            const [rows] = await conn.execute(sql, [idTechnologii]);
+            dane.push(rows);
+        }
+
+        // Zwracamy kompletny zestaw danych
+        res.status(200).json(dane);
+
+    } catch (err) {
+        console.error("Błąd pobierania parametrów technologii:", err);
+        res.status(500).json({ error: "Błąd bazy danych", details: err.message });
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+
+
+async getGrupyAll(req, res) {
+    // używane do sprawdzenia na wersji mini czy w procesorze są jakieś wykonania
+    let conn;
+    try {
+        conn = await pool.getConnection();
+
+        // Przygotowujemy oba zapytania
+        const sql1 = "SELECT * FROM artdruk.view_technologie_grupy_wykonan WHERE status < 4 AND typ_grupy < 3 ORDER BY poczatek";
+        const sql2 = "SELECT * FROM artdruk.view_technologie_grupy_wykonan_oprawa WHERE status < 4 AND typ_grupy < 3 ORDER BY poczatek";
+
+        // Odpalamy oba zapytania RÓWNOLEGLE (szybciej niż jedno po drugim)
+        const [result1, result2] = await Promise.all([
+            conn.query(sql1),
+            conn.query(sql2)
+        ]);
+
+        // Wyciągamy dane z wyników (w mysql2 wyniki są w pierwszym elemencie tablicy)
+        const dane = [
+            result1[0],
+            result2[0]
+        ];
+
+        return res.status(200).json(dane);
+
+    } catch (err) {
+        console.error("Błąd w getGrupyAll:", err);
+        return res.status(500).json({ error: "Błąd bazy danych", details: err.message });
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+
+
+        async getPodgladRealizacji(req, res) {
+    const dniWstecz = req.params['dniWstecz'];
+    console.log("tu socekt")
+    let conn;
+    try {
+        conn = await pool.getConnection();
+
+        // Przygotowujemy zapytania z użyciem "bind parameters" (?) dla bezpieczeństwa
+        const sql1 = "SELECT * FROM artdruk.view_podglad_realizacji_dzien WHERE utworzono > ? ORDER BY utworzono";
+        const sql2 = "SELECT * FROM artdruk.view_podglad_zamowienia_historia WHERE utworzono > ? AND dzial_id < 5 ORDER BY utworzono";
+        const sql3 = "SELECT * FROM artdruk.view_podglad_wykonania_oprawa WHERE utworzono > ? ORDER BY utworzono";
+
+        // Odpalamy wszystkie 3 zapytania równolegle
+        // Używamy execute zamiast query dla prepared statements
+        const [res1, res2, res3] = await Promise.all([
+            conn.execute(sql1, [dniWstecz]),
+            conn.execute(sql2, [dniWstecz]),
+            conn.execute(sql3, [dniWstecz])
+        ]);
+
+        // Budujemy tablicę wynikową (wyciągamy same wiersze z wyników)
+        const dane = [
+            res1[0], // dane z view_podglad_realizacji_dzien
+            res2[0], // dane z view_podglad_zamowienia_historia
+            res3[0]  // dane z view_podglad_wykonania_oprawa
+        ];
+
+        console.log("Pobrano podgląd realizacji (3 źródła)");
+        return res.status(200).json(dane);
+
+    } catch (err) {
+        console.error("Błąd w getPodgladRealizacji:", err);
+        // Zwracamy status 203 zgodnie z Twoim oryginałem, choć 500 byłoby bardziej standardowe
+        return res.status(203).json(err);
+    } finally {
+        if (conn) conn.release();
+    }
+} 
 
         async getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa(req, res) {
             // tylko odświeżanie procesora po zmianie kalendarza OPRAWA
@@ -497,30 +354,56 @@ class Connections {
 }
     //--------
 
-        getGrupy_oprawa_for_procesor(req,res){
-            let dane=[];
+        async getGrupy_oprawa_for_procesor(req, res) {
+    const procesor_id = req.params['procesor_id'];
+    let conn;
+console.log("tu oprawa")
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
 
+        // Zapytanie 1: Pobiera grupy oprawy dla konkretnego procesora z zapasem 1 dnia
+        const sql1 = `
+            SELECT * FROM artdruk.view_technologie_grupy_wykonan_oprawa 
+            WHERE poczatek > (
+                SELECT MIN(poczatek) - INTERVAL 1 DAY 
+                FROM artdruk.view_technologie_grupy_wykonan_oprawa 
+                WHERE status < 4 AND procesor_id = ?
+            )  
+            AND procesor_id = ? 
+            ORDER BY poczatek
+        `;
 
-             const procesor_id = req.params['procesor_id']
-          
-             var sql = "select * from artdruk.view_technologie_grupy_wykonan_oprawa where poczatek >  (select min(poczatek) - interval 1 day from artdruk.view_technologie_grupy_wykonan_oprawa where status <4 and procesor_id = '" + procesor_id + "')  and procesor_id = '" + procesor_id + "' ORDER BY poczatek";
-             connection.query(sql, function (err, doc) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-             dane.push(doc)
-             } );
+        // Zapytanie 2: Pobiera sformatowaną datę graniczną
+        const sql2 = `
+            SELECT DATE_FORMAT(MIN(poczatek) - INTERVAL 1 DAY, '%Y-%m-%d') AS dni 
+            FROM artdruk.view_technologie_grupy_wykonan_oprawa 
+            WHERE status < 4 AND procesor_id = ?
+        `;
 
-                      var sql = "select   DATE_FORMAT(min(poczatek) - interval 1 day, '%Y-%m-%d') AS `dni` from artdruk.view_technologie_grupy_wykonan_oprawa where status <4 and procesor_id = " + procesor_id ;
-             connection.query(sql, function (err, doc) {
-                if (err){ console.log(err) } 
-             dane.push(doc)
-             res.status(200).json(dane);
+        // Wykonujemy oba zapytania równolegle dla lepszej wydajności
+        const [result1, result2] = await Promise.all([
+            conn.execute(sql1, [procesor_id, procesor_id]),
+            conn.execute(sql2, [procesor_id])
+        ]);
 
-             } );
+        // Składamy dane do odpowiedzi (wyciągamy wiersze z result[0])
+        const dane = [
+            result1[0],
+            result2[0]
+        ];
 
+        return res.status(200).json(dane);
 
-
-     
-         }
+    } catch (err) {
+        console.error("Błąd w getGrupy_oprawa_for_procesor:", err);
+        // Zachowujemy Twój status 203 dla błędów
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
+}
     //----
 
 
