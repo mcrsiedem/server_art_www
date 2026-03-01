@@ -1,65 +1,59 @@
-const { connection, pool } = require("../mysql");
-const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
-const { DecodeToken } = require("../logowanie/DecodeToken");
-const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
+const {  pool } = require("../mysql");
+
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN } = require("../logowanie/ACCESS_TOKEN");
 const dataStore = require('../uprawnienia/dataStore');
 
 
 // nowy zapis zamówienia - dane i parametry w jednym
-const klienciPobierzWszystkich =(req,res)=>{
-        const token = req.params['token']
-        let results
-        let id,klienci_wszyscy;
+const klienciPobierzWszystkich = async (req, res) => {
+    const token = req.params['token'];
+    let conn;
 
+    try {
+        // 1. Weryfikacja tokena (promisyfikujemy, żeby użyć await)
+        const decoded = await new Promise((resolve, reject) => {
+            jwt.verify(token, ACCESS_TOKEN, (err, data) => {
+                if (err) reject(err);
+                else resolve(data);
+            });
+        });
 
-             jwt.verify(token,ACCESS_TOKEN,(err,decoded)=>{
-                if(decoded){
-       
-                id = decoded.id
-                klienci_wszyscy = dataStore.checkPrivileges(decoded.id,"klienci_wszyscy")
+        const id = decoded.id;
+        const klienci_wszyscy = dataStore.checkPrivileges(id, "klienci_wszyscy");
 
-                }
-                if(err){
-                    res.status(200).json("Bład")
-                }
-                
-                
+        conn = await pool.getConnection();
+        let sql;
+        let params = [];
 
-             })
+        // 2. Budowanie zapytania zależnie od uprawnień
+        if (klienci_wszyscy) {
+            sql = "SELECT * FROM artdruk.view_klienci ORDER BY firma ASC";
+        } else {
+            // Używamy parametrów ?, aby uniknąć SQL Injection i błędów typu
+            sql = `SELECT * FROM artdruk.view_klienci 
+                   WHERE (opiekun_id = ? OR asystent1 = ? OR asystent2 = ?) 
+                   ORDER BY firma ASC`;
+            params = [id, id, id];
+        }
 
-    
+        console.log(`Pobieram klientów dla user_id: ${id} (Uprawnienia globalne: ${klienci_wszyscy})`);
 
+        const [rows] = await conn.execute(sql, params);
 
-                    if(klienci_wszyscy){
-                     var sql  = "select * from artdruk.view_klienci ORDER BY firma ASC";
-                        connection.execute(sql, function (err, doc) {
-                            results = doc
-                            if (err) console.log(err);
-                            res.status(200).json(doc)
-                        });
+        return res.status(200).json(rows);
 
-                    }else {
-                    
-                        var sql =
-                            "select * from artdruk.view_klienci where (opiekun_id ="+ id +" or asystent1 ="+ id +"  or asystent1 ="+ id +")  ORDER BY firma ASC" ;
-                        connection.execute(sql, function (err, doc) {
-                            results = doc
-                            if (err) console.log(err);
-                            res.status(200).json(doc)
-                        });
-
-                    }
-
- 
-
-
-
-
-
-    
+    } catch (err) {
+        console.error("Błąd w klienciPobierzWszystkich:", err);
+        // Jeśli błąd pochodzi z JWT (np. nieważny token)
+        if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: "Błąd autoryzacji" });
+        }
+        return res.status(500).json({ error: "Błąd serwera" });
+    } finally {
+        if (conn) conn.release();
     }
+};
 
 
 module.exports = {

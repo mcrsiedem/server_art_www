@@ -1,14 +1,14 @@
 
 
-const { connection, pool } = require("./mysql");
+// const { connection, pool } = require("./mysql");
+const { pool } = require("./mysql");
 const jwt = require("jsonwebtoken");
-const { teraz } = require("./czas/teraz");
-const { dodaj_minuty } = require("./czas/dodaj_minuty");
+// const { teraz } = require("./czas/teraz");
+// const { dodaj_minuty } = require("./czas/dodaj_minuty");
 const { ACCESS_TOKEN } = require("./logowanie/ACCESS_TOKEN");
-const dataStore = require('./uprawnienia/dataStore');
-const { DecodeToken } = require("./logowanie/DecodeToken");
-const { nazwaEtapPlikow } = require("./nazwy/nazwaEtapPlikow");
-const { nazwaElementu } = require("./nazwy/nazwaElementu");
+// const { DecodeToken } = require("./logowanie/DecodeToken");
+// const { nazwaEtapPlikow } = require("./nazwy/nazwaEtapPlikow");
+// const { nazwaElementu } = require("./nazwy/nazwaElementu");
 const { exec } = require('child_process');
 
 class Connections {
@@ -450,7 +450,6 @@ console.log("tu papier")
     // pobie
 async getTechnologie(req, res) {
     // Pobierasz idzlecenia, ale w SQL go nie używasz - zostawiam jak w oryginale
-    const idzlecenia = req.params['idzlecenia'];
     let conn;
 
     try {
@@ -478,7 +477,6 @@ async getTechnologie(req, res) {
 
 async getGantGrupy(req, res) {
     // idzlecenia pobrane, ale nieużyte w SQL - zostawiam zgodnie z oryginałem
-    const idzlecenia = req.params['idzlecenia'];
     let conn;
 
     try {
@@ -506,7 +504,6 @@ async getGantGrupy(req, res) {
 
 async getZamowieniaKalendarz(req, res) {
     // Pobierasz procesor_id, ale obecnie nie jest używany w zapytaniu
-    const procesor_id = req.params['procesor_id'];
     let conn;
 
     try {
@@ -533,7 +530,6 @@ async getZamowieniaKalendarz(req, res) {
 
 async getVersion(req, res) {
     // parametr orderby pobrany z URL, ale nieużyty w zapytaniu SQL
-    const orderby = req.params['orderby'];
     let conn;
 
     try {
@@ -560,7 +556,6 @@ async getVersion(req, res) {
 
 async getAllUsers(req, res) {
     // Parametr orderby pobrany, ale nieużyty w zapytaniu
-    const orderby = req.params['orderby'];
     let conn;
 
     try {
@@ -588,7 +583,6 @@ async getAllUsers(req, res) {
 
 async getZamowieniaPliki(req, res) {
     // Parametr orderby pobrany, ale nieużyty w zapytaniu (zgodnie z oryginałem)
-    const orderby = req.params['orderby'];
     let conn;
 
     try {
@@ -957,7 +951,6 @@ async dragDropProcesGrupMulti(req, res) {
     const row = req.body;
     const multiSelect = row[0]; // tablica ID elementów przeciąganych
     const id_drop_grupa_proces = row[1]; // ID elementu docelowego
-    const token = req.params['token'];
 
     let conn;
     try {
@@ -1025,12 +1018,7 @@ async zmien_status_przerwy(req, res) {
     // Destrukturyzacja danych z body
     const { 
         status, 
-        global_id,
-        technologia_id, // wyciągnięte, jeśli będziesz chciał logować więcej danych
-        proces_id, 
-        element_id, 
-        grupa_id 
-    } = req.body;
+        global_id    } = req.body;
 
     let conn;
 
@@ -1401,79 +1389,158 @@ async zmienCzasTrwaniaGrupy(req, res) {
 }
 
 
-zmienCzasTrwaniaGrupyOprawa(req,res){
+async zmienCzasTrwaniaGrupyOprawa(req, res) {
+    // Pobieramy parametry z URL
+    const drop_grupa_global_id = req.params['drop_grupa_global_id'];
+    const nowy_koniec = req.params['nowy_koniec'];
 
-    const drop_grupa_global_id = req.params['drop_grupa_global_id']
-    const nowy_koniec = req.params['nowy_koniec']
+    let conn;
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.zmien_czas_trwania_grupy_oprawa("+ drop_grupa_global_id +",'"+ nowy_koniec +"') as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy ? dla bezpieczeństwa, zwłaszcza dla stringa z czasem/datą
+        const sql = "SELECT artdruk.zmien_czas_trwania_grupy_oprawa(?, ?) AS procesor_id";
+        
+        console.log(`Zmiana czasu trwania OPRAWY: Grupa ${drop_grupa_global_id}, Nowy koniec: ${nowy_koniec}`);
+
+        const [rows] = await conn.execute(sql, [drop_grupa_global_id, nowy_koniec]);
+
+        // Zwracamy wynik (procesor_id) do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas zmiany czasu trwania grupy oprawy:", err);
+        // Zachowujemy status 203 dla błędów
+        return res.status(203).json(err);
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli
+        if (conn) conn.release();
+    }
 }
 
-zmienCzasTrwaniaGrupyOprawaPrzerwa(req,res){
+async zmienCzasTrwaniaGrupyOprawaPrzerwa(req, res) {
+    // Pobieramy parametry z URL (req.params)
+    const drop_grupa_global_id = req.params['drop_grupa_global_id'];
+    const nowy_koniec = req.params['nowy_koniec'];
 
-    const drop_grupa_global_id = req.params['drop_grupa_global_id']
-    const nowy_koniec = req.params['nowy_koniec']
+    let conn;
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.zmien_czas_trwania_grupy_oprawa_przerwa("+ drop_grupa_global_id +",'"+ nowy_koniec +"') as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy ? dla bezpieczeństwa, szczególnie przy formacie daty/czasu w 'nowy_koniec'
+        const sql = "SELECT artdruk.zmien_czas_trwania_grupy_oprawa_przerwa(?, ?) AS procesor_id";
+        
+        console.log(`Zmiana czasu przerwy OPRAWA: Grupa ${drop_grupa_global_id}, Koniec: ${nowy_koniec}`);
+
+        const [rows] = await conn.execute(sql, [drop_grupa_global_id, nowy_koniec]);
+
+        // Zwracamy wynik (procesor_id) do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas zmiany czasu trwania przerwy oprawy:", err);
+        // Status 203 dla błędów zgodnie z Twoją konwencją
+        return res.status(203).json(err);
+    } finally {
+        // Zawsze zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
 
-zmienCzasTrwaniaGrupyPrzerwa(req,res){
+async zmienCzasTrwaniaGrupyPrzerwa(req, res) {
+    // Pobieramy parametry z URL
+    const drop_grupa_global_id = req.params['drop_grupa_global_id'];
+    const nowy_koniec = req.params['nowy_koniec'];
 
-    const drop_grupa_global_id = req.params['drop_grupa_global_id']
-    const nowy_koniec = req.params['nowy_koniec']
+    let conn;
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.zmien_czas_trwania_grupy_przerwa("+ drop_grupa_global_id +",'"+ nowy_koniec +"') as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy ? dla bezpieczeństwa, zwłaszcza przy stringu z datą/godziną (nowy_koniec)
+        const sql = "SELECT artdruk.zmien_czas_trwania_grupy_przerwa(?, ?) AS procesor_id";
+        
+        console.log(`Zmiana czasu trwania przerwy: Grupa ${drop_grupa_global_id}, Nowy koniec: ${nowy_koniec}`);
+
+        const [rows] = await conn.execute(sql, [drop_grupa_global_id, nowy_koniec]);
+
+        // Zwracamy wynik (procesor_id)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas zmiany czasu trwania przerwy:", err);
+        // Zachowujemy Twój status 203 dla błędów
+        return res.status(203).json(err);
+    } finally {
+        // Zawsze zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
 
-skasujTechnologie(req,res){
+async skasujTechnologie(req, res) {
+    // Pobieramy parametry z URL (req.params)
+    const { id_delete, zamowienie_id, user_id } = req.params;
 
-    const id_delete = req.params['id_delete']
-    const zamowienie_id = req.params['zamowienie_id']
-    const user_id = req.params['user_id']
+    let conn;
 
+    try {
+        conn = await pool.getConnection();
 
-    // kasowanie grupy wykonan wg global_id grupy
-    var sql = "call artdruk.deletedforever_technologia("+ id_delete +","+ zamowienie_id +","+ user_id +") ";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        // Używamy bindowania parametrów (?) dla procedury CALL
+        const sql = "CALL artdruk.deletedforever_technologia(?, ?, ?)";
+        
+        console.log(`Wywołuję procedurę kasowania technologii. ID: ${id_delete}, Zamówienie: ${zamowienie_id}, User: ${user_id}`);
+
+        // W przypadku CALL, execute zwraca tablicę, gdzie pierwszy element to wyniki procedury
+        const [result] = await conn.execute(sql, [id_delete, zamowienie_id, user_id]);
+
+        // Zwracamy wynik do frontendu
+        return res.status(200).json(result);
+
+    } catch (err) {
+        console.error("Błąd podczas kasowania technologii (deletedforever_technologia):", err);
+        // Zachowujemy status 203 dla błędów zgodnie z Twoim wzorcem
+        return res.status(203).json(err);
+    } finally {
+        // Zawsze oddajemy połączenie do puli, żeby serwer się nie "zapchał"
+        if (conn) conn.release();
+    }
 }
 
 
 
 
-skasujGrupe(req,res){
+async skasujGrupe(req, res) {
+    // Pobieramy ID grupy z parametrów URL
+    const global_id_grupa = req.params['global_id_grupa'];
 
-    const global_id_grupa = req.params['global_id_grupa']
+    let conn;
 
+    try {
+        conn = await pool.getConnection();
 
-    var sql = "select artdruk.delete_grupa_wykonan(?) as procesor_id_grupy";
-    connection.execute(sql, [global_id_grupa],function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        // Wywołujemy funkcję bazodanową, która usuwa powiązania i zwraca ID procesora
+        const sql = "SELECT artdruk.delete_grupa_wykonan(?) AS procesor_id_grupy";
+        
+        console.log(`Kasowanie ogólnej grupy wykonanań: ${global_id_grupa}`);
+
+        const [rows] = await conn.execute(sql, [global_id_grupa]);
+
+        // Zwracamy wynik (rows to tablica z wynikiem zapytania SELECT)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas kasowania grupy:", err);
+        // Zachowujemy status 203 dla błędów zgodnie z Twoim wzorcem
+        return res.status(203).json(err);
+    } finally {
+        // Zawsze zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
 
@@ -1528,197 +1595,362 @@ const usedConnections = allConnections - freeConnections;
 
 
 
-skasujGrupeOprawa(req,res){
+async skasujGrupeOprawa(req, res) {
+    // Pobieramy ID grupy z parametrów URL (req.params)
+    const global_id_grupa = req.params['global_id_grupa'];
 
-    const global_id_grupa = req.params['global_id_grupa']
+    let conn;
 
+    try {
+        conn = await pool.getConnection();
 
-    // kasowanie grupy wykonan wg global_id grupy
-    var sql = "select artdruk.delete_grupa_wykonan_oprawa(?) as procesor_id_grupy";
-    console.log(sql)
-    connection.execute(sql,  [global_id_grupa],function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        // Wywołujemy funkcję bazodanową, która zwraca 'procesor_id_grupy'
+        const sql = "SELECT artdruk.delete_grupa_wykonan_oprawa(?) AS procesor_id_grupy";
+        
+        console.log(`Wywołuję procedurę usuwania grupy oprawy: ${global_id_grupa}`);
+
+        const [rows] = await conn.execute(sql, [global_id_grupa]);
+
+        // Zwracamy wynik działania funkcji (procesor_id_grupy)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas kasowania grupy oprawy:", err);
+        // Zwracamy status 203 zgodnie z Twoim oryginalnym kodem w razie błędu
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
-deleteKlient(req,res){
+async deleteKlient(req, res) {
+    // Pobieramy ID klienta z body
     const id = req.body.id;
 
-    var sql = "update artdruk.klienci set deleted = 1 where id = " + id+ "";
-    connection.query(sql, function (err, result) {
-    if (err) console.log(err);
-    // console.log("1 record delete ");
-    res.status(201).json(result);
-})
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy ? zamiast doklejania stringa
+        const sql = "UPDATE artdruk.klienci SET deleted = 1 WHERE id = ?";
+        
+        console.log(`Oznaczam klienta ID: ${id} jako usuniętego`);
+
+        const [result] = await conn.execute(sql, [id]);
+
+        // Zwracamy wynik (np. info o 1 zmienionym wierszu)
+        return res.status(201).json(result);
+
+    } catch (err) {
+        console.error("Błąd podczas usuwania klienta:", err);
+        // Zwracamy status 500 w razie awarii bazy
+        return res.status(500).json({ error: "Nie udało się usunąć klienta", details: err });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia
+        if (conn) conn.release();
+    }
 }
 
-deleteZamowienie(req,res){
+async deleteZamowienie(req, res) {
+    const rowsToDelete = req.body.row;
 
-    //usun na zawsze
-    const rowsToDelete = req.body.row
+    if (!rowsToDelete || !Array.isArray(rowsToDelete) || rowsToDelete.length === 0) {
+        return res.status(400).json({ error: "Brak zamówień do usunięcia" });
+    }
 
+    let conn;
 
-    for(let row of rowsToDelete){
+    try {
+        conn = await pool.getConnection();
 
-        var sql =   "delete from artdruk.zamowienia where id = ?"
-        connection.execute(sql,[row.id], function (err, result) {        if (err) console.log(err);          });
+        // --- START TRANSAKCJI ---
+        await conn.beginTransaction();
 
-        var sql =   "delete from artdruk.zamowienia_produkty  where global_id !=0 and zamowienie_id = ?"
-        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
+        // Definiujemy wszystkie tabele, z których chcemy posprzątać
+        // Kolejność ma znaczenie, jeśli masz klucze obce (Foreign Keys)!
+        const tabele = [
+            "artdruk.zamowienia_produkty",
+            "artdruk.zamowienia_elementy",
+            "artdruk.zamowienia_fragmenty",
+            "artdruk.zamowienia_koszty_dodatkowe",
+            "artdruk.zamowienia_oprawa",
+            "artdruk.zamowienia_pakowanie",
+            "artdruk.zamowienia_procesy_elementow",
+            "artdruk.zamowienia_historia",
+            "artdruk.zamowienia" // Główne zamówienie na końcu
+        ];
 
-        var sql =   "delete from artdruk.zamowienia_elementy where  global_id !=0 and zamowienie_id = ?"
-        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
+        for (let row of rowsToDelete) {
+            console.log(`Rozpoczynam usuwanie zamówienia ID: ${row.id}`);
 
-        var sql =   "delete from artdruk.zamowienia_fragmenty where global_id !=0 and zamowienie_id = ?"
-        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
+            for (let tabela of tabele) {
+                // Dla większości tabel warunkiem jest zamowienie_id, 
+                // ale dla głównej tabeli 'zamowienia' warunkiem jest 'id'
+                const idColumn = (tabela === "artdruk.zamowienia") ? "id" : "zamowienie_id";
+                
+                // Dodatkowe zabezpieczenie global_id != 0 lub id != 0 jak w oryginale
+                const safetyFilter = (tabela === "artdruk.zamowienia_historia") ? "id != 0" : 
+                                     (tabela === "artdruk.zamowienia") ? "id != 0" : "global_id != 0";
 
-        var sql =   "delete from artdruk.zamowienia_koszty_dodatkowe where global_id !=0 and zamowienie_id = ?"
-        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
-
-        var sql =   "delete from artdruk.zamowienia_oprawa where global_id !=0 and zamowienie_id = ?"
-        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_pakowanie where global_id !=0 and zamowienie_id = ?"
-        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_procesy_elementow where global_id !=0 and zamowienie_id = ?"
-        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
-        var sql =   "delete from artdruk.zamowienia_historia where id !=0 and zamowienie_id = ?"
-        connection.execute(sql, [row.id],function (err, result) {        if (err) console.log(err);          });
-
-
-        }
-console.log("Zlecenie skasowane! ");
-res.status(201).json("OK");
-
-}
-
-odblokujZamowienie(req,res){
-
-    //usun na zawsze
-    const rowsToDelete = req.body.row
-
-    var sql = "start transaction";
-    connection.query(sql, function (err, result) {
-    if (err) res.status(203).json(err)  });
-
-    for(let row of rowsToDelete){
-        var sql =   "update  artdruk.zamowienia set open_data = null, open_user = null, open_stan = null where id = '" + row.id + "'"
-        // var sql =   "call unlock_zamowienie('" + row.id + "')
-        connection.query(sql, function (err, result) {        if (err) console.log(err);          });
-
-        }
-
-
-    var sql = "commit";
-    connection.query(sql, function (err, result) {
-    if (err) console.log(err);
-    console.log("Zlecenie odblokowane! ");
-res.status(201).json(result);
-});
-}
-
-
-
-
-updatePapiery(req,res){
-    // rows.filter(x => x.update == true) 
-    const rows = req.body
-    var sql = "begin";
-    connection.query(sql, function (err, result) {
-    if (err) res.status(203).json(err)  });
-
-    for(let row of rows.filter(x => x.update == true && x.insert != true) ){
-        var sql =   "update  artdruk.papiery set  dodal = " + row.dodal+ ", zmienil = " + row.dodal+ ", grupa_id = " + row.grupa_id+ ", nazwa_id = " + row.nazwa_id+ ", gramatura = '" + row.gramatura+ "', bulk = '" + row.bulk+ "', info = '" + row.info+ "', wykonczenie_id = " + row.wykonczenie_id+ ", powleczenie_id = " + row.powleczenie_id+ " where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)       }});
-        }
-
-        for(let row of rows.filter(x => x.insert == true) ){
-            var sql =   "INSERT INTO artdruk.papiery (dodal,zmienil,grupa_id,nazwa_id,gramatura,bulk,info,wykonczenie_id,powleczenie_id) "+
-            "values (" + row.dodal + "," + row.zmienil + "," + row.grupa_id + "," + row.nazwa_id + ",'" + row.gramatura + "','" + row.bulk + "','" + row.info + "'," + row.wykonczenie_id + "," + row.powleczenie_id + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)       }});
+                const sql = `DELETE FROM ${tabela} WHERE ${safetyFilter} AND ${idColumn} = ?`;
+                
+                await conn.execute(sql, [row.id]);
             }
-
-            for(let row of rows.filter(x => x.delete == true) ){
-                var sql =   "DELETE from artdruk.papiery where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)        }});
-                }
-
-
-
-    var sql = "commit";
-    connection.query(sql, function (err, result) {
-        if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err) } 
-
-res.status(201).json(result);
-
-});
-}
-
-updatePapieryNazwy(req,res){
-    // rows.filter(x => x.update == true) 
-    const rows = req.body
-    var sql = "begin";
-    connection.query(sql, function (err, result) {
-    if (err) res.status(203).json(err)  });
-
-    for(let row of rows.filter(x => x.update == true && x.insert != true) ){
-        var sql =   "update  artdruk.papiery_nazwy set  nazwa = '" + row.nazwa+ "', grupa_id = " + row.grupa_id+ ", powleczenie_id = " + row.powleczenie_id+ " where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)     }});
         }
 
-        for(let row of rows.filter(x => x.insert == true) ){
-            var sql =   "INSERT INTO artdruk.papiery_nazwy (nazwa,grupa_id,powleczenie_id) value ('" + row.nazwa + "'," + row.grupa_id + "," + row.powleczenie_id + "); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  console.log(err)       }});
-            }
+        // --- COMMIT ---
+        await conn.commit();
 
-            for(let row of rows.filter(x => x.delete == true) ){
-                var sql =   "DELETE from artdruk.papiery_nazwy where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)          }});
-                }
+        console.log(`Zlecenia (liczba: ${rowsToDelete.length}) skasowane na zawsze!`);
+        return res.status(201).json("OK");
 
+    } catch (err) {
+        // --- ROLLBACK ---
+        if (conn) await conn.rollback();
+        
+        console.error("BŁĄD PODCZAS USUWANIA ZAMÓWIENIA:", err);
+        return res.status(500).json({ error: "Błąd podczas usuwania danych", details: err });
+    } finally {
+        if (conn) conn.release();
+    }
+}
 
+async odblokujZamowienie(req, res) {
+    // rowsToDelete to Twoja tablica z wierszami (req.body.row)
+    const rowsToDelete = req.body.row;
 
-    var sql = "commit";
-    connection.query(sql, function (err, result) {
-        if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err) } 
+    // Szybki check, czy mamy co odblokowywać
+    if (!rowsToDelete || !Array.isArray(rowsToDelete) || rowsToDelete.length === 0) {
+        return res.status(400).json({ error: "Brak zamówień do odblokowania" });
+    }
 
-res.status(201).json(result);
+    let conn;
 
-});
+    try {
+        conn = await pool.getConnection();
+
+        // --- START TRANSAKCJI ---
+        await conn.beginTransaction();
+
+        // Tworzymy tablicę obietnic dla każdego UPDATE (czyścimy dane blokady)
+        const unlockPromises = rowsToDelete.map(row => {
+            const sql = `
+                UPDATE artdruk.zamowienia 
+                SET open_data = NULL, open_user = NULL, open_stan = NULL 
+                WHERE id = ?
+            `;
+            return conn.execute(sql, [row.id]);
+        });
+
+        // Czekamy na wykonanie wszystkich operacji
+        await Promise.all(unlockPromises);
+
+        // --- COMMIT ---
+        await conn.commit();
+
+        console.log(`Zlecenia odblokowane! Liczba: ${rowsToDelete.length}`);
+        return res.status(201).json({ status: "success", count: rowsToDelete.length });
+
+    } catch (err) {
+        // --- ROLLBACK ---
+        if (conn) await conn.rollback();
+        
+        console.error("Błąd podczas odblokowywania zamówień:", err);
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
 
-updatePapieryGrupa(req,res){
-    // rows.filter(x => x.update == true) 
-    const rows = req.body
-    var sql = "begin";
-    connection.query(sql, function (err, result) {
-    if (err) res.status(203).json(err)  });
-
-    for(let row of rows.filter(x => x.update == true && x.insert != true) ){
-        var sql =   "update  artdruk.papiery_grupa set  grupa = '" + row.grupa+ "' where id = '" + row.id + "'"
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)        }});
-        }
-
-        for(let row of rows.filter(x => x.insert == true) ){
-            var sql =   "INSERT INTO artdruk.papiery_grupa (grupa) value ('" + row.grupa + "'); ";
-            connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  console.log(err)        }});
-            }
-
-            for(let row of rows.filter(x => x.delete == true) ){
-                var sql =   "DELETE from artdruk.papiery_grupa where id=" + row.id;
-                connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  console.log(err)         }});
-                }
 
 
+async updatePapiery(req, res) {
+    const rows = req.body;
+    let conn;
 
-    var sql = "commit";
-    connection.query(sql, function (err, result) {
-        if (err){connection.query("rollback ", function (err, result) {   });   res.status(203).json(err) } 
+    try {
+        conn = await pool.getConnection();
 
-res.status(201).json(result);
+        // --- START TRANSAKCJI ---
+        await conn.beginTransaction();
 
-});
+        // 1. UPDATE - edycja istniejących parametrów
+        const updatePromises = rows
+            .filter(x => x.update === true && x.insert !== true)
+            .map(row => {
+                const sql = `
+                    UPDATE artdruk.papiery 
+                    SET dodal = ?, zmienil = ?, grupa_id = ?, nazwa_id = ?, 
+                        gramatura = ?, bulk = ?, info = ?, wykonczenie_id = ?, powleczenie_id = ? 
+                    WHERE id = ?
+                `;
+                const params = [
+                    row.dodal, row.dodal, row.grupa_id, row.nazwa_id, 
+                    row.gramatura, row.bulk, row.info, row.wykonczenie_id, row.powleczenie_id, row.id
+                ];
+                return conn.execute(sql, params);
+            });
+
+        // 2. INSERT - dodawanie nowych specyfikacji papieru
+        const insertPromises = rows
+            .filter(x => x.insert === true)
+            .map(row => {
+                const sql = `
+                    INSERT INTO artdruk.papiery 
+                    (dodal, zmienil, grupa_id, nazwa_id, gramatura, bulk, info, wykonczenie_id, powleczenie_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `;
+                const params = [
+                    row.dodal, row.zmienil, row.grupa_id, row.nazwa_id, 
+                    row.gramatura, row.bulk, row.info, row.wykonczenie_id, row.powleczenie_id
+                ];
+                return conn.execute(sql, params);
+            });
+
+        // 3. DELETE - usuwanie specyfikacji
+        const deletePromises = rows
+            .filter(x => x.delete === true)
+            .map(row => {
+                const sql = "DELETE FROM artdruk.papiery WHERE id = ?";
+                return conn.execute(sql, [row.id]);
+            });
+
+        // Czekamy na wykonanie wszystkich operacji naraz
+        await Promise.all([...updatePromises, ...insertPromises, ...deletePromises]);
+
+        // --- COMMIT ---
+        await conn.commit();
+
+        console.log("Pomyślnie zsynchronizowano parametry papierów.");
+        return res.status(201).json({ message: "Zapisano zmiany w parametrach papieru" });
+
+    } catch (err) {
+        // --- ROLLBACK ---
+        if (conn) await conn.rollback();
+        
+        console.error("Błąd podczas aktualizacji parametrów papierów:", err);
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
+}
+
+async updatePapieryNazwy(req, res) {
+    const rows = req.body;
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // --- START TRANSAKCJI ---
+        await conn.beginTransaction();
+
+        // 1. UPDATE - dla rekordów edytowanych (ale nie nowo wstawionych)
+        const updatePromises = rows
+            .filter(x => x.update === true && x.insert !== true)
+            .map(row => {
+                const sql = "UPDATE artdruk.papiery_nazwy SET nazwa = ?, grupa_id = ?, powleczenie_id = ? WHERE id = ?";
+                return conn.execute(sql, [row.nazwa, row.grupa_id, row.powleczenie_id, row.id]);
+            });
+
+        // 2. INSERT - dla całkiem nowych rekordów
+        const insertPromises = rows
+            .filter(x => x.insert === true)
+            .map(row => {
+                const sql = "INSERT INTO artdruk.papiery_nazwy (nazwa, grupa_id, powleczenie_id) VALUES (?, ?, ?)";
+                return conn.execute(sql, [row.nazwa, row.grupa_id, row.powleczenie_id]);
+            });
+
+        // 3. DELETE - dla rekordów do usunięcia
+        const deletePromises = rows
+            .filter(x => x.delete === true)
+            .map(row => {
+                const sql = "DELETE FROM artdruk.papiery_nazwy WHERE id = ?";
+                return conn.execute(sql, [row.id]);
+            });
+
+        // Czekamy aż wszystkie operacje zostaną wysłane
+        await Promise.all([...updatePromises, ...insertPromises, ...deletePromises]);
+
+        // --- COMMIT ---
+        await conn.commit();
+
+        console.log("Pomyślnie zaktualizowano listę nazw papierów.");
+        return res.status(201).json({ message: "Zmiany zapisane pomyślnie" });
+
+    } catch (err) {
+        // --- ROLLBACK ---
+        if (conn) await conn.rollback();
+        
+        console.error("Błąd podczas aktualizacji nazw papierów:", err);
+        // Zwracamy status 203 zgodnie z Twoją konwencją
+        return res.status(203).json(err);
+    } finally {
+        // Oddajemy połączenie do puli
+        if (conn) conn.release();
+    }
+}
+
+
+async updatePapieryGrupa(req, res) {
+    const rows = req.body;
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // --- START TRANSAKCJI ---
+        await conn.beginTransaction();
+
+        // 1. Przygotowujemy zadania dla UPDATE
+        const updatePromises = rows
+            .filter(x => x.update === true && x.insert !== true)
+            .map(row => {
+                const sql = "UPDATE artdruk.papiery_grupa SET grupa = ? WHERE id = ?";
+                return conn.execute(sql, [row.grupa, row.id]);
+            });
+
+        // 2. Przygotowujemy zadania dla INSERT
+        const insertPromises = rows
+            .filter(x => x.insert === true)
+            .map(row => {
+                const sql = "INSERT INTO artdruk.papiery_grupa (grupa) VALUES (?)";
+                return conn.execute(sql, [row.grupa]);
+            });
+
+        // 3. Przygotowujemy zadania dla DELETE
+        const deletePromises = rows
+            .filter(x => x.delete === true)
+            .map(row => {
+                const sql = "DELETE FROM artdruk.papiery_grupa WHERE id = ?";
+                return conn.execute(sql, [row.id]);
+            });
+
+        // Łączymy wszystkie obietnice w jedną tablicę i czekamy na finał wszystkich operacji
+        await Promise.all([...updatePromises, ...insertPromises, ...deletePromises]);
+
+        // --- COMMIT ---
+        await conn.commit();
+
+        console.log("Pomyślnie zsynchronizowano grupy papierów.");
+        return res.status(201).json({ message: "Zapisano zmiany" });
+
+    } catch (err) {
+        // --- ROLLBACK ---
+        // Jeśli COKOLWIEK z powyższych zawiedzie, baza wraca do stanu sprzed funkcji
+        if (conn) await conn.rollback();
+        
+        console.error("Błąd podczas aktualizacji grup papierów:", err);
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
 
@@ -2018,94 +2250,341 @@ async updateSetOrderToDeleted(req, res) {
 
 
 
-    getNadkomplety(req,res){
-        var sql = "SELECT * FROM artdruk.nadkomplety;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+async getNadkomplety(req, res) {
+    let conn;
 
-    getListaPapierow(req,res){
-        var sql = "SELECT * FROM artdruk.view_papiery ;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
-    getListaPapierowNazwy(req,res){
-        var sql = "SELECT * FROM artdruk.papiery_nazwy;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+    try {
+        conn = await pool.getConnection();
 
-    getListaPapierowGrupa(req,res){
-        var sql = "SELECT * FROM artdruk.papiery_grupa;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+        const sql = "SELECT * FROM artdruk.nadkomplety";
+        
+        console.log("Pobieram listę nadkompletów...");
 
-    getListaPapierowPostac(req,res){
-        var sql = "SELECT * FROM artdruk.papiery_postac;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });}
-    getListaPapierowRodzaj(req,res){
-        var sql = "SELECT * FROM artdruk.papiery_rodzaj;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });}
+        // execute() jest optymalne nawet dla prostych selectów
+        const [rows] = await conn.execute(sql);
 
-    getListaPapierowWykonczenia(req,res){
-        var sql = "SELECT * FROM artdruk.papiery_wykonczenia;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });}
+        // Zwracamy listę rekordów do frontendu
+        return res.status(200).json(rows);
 
-    getListaPapierowPowleczenie(req,res){
-        var sql = "SELECT * FROM artdruk.papiery_powleczenie;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });}
+    } catch (err) {
+        console.error("Błąd podczas pobierania nadkompletów:", err);
+        // Zwracamy błąd 500, jeśli baza nie odpowiada
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Zawsze oddajemy połączenie do puli!
+        if (conn) conn.release();
+    }
+}
 
-    getListaProcesow(req,res){
-        var sql = "SELECT * FROM artdruk.view_procesy ;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
-    getListaProcesowNazwa(req,res){
-        var sql = "SELECT id,nazwa FROM artdruk.procesy_nazwa ;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+async getListaPapierow(req, res) {
+    let conn;
 
-    getProcesyElementow(req,res){
-        var sql = "SELECT artdruk.zamowienia_procesy.id,zamowienie_id,produkt_id,element_id,proces_id,front, front_info,back,back_info, uwagi,artdruk.lista_procesow.proces,artdruk.lista_procesow.typ,artdruk.lista_procesow.rodzaj FROM artdruk.zamowienia_procesy INNER JOIN artdruk.lista_procesow ON zamowienia_procesy.proces_id = lista_procesow.id ORDER BY id ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+    try {
+        conn = await pool.getConnection();
 
-    getProcesory(req,res){
-        var sql = "SELECT * from artdruk.procesory ORDER BY indeks ASC;";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        //sconsole.log(doc);
-        res.status(200).json(doc);
-    });}
+        // Pobieramy dane z widoku artdruk.view_papiery
+        const sql = "SELECT * FROM artdruk.view_papiery";
+        
+        console.log("Pobieram pełną listę papierów z widoku...");
+
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania listy papierów:", err);
+        // Zwracamy status 500 w przypadku awarii bazy
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Zawsze zwalniamy połączenie do puli!
+        if (conn) conn.release();
+    }
+}
+async getListaPapierowNazwy(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        const sql = "SELECT * FROM artdruk.papiery_nazwy";
+        
+        console.log("Pobieram listę nazw papierów...");
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy dane do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania nazw papierów:", err);
+        // Zwracamy błąd 500, żeby frontend wiedział, że baza "nie domaga"
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Zawsze zwalniamy połączenie do puli!
+        if (conn) conn.release();
+    }
+}
+
+async getListaPapierowGrupa(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy aktywne połączenie z puli
+        conn = await pool.getConnection();
+
+        const sql = "SELECT * FROM artdruk.papiery_grupa";
+        
+        console.log("Pobieram listę grup papierów...");
+
+        // Wykonujemy zapytanie (rows to tablica wyników)
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania grup papierów:", err);
+        // Zwracamy status 500 w razie awarii bazy
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli!
+        if (conn) conn.release();
+    }
+}
+
+async getListaPapierowPostac(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy aktywne połączenie z puli
+        conn = await pool.getConnection();
+
+        const sql = "SELECT * FROM artdruk.papiery_postac";
+        
+        console.log("Pobieram listę postaci papieru (arkusz/rola)...");
+
+        // Wykonujemy zapytanie (rows to tablica wyników)
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania postaci papieru:", err);
+        // Zwracamy status 500 w razie awarii bazy
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli!
+        if (conn) conn.release();
+    }
+}
+async getListaPapierowRodzaj(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        const sql = "SELECT * FROM artdruk.papiery_rodzaj";
+        
+        console.log("Pobieram listę rodzajów papieru...");
+
+        // Wykonujemy zapytanie (rows to tablica wyników)
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania rodzajów papieru:", err);
+        // Zwracamy status 500, żeby frontend nie wisiał w nieskończoność
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli!
+        if (conn) conn.release();
+    }
+}
+
+async getListaPapierowWykonczenia(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy aktywne połączenie z puli
+        conn = await pool.getConnection();
+
+        const sql = "SELECT * FROM artdruk.papiery_wykonczenia";
+        
+        console.log("Pobieram listę wykończeń papieru...");
+
+        // Wykonujemy zapytanie (rows to tablica wyników)
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania wykończeń papieru:", err);
+        // Zwracamy status 500, aby frontend wiedział o awarii bazy
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli!
+        if (conn) conn.release();
+    }
+}
+
+async getListaPapierowPowleczenie(req, res) {
+    let conn;
+
+    try {
+        // Wyciągamy połączenie z naszej nowej puli
+        conn = await pool.getConnection();
+
+        const sql = "SELECT * FROM artdruk.papiery_powleczenie";
+        
+        console.log("Pobieram listę rodzajów powleczenia papieru...");
+
+        // Wykonujemy zapytanie (rows to tablica z rekordami)
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania powleczeń papieru:", err);
+        // Zwracamy błąd 500, żeby frontend nie wisiał w nieskończoność
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli!
+        if (conn) conn.release();
+    }
+}
+
+async getListaProcesow(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy połączenie z naszej puli
+        conn = await pool.getConnection();
+
+        // Pobieramy dane z widoku procesów
+        const sql = "SELECT * FROM artdruk.view_procesy";
+        
+        console.log("Pobieram pełną listę procesów technologicznych...");
+
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę rekordów do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania listy procesów:", err);
+        // Zwracamy status 500, jeśli widok lub baza mają problem
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
+}
+async getListaProcesowNazwa(req, res) {
+    let conn;
+
+    try {
+        // Wyciągamy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Pobieramy tylko niezbędne kolumny: id i nazwa
+        const sql = "SELECT id, nazwa FROM artdruk.procesy_nazwa";
+        
+        console.log("Pobieram słownik nazw procesów (ID + Nazwa)...");
+
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania nazw procesów:", err);
+        // Status 500 informuje frontend, że problem leży po stronie serwera/bazy
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli
+        if (conn) conn.release();
+    }
+}
+
+async getProcesyElementow(req, res) {
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Czytelniejszy zapis SQL z użyciem backtiksów dla długich zapytań
+        const sql = `
+            SELECT 
+                zp.id, 
+                zp.zamowienie_id, 
+                zp.produkt_id, 
+                zp.element_id, 
+                zp.proces_id, 
+                zp.front, 
+                zp.front_info, 
+                zp.back, 
+                zp.back_info, 
+                zp.uwagi, 
+                lp.proces, 
+                lp.typ, 
+                lp.rodzaj 
+            FROM artdruk.zamowienia_procesy AS zp
+            INNER JOIN artdruk.lista_procesow AS lp ON zp.proces_id = lp.id 
+            ORDER BY zp.id ASC
+        `;
+        
+        console.log("Pobieram procesy elementów (JOIN zamowienia_procesy + lista_procesow)...");
+
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy wynik do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania procesów elementów:", err);
+        // Status 500 informuje o problemie technicznym po stronie bazy
+        return res.status(500).json({ error: "Błąd bazy danych przy pobieraniu procesów", details: err });
+    } finally {
+        // Zawsze zwalniamy połączenie do puli!
+        if (conn) conn.release();
+    }
+}
+
+async getProcesory(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Pobieramy wszystkie procesory, zachowując kolejność wg indeksu
+        const sql = "SELECT * FROM artdruk.procesory ORDER BY indeks ASC";
+        
+        console.log("Pobieram listę procesorów produkcyjnych...");
+
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd podczas pobierania procesorów:", err);
+        // Status 500 informuje frontend, że coś "nie pykło" w bazie
+        return res.status(500).json({ error: "Błąd bazy danych", details: err });
+    } finally {
+        // Zawsze oddajemy połączenie do puli!
+        if (conn) conn.release();
+    }
+}
 
 
 
