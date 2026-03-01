@@ -357,7 +357,6 @@ async getGrupyAll(req, res) {
         async getGrupy_oprawa_for_procesor(req, res) {
     const procesor_id = req.params['procesor_id'];
     let conn;
-console.log("tu oprawa")
     try {
         // Pobieramy połączenie z puli
         conn = await pool.getConnection();
@@ -409,163 +408,300 @@ console.log("tu oprawa")
 
 
 
-    sprawdzCzyPapierUzyty(req,res){
-        // spraawdza czy papier był użyty w trzech miejscach i zlicza je. 
-        // jeśli był użyty to nie da się go skasować
-        const papier_id = req.params['papier_id']
-        let dane=[];
+async sprawdzCzyPapierUzyty(req, res) {
+    // Sprawdza czy papier był użyty w trzech miejscach i zlicza je. 
+    const papier_id = req.params['papier_id'];
+    let conn;
+console.log("tu papier")
+    try {
+        conn = await pool.getConnection();
 
-        var sql  = "select count(*) as ilosc from artdruk.technologie_arkusze  where papier_id= "+ papier_id ;
-        connection.query(sql, function (err, doc) {
-            dane.push(doc)
-        if (err) console.log(err);
-        });
+        // Przygotowujemy trzy niezależne zapytania liczące (z użyciem ? dla bezpieczeństwa)
+        const sql1 = "SELECT COUNT(*) AS ilosc FROM artdruk.technologie_arkusze WHERE papier_id = ?";
+        const sql2 = "SELECT COUNT(*) AS ilosc FROM artdruk.zamowienia_elementy WHERE papier_id = ?";
+        const sql3 = "SELECT COUNT(*) AS ilosc FROM artdruk.technologie_elementy WHERE papier_id = ?";
 
-        var sql  = "select count(*) as ilosc from artdruk.zamowienia_elementy  where papier_id= "+ papier_id ;
-        connection.query(sql, function (err, doc) {
-            dane.push(doc)
+        // Wykonujemy wszystkie naraz
+        const [res1, res2, res3] = await Promise.all([
+            conn.execute(sql1, [papier_id]),
+            conn.execute(sql2, [papier_id]),
+            conn.execute(sql3, [papier_id])
+        ]);
 
-        if (err) console.log(err);
-        });
+        // Wyciągamy wartości 'ilosc' i sumujemy je
+        // res[0][0] bo: pierwszy [0] to wiersze, drugi [0] to pierwszy wiersz wyniku (count zawsze zwraca jeden)
+        const suma = res1[0][0].ilosc + res2[0][0].ilosc + res3[0][0].ilosc;
+
+        console.log(`Sprawdzenie papieru ID: ${papier_id}. Łączna ilość użyć: ${suma}`);
         
-        var sql  = "select count(*) as ilosc from artdruk.technologie_elementy  where papier_id= "+ papier_id ;
-        connection.query(sql, function (err, doc) {
-            dane.push(doc)
-            //sumowanie ilosci
-           dane =  dane.map(x => x[0].ilosc).reduce((a, b) => a + b, 0)
+        // Zwracamy samą liczbę (tak jak w Twoim oryginale po redukcji)
+        return res.status(200).json(suma);
 
-            
-        if (err) console.log(err);
-        res.status(200).json(dane);
-        });
-
-
-
+    } catch (err) {
+        console.error("Błąd w sprawdzCzyPapierUzyty:", err);
+        return res.status(500).json({ error: "Błąd bazy danych" });
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
     }
+}
 
 
     // pobie
-    getTechnologie(req,res){
-        const idzlecenia = req.params['idzlecenia']
-        var sql  = "select * from artdruk.view_technologie  where final is null ORDER BY id ASC";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
+async getTechnologie(req, res) {
+    // Pobierasz idzlecenia, ale w SQL go nie używasz - zostawiam jak w oryginale
+    const idzlecenia = req.params['idzlecenia'];
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL
+        const sql = "SELECT * FROM artdruk.view_technologie WHERE final IS NULL ORDER BY id ASC";
+
+        // Wykonujemy zapytanie (execute jest szybsze i bezpieczniejsze)
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy wynik do klienta
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getTechnologie:", err);
+        // Standardowo status 500 przy błędzie bazy
+        return res.status(500).json({ error: "Błąd podczas pobierania technologii" });
+    } finally {
+        // Zwalniamy połączenie z powrotem do puli
+        if (conn) conn.release();
+    }
+}
+
+async getGantGrupy(req, res) {
+    // idzlecenia pobrane, ale nieużyte w SQL - zostawiam zgodnie z oryginałem
+    const idzlecenia = req.params['idzlecenia'];
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL (pobieranie grup do wykresu Ganta)
+        const sql = "SELECT * FROM artdruk.view_gant_grupy WHERE status < 4 AND typ_grupy = 2 ORDER BY start ASC";
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy wynik
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getGantGrupy:", err);
+        return res.status(500).json({ error: "Błąd podczas pobierania danych Ganta" });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia
+        if (conn) conn.release();
+    }
+}
+
+
+async getZamowieniaKalendarz(req, res) {
+    // Pobierasz procesor_id, ale obecnie nie jest używany w zapytaniu
+    const procesor_id = req.params['procesor_id'];
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL
+        // Jeśli będziesz chciał filtrować po procesor_id, dodaj: AND procesor_id = ?
+        const sql = "SELECT * FROM artdruk.view_zamowienia_kalendarz WHERE data_spedycji > '2026-01-01' AND data_spedycji < '2026-01-30' ORDER BY data_spedycji";
+
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy dane w tablicy (zachowując strukturę [doc] z oryginału)
+        return res.status(200).json([rows]);
+
+    } catch (err) {
+        console.error("Błąd w getZamowieniaKalendarz:", err);
+        // Zwracamy 203 zgodnie z Twoją konwencją dla błędów
+        return res.status(203).json(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+
+async getVersion(req, res) {
+    // parametr orderby pobrany z URL, ale nieużyty w zapytaniu SQL
+    const orderby = req.params['orderby'];
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Zapytanie o ostatnią wersję
+        const sql = "SELECT ver, utworzono FROM artdruk.version ORDER BY id DESC LIMIT 1";
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy wynik (tablica z jednym obiektem wersji)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getVersion:", err);
+        return res.status(500).json({ error: "Błąd podczas pobierania wersji" });
+    } finally {
+        // Zawsze zwalniamy połączenie!
+        if (conn) conn.release();
+    }
+}
+
+async getAllUsers(req, res) {
+    // Parametr orderby pobrany, ale nieużyty w zapytaniu
+    const orderby = req.params['orderby'];
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL (widok użytkowników)
+        const sql = "SELECT * FROM artdruk.view_user";
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę użytkowników
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getAllUsers:", err);
+        // Zwracamy status 500, żeby frontend wiedział, że coś poszło nie tak
+        return res.status(500).json({ error: "Błąd podczas pobierania listy użytkowników" });
+    } finally {
+        // Zwalniamy połączenie do puli - kluczowe dla wydajności!
+        if (conn) conn.release();
+    }
+}
+
+async getZamowieniaPliki(req, res) {
+    // Parametr orderby pobrany, ale nieużyty w zapytaniu (zgodnie z oryginałem)
+    const orderby = req.params['orderby'];
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL do widoku plików zamówień
+        const sql = "SELECT * FROM artdruk.view_zamowienia_pliki";
+
+        // Wykonujemy zapytanie (execute jest bezpieczniejszy i szybszy)
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę plików
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getZamowieniaPliki:", err);
+        // Zwracamy status 500 przy błędzie bazy danych
+        return res.status(500).json({ error: "Błąd podczas pobierania listy plików" });
+    } finally {
+        // Zwalniamy połączenie z powrotem do puli - to zapobiega blokowaniu bazy
+        if (conn) conn.release();
+    }
+}
+
+async getOddaniaWykonania(req, res) {
+    const grupa_global_id = req.params['grupa_global_id'];
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL z użyciem ? zamiast doklejania stringa
+        const sql = "SELECT * FROM artdruk.view_oddania_wykonania WHERE oddanie_global_id = ?";
+
+        // Wykonujemy zapytanie (parametr przekazujemy w tablicy)
+        const [rows] = await conn.execute(sql, [grupa_global_id]);
+
+        // Zwracamy wynik do klienta
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getOddaniaWykonania:", err);
+        // Standardowo status 500 przy błędzie bazy
+        return res.status(500).json({ error: "Błąd podczas pobierania danych oddania" });
+    } finally {
+        // Zwalniamy połączenie z powrotem do puli
+        if (conn) conn.release();
+    }
+}
+
+async getZamowieniaProofy(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL do widoku proofów
+        const sql = "SELECT * FROM artdruk.view_zamowienia_proofy ORDER BY id ASC";
+
+        // Wykonujemy zapytanie (destrukturyzacja [rows] wyciąga same dane)
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy wynik do klienta
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getZamowieniaProofy:", err);
+        // Wysłanie błędu do klienta, zamiast zostawiania "wiszącego" żądania
+        return res.status(500).json({ error: "Błąd podczas pobierania danych proofów" });
+    } finally {
+        // Zwalniamy połączenie z powrotem do puli - bez tego pula szybko się wyczerpie
+        if (conn) conn.release();
+    }
+}
+
+async getOddaniaGrupy(req, res) {
+    const widok = req.params['widok'];
+    let conn;
+    let sql = "";
+
+    // Ustawiamy odpowiednie zapytanie w zależności od widoku
+    if (widok == 1) {
+        sql = "SELECT * FROM artdruk.view_oddania_grupy WHERE status != 4 AND status_zamowienia < 7 AND etap > 1 ORDER BY data_spedycji";
+    } else if (widok == 2) {
+        sql = "SELECT * FROM artdruk.view_oddania_grupy WHERE status = 4 AND status_zamowienia < 7 AND etap > 1 ORDER BY data_spedycji";
+    } else if (widok == 3) {
+        sql = "SELECT * FROM artdruk.view_oddania_grupy ORDER BY data_spedycji";
+    } else {
+        // Zabezpieczenie na wypadek, gdyby przyszedł inny numer widoku
+        return res.status(400).json({ error: "Nieprawidłowy parametr widoku" });
     }
 
-        getGantGrupy(req,res){
-        const idzlecenia = req.params['idzlecenia']
-        // var sql  = "select * from artdruk.view_gant_grupy where status <4 and typ_grupy= 2  and (proces_nazwa_id = 1 or proces_nazwa_id = 1)  ORDER BY start ASC";
-        var sql  = "select * from artdruk.view_gant_grupy where status <4 and typ_grupy= 2   ORDER BY start ASC";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
+    try {
+        conn = await pool.getConnection();
+
+        // Wykonujemy wybrane zapytanie
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy wynik
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getOddaniaGrupy:", err);
+        return res.status(500).json({ error: "Błąd bazy danych przy pobieraniu grup oddań" });
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
     }
+}
 
-
-
-            getZamowieniaKalendarz(req,res){
-            let dane=[];
-
-             const procesor_id = req.params['procesor_id']
-
-            //  var sql = "select * from artdruk.view_zamowienia_kalendarz ORDER BY data_spedycji";
-             var sql = "select * from artdruk.view_zamowienia_kalendarz where data_spedycji > '2026-01-01' and data_spedycji < '2026-01-30' ORDER BY data_spedycji ";
-             connection.query(sql, function (err, doc) {
-                if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-             dane.push(doc)
-                   res.status(200).json(dane);
-             } );
-
-                    //   var sql = "select   DATE_FORMAT(min(data_spedycji), '%Y-%m-%d') AS `data_spedycji_min`, DATE_FORMAT(max(data_spedycji), '%Y-%m-%d') AS `data_spedycji_max`,  DateDiff((select max(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz),(select min(data_spedycji) FROM  artdruk.view_zamowienia_kalendarz)) AS ilosc_dni  from artdruk.view_zamowienia_kalendarz  ";
-            //  connection.query(sql, function (err, doc) {
-            //     if (err){ console.log(err) } 
-            //  dane.push(doc)
-            //  res.status(200).json(dane);
-
-            //  } );
-     
-         }
-
-
-    getVersion(req,res){
-        const orderby = req.params['orderby']
-        var sql  = "select ver,utworzono from artdruk.version  ORDER BY id DESC LIMIT 1";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
-    }
-
-    getAllUsers(req,res){
-        const orderby = req.params['orderby']
-        var sql  = "select * from artdruk.view_user" ;
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
-    }
-
-    getZamowieniaPliki(req,res){
-        const orderby = req.params['orderby']
-        var sql  = "select * from artdruk.view_zamowienia_pliki" ;
-        // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
-    }
-
-        getOddaniaWykonania(req,res){
-        const grupa_global_id = req.params['grupa_global_id']
-        
-        var sql  = "select * from artdruk.view_oddania_wykonania where oddanie_global_id= "+ grupa_global_id  ;
-        // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
-    }
-
-            getZamowieniaProofy(req,res){
-       
-        var sql  = "select * from artdruk.view_zamowienia_proofy ORDER BY id ASC"  ;
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
-    }
-
-        getOddaniaGrupy(req,res){
-        const widok = req.params['widok']
-
-        if(widok==1){
-            var sql  = "select * from artdruk.view_oddania_grupy where status !=4 and status_zamowienia <7 and etap > 1 order by data_spedycji" ;
-        }
-            if(widok==2){
-            // var sql  = "select * from artdruk.view_oddania_grupy where status =4 and status_zamowienia <7 order by rok,nr" ;
-            var sql  = "select * from artdruk.view_oddania_grupy where status =4 and status_zamowienia <7 and etap > 1 order by data_spedycji" ;
-        }
-                    if(widok==3){
-            var sql  = "select * from artdruk.view_oddania_grupy order by data_spedycji" ;
-        }
-        // var sql  = "select * from artdruk.view_oddania_grupy where status !=4 order by rok,nr" ;
-        // var sql  = "select * from artdruk.view_zamowienia_produkty_koszty ORDER BY id ASC";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
-    }
-    // getKlienci(req,res){
-   
-    //     var sql  = "select * from artdruk.view_klienci ORDER BY firma_nazwa ASC";
-    //     connection.query(sql, function (err, doc) {
-    //     if (err) console.log(err);
-    //     res.status(200).json(doc);
-    // });
-    // }
 
     getProdukty(req,res){
    
