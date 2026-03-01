@@ -703,600 +703,701 @@ async getOddaniaGrupy(req, res) {
 }
 
 
-    getProdukty(req,res){
-   
-        var sql  = "select * from artdruk.produkty ORDER BY id";
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
-    }
+async getProdukty(req, res) {
+    let conn;
 
-    getUsersM(req,res){
-        // lista dość publiczna
-        var sql  = "select id,Imie,Nazwisko,zamowienie_zapis from artdruk.users ORDER BY Imie";
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
 
-        connection.query(sql, function (err, doc) {
-        if (err) console.log(err);
-        res.status(200).json(doc);
-    });
+        // Zapytanie SQL
+        const sql = "SELECT * FROM artdruk.produkty ORDER BY id";
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę produktów
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getProdukty:", err);
+        // Informujemy klienta o błędzie
+        return res.status(500).json({ error: "Błąd podczas pobierania produktów" });
+    } finally {
+        // Bardzo ważne: zwracamy połączenie do puli
+        if (conn) conn.release();
     }
+}
+
+async getUsersM(req, res) {
+    let conn;
+
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL - pobieramy tylko id, imię, nazwisko i uprawnienie zapisu
+        const sql = "SELECT id, Imie, Nazwisko, zamowienie_zapis FROM artdruk.users ORDER BY Imie";
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy listę użytkowników
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w getUsersM:", err);
+        // Zwracamy status 500, żeby frontend nie wisiał w nieskończoność
+        return res.status(500).json({ error: "Błąd podczas pobierania uproszczonej listy użytkowników" });
+    } finally {
+        // Bardzo ważne: zwalniamy połączenie z powrotem do puli
+        if (conn) conn.release();
+    }
+}
 
     // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
-    postProdukty(req,res){
-        const zamowienie_id = req.body.zamowienie_id;
-        const typ = req.body.typ;
-        const nazwa = req.body.nazwa;
-        const wersja = req.body.wersja;
-        const ilosc_stron = req.body.ilosc_stron;
-        const format_x = req.body.format_x;
-        const format_y = req.body.format_y;
-        const oprawa = req.body.oprawa;
-        const naklad = req.body.naklad;
-        const indeks = req.body.indeks;
-        const uwagi = req.body.uwagi;
-        var sql =   "INSERT INTO artdruk.zamowienia_produkty (nazwa,wersja,zamowienie_id,typ,uwagi,ilosc_stron,format_x,format_y,oprawa,naklad,indeks) "+
-        "values ('" + nazwa+ "','" + wersja + "','" + zamowienie_id + "','" + typ + "','" + uwagi + "','" + ilosc_stron + "','" + format_x + "','" + format_y + "','" + oprawa + "','" + naklad + "','" + indeks + "'); ";
-        connection.query(sql, function (err, result) {
-        if (err) console.log(err);
-        // console.log(" 1 record inserted "+result.insertId);
-        res.status(201).json(result);
+async postProdukty(req, res) {
+    // Wyciągamy dane z body
+    const { 
+        nazwa, wersja, zamowienie_id, typ, uwagi, 
+        ilosc_stron, format_x, format_y, oprawa, naklad, indeks 
+    } = req.body;
 
-    });}
+    let conn;
+    try {
+        conn = await pool.getConnection();
 
-    postKlient(req,res){
-        const firma = req.body.firma;
-        const firma_nazwa = req.body.firma_nazwa;
-        const adres = req.body.adres;
-        const kod = req.body.kod;
-        const nip = req.body.nip;
-        const opiekun_id = req.body.opiekun_id;
-        const utworzyl_user_id = req.body.utworzyl_user_id;
-        let deleted = 0
+        // SQL z użyciem znaków zapytania - bezpieczny sposób przesyłania danych
+        const sql = `
+            INSERT INTO artdruk.zamowienia_produkty 
+            (nazwa, wersja, zamowienie_id, typ, uwagi, ilosc_stron, format_x, format_y, oprawa, naklad, indeks) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
-        let dane=[firma,firma_nazwa,adres,kod,nip,opiekun_id,utworzyl_user_id,deleted ]
+        // Przekazujemy wartości w tablicy - mysql2 zajmie się ich bezpiecznym "wyczyszczeniem"
+        const [result] = await conn.execute(sql, [
+            nazwa, wersja, zamowienie_id, typ, uwagi, 
+            ilosc_stron, format_x, format_y, oprawa, naklad, indeks
+        ]);
 
-        var sql =   "INSERT INTO artdruk.klienci (firma,firma_nazwa,adres,kod,nip,opiekun_id,utworzyl_user_id,deleted) "+
-        "values (?,?,?,?,?,?,?,?); ";
-        connection.execute(sql,dane, function (err, result) {
-        if (err) console.log(err);
-        // console.log(" 1 record inserted "+result.insertId);
-        res.status(201).json(result);
+        console.log("Dodano produkt, ID:", result.insertId);
+        
+        // Zwracamy status 201 (Created) i dane o wstawionym rekordzie
+        return res.status(201).json(result);
 
-    });}
-
-
-setOrderOpen(req,res){
-
-    const id = req.body.id;
-    const token = req.body.token;
-    const user = req.body.user;
-
-    var sql  = "select * from artdruk.view_zamowienia_stan_otwarcia where id = '" + id+ "' ORDER BY id ASC ";
-    connection.query(sql, function (err, doc) {
-
-        if (err) {
-        console.log(err);
-        // Opcjonalnie: Zakończ żądanie z błędem
-        return res.status(500).json({ stan: "DB_ERROR" });
+    } catch (err) {
+        console.error("Błąd podczas dodawania produktu:", err);
+        return res.status(500).json({ error: "Błąd bazy danych podczas zapisu produktu" });
+    } finally {
+        if (conn) conn.release();
     }
+}
 
-    // ⭐ KLUCZOWA POPRAWKA ⭐
-    if (!doc || doc.length === 0) {
-        // Żaden rekord nie został znaleziony dla tego id zamówienia
-        console.log(`Błąd: Nie znaleziono zamówienia o ID: ${id}`);
-        console.log(`User: ${user}`);
-        console.log(`token: ${token}`);
+async postKlient(req, res) {
+    // Szybkie wyciągnięcie danych z body
+    const { 
+        firma, 
+        firma_nazwa, 
+        adres, 
+        kod, 
+        nip, 
+        opiekun_id, 
+        utworzyl_user_id 
+    } = req.body;
+    
+    const deleted = 0; // Wartość domyślna
 
-        return res.status(404).json({ stan: "NOT_FOUND" });
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        const sql = `
+            INSERT INTO artdruk.klienci 
+            (firma, firma_nazwa, adres, kod, nip, opiekun_id, utworzyl_user_id, deleted) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const dane = [firma, firma_nazwa, adres, kod, nip, opiekun_id, utworzyl_user_id, deleted];
+
+        // Wykonujemy zapytanie (execute automatycznie dba o bezpieczeństwo parametrów)
+        const [result] = await conn.execute(sql, dane);
+
+        console.log("Dodano klienta, ID:", result.insertId);
+        
+        // Zwracamy status 201 (Created)
+        return res.status(201).json(result);
+
+    } catch (err) {
+        console.error("Błąd podczas dodawania klienta:", err);
+        return res.status(500).json({ error: "Błąd bazy danych podczas zapisu klienta" });
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
     }
-        if(doc[0]?.open_user_id == user || doc[0]?.open_stan != 1  )
-        {
-                var sql = "update artdruk.zamowienia set open_token = '" + token+ "', open_user = '" + user+ "', open_data = now(), open_stan = 1 where id = " + id+ "";
-                connection.query(sql, function (err, result) {
-                if (err) console.log(err);
-            
-                res.status(200).json(
-                    {stan:"OK",
-                    user:doc[0].open_user,
-                    data: doc[0].open_data
-                    });
-                    })
-        }else{
-            res.status(200).json({stan:"error",
-            user:doc[0].open_user,
-            data: doc[0].open_data});
+}
+
+
+async setOrderOpen(req, res) {
+    const { id, token, user } = req.body;
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // 1. Sprawdzamy stan otwarcia zamówienia (używamy ? dla bezpieczeństwa)
+        const sqlSelect = "SELECT * FROM artdruk.view_zamowienia_stan_otwarcia WHERE id = ? ORDER BY id ASC";
+        const [rows] = await conn.execute(sqlSelect, [id]);
+
+        // Sprawdzamy, czy zamówienie w ogóle istnieje
+        if (!rows || rows.length === 0) {
+            console.log(`Błąd: Nie znaleziono zamówienia o ID: ${id}`);
+            return res.status(404).json({ stan: "NOT_FOUND" });
         }
-        });
-}
 
-setOrderClosed(req,res){
-    // zmienia wartość open_stan na null przy zamknięciu zamówienia!
-    const id = req.body.id || 1;
-    // const token = req.body.token;
-    // const user = req.body.user;
-                
-                var sql = "update artdruk.zamowienia set open_stan = null, open_data = null, open_user = null where id = " + id+ "";
-                connection.query(sql, function (err, result) {
-                if (err) console.log(err);
+        const order = rows[0];
+
+        // 2. Logika sprawdzania: czy ja już to otworzyłem, czy nikt inny tego nie blokuje (open_stan != 1)
+        if (order.open_user_id == user || order.open_stan != 1) {
             
-                res.status(200).json(
-                    {stan:"closed"
-                    });
-        });
-}
+            // 3. Aktualizujemy stan blokady
+            const sqlUpdate = `
+                UPDATE artdruk.zamowienia 
+                SET open_token = ?, open_user = ?, open_data = NOW(), open_stan = 1 
+                WHERE id = ?
+            `;
+            
+            await conn.execute(sqlUpdate, [token, user, id]);
 
-dragDropProcesGrup(req,res){
+            return res.status(200).json({
+                stan: "OK",
+                user: order.open_user,
+                data: order.open_data
+            });
 
-    const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
-    const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
+        } else {
+            // Zamówienie jest już otwarte przez kogoś innego
+            return res.status(200).json({
+                stan: "error",
+                user: order.open_user,
+                data: order.open_data
+            });
+        }
 
-    
-    // console.log(id_drag_grupa_proces)
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.drag("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
-
-
-
-}
-dragDropProcesGrupMulti(req,res){
-let promises = [];
-
-    let row = req.body;
-    let multiSelect =row[0]
-    let id_drop_grupa_proces =row[1]
-
-    const token = req.params['token']
-
-    // console.log(multiSelect)
-    // console.log(id_drop_grupa_proces)
-
-
-
-
-  for (let element of multiSelect) {
-    var sql = "select artdruk.drag("+ element +", "+ id_drop_grupa_proces +") ";
-
-    promises.push(     new Promise((resolve, reject) => {
-      connection.query(sql, (err, results) => {
-      if (err) {
-          resolve([{zapis: false},err]);               
-      } else {
-
-          resolve([{zapis: true}])
-      }
-  });
-  })) 
-
-}
-
-  Promise.all(promises).then((data) => res.status(200).json("OK"));
-
-}
-
-
-dragDropProcesGrupOprawa(req,res){
-
-    const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
-    const id_drop_grupa_proces = req.params['id_drop_grupa_proces']
-
-    
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.drag_oprawa("+ id_drag_grupa_proces +", "+ id_drop_grupa_proces +") as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
-}
-
-
-
-zakoncz_proces_elementu_uwolnij_nastepny(req,res){
-console.log("tuuuuu")
-    const technologia_id = req.body.technologia_id;
-    const proces_id = req.body.proces_id;
-    const element_id = req.body.element_id;
-    const grupa_id = req.body.grupa_id;
-    const status = req.body.status;
-    const grupa_global_id = req.body.global_id;
-    const zamowienie_id = req.body.zamowienie_id;
-    const grupa_nazwa = req.body.grupa_nazwa;
-    const stary_status = req.body.stary_status;
-    let info="stop";
-    
-    
-
-     let indeks_procesu;
-     let global_id_procesu;
-     let id_procesu;
-     let grupyWykonan =[]
-     let grupyAktualnegoProcesu = []
-
-     let indeks_nastepnego_procesu;
-     let id_nastepnego_procesu;
-
-       const token = req.params['token']
-       let ID_SPRAWCY =  DecodeToken(token).id;
-
- var sql = " update artdruk.technologie_grupy_wykonan set status ="+ status +" where global_id ="+grupa_global_id
-connection.query(sql, function (err, result) {
-    if (err) console.log(err)
- });
- var sql = " update artdruk.technologie_wykonania set status ="+ status +" where technologia_id ="+technologia_id+" and global_id !=0 and grupa_id="+grupa_id
-connection.query(sql, function (err, result) {
-    if (err) console.log(err)
- });
-  
-    
-// indeks procesu
-var sql = "select indeks,global_id,id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and id ="+proces_id
-connection.query(sql, function (err, result) {
-indeks_procesu = result[0].indeks
-indeks_nastepnego_procesu= parseInt(indeks_procesu)+1
-global_id_procesu = result[0].global_id
-id_procesu = result[0].id
-
-    if (err) console.log(err)
- });
-
-
-
-
- var sql = "SELECT * FROM artdruk.technologie_grupy_wykonan where technologia_id="+ technologia_id 
- connection.query(sql, function (err, result) {
- // indeks.push(result[0].indeks)
- grupyWykonan = result
- grupyAktualnegoProcesu = [...result.filter(x=> x.proces_id == id_procesu )]
-
-let max_status = Math.max(...grupyAktualnegoProcesu.map((f) => f.status))
- if(status !=4){
-//  zmien status procesu na najwyzszy status grupy 
-var sql = " update artdruk.technologie_procesy_elementow set status ="+ max_status +" where global_id ="+global_id_procesu
-connection.query(sql, function (err, result) {
-    if (err) console.log(err)
- });
- 
-
-  }
-
-  if(status ==4){  // status == 4 zakonczone
-//  console.log("status:"+status)   
- 
-//     console.log("grupyAktualnegoProcesu:",grupyAktualnegoProcesu)
-    if(grupyAktualnegoProcesu.every(x=>x.status == 4)){
-
-var sql = " update artdruk.technologie_procesy_elementow set status =4 where global_id ="+global_id_procesu
-connection.query(sql, function (err, result) {
-    if (err) console.log(err)
- });
-//  console.log('id_nastepnego_procesu XX --'+result[0].id)
- var sql = "select id from artdruk.technologie_procesy_elementow where technologia_id ="+ technologia_id +" and (element_id ="+element_id+" and indeks ="+indeks_nastepnego_procesu+") and (status=1 or status is null)"
- connection.query(sql, function (err, result) {
-// console.log('technologia_id XX --'+technologia_id)
-// console.log('element_id XX --'+element_id)
-// console.log('indeks_nastepnego_procesu XX --'+indeks_nastepnego_procesu)
-// console.log('id_nastepnego_procesu XX --'+result[0]?.id)
-// console.log('')
-
- id_nastepnego_procesu = result[0]?.id || 0
-
- console.log(" id_nastepnego_procesu: "+id_nastepnego_procesu)
-
-        var sql =
-        " update artdruk.technologie_procesy_elementow set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and id ="+id_nastepnego_procesu
-      connection.query(sql, function (err, result) {
-        if (err) console.log(err);
-      });
-        var sql =
-        " update artdruk.technologie_grupy_wykonan set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and proces_id ="+id_nastepnego_procesu
-      connection.query(sql, function (err, result) {
-        if (err) console.log(err);
-      });
-
-        var sql =
-        " update artdruk.technologie_wykonania set status = 2 where technologia_id ="+ technologia_id +" and element_id ="+element_id+" and global_id !=0 and proces_id ="+id_nastepnego_procesu
-      connection.query(sql, function (err, result) {
-        if (err) console.log(err);
-      });
-
-     if (err) console.log(err)
-  });
+    } catch (err) {
+        console.error("Błąd w setOrderOpen:", err);
+        return res.status(500).json({ stan: "DB_ERROR", message: err.message });
+    } finally {
+        // Zawsze zwalniamy połączenie do puli
+        if (conn) conn.release();
     }
+}
 
+async setOrderClosed(req, res) {
+    // Pobieramy ID, z domyślną wartością 1 (zgodnie z Twoim kodem)
+    const id = req.body.id || 1;
+    let conn;
 
-//--- zakoncz element jeśli to wszystkie grupy i uwolnij oprawe
+    try {
+        conn = await pool.getConnection();
 
-//-----
+        // Używamy parametrów ? dla bezpieczeństwa, zamiast doklejania id do stringa
+        const sql = `
+            UPDATE artdruk.zamowienia 
+            SET open_stan = NULL, open_data = NULL, open_user = NULL 
+            WHERE id = ?
+        `;
 
- var sql = "SELECT * FROM artdruk.view_technologie_wykonania where technologia_id="+ technologia_id 
- connection.query(sql, function (err, result) {
-        if(result.every(x=>x.status == 4)){
-        var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status = CASE WHEN status = '1' THEN 2 ELSE status END where global_id !=0 and technologia_id ="+ technologia_id 
-        connection.query(sql, function (err, result) {
-            if (err) console.log(err)
+        await conn.execute(sql, [id]);
+
+        console.log(`Zamówienie ID: ${id} zostało zamknięte/odblokowane.`);
+
+        return res.status(200).json({
+            stan: "closed"
         });
-            }
-            if (err) console.log(err)
-     });
 
+    } catch (err) {
+        console.error("Błąd w setOrderClosed:", err);
+        return res.status(500).json({ error: "Błąd bazy danych podczas zamykania zamówienia" });
+    } finally {
+        if (conn) conn.release();
+    }
+}
 
+async dragDropProcesGrup(req, res) {
+    // Pobieramy ID z parametrów URL
+    const id_drag_grupa_proces = req.params['id_drag_grupa_proces'];
+    const id_drop_grupa_proces = req.params['id_drop_grupa_proces'];
+    
+    let conn;
+    try {
+        conn = await pool.getConnection();
 
-// nr1 sprawdz czy cały druk zakonczony, jeśli tak to zmień etap zamowienia na wydrukowane
- var sql = "SELECT * FROM artdruk.view_technologie_procesy_elementow where nazwa_id = 1 and technologia_id="+ technologia_id 
- connection.query(sql, function (err, result) {
-        if(result.every(x=> x.status == 4)){
-        var sql = " update artdruk.zamowienia set etap = CASE WHEN etap < 8 THEN 8 ELSE etap END where id !=0 and technologia_id ="+ technologia_id 
-        connection.query(sql, function (err, result) {
-            if (err) console.log(err)
+        // Wywołujemy funkcję bazodanową przez SELECT
+        // Używamy ?, aby uniknąć problemów z typami danych i SQL Injection
+        const sql = "SELECT artdruk.drag(?, ?) AS procesor_id";
+        
+        console.log(`Wykonuję Drag&Drop: Drag ID ${id_drag_grupa_proces} na Drop ID ${id_drop_grupa_proces}`);
+
+        const [rows] = await conn.execute(sql, [id_drag_grupa_proces, id_drop_grupa_proces]);
+
+        // Zwracamy wynik (zawierający procesor_id zwrócony przez funkcję SQL)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w dragDropProcesGrup:", err);
+        // Zwracamy 203, tak jak miałeś w oryginale
+        return res.status(203).json(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+async dragDropProcesGrupMulti(req, res) {
+    const row = req.body;
+    const multiSelect = row[0]; // tablica ID elementów przeciąganych
+    const id_drop_grupa_proces = row[1]; // ID elementu docelowego
+    const token = req.params['token'];
+
+    let conn;
+    try {
+        conn = await pool.getConnection();
+
+        // Tworzymy tablicę obietnic dla każdego elementu z multiSelect
+        const promises = multiSelect.map(element => {
+            const sql = "SELECT artdruk.drag(?, ?) AS wynik";
+            // Każde wywołanie execute zwraca Promise dzięki mysql2/promise
+            return conn.execute(sql, [element, id_drop_grupa_proces]);
         });
-            }
-            if (err) console.log(err)
-     });
-// nr1 end
-// nr2 sprawdz czy cały falc zakonczony, jeśli tak to zmień etap zamowienia na wydrukowane
- var sql = "SELECT * FROM artdruk.view_technologie_procesy_elementow where nazwa_id = 3 and technologia_id="+ technologia_id 
- connection.query(sql, function (err, result) {
-        if(result.every(x=> x.status == 4)){
-        var sql = " update artdruk.zamowienia set etap = CASE WHEN etap < 10 THEN 10 ELSE etap END where id !=0 and technologia_id ="+ technologia_id 
-        connection.query(sql, function (err, result) {
-            if (err) console.log(err)
-        });
-            }
-            if (err) console.log(err)
-     });
-// nr2 end
 
+        // Czekamy, aż wszystkie wywołania funkcji w bazie zostaną wykonane
+        await Promise.all(promises);
 
-  }
+        console.log(`Przeniesiono multiselect (${multiSelect.length} elementów) na ID: ${id_drop_grupa_proces}`);
+        
+        return res.status(200).json("OK");
 
-  if (err) console.log(err)
-  });
-
-    let STATUSY = {1:"NIEDOSTĘPNE",2:"OCZEKUJĄCE",3:"W TRAKCIE",4:"ZAKOŃCZONE"}
-    let data=[ID_SPRAWCY,grupa_nazwa,"Zmiana statusu grupy ID:"+ grupa_id+" z "+STATUSY[stary_status]+" na "+STATUSY[status],zamowienie_id]
-    var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
-    connection.execute(sql,data, function (err, result) {    
-           if (err) console.log(err); 
-        info = "OK"
-        })
-              
-           
-
- var sql = "commit";
- connection.query(sql, function (err, result) {
-     if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-
-
-
-     
-//  res.status(200).json(indeks_procesu)  
- res.status(200).json(info)  
- });
-
- 
+    } catch (err) {
+        console.error("Błąd w dragDropProcesGrupMulti:", err);
+        // Jeśli coś pójdzie nie tak, zwracamy błąd 500
+        return res.status(500).json({ error: "Błąd podczas operacji masowego przenoszenia" });
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
-zakoncz_oprawe(req,res){
-// console.log("tuuuuu")
-    const grupa_id = req.body.grupa_id;
-    const status = req.body.status;
-    const grupa_global_id = req.body.global_id;
-    const stary_status = req.body.stary_status;
-    const zamowienie_id = req.body.zamowienie_id;
-    let info;
 
-     let indeks_procesu;
-const token = req.params['token']
-       let ID_SPRAWCY =  DecodeToken(token).id;
- var sql = " update artdruk.technologie_grupy_wykonan_oprawa set status ="+ status +" where global_id ="+grupa_global_id
-connection.query(sql, function (err, result) {
-       info = "OK"
+async dragDropProcesGrupOprawa(req, res) {
+    // Pobieramy parametry z URL
+    const id_drag_grupa_proces = req.params['id_drag_grupa_proces'];
+    const id_drop_grupa_proces = req.params['id_drop_grupa_proces'];
+    
+    let conn;
 
-    if (err) console.log(err)
- });
+    try {
+        conn = await pool.getConnection();
 
- 
-     let STATUSY = {1:"NIEDOSTĘPNE",2:"OCZEKUJĄCE",3:"W TRAKCIE",4:"ZAKOŃCZONE"}
-     let data=[ID_SPRAWCY,"Oprawa","Zmiana statusu grupy ID:"+ grupa_id+" z "+STATUSY[stary_status]+" na "+STATUSY[status],zamowienie_id]
-    //  console.log(data)
-     var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
-    connection.execute(sql,data, function (err, result) {  
-           if (err) console.log(err);   })
+        // Wywołujemy funkcję bazodanową dedykowaną dla oprawy
+        const sql = "SELECT artdruk.drag_oprawa(?, ?) AS procesor_id";
+        
+        console.log(`Drag&Drop Oprawa: Drag ${id_drag_grupa_proces} -> Drop ${id_drop_grupa_proces}`);
 
- var sql = "commit";
- connection.query(sql, function (err, result) {
-     if (err){ connection.query("rollback ", function (err, result) {   }); res.status(203).json(err) } 
-     
- res.json(info)  
- });
+        const [rows] = await conn.execute(sql, [id_drag_grupa_proces, id_drop_grupa_proces]);
 
- 
+        // Zwracamy wynik (zawierający procesor_id)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w dragDropProcesGrupOprawa:", err);
+        // Zachowujemy Twój status 203 dla błędów w tej sekcji
+        return res.status(203).json(err);
+    } finally {
+        // Zawsze oddajemy połączenie do puli!
+        if (conn) conn.release();
+    }
 }
 
-zmien_status_przerwy(req,res){
-
-    const technologia_id = req.body.technologia_id;
-    const proces_id = req.body.proces_id;
-    const element_id = req.body.element_id;
-    const grupa_id = req.body.grupa_id;
-    const status = req.body.status;
-    const grupa_global_id = req.body.global_id;
 
 
- var sql = " update artdruk.technologie_grupy_wykonan set status ="+ status +" where global_id ="+grupa_global_id
-connection.query(sql, function (err, result) {
-    if (err) console.log(err)
- res.status(200).json("OK")  
- });
 
- 
+async zmien_status_przerwy(req, res) {
+    // Destrukturyzacja danych z body
+    const { 
+        status, 
+        global_id,
+        technologia_id, // wyciągnięte, jeśli będziesz chciał logować więcej danych
+        proces_id, 
+        element_id, 
+        grupa_id 
+    } = req.body;
+
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy ? dla bezpieczeństwa, zamiast doklejania wartości do stringa
+        const sql = "UPDATE artdruk.technologie_grupy_wykonan SET status = ? WHERE global_id = ?";
+        
+        console.log(`Zmiana statusu przerwy: Global ID ${global_id} -> Status ${status}`);
+
+        const [result] = await conn.execute(sql, [status, global_id]);
+
+        // Zwracamy "OK" zgodnie z Twoim oryginałem
+        return res.status(200).json("OK");
+
+    } catch (err) {
+        console.error("Błąd w zmien_status_przerwy:", err);
+        // W razie błędu wysyłamy status 500 lub 203 w zależności od Twoich preferencji
+        return res.status(500).json({ error: "Błąd podczas aktualizacji statusu przerwy" });
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
 
 
 
 
+async dragDropProcesGrupToProcesor(req, res) {
+    // Pobieramy ID z parametrów URL
+    const id_drag_grupa_proces = req.params['id_drag_grupa_proces'];
+    const id = req.params['id']; // to prawdopodobnie nowe ID procesora (maszyny/osoby)
 
-dragDropProcesGrupToProcesor(req,res){
+    let conn;
 
-    const id_drag_grupa_proces = req.params['id_drag_grupa_proces']
-    const id = req.params['id']
+    try {
+        conn = await pool.getConnection();
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.zmien_procesor("+ id_drag_grupa_proces +", "+ id +") as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        // Używamy bezpiecznych parametrów zamiast sklejania stringów
+        const sql = "SELECT artdruk.zmien_procesor(?, ?) AS procesor_id";
+        
+        console.log(`Zmiana procesora: Przenoszę grupę ${id_drag_grupa_proces} na procesor ${id}`);
+
+        const [rows] = await conn.execute(sql, [id_drag_grupa_proces, id]);
+
+        // Zwracamy wynik (procesor_id zwrócony przez funkcję SQL)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w dragDropProcesGrupToProcesor:", err);
+        // Zgodnie z Twoją konwencją dla błędów w tej sekcji - status 203
+        return res.status(203).json(err);
+    } finally {
+        // Obowiązkowe zwolnienie połączenia
+        if (conn) conn.release();
+    }
 }
 
-updateWykonaniaOrazGrupa(req,res){
+async updateWykonaniaOrazGrupa(req, res) {
+    // Pobieramy dane z parametrów URL
+    const { global_id_grupa_wykonan, kolumna, wartosc } = req.params;
+    
+    let conn;
 
-    const global_id_grupa_wykonan = req.params['global_id_grupa_wykonan']
-    const kolumna = req.params['kolumna']
-    const wartosc = req.params['wartosc']
+    try {
+        conn = await pool.getConnection();
 
+        // Używamy bezpiecznych parametrów. 
+        // Uwaga: Funkcja SQL przyjmuje te wartości jako argumenty.
+        const sql = "SELECT artdruk.update_wykonania_oraz_grupa(?, ?, ?) AS technologia_id";
+        
+        console.log(`Aktualizacja grupy: ID ${global_id_grupa_wykonan}, Kolumna: ${kolumna}, Wartość: ${wartosc}`);
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.update_wykonania_oraz_grupa("+ global_id_grupa_wykonan +", "+ kolumna +", "+ wartosc +") as technologia_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        const [rows] = await conn.execute(sql, [global_id_grupa_wykonan, kolumna, wartosc]);
+
+        // Zwracamy wynik (technologia_id)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w updateWykonaniaOrazGrupa:", err);
+        // Zachowujemy Twój status 203 dla błędów bazodanowych
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
-updateWykonania(req,res){
+async updateWykonania(req, res) {
+    // Pobieramy dane z parametrów URL
+    const { global_id_wykonania, kolumna, wartosc } = req.params;
+    
+    let conn;
 
-    const global_id_wykonania = req.params['global_id_wykonania']
-    const kolumna = req.params['kolumna']
-    const wartosc = req.params['wartosc']
+    try {
+        conn = await pool.getConnection();
 
+        // Wywołujemy funkcję bazodanową
+        const sql = "SELECT artdruk.update_wykonania(?, ?, ?) AS technologia_id";
+        
+        console.log(`Aktualizacja wykonania: ID ${global_id_wykonania}, Kolumna: ${kolumna}, Wartość: ${wartosc}`);
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.update_wykonania("+ global_id_wykonania +", "+ kolumna +", "+ wartosc +") as technologia_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        // execute() bezpiecznie obsłuży parametry
+        const [rows] = await conn.execute(sql, [global_id_wykonania, kolumna, wartosc]);
+
+        // Zwracamy technologia_id
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w updateWykonania:", err);
+        // Status 203 zgodnie z Twoim systemem obsługi błędów
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
-updateWydzielWykonanieZgrupy(req,res){
+async updateWydzielWykonanieZgrupy(req, res) {
+    // Pobieramy ID z parametrów URL
+    const global_id_wykonania = req.params['global_id_wykonania'];
+    
+    let conn;
 
-    const global_id_wykonania = req.params['global_id_wykonania']
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.wyodrebnij_wykonanie_do_nowej_grupy("+ global_id_wykonania +") as technologia_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+    try {
+        // Wyciągamy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Używamy bezpiecznego parametru ?
+        const sql = "SELECT artdruk.wyodrebnij_wykonanie_do_nowej_grupy(?) AS technologia_id";
+        
+        console.log(`Wyodrębnianie wykonania do nowej grupy. ID: ${global_id_wykonania}`);
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql, [global_id_wykonania]);
+
+        // Zwracamy wynik (technologia_id) do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w updateWydzielWykonanieZgrupy:", err);
+        // Status 203 dla błędów, zgodnie z Twoją strukturą
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie z powrotem do puli
+        if (conn) conn.release();
+    }
 }
 
 
-updatePrzeniesWykonanieDoInnejGrupy(req,res){
+async updatePrzeniesWykonanieDoInnejGrupy(req, res) {
+    // Wyciągamy parametry z adresu URL
+    const { global_id_wykonania, grupa_id_drop, ostatnie_wykonania } = req.params;
+    
+    let conn;
 
-    const global_id_wykonania = req.params['global_id_wykonania']
-    const grupa_id_drop = req.params['grupa_id_drop']
-    const ostatnie_wykonania = req.params['ostatnie_wykonania']
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.przenies_wykonanie("+ global_id_wykonania +","+ grupa_id_drop +","+ ostatnie_wykonania +") as technologia_id";
+    try {
+        conn = await pool.getConnection();
 
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        // SQL z parametrami ? - czysto i bezpiecznie
+        const sql = "SELECT artdruk.przenies_wykonanie(?, ?, ?) AS technologia_id";
+        
+        console.log(`Przenoszenie wykonania: ID ${global_id_wykonania} do grupy ${grupa_id_drop} (Ostatnie: ${ostatnie_wykonania})`);
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql, [global_id_wykonania, grupa_id_drop, ostatnie_wykonania]);
+
+        // Zwracamy technologia_id do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w updatePrzeniesWykonanieDoInnejGrupy:", err);
+        // Status 203 dla błędów bazodanowych
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie
+        if (conn) conn.release();
+    }
 }
 
-updateAddPrzerwa(req,res){
+async updateAddPrzerwa(req, res) {
+    // Wyciągamy parametry z URL
+    const global_id_grupa = req.params['global_id_grupa'];
+    const czas = req.params['czas'];
+    
+    let conn;
 
-    const global_id_grupa = req.params['global_id_grupa']
-    const czas = req.params['czas']
+    try {
+        conn = await pool.getConnection();
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.add_przerwa("+ global_id_grupa +","+ czas +") as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        // SQL z bezpiecznymi placeholderami ?
+        const sql = "SELECT artdruk.add_przerwa(?, ?) AS procesor_id";
+        
+        console.log(`Dodawanie przerwy: Grupa ID ${global_id_grupa}, Czas: ${czas}`);
+
+        // Wykonujemy zapytanie na puli
+        const [rows] = await conn.execute(sql, [global_id_grupa, czas]);
+
+        // Zwracamy wynik (id procesora, na którym operujemy)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w updateAddPrzerwa:", err);
+        // Status 203, żeby frontend wiedział, że coś poszło nie tak po stronie bazy
+        return res.status(203).json(err);
+    } finally {
+        // Obowiązkowe zwolnienie połączenia
+        if (conn) conn.release();
+    }
 }
 
 
 
-updateAddPrzerwaOprawa(req,res){
+async updateAddPrzerwaOprawa(req, res) {
+    // Pobieramy parametry z adresu URL
+    const { global_id_grupa, czas } = req.params;
+    
+    let conn;
 
-    const global_id_grupa = req.params['global_id_grupa']
-    const czas = req.params['czas']
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.add_przerwa_oprawa("+ global_id_grupa +","+ czas +") as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+        // Używamy placeholderów ?, aby zapobiec błędom i atakom SQL Injection
+        const sql = "SELECT artdruk.add_przerwa_oprawa(?, ?) AS procesor_id";
+        
+        console.log(`Dodawanie przerwy (Oprawa): Grupa ID ${global_id_grupa}, Czas: ${czas}`);
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql, [global_id_grupa, czas]);
+
+        // Zwracamy wynik (procesor_id)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w updateAddPrzerwaOprawa:", err);
+        // Zwracamy błąd zgodnie z Twoją konwencją
+        return res.status(203).json(err);
+    } finally {
+        // Zawsze zwracamy połączenie do puli, żeby serwer się nie zapchał
+        if (conn) conn.release();
+    }
 }
 
-updateAddPrzerwaMagic(req,res){
+async updateAddPrzerwaMagic(req, res) {
+    // Pobieramy ID z parametrów URL
+    const global_id_grupa = req.params['global_id_grupa'];
+    
+    let conn;
 
-    const global_id_grupa = req.params['global_id_grupa']
+    try {
+        conn = await pool.getConnection();
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "call artdruk.add_magic_przerwa("+ global_id_grupa +")";
-       
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
-}
-updateDeletePrzerwa(req,res){
+        // Używamy CALL do wywołania procedury z bezpiecznym parametrem ?
+        const sql = "CALL artdruk.add_magic_przerwa(?)";
+        
+        console.log(`Wywołuję Magic Przerwę dla grupy ID: ${global_id_grupa}`);
 
-    const global_id_grupa = req.params['global_id_grupa']
+        // Wykonujemy zapytanie
+        const [result] = await conn.execute(sql, [global_id_grupa]);
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.delete_przerwa("+ global_id_grupa +") as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
-}
+        // Zwracamy wynik procedury
+        return res.status(200).json(result);
 
-updateDeletePrzerwaOprawa(req,res){
-
-    const global_id_grupa = req.params['global_id_grupa']
-
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.delete_przerwa_oprawa("+ global_id_grupa +") as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+    } catch (err) {
+        console.error("Błąd w updateAddPrzerwaMagic:", err);
+        // Status 203 dla błędów bazodanowych
+        return res.status(203).json(err);
+    } finally {
+        // Zawsze zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
-zmienCzasTrwaniaGrupy(req,res){
 
-    const drop_grupa_global_id = req.params['drop_grupa_global_id']
-    const nowy_koniec = req.params['nowy_koniec']
+async updateDeletePrzerwa(req, res) {
+    // Pobieramy ID z parametrów URL
+    const global_id_grupa = req.params['global_id_grupa'];
+    
+    let conn;
 
-    // po zmianie kolejnosci funkcją drag zwracany jest id procesor drag
-    var sql = "select artdruk.zmien_czas_trwania_grupy("+ drop_grupa_global_id +",'"+ nowy_koniec +"') as procesor_id";
-    console.log(sql)
-    connection.query(sql, function (err, result) {
-       if (err) res.status(203).json(err)  
-            res.status(200).json(result);
-    });
+    try {
+        // Pobieramy połączenie z puli
+        conn = await pool.getConnection();
+
+        // Używamy bezpiecznego parametru ? zamiast doklejania stringa
+        const sql = "SELECT artdruk.delete_przerwa(?) AS procesor_id";
+        
+        console.log(`Usuwanie przerwy dla grupy ID: ${global_id_grupa}`);
+
+        // Wykonujemy zapytanie
+        const [rows] = await conn.execute(sql, [global_id_grupa]);
+
+        // Zwracamy wynik do frontendu
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w updateDeletePrzerwa:", err);
+        // Status 203 dla błędów bazodanowych, tak jak w oryginale
+        return res.status(203).json(err);
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli
+        if (conn) conn.release();
+    }
+}
+
+async updateDeletePrzerwaOprawa(req, res) {
+    // Wyciągamy ID z parametrów URL
+    const global_id_grupa = req.params['global_id_grupa'];
+    
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy bezpiecznego ? zamiast łączenia stringów
+        const sql = "SELECT artdruk.delete_przerwa_oprawa(?) AS procesor_id";
+        
+        console.log(`Usuwanie przerwy (Oprawa) dla grupy ID: ${global_id_grupa}`);
+
+        const [rows] = await conn.execute(sql, [global_id_grupa]);
+
+        // Zwracamy wynik
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w updateDeletePrzerwaOprawa:", err);
+        // Status 203 zgodnie z Twoją konwencją
+        return res.status(203).json(err);
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli
+        if (conn) conn.release();
+    }
+}
+
+async zmienCzasTrwaniaGrupy(req, res) {
+    // Pobieramy parametry z URL
+    const { drop_grupa_global_id, nowy_koniec } = req.params;
+    
+    let conn;
+
+    console.log("zmiana czasu tu")
+
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy bezpiecznych parametrów ?
+        // Nie musisz już ręcznie dodawać apostrofów wokół daty/stringa
+        const sql = "SELECT artdruk.zmien_czas_trwania_grupy(?, ?) AS procesor_id";
+        
+        console.log(`Zmiana czasu: Grupa ID ${drop_grupa_global_id}, Nowy koniec: ${nowy_koniec}`);
+
+        const [rows] = await conn.execute(sql, [drop_grupa_global_id, nowy_koniec]);
+
+        // Zwracamy wynik (procesor_id)
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w zmienCzasTrwaniaGrupy:", err);
+        // Status 203 dla błędów bazy danych
+        return res.status(203).json(err);
+    } finally {
+        // Zwalniamy połączenie
+        if (conn) conn.release();
+    }
 }
 zmienCzasTrwaniaGrupyOprawa(req,res){
 
