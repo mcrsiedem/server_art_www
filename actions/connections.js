@@ -1399,6 +1399,8 @@ async zmienCzasTrwaniaGrupy(req, res) {
         if (conn) conn.release();
     }
 }
+
+
 zmienCzasTrwaniaGrupyOprawa(req,res){
 
     const drop_grupa_global_id = req.params['drop_grupa_global_id']
@@ -1722,317 +1724,298 @@ res.status(201).json(result);
 
 
 
-updateKlient(req,res){
-    const id = req.body.id;
-    const firma= req.body.firma;
-    const firma_nazwa= req.body.firma_nazwa;
-    const adres= req.body.adres;
-    const kod= req.body.kod;
-    const nip= req.body.nip;
-    const opiekun_id= req.body.opiekun_id;
+async updateKlient(req, res) {
+    // Wyciągamy dane z body - czysto i czytelnie
+    const { id, firma, firma_nazwa, adres, kod, nip, opiekun_id } = req.body;
 
-    let dane=[firma,firma_nazwa,adres,kod,nip,opiekun_id,id ]
+    // Przygotowujemy tablicę danych do wstawienia w miejsca znaków zapytania
+    const dane = [firma, firma_nazwa, adres, kod, nip, opiekun_id, id];
 
-    var sql = "update artdruk.klienci set firma =?, firma_nazwa =?, adres =?, kod =?, nip =?, opiekun_id =? where id =?";
-    connection.execute(sql,dane, function (err, result) {
-    if (err) console.log(err);
-    res.status(200).json(result);
-})
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        const sql = `
+            UPDATE artdruk.klienci 
+            SET firma = ?, firma_nazwa = ?, adres = ?, kod = ?, nip = ?, opiekun_id = ? 
+            WHERE id = ?
+        `;
+        
+        console.log(`Aktualizacja danych klienta: ${firma_nazwa} (ID: ${id})`);
+
+        // Wykonujemy zapytanie korzystając z execute dla maksymalnego bezpieczeństwa
+        const [result] = await conn.execute(sql, dane);
+
+        // Zwracamy wynik (np. informację o liczbie zmienionych wierszy)
+        return res.status(200).json(result);
+
+    } catch (err) {
+        console.error("Błąd podczas aktualizacji klienta:", err);
+        // Zwracamy status 500, żeby frontend wiedział, że coś poszło nie tak
+        return res.status(500).json({ error: "Nie udało się zaktualizować danych klienta", details: err });
+    } finally {
+        // Zawsze oddajemy połączenie do puli!
+        if (conn) conn.release();
+    }
 }
 
 
 
+async updateHistoria(req, res) {
+    // Pobieramy dane z body
+    const { kategoria, event, zamowienie_id, user_id } = req.body;
 
-updateHistoria(req,res){
-    const kategoria = req.body.kategoria;
-    const event = req.body.event;
-    const zamowienie_id= req.body.zamowienie_id;
-    const user_id= req.body.user_id;
-    var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) "+
-    "values (" + user_id+ ",'" + kategoria + "','" + event + "'," + zamowienie_id+ "); ";
-    connection.query(sql, function (err, result) {    
-           if (err) console.log(err);   
-               res.status(200).json(result);   
-        });
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy ? dla wszystkich wartości. 
+        // Sterownik sam dopilnuje, co jest liczbą, a co stringiem.
+        const sql = `
+            INSERT INTO artdruk.zamowienia_historia (user_id, kategoria, event, zamowienie_id) 
+            VALUES (?, ?, ?, ?)
+        `;
+        
+        console.log(`Logowanie zdarzenia: [${kategoria}] dla zamówienia ID: ${zamowienie_id}`);
+
+        const [result] = await conn.execute(sql, [user_id, kategoria, event, zamowienie_id]);
+
+        // Zwracamy status 200
+        return res.status(200).json(result);
+
+    } catch (err) {
+        console.error("Błąd podczas zapisu historii:", err);
+        // Zwracamy 500 lub inny status błędu, żeby frontend wiedział o problemie
+        return res.status(500).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
 
-updateWydaniePapieru_status(req,res){
-    const global_id_grupa = req.body.global_id_grupa;
-    const status = req.body.status;
+async updateWydaniePapieru_status(req, res) {
+    // Wyciągamy dane z body
+    const { global_id_grupa, status } = req.body;
 
- var sql = "update artdruk.technologie_wydanie_papieru set status = " + status+ " where global_id !=0 and global_id_grupa = '" + global_id_grupa+ "' ";
+    let conn;
 
-    connection.query(sql, function (err, result) {    
-           if (err) console.log(err);   
-               res.status(200).json(result);   
-        });
+    try {
+        conn = await pool.getConnection();
+
+        // SQL z bezpiecznymi parametrami
+        const sql = "UPDATE artdruk.technologie_wydanie_papieru SET status = ? WHERE global_id != 0 AND global_id_grupa = ?";
+        
+        console.log(`Aktualizacja statusu wydania papieru: Grupa ${global_id_grupa} na status ${status}`);
+
+        const [result] = await conn.execute(sql, [status, global_id_grupa]);
+
+        // Zwracamy wynik do frontendu
+        return res.status(200).json(result);
+
+    } catch (err) {
+        console.error("Błąd w updateWydaniePapieru_status:", err);
+        // Status 500 dla błędów serwera/bazy
+        return res.status(500).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
-insertWydaniePapieru_status(req,res){
-    const global_id_grupa = req.body.global_id_grupa;
-    const status = req.body.status;
+async insertWydaniePapieru_status(req, res) {
+    // Pobieramy dane z body
+    const { global_id_grupa, status } = req.body;
 
-  var sql =   "INSERT INTO artdruk.technologie_wydanie_papieru (global_id_grupa,status) "+
-        "values ('" + global_id_grupa+ "','" + status + "'); ";
-       
+    let conn;
 
-    connection.query(sql, function (err, result) {    
-           if (err) console.log(err);   
-               res.status(200).json(result);   
-        });
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy parametrów ? zamiast doklejania stringów
+        const sql = "INSERT INTO artdruk.technologie_wydanie_papieru (global_id_grupa, status) VALUES (?, ?)";
+        
+        console.log(`Zapisuję status wydania papieru: Grupa ${global_id_grupa}, Status ${status}`);
+
+        const [result] = await conn.execute(sql, [global_id_grupa, status]);
+
+        // Zwracamy wynik operacji (np. insertId)
+        return res.status(200).json(result);
+
+    } catch (err) {
+        console.error("Błąd w insertWydaniePapieru_status:", err);
+        // Zwracamy błąd, jeśli coś poszło nie tak
+        return res.status(500).json(err);
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli
+        if (conn) conn.release();
+    }
 }
-insertWydaniePapieru_status_multiselect(req,res){
- 
+
+
+async insertWydaniePapieru_status_multiselect(req, res) {
     const grupyWykonanSelect = req.body;
 
-                // tutaj insert
-           for( let grupa of grupyWykonanSelect.filter(x=> x.wydanie_papieru_status == null)){
-           
-                    var sql =   "INSERT INTO artdruk.technologie_wydanie_papieru (global_id_grupa,status) "+
-                    "values ('" + grupa.global_id+ "',3); ";
-                
-                        connection.query(sql, function (err, result) {    
-                    if (err) console.log(err);   
-                    });
+    let conn;
+    try {
+        conn = await pool.getConnection();
 
+        // --- START TRANSAKCJI ---
+        await conn.beginTransaction();
 
-           }
+        // 1. Przygotowujemy listę zadań dla INSERT-ów
+        const insertPromises = grupyWykonanSelect
+            .filter(x => x.wydanie_papieru_status == null)
+            .map(grupa => {
+                const sqlInsert = "INSERT INTO artdruk.technologie_wydanie_papieru (global_id_grupa, status) VALUES (?, 3)";
+                return conn.execute(sqlInsert, [grupa.global_id]);
+            });
 
+        // 2. Przygotowujemy listę zadań dla UPDATE-ów
+        const updatePromises = grupyWykonanSelect
+            .filter(x => x.wydanie_papieru_status != null)
+            .map(grupa => {
+                const sqlUpdate = "UPDATE artdruk.technologie_wydanie_papieru SET status = 3 WHERE global_id != 0 AND global_id_grupa = ?";
+                return conn.execute(sqlUpdate, [grupa.global_id]);
+            });
 
-           // tutaj update
-                      for( let grupa of grupyWykonanSelect.filter(x=> x.wydanie_papieru_status != null)){
+        // 3. Czekamy na wykonanie wszystkich zapytań wewnątrz transakcji
+        await Promise.all([...insertPromises, ...updatePromises]);
 
-        var sql = "update artdruk.technologie_wydanie_papieru set status = 3 where global_id !=0 and global_id_grupa = '" + grupa.global_id+ "' ";
+        // --- COMMIT ---
+        // Dopiero teraz dane faktycznie zostają zapisane w bazie
+        await conn.commit();
 
-    connection.query(sql, function (err, result) {    
-           if (err) console.log(err);   
-        });
+        console.log(`Transakcja zakończona sukcesem. Zaktualizowano ${grupyWykonanSelect.length} rekordów.`);
+        return res.status(200).json("OK");
 
-           }
-
-               res.status(200).json("OK");   
-
-
+    } catch (err) {
+        // --- ROLLBACK ---
+        // Jeśli którykolwiek element zawiedzie, cofamy WSZYSTKIE zmiany
+        if (conn) await conn.rollback();
+        
+        console.error("Błąd transakcji (Wydanie Papieru):", err);
+        // Zwracamy błąd do frontendu, żeby wiedział, że nic się nie zapisało
+        return res.status(500).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
 }
 
 
-    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
-    postFragmenty(req,res){
-        const naklad = req.body.naklad;
-        const info = req.body.info;
-        const zamowienie_id = req.body.zamowienie_id;
-        const element_id = req.body.element_id;
-        const produkt_id = req.body.produkt_id;
-        const data_przyjecia = req.body.data_przyjecia;
-        const oprawa_id = req.body.oprawa_id;
-        const typ = req.body.typ;
-        const indeks = req.body.indeks;
-        const wersja = req.body.wersja;
-        const ilosc_stron = req.body.ilosc_stron;
-
-
-        var sql =   "INSERT INTO artdruk.zamowienia_fragmenty(zamowienie_id,produkt_id,element_id,info,naklad,oprawa_id,typ,indeks,wersja,ilosc_stron) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + element_id + "','" + info + "','" + naklad + "','" + oprawa_id + "','" + typ + "','" + indeks + "','" + wersja + "','" + ilosc_stron + "'); ";
-        connection.query(sql, function (err, result) {
-        if (err) console.log(err);
-        res.status(201).json(result);
-
-    });}
-
-    // zapis w ModalInsert ( razem z zmaowienie - produkty - elementy - fragmenty itp)
-    postElementy(req,res){
-        const nazwa = req.body.nazwa;
-        const typ = req.body.typ;
-        const zamowienie_id = req.body.zamowienie_id;
-        const produkt_id = req.body.produkt_id;
-        const naklad = req.body.naklad;
-        const papier_id = req.body.papier_id;
-        const gramatura_id = req.body.gramatura_id;
-        const ilosc_stron = req.body.strony;
-        const format_x = req.body.format_x;
-        const format_y = req.body.format_y;
-        const uwagi = req.body.uwagi;
-        const papier_info = req.body.papier_info;
-        const indeks = req.body.indeks;
-
-
-        var sql =   "INSERT INTO artdruk.zamowienia_elementy(zamowienie_id,produkt_id,nazwa,typ,naklad,papier_id,gramatura_id,ilosc_stron,format_x,format_y,uwagi,papier_info,indeks) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + typ + "','" + naklad + "','" + papier_id + "','" + gramatura_id + "','" + ilosc_stron + "','" + format_x + "','" + format_y + "','" + uwagi + "','" + papier_info + "','" + indeks + "'); ";
-        connection.query(sql, function (err, result) {
-        if (err) console.log(err);
-        // console.log(" 1 record inserted "+result.insertId);
-        res.status(201).json(result);
-
-    });}
 
 
 
+async postKosztyDodatkoweZamowienia(req, res) {
+    // Pobieramy dane z body
+    const { status, zamowienie_id, zamowienie_prime_id } = req.body;
 
+    let conn;
 
+    try {
+        conn = await pool.getConnection();
 
-
-
-
-    postPakowanie(req,res){
-        const zamowienie_id = req.body.zamowienie_id;
-        const produkt_id = req.body.produkt_id;
-        const nazwa = req.body.nazwa;
-        const naklad = req.body.naklad;
-        const uwagi = req.body.uwagi;
-        const rodzaj_pakowania = req.body.rodzaj_pakowania;
-        const sztuki_w_paczce = req.body.sztuki_w_paczce;
-        const indeks = req.body.indeks;
-
-        var sql =   "INSERT INTO artdruk.zamowienia_pakowanie(zamowienie_id,produkt_id,nazwa,naklad,uwagi,sztuki_w_paczce,rodzaj_pakowania,indeks) "+
-        "values ('" + zamowienie_id+ "','" + produkt_id + "','" + nazwa + "','" + naklad + "','" + uwagi + "','" + sztuki_w_paczce + "','" + rodzaj_pakowania + "','" + indeks + "'); ";
-        connection.query(sql, function (err, result) {
-        if (err) {
-            console.log(err)
-            res.status(400).json(err);
-
-        };
-        // console.log(" 1 record inserted "+result.insertId);
-        res.status(201).json(result);
-
-    });}
-    postKoszty(req,res){
-        // zajmuje dodatkowe id przy dodawaniu nowego kosztu na froncie - taka atrapa
-
-
-        var sql =   "INSERT INTO artdruk.koszty_dodatkowe(info) "+
-        "values ('atrapa'); ";
-        connection.query(sql, function (err, result) {
-        if (err) {
-            console.log(err)
-            res.status(400).json(err);
-        };
-        res.status(201).json(result);
-
-    });}
-
-    postKosztyDodatkoweZamowienia(req,res){
-        // dodanie kosztow do zamówienia - guzik " Dodaj koszty dodatkowe"
-        const status = req.body.status;
-        const zamowienia_id = req.body.zamowienie_id;
-        const zamowienie_prime_id = req.body.zamowienie_prime_id;
-
-        var sql =   "INSERT INTO artdruk.zamowienia_koszty_dodatkowe(status,zamowienie_id,zamowienie_prime_id) "+
-        "values ('" + status+ "','" + zamowienia_id + "','" + zamowienie_prime_id + "'); ";
-        connection.query(sql, function (err, result) {
-        if (err) {
-            console.log(err)
-            res.status(400).json(err);
-        };
-        res.status(201).json(result);
-
-    });}
-
-
-        updateSetOrderNotFinal(req,res){
-            // przy zapisie zamowienia zmiana final z 1 na 0, final = 1 to najnowsza wersja zamowienia, 0 to poprzednie wersje
-            const zamowienie_id = req.body.zamowienie_id;
-
-
-            var sql = "update artdruk.zamowienia set final = 0 where id = '" + zamowienie_id+ "' ";
-            connection.query(sql, function (err, result) {
-            if (err) console.log(err);
-            res.status(201).json(result);
-            });
-        }
-
-        updateSetOrderToDeleted(req,res){
-            
-            // zmiana final na 2 oznacza ukrycie zamowienia w kosztu - czyli skasowanie z możliwością przywrócenias
-
-            const rowsToDelete = req.body.rowsToDelete
-
-
-            var sql = "start transaction";
-            connection.query(sql, function (err, result) {
-            if (err) res.status(203).json(err)  });
+        // Używamy parametrów ? zamiast sklejania stringów dla bezpieczeństwa i czystości
+        const sql = `
+            INSERT INTO artdruk.zamowienia_koszty_dodatkowe (status, zamowienie_id, zamowienie_prime_id) 
+            VALUES (?, ?, ?)
+        `;
         
-            for(let row of rowsToDelete){
+        console.log(`Dodaję koszty dodatkowe dla zamówienia: ${zamowienie_id}`);
 
-                var sql = "update artdruk.zamowienia set final = 2 where id = '" + row.id+ "' ";
-                connection.query(sql, function (err, result) {        if (err) console.log(err);          });
+        const [result] = await conn.execute(sql, [status, zamowienie_id, zamowienie_prime_id]);
+
+        // Zwracamy status 201 zgodnie z Twoim oryginałem
+        return res.status(201).json(result);
+
+    } catch (err) {
+        console.error("Błąd w postKosztyDodatkoweZamowienia:", err);
+        // Jeśli coś pójdzie nie tak, zwracamy 400 tak jak w Twoim kodzie
+        return res.status(400).json(err);
+    } finally {
+        // Zwalniamy połączenie do puli
+        if (conn) conn.release();
+    }
+}
+
+
+async updateSetOrderNotFinal(req, res) {
+    // Wyciągamy ID zamówienia z body
+    const zamowienie_id = req.body.zamowienie_id;
+
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Używamy ? zamiast doklejania stringa, żeby nikt nie "zamieszał" w ID
+        const sql = "UPDATE artdruk.zamowienia SET final = 0 WHERE id = ?";
         
-                }
-        
-        
-            var sql = "commit";
-            connection.query(sql, function (err, result) {
-            if (err) console.log(err);
-            console.log("Przeniesione do kosza! ");
-        res.status(201).json(result);
-        });
+        console.log(`Archiwizuję poprzednią wersję zamówienia ID: ${zamowienie_id}`);
 
-        }
+        const [result] = await conn.execute(sql, [zamowienie_id]);
 
-//------------------------------------------------
-        zapisKosztowDodatkowych(req,res){
-// * zapis kosztów dodatkowych:
-//     - update koszty_dodatkowe set final= 0 where zamowienie_prime_id = X 
-//     - insert wszystko z przesłanej tablicy koszty_dodatkowe
-//     - update kosztyDodatkoweZamowienia
+        // Zwracamy status 201 (zgodnie z Twoim oryginałem)
+        return res.status(201).json(result);
 
+    } catch (err) {
+        console.error("Błąd w updateSetOrderNotFinal:", err);
+        // Wysłanie błędu do frontendu
+        return res.status(500).json({ error: "Nie udało się zaktualizować statusu wersji zamówienia" });
+    } finally {
+        // Obowiązkowe zwolnienie połączenia do puli
+        if (conn) conn.release();
+    }
+}
 
-             const kosztyDodatkoweTemporary = req.body.kosztyDodatkoweTemporary;
-            const kosztyDodatkoweZamowienia = req.body.kosztyDodatkoweZamowienia;
+async updateSetOrderToDeleted(req, res) {
+    const rowsToDelete = req.body.rowsToDelete;
 
-    
-            var sql = "start transaction";
-                    connection.query(sql, function (err, result) {
-                    if (err) console.log(err);
-                    });
-            // console.log("zapis ok"+req.body.kosztyDodatkoweZamowienia[0].suma)
-                    var sql = "update artdruk.koszty_dodatkowe set final= 0 where zamowienie_prime_id="+kosztyDodatkoweZamowienia[0].zamowienie_prime_id;
-                    connection.query(sql, function (err, result) {
-                    if (err) console.log(err);
-                    });
-    
-                    for(let koszt of kosztyDodatkoweTemporary){
-                    var sql =   "INSERT INTO artdruk.koszty_dodatkowe(indeks,nazwa,ilosc,cena,suma,info,zamowienia_koszty_id,autor_id,zamowienie_prime_id,final) "+
-                    "values ('" + koszt.indeks+ "','" + koszt.nazwa + "','" + koszt.ilosc + "','" + koszt.cena + "','" + koszt.suma + "','" + koszt.info + "','" + koszt.zamowienia_koszty_id + "','" + koszt.autor_id + "','" + koszt.zamowienie_prime_id + "',1); ";
-                    connection.query(sql, function (err, result) {
-                    if (err) console.log(err);
-              
-                    });
-                    }
-
-                    var sql = "update artdruk.zamowienia_koszty_dodatkowe set suma= '" + kosztyDodatkoweZamowienia[0].suma + "' where id="+kosztyDodatkoweZamowienia[0].id;
-                    connection.query(sql, function (err, result) {
-                    if (err) console.log(err);
-                    });
-         
-    
-    var sql = "commit";
-    connection.query(sql, function (err, result) {
-    if (err) console.log(err);
-    // console.log("1 record update ");
-      res.status(201).json(result);
-    });
-    
-    
+    // Szybka walidacja, żeby nie męczyć bazy pustymi danymi
+    if (!rowsToDelete || !Array.isArray(rowsToDelete) || rowsToDelete.length === 0) {
+        return res.status(400).json({ error: "Brak zamówień do usunięcia" });
     }
 
-//-----------
-zapisKosztowDodatkowychZamowienia(req,res){
-    // zapis zmiany status kosztow dodatkowych zmaówienia
-    
-                const id = req.body.id;
-                const value = req.body.value;
-    
-                        var sql = "update artdruk.zamowienia_koszty_dodatkowe set status= '" + value + "' where id="+id;
-                        connection.query(sql, function (err, result) {
-                        if (err) console.log(err);
-                        res.status(201).json(result);
-                        });
-             
-        
+    let conn;
 
+    try {
+        conn = await pool.getConnection();
+
+        // --- START TRANSAKCJI ---
+        await conn.beginTransaction();
+
+        // Tworzymy tablicę obietnic dla każdego UPDATE
+        const updatePromises = rowsToDelete.map(row => {
+            const sql = "UPDATE artdruk.zamowienia SET final = 2 WHERE id = ?";
+            return conn.execute(sql, [row.id]);
+        });
+
+        // Czekamy, aż wszystkie zapytania zostaną wysłane do bazy
+        await Promise.all(updatePromises);
+
+        // --- COMMIT ---
+        await conn.commit();
+
+        console.log(`Przeniesione do kosza! Liczba zamówień: ${rowsToDelete.length}`);
+        return res.status(201).json({ message: "Przeniesiono do kosza", count: rowsToDelete.length });
+
+    } catch (err) {
+        // Jeśli cokolwiek pójdzie nie tak (np. błąd połączenia), cofamy zmiany
+        if (conn) await conn.rollback();
         
-        }
+        console.error("Błąd podczas usuwania zamówień:", err);
+        return res.status(203).json(err);
+    } finally {
+        // Oddajemy połączenie do puli
+        if (conn) conn.release();
+    }
+}
+
+//------------------------------------------------
+
 
 
     getNadkomplety(req,res){
