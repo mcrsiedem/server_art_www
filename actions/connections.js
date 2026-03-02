@@ -2258,7 +2258,6 @@ async getNadkomplety(req, res) {
 
         const sql = "SELECT * FROM artdruk.nadkomplety";
         
-        console.log("Pobieram listę nadkompletów...");
 
         // execute() jest optymalne nawet dla prostych selectów
         const [rows] = await conn.execute(sql);
@@ -2285,7 +2284,6 @@ async getListaPapierow(req, res) {
         // Pobieramy dane z widoku artdruk.view_papiery
         const sql = "SELECT * FROM artdruk.view_papiery";
         
-        console.log("Pobieram pełną listę papierów z widoku...");
 
         const [rows] = await conn.execute(sql);
 
@@ -2310,7 +2308,6 @@ async getListaPapierowNazwy(req, res) {
 
         const sql = "SELECT * FROM artdruk.papiery_nazwy";
         
-        console.log("Pobieram listę nazw papierów...");
 
         // Wykonujemy zapytanie
         const [rows] = await conn.execute(sql);
@@ -2337,7 +2334,6 @@ async getListaPapierowGrupa(req, res) {
 
         const sql = "SELECT * FROM artdruk.papiery_grupa";
         
-        console.log("Pobieram listę grup papierów...");
 
         // Wykonujemy zapytanie (rows to tablica wyników)
         const [rows] = await conn.execute(sql);
@@ -2364,7 +2360,6 @@ async getListaPapierowPostac(req, res) {
 
         const sql = "SELECT * FROM artdruk.papiery_postac";
         
-        console.log("Pobieram listę postaci papieru (arkusz/rola)...");
 
         // Wykonujemy zapytanie (rows to tablica wyników)
         const [rows] = await conn.execute(sql);
@@ -2390,7 +2385,6 @@ async getListaPapierowRodzaj(req, res) {
 
         const sql = "SELECT * FROM artdruk.papiery_rodzaj";
         
-        console.log("Pobieram listę rodzajów papieru...");
 
         // Wykonujemy zapytanie (rows to tablica wyników)
         const [rows] = await conn.execute(sql);
@@ -2417,7 +2411,6 @@ async getListaPapierowWykonczenia(req, res) {
 
         const sql = "SELECT * FROM artdruk.papiery_wykonczenia";
         
-        console.log("Pobieram listę wykończeń papieru...");
 
         // Wykonujemy zapytanie (rows to tablica wyników)
         const [rows] = await conn.execute(sql);
@@ -2444,7 +2437,6 @@ async getListaPapierowPowleczenie(req, res) {
 
         const sql = "SELECT * FROM artdruk.papiery_powleczenie";
         
-        console.log("Pobieram listę rodzajów powleczenia papieru...");
 
         // Wykonujemy zapytanie (rows to tablica z rekordami)
         const [rows] = await conn.execute(sql);
@@ -2472,7 +2464,6 @@ async getListaProcesow(req, res) {
         // Pobieramy dane z widoku procesów
         const sql = "SELECT * FROM artdruk.view_procesy";
         
-        console.log("Pobieram pełną listę procesów technologicznych...");
 
         const [rows] = await conn.execute(sql);
 
@@ -2498,7 +2489,6 @@ async getListaProcesowNazwa(req, res) {
         // Pobieramy tylko niezbędne kolumny: id i nazwa
         const sql = "SELECT id, nazwa FROM artdruk.procesy_nazwa";
         
-        console.log("Pobieram słownik nazw procesów (ID + Nazwa)...");
 
         const [rows] = await conn.execute(sql);
 
@@ -2542,7 +2532,6 @@ async getProcesyElementow(req, res) {
             ORDER BY zp.id ASC
         `;
         
-        console.log("Pobieram procesy elementów (JOIN zamowienia_procesy + lista_procesow)...");
 
         const [rows] = await conn.execute(sql);
 
@@ -2569,7 +2558,6 @@ async getProcesory(req, res) {
         // Pobieramy wszystkie procesory, zachowując kolejność wg indeksu
         const sql = "SELECT * FROM artdruk.procesory ORDER BY indeks ASC";
         
-        console.log("Pobieram listę procesorów produkcyjnych...");
 
         const [rows] = await conn.execute(sql);
 

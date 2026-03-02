@@ -37,7 +37,6 @@ const klienciPobierzWszystkich = async (req, res) => {
             params = [id, id, id];
         }
 
-        console.log(`Pobieram klientów dla user_id: ${id} (Uprawnienia globalne: ${klienci_wszyscy})`);
 
         const [rows] = await conn.execute(sql, params);
 
