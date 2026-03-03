@@ -199,7 +199,6 @@ router.put('/setOrderClosed',connections.setOrderClosed);
 
 
 // pobieranie grup wykonan 2025-11-08 korekta
-// router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',connections.getWykonania_i_grupy_for_procesor);   // #GRUPY_01   
 router.get('/technologie_grupy_an_wykonania_for_procesor/:procesor_id',getGrupyForProcesor);   // #GRUPY_01   
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz/:procesor_id/:dniWstecz', getGrupyForProcesorDniWstecz);  // #GRUPY_02   
 router.get('/technologie_grupyWykonan/:token',verifyToken,connections.getGrupyAll);    // niezakonczone grupy wykonan i oprawy  do widoku mini
@@ -210,7 +209,7 @@ router.get('/technologie_grupyWykonan/:token',verifyToken,connections.getGrupyAl
 
 router.get('/technologie_grupy_an_wykonania_for_procesor_dni_wstecz_oprawa/:procesor_id/:dniWstecz',connections.getWykonania_i_grupy_for_procesor_dni_wstecz_oprawa);     
 router.get('/technologie_grupy_oprawa_for_procesor/:procesor_id',connections.getGrupy_oprawa_for_procesor);     
-router.get('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);
+router.get('/drag_drop_proces_grupa/:id_drag_grupa_proces/:id_drop_grupa_proces',connections.dragDropProcesGrup);  // select for update
 router.put('/drag_drop_proces_grupa_multi/:token',verifyToken,connections.dragDropProcesGrupMulti);
 
 

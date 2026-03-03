@@ -926,21 +926,17 @@ async dragDropProcesGrup(req, res) {
     let conn;
     try {
         conn = await pool.getConnection();
+        await conn.beginTransaction(); // Start transakcji
 
-        // Wywołujemy funkcję bazodanową przez SELECT
-        // Używamy ?, aby uniknąć problemów z typami danych i SQL Injection
         const sql = "SELECT artdruk.drag(?, ?) AS procesor_id";
-        
         console.log(`Wykonuję Drag&Drop: Drag ID ${id_drag_grupa_proces} na Drop ID ${id_drop_grupa_proces}`);
-
         const [rows] = await conn.execute(sql, [id_drag_grupa_proces, id_drop_grupa_proces]);
-
-        // Zwracamy wynik (zawierający procesor_id zwrócony przez funkcję SQL)
+        await conn.commit(); // Zatwierdzenie zmian
         return res.status(200).json(rows);
 
     } catch (err) {
+        if (conn) await conn.rollback(); // Wycofanie w razie błędu
         console.error("Błąd w dragDropProcesGrup:", err);
-        // Zwracamy 203, tak jak miałeś w oryginale
         return res.status(203).json(err);
     } finally {
         if (conn) conn.release();
@@ -955,27 +951,25 @@ async dragDropProcesGrupMulti(req, res) {
     let conn;
     try {
         conn = await pool.getConnection();
+        await conn.beginTransaction(); // Start transakcji
 
-        // Tworzymy tablicę obietnic dla każdego elementu z multiSelect
         const promises = multiSelect.map(element => {
             const sql = "SELECT artdruk.drag(?, ?) AS wynik";
-            // Każde wywołanie execute zwraca Promise dzięki mysql2/promise
             return conn.execute(sql, [element, id_drop_grupa_proces]);
         });
 
-        // Czekamy, aż wszystkie wywołania funkcji w bazie zostaną wykonane
         await Promise.all(promises);
 
-        console.log(`Przeniesiono multiselect (${multiSelect.length} elementów) na ID: ${id_drop_grupa_proces}`);
+        await conn.commit(); // Zatwierdzenie zmian
         
         return res.status(200).json("OK");
 
     } catch (err) {
+        if (conn) await conn.rollback(); // Wycofanie w razie błędu
+
         console.error("Błąd w dragDropProcesGrupMulti:", err);
-        // Jeśli coś pójdzie nie tak, zwracamy błąd 500
         return res.status(500).json({ error: "Błąd podczas operacji masowego przenoszenia" });
     } finally {
-        // Zwalniamy połączenie do puli
         if (conn) conn.release();
     }
 }
@@ -1172,31 +1166,25 @@ async updateWydzielWykonanieZgrupy(req, res) {
 
 
 async updatePrzeniesWykonanieDoInnejGrupy(req, res) {
-    // Wyciągamy parametry z adresu URL
+ 
     const { global_id_wykonania, grupa_id_drop, ostatnie_wykonania } = req.params;
     
     let conn;
+    const ostatnieParam = (ostatnie_wykonania === 'true' || ostatnie_wykonania === true) ? 1 : 0;
 
     try {
         conn = await pool.getConnection();
-
-        // SQL z parametrami ? - czysto i bezpiecznie
+       
         const sql = "SELECT artdruk.przenies_wykonanie(?, ?, ?) AS technologia_id";
-        
-        console.log(`Przenoszenie wykonania: ID ${global_id_wykonania} do grupy ${grupa_id_drop} (Ostatnie: ${ostatnie_wykonania})`);
-
-        // Wykonujemy zapytanie
-        const [rows] = await conn.execute(sql, [global_id_wykonania, grupa_id_drop, ostatnie_wykonania]);
-
-        // Zwracamy technologia_id do frontendu
+        const [rows] = await conn.execute(sql, [global_id_wykonania, grupa_id_drop, ostatnieParam,]);
         return res.status(200).json(rows);
 
     } catch (err) {
         console.error("Błąd w updatePrzeniesWykonanieDoInnejGrupy:", err);
-        // Status 203 dla błędów bazodanowych
+      
         return res.status(203).json(err);
     } finally {
-        // Zwalniamy połączenie
+      
         if (conn) conn.release();
     }
 }
