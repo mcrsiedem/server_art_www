@@ -1043,7 +1043,7 @@ async zmien_status_przerwy(req, res) {
 
 
 
-async dragDropProcesGrupToProcesor(req, res) {
+async dragDropProcesGrupToProcesor_stare(req, res) {
     // Pobieramy ID z parametrów URL
     const id_drag_grupa_proces = req.params['id_drag_grupa_proces'];
     const id = req.params['id']; // to prawdopodobnie nowe ID procesora (maszyny/osoby)
@@ -1072,6 +1072,43 @@ async dragDropProcesGrupToProcesor(req, res) {
         if (conn) conn.release();
     }
 }
+
+async dragDropProcesGrupToProcesor(req, res) {
+    const id_drag_grupa_proces = req.params['id_drag_grupa_proces'];
+    const id = req.params['id']; 
+
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // 1. Wywołujemy procedurę. 
+        // Trzeci parametr to zmienna sesyjna MySQL (@old_id), która odbierze wartość OUT.
+        const sqlCall = "CALL artdruk.procedura_zmien_procesor(?, ?, @old_id)";
+        
+        // 2. Pobieramy wartość tej zmiennej
+        const sqlSelect = "SELECT @old_id AS procesor_id";
+
+        console.log(`Zmiana procesora: Przenoszę po nowemu grupę ${id_drag_grupa_proces} na procesor ${id}`);
+
+        // Wykonujemy CALL
+        await conn.query(sqlCall, [id_drag_grupa_proces, id]);
+        
+        // Wykonujemy SELECT, aby pobrać wynik (ważne: na tym samym połączeniu 'conn'!)
+        const [rows] = await conn.query(sqlSelect);
+
+        // Zwracamy wynik
+        return res.status(200).json(rows);
+
+    } catch (err) {
+        console.error("Błąd w dragDropProcesGrupToProcesor:", err);
+        return res.status(203).json(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+
 
 async updateWykonaniaOrazGrupa(req, res) {
     // Pobieramy dane z parametrów URL
