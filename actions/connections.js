@@ -1202,29 +1202,92 @@ async updateWydzielWykonanieZgrupy(req, res) {
 }
 
 
-async updatePrzeniesWykonanieDoInnejGrupy(req, res) {
+// async updatePrzeniesWykonanieDoInnejGrupy_stare(req, res) {
  
+//     const { global_id_wykonania, grupa_id_drop, ostatnie_wykonania } = req.params;
+    
+//     let conn;
+//     const ostatnieParam = (ostatnie_wykonania === 'true' || ostatnie_wykonania === true) ? 1 : 0;
+
+//     try {
+//         conn = await pool.getConnection();
+       
+//         const sql = "SELECT artdruk.przenies_wykonanie(?, ?, ?) AS technologia_id";
+//         console.log(global_id_wykonania+" "+grupa_id_drop+" "+ ostatnieParam)
+//         const [rows] = await conn.execute(sql, [global_id_wykonania, grupa_id_drop, ostatnieParam,]);
+//         console.log(rows)
+
+//         return res.status(200).json(rows);
+
+//     } catch (err) {
+//         console.error("Błąd w updatePrzeniesWykonanieDoInnejGrupy:", err);
+      
+//         return res.status(203).json(err);
+//     } finally {
+      
+//         if (conn) conn.release();
+//     }
+// }
+
+
+
+
+async updatePrzeniesWykonanieDoInnejGrupy(req, res) {
     const { global_id_wykonania, grupa_id_drop, ostatnie_wykonania } = req.params;
     
     let conn;
+    // Konwersja na format akceptowany przez MySQL BOOLEAN (0 lub 1)
     const ostatnieParam = (ostatnie_wykonania === 'true' || ostatnie_wykonania === true) ? 1 : 0;
 
     try {
         conn = await pool.getConnection();
-       
-        const sql = "SELECT artdruk.przenies_wykonanie(?, ?, ?) AS technologia_id";
-        const [rows] = await conn.execute(sql, [global_id_wykonania, grupa_id_drop, ostatnieParam,]);
+        
+        // W procedurze mamy parametr OUT. Najprościej wywołać to tak:
+        // 1. Wywołujemy procedurę z zmienną sesyjną @res_tech_id
+        // 2. Pobieramy wartość tej zmiennej w tym samym połączeniu
+        const sqlCall = "CALL procedura_przenies_wykonanie(?, ?, ?, @res_tech_id)";
+        const sqlSelect = "SELECT @res_tech_id AS technologia_id";
+
+        console.log(`Wywołanie: ${global_id_wykonania}, ${grupa_id_drop}, ${ostatnieParam}`);
+        
+        // Wykonujemy procedurę
+        await conn.execute(sqlCall, [global_id_wykonania, grupa_id_drop, ostatnieParam]);
+        
+        // Pobieramy wynik parametru OUT
+        const [rows] = await conn.execute(sqlSelect);
+        
+        console.log("Wynik:", rows);
+
+        // Zwracamy pierwszy wiersz (technologia_id)
         return res.status(200).json(rows);
 
     } catch (err) {
         console.error("Błąd w updatePrzeniesWykonanieDoInnejGrupy:", err);
-      
-        return res.status(203).json(err);
+        return res.status(203).json({ error: err.message });
     } finally {
-      
         if (conn) conn.release();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async updateAddPrzerwa(req, res) {
     // Wyciągamy parametry z URL
