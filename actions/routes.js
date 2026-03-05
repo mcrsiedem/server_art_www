@@ -217,7 +217,7 @@ router.get('/drag_drop_proces_grupa_oprawa/:id_drag_grupa_proces/:id_drop_grupa_
 router.get('/drag_drop_proces_grupa_to_procesor/:id_drag_grupa_proces/:id',connections.dragDropProcesGrupToProcesor); // procedura_zmien_procesor
 router.get('/updateWykonania/:global_id_wykonania/:kolumna/:wartosc',connections.updateWykonania);
 router.get('/updateWydzielWykonanieZgrupy/:global_id_wykonania',connections.updateWydzielWykonanieZgrupy);
-router.get('/updatePrzeniesWykonanieDoInnejGrupy/:global_id_wykonania/:grupa_id_drop/:ostatnie_wykonania',connections.updatePrzeniesWykonanieDoInnejGrupy);
+router.get('/updatePrzeniesWykonanieDoInnejGrupy/:global_id_wykonania/:grupa_id_drop/:ostatnie_wykonania',connections.updatePrzeniesWykonanieDoInnejGrupy); // procedura_przenies_wykonanie  zmiana 5-03-2026
 router.get('/updateAddPrzerwa/:global_id_grupa/:czas',connections.updateAddPrzerwa);
 router.get('/updateAddPrzerwaOprawa/:global_id_grupa/:czas',connections.updateAddPrzerwaOprawa);
 router.get('/updateAddPrzerwaMagic/:global_id_grupa/:czas',connections.updateAddPrzerwaMagic);
