@@ -2,21 +2,25 @@ const { pool } = require("../mysql");
 
 const postVersion = (req, res) => {
   const { newHashFileName } = req.body;
-  
+
   const sql = "INSERT INTO artdruk.version (ver) values (?);";
   const dane = [newHashFileName];
 
-  // Używamy pool.execute zamiast connection.execute
+  // Wykonujemy zapytanie bezpośrednio na puli
   pool.execute(sql, dane, (err, results) => {
+    // 1. Obsługa błędu bazy danych
     if (err) {
-      // Zwracamy błąd w formacie, który miałeś wcześniej
+      console.error("Błąd SQL:", err); // Warto zajrzeć w konsolę serwera
       return res.status(500).json([
-        { zapis: false }, 
-        err
+        { zapis: false },
+        { error: err.message }
       ]);
     }
 
-    // Zwracamy sukces
+    // 2. Obsługa sukcesu
+    // To TA linia odpowiada za wysłanie odpowiedzi do przeglądarki/apki
+    console.log("Zapisano pomyślnie, ID:", results.insertId);
+    
     res.status(201).json([
       { zapis: true },
       { zamowienie_nr: results.insertId }
