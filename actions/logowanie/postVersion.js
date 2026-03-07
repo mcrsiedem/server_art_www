@@ -1,33 +1,33 @@
-const { pool } = require("../mysql");
+const { pool } = require("../mysql"); // używamy tylko pool
 
 const postVersion = (req, res) => {
-  const { newHashFileName } = req.body;
+  let promises = [];
+  let body = req.body;
 
-  const sql = "INSERT INTO artdruk.version (ver) values (?);";
-  const dane = [newHashFileName];
+  let newHashFileName = body.newHashFileName;
+  let kto = body.kto;
 
-  // Wykonujemy zapytanie bezpośrednio na puli
-  pool.execute(sql, dane, (err, results) => {
-    // 1. Obsługa błędu bazy danych
-    if (err) {
-      console.error("Błąd SQL:", err); // Warto zajrzeć w konsolę serwera
-      return res.status(500).json([
-        { zapis: false },
-        { error: err.message }
-      ]);
-    }
+  var sql = "INSERT INTO artdruk.version (ver) values (?); ";
+  let dane = [newHashFileName];
 
-    // 2. Obsługa sukcesu
-    // To TA linia odpowiada za wysłanie odpowiedzi do przeglądarki/apki
-    console.log("Zapisano pomyślnie, ID:", results.insertId);
-    
-    res.status(201).json([
-      { zapis: true },
-      { zamowienie_nr: results.insertId }
-    ]);
+  promises.push(
+    new Promise((resolve, reject) => {
+      // Zmieniamy connection na pool, ale zostawiamy callback
+      pool.execute(sql, dane, (err, results) => {
+        if (err) {
+          resolve([{ zapis: false }, err]);
+        } else {
+          resolve([{ zapis: true }, { zamowienie_nr: results.insertId }]);
+        }
+      });
+    })
+  );
+
+  Promise.all(promises).then((data) => {
+    res.status(201).json(data);
   });
 };
 
 module.exports = {
-  postVersion
+  postVersion,
 };
