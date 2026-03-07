@@ -64,10 +64,10 @@ const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
 const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPobierz');
 
     router.post('/version/', postVersion); 
-router.get('/version/', connections.getVersion); 
-router.get('/users/:login/:haslo/:hash',connections.getUser);
-router.get('/all_users/:token',verifyToken,connections.getAllUsers);
-router.get('/lista-userow',connections.getUsersM);
+    router.get('/version/', connections.getVersion); 
+    router.get('/users/:login/:haslo/:hash',connections.getUser);
+    router.get('/all_users/:token',verifyToken,connections.getAllUsers);
+    router.get('/lista-userow',connections.getUsersM);
 router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
 router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_przyjmij'), zamowienieInsertNumer); // dodaje nowe zmówienie
 router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
