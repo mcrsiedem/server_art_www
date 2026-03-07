@@ -1,4 +1,4 @@
-const { pool } = require("../mysql"); // używamy tylko pool
+const { pool } = require("../mysql");
 
 const postVersion = (req, res) => {
   let promises = [];
@@ -10,24 +10,24 @@ const postVersion = (req, res) => {
   var sql = "INSERT INTO artdruk.version (ver) values (?); ";
   let dane = [newHashFileName];
 
+  // TUTAJ ZMIANA: pool.execute() w Twoim mysql.js zwraca Promise, 
+  // więc używamy .then() zamiast callbacka
   promises.push(
-    new Promise((resolve, reject) => {
-      // Zmieniamy connection na pool, ale zostawiamy callback
-      pool.execute(sql, dane, (err, results) => {
-        if (err) {
-          resolve([{ zapis: false }, err]);
-        } else {
-          resolve([{ zapis: true }, { zamowienie_nr: results.insertId }]);
-        }
-      });
-    })
+    pool.execute(sql, dane)
+      .then(([results]) => {
+        // Zwracamy dokładnie to samo, co wcześniej
+        return [{ zapis: true }, { zamowienie_nr: results.insertId }];
+      })
+      .catch((err) => {
+        // W razie błędu zwracamy to, co miałeś w resolve błędu
+        return [{ zapis: false }, err];
+      })
   );
 
-  Promise.all(promises).then((data) => {
-    res.status(201).json(data);
-  });
+  // Reszta zostaje bez zmian - Promise.all teraz dostanie gotowe dane
+  Promise.all(promises).then((data) => res.status(201).json(data));
 };
 
 module.exports = {
-  postVersion,
+  postVersion
 };
