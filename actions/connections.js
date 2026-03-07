@@ -970,6 +970,7 @@ async dragDropProcesGrupMulti(req, res) {
         console.error("Błąd w dragDropProcesGrupMulti:", err);
         return res.status(500).json({ error: "Błąd podczas operacji masowego przenoszenia" });
     } finally {
+
         if (conn) conn.release();
     }
 }
@@ -1042,36 +1043,6 @@ async zmien_status_przerwy(req, res) {
 
 
 
-
-// async dragDropProcesGrupToProcesor_stare(req, res) {
-//     // Pobieramy ID z parametrów URL
-//     const id_drag_grupa_proces = req.params['id_drag_grupa_proces'];
-//     const id = req.params['id']; // to prawdopodobnie nowe ID procesora (maszyny/osoby)
-
-//     let conn;
-
-//     try {
-//         conn = await pool.getConnection();
-
-//         // Używamy bezpiecznych parametrów zamiast sklejania stringów
-//         const sql = "SELECT artdruk.zmien_procesor(?, ?) AS procesor_id";
-        
-//         console.log(`Zmiana procesora: Przenoszę grupę ${id_drag_grupa_proces} na procesor ${id}`);
-
-//         const [rows] = await conn.execute(sql, [id_drag_grupa_proces, id]);
-
-//         // Zwracamy wynik (procesor_id zwrócony przez funkcję SQL)
-//         return res.status(200).json(rows);
-
-//     } catch (err) {
-//         console.error("Błąd w dragDropProcesGrupToProcesor:", err);
-//         // Zgodnie z Twoją konwencją dla błędów w tej sekcji - status 203
-//         return res.status(203).json(err);
-//     } finally {
-//         // Obowiązkowe zwolnienie połączenia
-//         if (conn) conn.release();
-//     }
-// }
 
 async dragDropProcesGrupToProcesor(req, res) {
     const id_drag_grupa_proces = req.params['id_drag_grupa_proces'];

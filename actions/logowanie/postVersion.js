@@ -1,29 +1,29 @@
-const { connection, pool } = require("../mysql");
-const postVersion = (req,res) =>{
-  let promises = [];
-  let body = req.body
+const { pool } = require("../mysql");
 
- let newHashFileName= body.newHashFileName;
-   let kto = body.kto;
+const postVersion = (req, res) => {
+  const { newHashFileName } = req.body;
+  
+  const sql = "INSERT INTO artdruk.version (ver) values (?);";
+  const dane = [newHashFileName];
 
+  // Używamy pool.execute zamiast connection.execute
+  pool.execute(sql, dane, (err, results) => {
+    if (err) {
+      // Zwracamy błąd w formacie, który miałeś wcześniej
+      return res.status(500).json([
+        { zapis: false }, 
+        err
+      ]);
+    }
 
-    var sql =   "INSERT INTO artdruk.version (ver) values (?); ";
-    let dane = [newHashFileName ]
-    promises.push(     new Promise((resolve, reject) => {
-      connection.execute(sql,dane, (err, results) => {
-      if (err) {
-        // console.log(err)
-          resolve([{zapis: false},err]);               
-      } else {
-          resolve([{zapis: true},{zamowienie_nr:results.insertId}])
-      }
+    // Zwracamy sukces
+    res.status(201).json([
+      { zapis: true },
+      { zamowienie_nr: results.insertId }
+    ]);
   });
-  })) 
-  Promise.all(promises).then((data) => res.status(201).json(data));
-}
+};
 
 module.exports = {
   postVersion
-    
-}
- 
+};
