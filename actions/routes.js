@@ -63,7 +63,7 @@ const { dodajProof } = require('./proofy/dodajProof');
 const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
 const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPobierz');
 
-router.post('/version/', postVersion); // try catch
+    router.post('/version/', postVersion); 
 router.get('/version/', connections.getVersion); 
 router.get('/users/:login/:haslo/:hash',connections.getUser);
 router.get('/all_users/:token',verifyToken,connections.getAllUsers);
