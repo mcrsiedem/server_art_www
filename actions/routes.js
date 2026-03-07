@@ -70,7 +70,7 @@ const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPo
     router.get('/lista-userow',connections.getUsersM);
     router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
     router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_przyjmij'), zamowienieInsertNumer); // dodaje nowe zmówienie
-router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
+    router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
 router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdatePool); // aktualizacja zamowienia  POOL
 router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingle); // pojedyncze zamówienie do edycji
 router.get('/elementy/:nr/:rok/:token',verifyToken,zamowienieElementyPobierz); // pobiera elementy do kalkulatora
