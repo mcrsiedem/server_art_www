@@ -63,20 +63,20 @@ const { dodajProof } = require('./proofy/dodajProof');
 const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
 const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPobierz');
 
-    router.post('/version/', postVersion); 
-    router.get('/version/', connections.getVersion); 
-    router.get('/users/:login/:haslo/:hash',connections.getUser);
-    router.get('/all_users/:token',verifyToken,connections.getAllUsers);
-    router.get('/lista-userow',connections.getUsersM);
-    router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
-    router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_przyjmij'), zamowienieInsertNumer); // dodaje nowe zmówienie
-    router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
-router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdatePool); // aktualizacja zamowienia  POOL
-router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingle); // pojedyncze zamówienie do edycji
-router.get('/elementy/:nr/:rok/:token',verifyToken,zamowienieElementyPobierz); // pobiera elementy do kalkulatora
-router.get('/sprawdzNiezamknieteKoszty/:token',verifyToken,sprawdzNiezamknieteKoszty); // pojedyncze zamówienie do edycji
-router.get('/zamowienia/:orderby/:zestaw/:token',verifyToken,zamowieniePobierzWszystkie); // pool
-router.get('/zamowienia_proofy/:token',verifyToken,connections.getZamowieniaProofy); // pool
+        router.post('/version/', postVersion); 
+        router.get('/version/', connections.getVersion); 
+        router.get('/users/:login/:haslo/:hash',connections.getUser);
+        router.get('/all_users/:token',verifyToken,connections.getAllUsers);
+        router.get('/lista-userow',connections.getUsersM);
+        router.get('/islogged/:token',verifyToken,connections.isLogged); // weryfikacja tokenu
+        router.post('/zamowienieNumer/:token',verifyTokenParams('zamowienie_przyjmij'), zamowienieInsertNumer); // dodaje nowe zmówienie
+        router.post('/zamowienieInsert/:token',verifyTokenParams('zamowienie_zapis'), zamowienieInsert); // dodaje nowe zmówienie
+        router.put('/zapiszZamowienieUpdate/:token',verifyTokenParams('zamowienie_zapis'), zamowienieUpdatePool); // aktualizacja zamowienia  POOL
+        router.get('/parametry/:idZamowienia/:token',verifyToken,zamowieniePobierzSingle); // pojedyncze zamówienie do edycji
+    router.get('/elementy/:nr/:rok/:token',verifyToken,zamowienieElementyPobierz); // pobiera elementy do kalkulatora
+    router.get('/sprawdzNiezamknieteKoszty/:token',verifyToken,sprawdzNiezamknieteKoszty); // pojedyncze zamówienie do edycji
+    router.get('/zamowienia/:orderby/:zestaw/:token',verifyToken,zamowieniePobierzWszystkie); // pool
+    router.get('/zamowienia_proofy/:token',verifyToken,connections.getZamowieniaProofy); // pool
 router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
 router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
 router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
