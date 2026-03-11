@@ -20,18 +20,18 @@ const dodajRealizacjeOprawy = async (req, res) => {
     try {
         // ROZPOCZĘCIE TRANSAKCJI
         await conn.beginTransaction();
-
+let insertId
         // 1. Wstawienie wykonania
         if(brak) {
         const sqlInsert = "INSERT INTO artdruk.technologie_wykonania_oprawa (id, technologia_id, zamowienie_id, grupa_id, oprawa_id, naklad, proces_id, procesor_id, dodal,typ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         const dataInsert = [row.id, row.technologia_id, row.zamowienie_id, row.id, row.oprawa_id, row.naklad, row.proces_id, row.procesor_id, ID_SPRAWCY,1];
         const [resultInsert] = await conn.execute(sqlInsert, dataInsert);
-        const insertId = resultInsert.insertId;
+         insertId = resultInsert.insertId;
         }else{
         const sqlInsert = "INSERT INTO artdruk.technologie_wykonania_oprawa (id, technologia_id, zamowienie_id, grupa_id, oprawa_id, naklad, proces_id, procesor_id, dodal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const dataInsert = [row.id, row.technologia_id, row.zamowienie_id, row.id, row.oprawa_id, row.naklad, row.proces_id, row.procesor_id, ID_SPRAWCY];
         const [resultInsert] = await conn.execute(sqlInsert, dataInsert);
-        const insertId = resultInsert.insertId;
+         insertId = resultInsert.insertId;
         }
 
 
