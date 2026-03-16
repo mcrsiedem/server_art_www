@@ -14,6 +14,9 @@ const dodajRealizacjeProcesu = async (req, res) => {
     try {
         await conn.beginTransaction();
 
+        // BLOKADA: Inne sesje próbujące edytować to wykonanie poczekają tutaj
+        await conn.execute("SELECT global_id FROM artdruk.technologie_wykonania WHERE global_id = ? FOR UPDATE", [row.global_id]);
+
         // 1. Insert realizacji
         const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
         const [insertResult] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1]);

@@ -11,8 +11,12 @@ const usunRealizacjeProcesu = async (req, res) => {
 
     const conn = await pool.getConnection();
 
+    // jeśli użytkownik nie ma uprawnienia reazacje_usun to może skasować tylko to co sam dodał
+
     try {
         await conn.beginTransaction();
+        // BLOKADA: Inne sesje próbujące edytować to wykonanie poczekają tutaj
+        await conn.execute("SELECT global_id FROM artdruk.technologie_wykonania WHERE global_id = ? FOR UPDATE", [row.global_id]);
 
         // 1. Usunięcie realizacji z kontrolą uprawnień
         // (Używamy affectedRows, aby sprawdzić czy delete faktycznie się udał)

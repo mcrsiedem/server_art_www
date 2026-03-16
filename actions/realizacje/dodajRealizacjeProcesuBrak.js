@@ -16,6 +16,9 @@ const dodajRealizacjeProcesuBrak = async (req, res) => {
         // Start transakcji
         await conn.beginTransaction();
 
+        // BLOKADA: Inne sesje próbujące edytować to wykonanie poczekają tutaj
+        await conn.execute("SELECT global_id FROM artdruk.technologie_wykonania WHERE global_id = ? FOR UPDATE", [row.global_id]);
+
         // 1. Sprawdź ile brakuje
         const sqlCheck = "SELECT sum(zrealizowano) as realizacje from artdruk.view_technologie_realizacje where wykonanie_global_id=?";
         const [rowsCheck] = await conn.execute(sqlCheck, [wykonanie_global_id]);
