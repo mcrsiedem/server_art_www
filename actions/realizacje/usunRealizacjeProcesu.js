@@ -15,8 +15,10 @@ const usunRealizacjeProcesu = async (req, res) => {
 
     try {
         await conn.beginTransaction();
+
         // BLOKADA: Inne sesje próbujące edytować to wykonanie poczekają tutaj
-        await conn.execute("SELECT global_id FROM artdruk.technologie_wykonania WHERE global_id = ? FOR UPDATE", [row.global_id]);
+        // await conn.execute("SELECT global_id FROM artdruk.technologie_wykonania WHERE global_id = ? FOR UPDATE", [row.global_id]);
+        await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
 
         // 1. Usunięcie realizacji z kontrolą uprawnień
         // (Używamy affectedRows, aby sprawdzić czy delete faktycznie się udał)
