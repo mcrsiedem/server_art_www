@@ -1,119 +1,71 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
-const { transporter } = require("../mail/mail");
 const { SendMail } = require("../mail/SendMail");
-const { SendMailPlaner } = require("../mail/SendMailPlaner");
-const { connection, pool } = require("../mysql");
+const { pool } = require("../mysql"); // Używamy tylko poola
 
 const dodajRealizacjeProcesu = async (req, res) => {
-let id;
-let row = req.body;  // wykonanie do którego dodawana jest realizacja rozszerzona o zrealizowano
-const token = req.params['token']
-let ID_SPRAWCY =  DecodeToken(token).id;
-let wizytowka = "User: "+ ID_SPRAWCY+ " Wykonanie global_id: "+row.global_id + " Procesor: "+row.procesor_id
+    const row = req.body;
+    const token = req.params['token'];
+    const ID_SPRAWCY = DecodeToken(token).id;
+    const wizytowka = `User: ${ID_SPRAWCY} Wykonanie global_id: ${row.global_id} Procesor: ${row.procesor_id}`;
 
-let Insert = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[row.global_id,row.zrealizowano,row.procesor_id,ID_SPRAWCY,1]
-      var sql =   "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?); ";
-      connection.execute(sql, data,function (err, result) {     
-       if (err){
-                reject(wizytowka+" Insert "+err); 
-            } else {
-                      id = result.insertId;
-                      resolve("OK");
-                    }
-        })
-})
-}
+    // Pobieramy połączenie z puli do obsługi transakcji
+    const conn = await pool.getConnection();
 
+    try {
+        await conn.beginTransaction();
 
-let Historia = () =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,row.nazwa,"Zrealizowano: "+row.zrealizowano+" ark. "+"grupa id: "+row.id,row.zamowienie_id]
-    var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
-    connection.execute(sql,data, function (err, result) {    
-        if (err){
-                reject(wizytowka+" Historia "+err); 
-            } else resolve("OK")
-        })
-})
-}
+        // 1. Insert realizacji
+        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
+        const [insertResult] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1]);
+        const insertId = insertResult.insertId;
 
+        // 2. Historia
+        const sqlHistory = "INSERT INTO artdruk.zamowienia_historia (user_id, kategoria, event, zamowienie_id) values (?,?,?,?);";
+        await conn.execute(sqlHistory, [ID_SPRAWCY, row.nazwa, `Zrealizowano: ${row.zrealizowano} ark. grupa id: ${row.id}`, row.zamowienie_id]);
 
-let Status = () =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[row.global_id]
-    var sql = "call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?) ";
-    connection.execute(sql,data, function (err, result) {    
-         if (err){
-                reject(wizytowka+" Status "+err); 
-            }  else resolve("OK")
-        })
-})
+        // 3. Status (Procedura)
+        await conn.execute("call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?)", [row.global_id]);
 
-}
+        // 4. Odśwież Wykonanie
+        const sqlWykonanie = "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=?";
+        const [resWykonanie] = await conn.execute(sqlWykonanie, [row.global_id]);
+        const statusWykonania = resWykonanie[0]?.status || 0;
+        const doWykonania = resWykonanie[0]?.do_wykonania || 0;
 
-let AktualizacjaNastepnejGrupy = () =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[row.technologia_id]
-    var sql = "call artdruk.aktualizacja_statusow_grup(?) ";
-    connection.execute(sql,data, function (err, result) {    
-        if (err){
-                reject(wizytowka+" AktualizacjaNastepnejGrupy "+err); 
-            } else resolve("OK")
-        })
-})
+        // 5. Odśwież Grupę
+        const sqlGrupa = "SELECT status from artdruk.view_technologie_grupy_wykonan where technologia_id=? and id=?";
+        const [resGrupa] = await conn.execute(sqlGrupa, [row.technologia_id, row.grupa_id]);
+        const statusGrupy = resGrupa[0]?.status || 0;
 
-}
+        // 6. Aktualizacja Następnej Grupy (Procedura)
+        await conn.execute("call artdruk.aktualizacja_statusow_grup(?)", [row.technologia_id]);
 
+        // Jeśli wszystko OK, zatwierdzamy
+        await conn.commit();
 
-let OdwiezWykonanie= () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[row.global_id]
-      var sql =   "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=? ";
-      connection.execute(sql, data,function (err, result) {     
-            if (err){
-                reject(wizytowka+" OdwiezWykonanie "+err); 
-            } else            resolve({status:result[0]?.status ||0, do_wykonania:result[0]?.do_wykonania ||0})
-        })
-})
-}
+        res.status(200).json({
+            status: "OK",
+            insertId,
+            status_wykonania: statusWykonania,
+            do_wykonania: doWykonania,
+            status_grupy: statusGrupy
+        });
 
-let OdwiezGrupe = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[row.technologia_id,row.grupa_id]
-      var sql =   "SELECT status from artdruk.view_technologie_grupy_wykonan where technologia_id=? and id=? ";
-      connection.execute(sql, data,function (err, result) {     
-                  if (err){
-                reject(wizytowka+" OdwiezGrupe "+err); 
-            } else  resolve({status_grupy:result[0].status })
-        })
-})
-}
-
-
-try {
-let res1 = await  Insert();  // wstaw wykonanie
-let res2 = await  Historia(); // dodaj do historii
-let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
-let res4 = await  OdwiezWykonanie() // sprawdza nowy status grupy;  // sprawdza nowy status wykonania
-let res5 = await  OdwiezGrupe()
-let res6 = await  AktualizacjaNastepnejGrupy();  // aktualizuj statusy wszystkich grup
-
-
-
-
- res.status(200).json({status:"OK",insertId : id,status_wykonania:res4.status,do_wykonania:res4.do_wykonania, status_grupy: res5.status_grupy });
     } catch (error) {
+        // W razie błędu wycofujemy wszystkie zmiany w bazie
+        await conn.rollback();
 
-        SendMail(error)
-        console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
-        res.status(200).json({ status: error});
+        const errorMsg = `${wizytowka} | Błąd: ${error.message || error}`;
+        SendMail(errorMsg);
+        console.error("Błąd transakcji:", error);
+
+        res.status(200).json({ status: errorMsg });
+    } finally {
+        // Zawsze zwalniamy połączenie do puli!
+        conn.release();
     }
-     }
-
-
-module.exports = {
-  dodajRealizacjeProcesu
 };
 
+module.exports = {
+    dodajRealizacjeProcesu
+};

@@ -1,182 +1,83 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { SendMail } = require("../mail/SendMail");
-const { connection, pool } = require("../mysql");
+const { pool } = require("../mysql");
 
 const zakonczArkusz = async (req, res) => {
-let row = req.body;  // wykonanie do którego dodawana jest realizacja rozszerzona o zrealizowano
-const token = req.params['token']
-let id, idRozjazdu;
-let ID_SPRAWCY =  DecodeToken(token).id;
-const wykonanie_global_id = req.body.global_id;
-// console.log("global id wykonania"+row.global_id)
-let Insert = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[row.global_id,row.zrealizowano,row.procesor_id,ID_SPRAWCY,1]
-      var sql =   "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?); ";
-      connection.execute(sql, data,function (err, result) {     
-            if (err){
-              reject(err); 
-            } else{
-               id = result.insertId
-               resolve("OK") 
-            }
-        })
-})
-}
+    const row = req.body;
+    const token = req.params['token'];
+    const wykonanie_global_id = row.global_id;
+    const ID_SPRAWCY = DecodeToken(token).id;
 
+    let id = null;
+    let idRozjazdu = null;
+    let brakujace_przeloty_wynik = 0;
 
-let SprawdzIleBrakuje = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[wykonanie_global_id]
-      var sql =   "SELECT sum(zrealizowano) as realizacje from artdruk.view_technologie_realizacje where wykonanie_global_id=?  ";
-      connection.execute(sql, data,function (err, result) {     
-                  if (err) {
-                    reject(err);
-                  } else {
-                    resolve(result[0].realizacje || 0);
-                  }
-           
-        })
-})
-}
+    const conn = await pool.getConnection();
 
+    try {
+        await conn.beginTransaction();
 
-let InsertRozjazd = (SUMA_REALIZACJI) =>{ 
-    return  new Promise((resolve,reject)=>{
+        // 1. Insert podstawowej realizacji
+        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
+        const [resInsert] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1]);
+        id = resInsert.insertId;
 
-              let BRAKUJACE_PRZELOTY = parseInt(row.przeloty) - parseInt(SUMA_REALIZACJI || 0)
-              // console.log(" BRAKUJACE_PRZELOTY: "+ BRAKUJACE_PRZELOTY)
-      if(BRAKUJACE_PRZELOTY>0){
+        // 2. Sprawdź ile brakuje (po dodaniu powyższej realizacji)
+        const sqlCheck = "SELECT sum(zrealizowano) as realizacje from artdruk.view_technologie_realizacje where wykonanie_global_id=?";
+        const [rowsCheck] = await conn.execute(sqlCheck, [wykonanie_global_id]);
+        const SUMA_REALIZACJI = rowsCheck[0]?.realizacje || 0;
 
-  let data=[row.global_id,BRAKUJACE_PRZELOTY,row.procesor_id,ID_SPRAWCY,3]
-      var sql =   "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id,zrealizowano,procesor_id,dodal,typ) values (?,?,?,?,?); ";
-      connection.execute(sql, data,function (err, result) {     
-            // if (err) reject(err); 
-                    if (err) {
-                      reject(err);
-                    }
-                    {
-                      idRozjazdu = result.insertId;
-                      resolve(BRAKUJACE_PRZELOTY);
-                    }
-           
-        })
-      }else{
-        resolve(0)
-      }
+        // 3. Logika "Rozjazdu"
+        const BRAKUJACE_PRZELOTY = parseInt(row.przeloty) - parseInt(SUMA_REALIZACJI);
+        
+        if (BRAKUJACE_PRZELOTY > 0) {
+            const sqlInsertRozjazd = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
+            const [resRozjazd] = await conn.execute(sqlInsertRozjazd, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 3]);
+            idRozjazdu = resRozjazd.insertId;
+            brakujace_przeloty_wynik = BRAKUJACE_PRZELOTY;
+        }
 
+        // 4. Historia
+        const sqlHist = "INSERT INTO artdruk.zamowienia_historia (user_id, kategoria, event, zamowienie_id) values (?,?,?,?);";
+        await conn.execute(sqlHist, [ID_SPRAWCY, row.nazwa, `Zrealizowano: ${row.zrealizowano} ark. grupa id: ${row.id}`, row.zamowienie_id]);
 
-})
-}
+        // 5. Procedury statusowe
+        await conn.execute("call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?)", [row.global_id]);
+        await conn.execute("call artdruk.aktualizacja_statusow_grup(?)", [row.technologia_id]);
 
+        // 6. Pobranie danych zwrotnych
+        const sqlWykonanie = "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=?";
+        const [resWyk] = await conn.execute(sqlWykonanie, [row.global_id]);
+        
+        const sqlGrupa = "SELECT status from artdruk.view_technologie_grupy_wykonan where technologia_id=? and id=?";
+        const [resGr] = await conn.execute(sqlGrupa, [row.technologia_id, row.grupa_id]);
 
-let Historia = () =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,row.nazwa,"Zrealizowano: "+row.zrealizowano+" ark. "+"grupa id: "+row.id,row.zamowienie_id]
-    var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
-    connection.execute(sql,data, function (err, result) {    
-          if (err){
-            reject(err); 
-          } else{
-            resolve("OK")
-          }
-           
-        })
-})
-}
+        // Zatwierdzenie wszystkiego
+        await conn.commit();
 
+        res.status(200).json({
+            status: "OK",
+            insertId: id,
+            status_wykonania: resWyk[0]?.status || 0,
+            do_wykonania: resWyk[0]?.do_wykonania || 0,
+            status_grupy: resGr[0]?.status || 0,
+            idRozjazdu: idRozjazdu,
+            brakujace_przeloty: brakujace_przeloty_wynik
+        });
 
-let Status = () =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[row.global_id]
-    var sql = "call artdruk.aktualizacja_statusu_wykonania_vs_realizacja(?) ";
-    connection.execute(sql,data, function (err, result) {    
-          if (err) {
-            reject(err); 
-          } else{
-            resolve("OK")
-          }
-           
-        })
-})
-
-}
-
-let AktualizacjaNastepnejGrupy = () =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[row.technologia_id]
-    var sql = "call artdruk.aktualizacja_statusow_grup(?) ";
-    connection.execute(sql,data, function (err, result) {    
-          if (err){
-            reject(err);
-          }  else{
-             resolve("OK")
-          }
-          
-        })
-})
-
-}
-
-
-let OdwiezWykonanie= () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[row.global_id]
-      var sql =   "SELECT status, do_wykonania from artdruk.technologie_wykonania where global_id=? ";
-      connection.execute(sql, data,function (err, result) {     
-            if (err) {
-              reject(err);
-            } else {
-              resolve({
-                status: result[0].status,
-                do_wykonania: result[0].do_wykonania,
-              });
-            }
-           
-        })
-})
-}
-
-let OdwiezGrupe = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[row.technologia_id,row.grupa_id]
-      var sql =   "SELECT status from artdruk.view_technologie_grupy_wykonan where technologia_id=? and id=? ";
-      connection.execute(sql, data,function (err, result) {     
-            if (err) {
-              reject(err);
-            } else {
-              resolve({ status_grupy: result[0].status });
-            }
-           
-        })
-})
-}
-
-
-try {
-let res1 = await  Insert();  // wstaw wykonanie
-let SUMA_REALIZACJI = await  SprawdzIleBrakuje();  // wstaw wykonanie
-let BRAKUJACE_PRZELOTY = await  InsertRozjazd(SUMA_REALIZACJI);  // wstaw wykonanie
-let res2 = await  Historia(); // dodaj do historii
-let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
-let res4 = await  OdwiezWykonanie();  // sprawdza nowy status wykonania
-let res5 = await  OdwiezGrupe();  // sprawdza nowy status grupy
-let res6 = await  AktualizacjaNastepnejGrupy();  // aktualizuj statusy wszystkich grup
-
-
-
- res.status(200).json({status:"OK",insertId : id,status_wykonania:res4.status,do_wykonania:res4.do_wykonania, status_grupy: res5.status_grupy, idRozjazdu:idRozjazdu,brakujace_przeloty:BRAKUJACE_PRZELOTY  });
     } catch (error) {
+        await conn.rollback();
+        
+        SendMail(error);
+        console.error("Błąd podczas kończenia arkusza:", error);
+        
+        res.status(200).json({ status: error.message || error });
+    } finally {
 
-       SendMail(error)
-
-        console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
-        res.status(200).json({ status: error});
+        conn.release();
     }
-     }
-
-
-module.exports = {
-  zakonczArkusz
 };
 
+module.exports = {
+    zakonczArkusz
+};
