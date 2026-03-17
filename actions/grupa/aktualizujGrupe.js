@@ -11,6 +11,7 @@ const aktualizujGrupe = async (req, res) => {
   try {
     await conn.beginTransaction(); // Rozpoczęcie transakcji
 
+
     const info = data[0]; // Informacje o zmianie czasu
     const rowGrupa = data[1]; // Dane grupy
     const wykonania = data[2] || []; // Lista wykonan

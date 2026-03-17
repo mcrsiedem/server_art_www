@@ -34,9 +34,8 @@ const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWs
 const { klienciPobierzWszystkich } = require('./klienci/klienciPobierzWszystkich');
 const { aktualizujGrupe } = require('./grupa/aktualizujGrupe');
 const { aktualizujGrupeOprawaUwagi } = require('./grupa/aktualizujGrupeOprawaUwagi');
-const { dodajRealizacjeOprawy } = require('./grupa/dodajRealizacjeOprawy');
-const { usunRealizacjeOprawy } = require('./grupa/usunRealizacjeOprawy');
-const { zakonczOpraweDodajRealizacje } = require('./grupa/zakonczOprawe');
+const { dodajRealizacjeOprawy } = require('./oprawa/dodajRealizacjeOprawy');
+const { usunRealizacjeOprawy } = require('./oprawa/usunRealizacjeOprawy');
 const { dodajRealizacjeProcesu } = require('./realizacje/dodajRealizacjeProcesu');
 const { usunRealizacjeProcesu } = require('./realizacje/usunRealizacjeProcesu');
 const { dodajRealizacjeProcesuBrak } = require('./realizacje/dodajRealizacjeProcesuBrak');
@@ -112,7 +111,6 @@ router.put('/grupa_wykonan_oprawa_uwagi/:token',verifyTokenParams('manage_oprawa
 router.put('/dodaj_info_dostepnosc_papieru/:token',verifyToken, dodajInfoDostepnoscPapieru); 
 router.post('/dodaj_realizacje_oprawy/:token',verifyTokenParams('mini_oprawa'), dodajRealizacjeOprawy); // try catch
 router.post('/usun_realizacje_oprawy/:token',verifyToken, usunRealizacjeOprawy); // try catch
-router.post('/zakoncz_oprawe_dodaj_realizacje/:token',verifyTokenParams('mini_oprawa'), zakonczOpraweDodajRealizacje); // try catch
 router.post('/zakoncz_oddanie_dodaj_wykonanie/:token',verifyTokenParams('mini_oprawa'), zakonczOddanieDodajeWykonanie); // try catch
 router.post('/dodaj_realizacje_procesu/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesu); // try catch
 router.post('/dodaj_realizacje_procesu_brak/:token',verifyTokenParams('realizacje_dodaj'), dodajRealizacjeProcesuBrak); // try catch

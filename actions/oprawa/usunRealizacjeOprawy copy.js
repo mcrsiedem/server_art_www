@@ -93,8 +93,3 @@ module.exports = {
   usunRealizacjeOprawy
 };
 
-
-// let res1 = await save().catch(error => {
-//         console.error("Błąd w save():", error);
-//         res.status(500).json({ error: "Błąd podczas zapisywania." });
-//     });
