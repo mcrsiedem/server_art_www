@@ -20,7 +20,9 @@ const dodajRealizacjeOprawy = async (req, res) => {
     try {
         // ROZPOCZĘCIE TRANSAKCJI
         await conn.beginTransaction();
-        await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+        // await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+        await conn.execute("SELECT id FROM artdruk.zamowienia WHERE id = ? FOR UPDATE", [row.zamowienie_id]);
+
 
 let insertId
         // 1. Wstawienie wykonania
@@ -69,6 +71,7 @@ let insertId
 
     } finally {
         // ZWOLNIENIE POŁĄCZENIA z powrotem do puli (kluczowe!)
+
         conn.release();
     }
 };

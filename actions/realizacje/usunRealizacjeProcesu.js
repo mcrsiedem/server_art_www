@@ -18,7 +18,9 @@ const usunRealizacjeProcesu = async (req, res) => {
 
         // BLOKADA: Inne sesje próbujące edytować to wykonanie poczekają tutaj
         // await conn.execute("SELECT global_id FROM artdruk.technologie_wykonania WHERE global_id = ? FOR UPDATE", [row.global_id]);
-        await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+        // await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+        await conn.execute("SELECT id FROM artdruk.zamowienia WHERE id = ? FOR UPDATE", [row.zamowienie_id]);
+
 
         // 1. Usunięcie realizacji z kontrolą uprawnień
         // (Używamy affectedRows, aby sprawdzić czy delete faktycznie się udał)
@@ -77,7 +79,7 @@ const usunRealizacjeProcesu = async (req, res) => {
         res.status(200).json({ status: errorMsg });
     } finally {
         // Zwolnienie połączenia do puli
-        console.log("to tutaj skasuj wykonanie")
+
 
         conn.release();
     }

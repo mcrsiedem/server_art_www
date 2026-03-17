@@ -18,7 +18,9 @@ const usunRealizacjeOprawy = async (req, res) => {
     try {
         // 1. Rozpoczęcie transakcji
         await conn.beginTransaction();
-        await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+        // await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+        await conn.execute("SELECT id FROM artdruk.zamowienia WHERE id = ? FOR UPDATE", [row.zamowienie_id]);
+
 
 
         // 2. Usunięcie realizacji

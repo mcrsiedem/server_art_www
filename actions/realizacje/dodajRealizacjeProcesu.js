@@ -16,7 +16,9 @@ const dodajRealizacjeProcesu = async (req, res) => {
 
         // BLOKADA: Inne sesje próbujące edytować to wykonanie poczekają tutaj
         // await conn.execute("SELECT global_id FROM artdruk.technologie_wykonania WHERE global_id = ? FOR UPDATE", [row.global_id]);
-        await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+        // await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+        await conn.execute("SELECT id FROM artdruk.zamowienia WHERE id = ? FOR UPDATE", [row.zamowienie_id]);
+
 
         // 1. Insert realizacji
         const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
@@ -66,6 +68,9 @@ const dodajRealizacjeProcesu = async (req, res) => {
         res.status(200).json({ status: errorMsg });
     } finally {
         // Zawsze zwalniamy połączenie do puli!
+
+      console.log("zam")
+
         conn.release();
     }
 };

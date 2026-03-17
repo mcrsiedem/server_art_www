@@ -1,94 +1,76 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { SendMail } = require("../mail/SendMail");
-const { connection, pool } = require("../mysql");
+const { pool } = require("../mysql");
 
 const usunRealizacjeOddania = async (req, res) => {
-let row = req.body;   // wykonanie oddania 
-let id_oddania = row.id_grupy  // id Oddania - zawsze 1
-let global_id_oddania = row.global_id_grupy  // global_id Oddania
+    const row = req.body; 
+    const global_id_oddania = row.global_id_grupy;
+    const token = req.params['token'];
+    
+    const { id: ID_SPRAWCY, realizacje_usun: REALIZACJE_USUN = 0 } = DecodeToken(token);
+    const zamowienie_id = req.body.zamowienie_id;
+
+    // Pobieramy połączenie z puli
+    const conn = await pool.getConnection();
+
+    try {
+        // Start transakcji
+        await conn.beginTransaction();
+        await conn.execute("SELECT id FROM artdruk.zamowienia WHERE id = ? FOR UPDATE", [row.zamowienie_id]);
 
 
+        // 1. Delete - Usuwanie realizacji
+        // Wykorzystujemy logikę: (dodal=? or 1=?) by sprawdzić uprawnienia lub własność
+        const sqlDelete = "DELETE FROM artdruk.oddania_wykonania WHERE global_id = ? AND (dodal = ? OR 1 = ?)";
+        await conn.execute(sqlDelete, [req.body.global_id, ID_SPRAWCY, REALIZACJE_USUN]);
 
-const token = req.params['token']
-let ID_SPRAWCY =  DecodeToken(token).id;
-let REALIZACJE_USUN =  DecodeToken(token).realizacje_usun || 0;
-const zamowienie_id = req.body.zamowienie_id;
+        // 2. Historia - Logowanie usunięcia
+        const eventMsg = row.typ == 1 
+            ? `Usunięto realizację oddania : ${row.zrealizowano} szt.` 
+            : `Usunięto brak nakładu : ${row.zrealizowano} szt.`;
+        
+        const sqlHistory = "INSERT INTO artdruk.zamowienia_historia (user_id, kategoria, event, zamowienie_id) VALUES (?, ?, ?, ?)";
+        await conn.execute(sqlHistory, [ID_SPRAWCY, "Oddania", eventMsg, zamowienie_id]);
 
-let Delete = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[req.body.global_id,ID_SPRAWCY,REALIZACJE_USUN]
-      var sql =   "DELETE from artdruk.oddania_wykonania where global_id=? and (dodal=? or 1=?)";
-      connection.execute(sql, data,function (err, result) {     
-            if (err) {
-              reject("Delete usun realizacja oddania "+err); 
-            }else {
-           resolve("OK")
-            }
-       
-        })
-})
-}
+        // 3. Status - Aktualizacja procedurą składowaną
+        const sqlStatus = "CALL artdruk.aktualizacja_statusu_oddania(?, ?)";
+        await conn.execute(sqlStatus, [zamowienie_id, global_id_oddania]);
 
-let Historia = () =>{ 
-    return  new Promise((resolve,reject)=>{
-   let data;
-      if(row.typ==1){
-        data=[ID_SPRAWCY,"Oddania","Usunięto realizację oddania : "+row.zrealizowano+" szt.",zamowienie_id]
-      }
-  if(row.typ==2){
-        data=[ID_SPRAWCY,"Oddania","Usunięto brak nakładu : "+row.zrealizowano+" szt.",zamowienie_id]
-      }
-    var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
-    connection.execute(sql,data, function (err, result) {    
-                if (err){
-                reject("Historia usun realizacja oddania "+err); 
-            } else resolve("OK")
-        })
-})
-}
+        // 4. OdwiezGrupe - Pobranie aktualnego stanu widoku
+        const sqlRefresh = "SELECT status, oddano FROM artdruk.view_oddania_grupy WHERE global_id = ?";
+        const [rows] = await conn.execute(sqlRefresh, [req.body.oddanie_global_id]);
+        
+        if (rows.length === 0) {
+            throw new Error("Nie znaleziono danych grupy po usunięciu");
+        }
 
-let Status = () =>{ 
-    return  new Promise((resolve,reject)=>{
-       let data=[zamowienie_id,global_id_oddania]
-    var sql = "call artdruk.aktualizacja_statusu_oddania(?,?) ";
-    connection.execute(sql,data, function (err, result) {    
-          if (err){
-                reject("Status usun realizacja oddania "+err); 
-            } else resolve("OK")
-        })
-})
+        const res4 = rows[0];
 
-}
+        // Zatwierdzenie zmian
+        await conn.commit();
 
-let OdwiezGrupe = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[req.body.oddanie_global_id]
-      var sql =   "SELECT status,oddano from artdruk.view_oddania_grupy where global_id=? ";
-      connection.execute(sql, data,function (err, result) {     
-                  if (err){
-                reject("OdwiezGrupe usun realizacja oddania "+err); 
-            }  else resolve({status:result[0].status, oddano:result[0].oddano})
-        })
-  
-})
-}
+        res.status(200).json({
+            status: "OK",
+            status_grupy: res4.status,
+            oddano: res4.oddano
+        });
 
-try {
-let res1 = await  Delete();  // wstaw wykonanie
-let res2 = await  Historia(); // dodaj do historii
-let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
-let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
-
-// pobierz tylko nowy status i odeślij go aby zaaktualizować
-res.status(200).json({status:"OK",status_grupy:res4.status,oddano:res4.oddano });
     } catch (error) {
-      SendMail(error)
-        // Ten blok przechwyci błąd `err` przekazany przez `reject(err)`
-        // z dowolnej z funkcji (Insert, Historia).
-        console.error(error);
-        res.status(200).json({ status: error});
+        // Wycofanie zmian w razie jakiegokolwiek błędu
+        if (conn) await conn.rollback();
+
+        SendMail(error);
+        console.error("Błąd podczas usuwania realizacji:", error);
+        
+        // Zwracamy błąd 500 zamiast 200, żeby front-end wiedział, że coś poszło nie tak
+        res.status(500).json({ status: "Error", message: error.message || error });
+
+    } finally {
+        // Obowiązkowe zwolnienie połączenia
+        if (conn) conn.release();
     }
-     }
+};
+
 module.exports = {
-  usunRealizacjeOddania
+    usunRealizacjeOddania
 };

@@ -1,128 +1,74 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { SendMail } = require("../mail/SendMail");
-const { connection, pool } = require("../mysql");
+const { pool } = require("../mysql");
 
 const zakonczOddanieDodajeWykonanie = async (req, res) => {
-let row = req.body;
-let id;
-const token = req.params['token']
-let ID_SPRAWCY =  DecodeToken(token).id;
+    const row = req.body;
+    const token = req.params['token'];
+    const ID_SPRAWCY = DecodeToken(token).id;
 
-const zamowienie_id = req.body.zamowienie_id;
-const grupa_id = req.body.id;
+    const { zamowienie_id, global_id, naklad } = req.body;
+    let insertId = 0;
+    let brakujacyNaklad = 0;
 
-const oddanie_global_id = req.body.global_id;
+    const conn = await pool.getConnection();
 
-
-
-let SprawdzIleBrakuje = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[oddanie_global_id]
-      var sql =   "SELECT sum(zrealizowano) as realizacje from artdruk.oddania_wykonania where oddanie_global_id=?";
-      connection.execute(sql, data,function (err, result) {     
-              if (err) {
-                          reject(err);
-                        } else  resolve(result[0].realizacje)
-        })
-})
-}
-
-let Insert = (SUMA_REALIZACJI) =>{ 
-    return  new Promise((resolve,reject)=>{
-      let BRAKUJACY_NAKLAD = parseInt(row.naklad) - parseInt(SUMA_REALIZACJI || 0)
-      if(BRAKUJACY_NAKLAD>0){
-
-          let data=[row.zamowienie_id,req.body.global_id,BRAKUJACY_NAKLAD,ID_SPRAWCY,1]
-      var sql =   "INSERT INTO artdruk.oddania_wykonania (zamowienie_id,oddanie_global_id, zrealizowano,dodal,typ) values (?,?,?,?,?); ";
-      connection.execute(sql, data,function (err, result) {     
-          //  if (err) console.log(err); 
-              if (err) {
-                          reject(err);
-                        } else {
-                          id = result.insertId
-                          resolve(BRAKUJACY_NAKLAD)
-                        }
-            
-        })
-      }else {
-        resolve("OK")
-      }
+    try {
+        await conn.beginTransaction();
+        await conn.execute("SELECT id FROM artdruk.zamowienia WHERE id = ? FOR UPDATE", [row.zamowienie_id]);
 
 
-})
-}
+        // 1. SprawdzIleBrakuje - sumujemy obecne realizacje
+        const sqlCheck = "SELECT SUM(zrealizowano) as realizacje FROM artdruk.oddania_wykonania WHERE oddanie_global_id = ?";
+        const [rowsCheck] = await conn.execute(sqlCheck, [global_id]);
+        const sumaRealizacji = rowsCheck[0].realizacje || 0;
 
+        brakujacyNaklad = parseInt(naklad) - parseInt(sumaRealizacji);
 
-let Historia = (BRAKUJACY_NAKLAD) =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY,"Oddanie","Oddano "+BRAKUJACY_NAKLAD+" szt.",zamowienie_id]
-    var sql =   "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?); ";
-    connection.execute(sql,data, function (err, result) {    
-          if (err) {
-                          reject(err);
-                        } else resolve("OK");
-        })
-})
-}
+        // 2. Insert & Historia - tylko jeśli faktycznie coś zostało do oddania
+        if (brakujacyNaklad > 0) {
+            // Wstawienie wykonania
+            const sqlInsert = "INSERT INTO artdruk.oddania_wykonania (zamowienie_id, oddanie_global_id, zrealizowano, dodal, typ) VALUES (?, ?, ?, ?, ?)";
+            const [resultInsert] = await conn.execute(sqlInsert, [zamowienie_id, global_id, brakujacyNaklad, ID_SPRAWCY, 1]);
+            insertId = resultInsert.insertId;
 
-/// tuuuuuuu
+            // Dodanie do historii
+            const sqlHistory = "INSERT INTO artdruk.zamowienia_historia (user_id, kategoria, event, zamowienie_id) VALUES (?, ?, ?, ?)";
+            await conn.execute(sqlHistory, [ID_SPRAWCY, "Oddanie", `Oddano ${brakujacyNaklad} szt.`, zamowienie_id]);
+        }
 
+        // 3. Status - Aktualizacja statusu grupy/zamówienia
+        const sqlStatus = "CALL artdruk.aktualizacja_statusu_oddania(?, ?)";
+        await conn.execute(sqlStatus, [zamowienie_id, global_id]);
 
+        // 4. OdwiezGrupe - Pobranie danych do frontendu
+        const sqlRefresh = "SELECT status, oddano FROM artdruk.view_oddania_grupy WHERE global_id = ?";
+        const [rowsRefresh] = await conn.execute(sqlRefresh, [global_id]);
+        const daneGrupy = rowsRefresh[0] || { status: null, oddano: 0 };
 
-let Status = () =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[zamowienie_id,req.body.global_id]
-    var sql = "call artdruk.aktualizacja_statusu_oddania(?,?) ";
-    connection.execute(sql,data, function (err, result) {    
-          if (err) {
-                          reject(err);
-                        } else resolve("OK");
-        })
-})
+        await conn.commit();
 
-}
+        res.status(200).json({
+            status: "OK",
+            insertId: insertId,
+            status_grupy: daneGrupy.status,
+            brakujacy_naklad: brakujacyNaklad,
+            oddano: daneGrupy.oddano
+        });
 
-
-
-let OdwiezGrupe = () =>{ 
-    return  new Promise((resolve,reject)=>{
-  let data=[req.body.global_id]
-      var sql =   "SELECT status,oddano from artdruk.view_oddania_grupy where global_id=? ";
-      connection.execute(sql, data,function (err, result) {     
-            if (err) {
-                          reject(err);
-                        } else resolve({status:result[0].status, oddano:result[0].oddano})
-        })
-})
-}
-
-
-
-
-try {
-let SUMA_REALIZACJI = await  SprawdzIleBrakuje();  // wstaw wykonanie
-let BRAKUJACY_NAKLAD = await  Insert(SUMA_REALIZACJI);  // wstaw wykonanie
-let res2 = await  Historia(BRAKUJACY_NAKLAD); // dodaj do historii
-let res3 = await  Status();  // zmieñ status grupy - w trakcie lub zakoñczone
-let res4 = await  OdwiezGrupe();  // sprawdza nowy status grupy
-
-
-res.status(200).json({status:"OK",insertId : id || 0,status_grupy:res4.status, brakujacy_naklad:BRAKUJACY_NAKLAD,oddano:res4.oddano });
     } catch (error) {
+        if (conn) await conn.rollback();
+        
+        SendMail(error);
+        console.error("Błąd w zakonczOddanieDodajeWykonanie:", error);
+        res.status(500).json({ status: "Error", message: error.message });
 
-        SendMail(error)
-        console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
-        res.status(200).json({ status: error});
+    } finally {
+
+        if (conn) conn.release();
     }
-     }
-
-
-module.exports = {
-  zakonczOddanieDodajeWykonanie
 };
 
-
-// let res1 = await save().catch(error => {
-//         console.error("Błąd w save():", error);
-//         res.status(500).json({ error: "Błąd podczas zapisywania." });
-//     });
+module.exports = {
+    zakonczOddanieDodajeWykonanie
+};
