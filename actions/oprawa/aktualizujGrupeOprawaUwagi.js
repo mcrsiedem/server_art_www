@@ -39,7 +39,7 @@ const aktualizujGrupeOprawaUwagi = async (req, res) => {
     } finally {
         // Zwalniamy połączenie do puli
 
-        console.log("oprawa uwagi")
+        // console.log("oprawa uwagi")
         if (conn) conn.release();
     }
 };
