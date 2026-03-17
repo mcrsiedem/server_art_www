@@ -20,6 +20,8 @@ const dodajRealizacjeOprawy = async (req, res) => {
     try {
         // ROZPOCZĘCIE TRANSAKCJI
         await conn.beginTransaction();
+        await conn.execute("SELECT id FROM artdruk.technologie WHERE id = ? FOR UPDATE", [row.technologia_id]);
+
 let insertId
         // 1. Wstawienie wykonania
         if(brak) {
