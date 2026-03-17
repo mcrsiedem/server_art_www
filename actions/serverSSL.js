@@ -60,34 +60,21 @@ app.use(cors(
 
 const serverSSL = https.createServer({
 key: fs.readFileSync(path.join(__dirname,'cert','privkey.pem')),
-// key: fs.readFileSync(path.join(__dirname,'cert','key.pem')),
+
 cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem'))
 },app)
 
 
 
-// const io = new Server(serverSSL,{
-//   // withCredential: true,
-//   cors:{
-//      origin:["https://planer.artdruk.eu"]
-//      //ss
-//   },
-// })
+
 
 const io = new Server(serverSSL, {
-  // ostatnio dodane na próbe
+
   connectionStateRecovery: {},
   cors: {
     origin: ["https://planer.artdruk.eu"],
   },
 });
-// io.on("connection", (socket)=>{
-//   console.log(new Date().toString()+ `User Connected: ${socket.id}`)
-
-//   socket.on("send_mesage", (data) => {
-//     console.log(`Wiadomość: ${data.message}`)
-//     socket.broadcast.emit("receive_message", data)
-//   })
 
 
 
@@ -98,7 +85,6 @@ const io = new Server(serverSSL, {
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
-  // console.log("TOKEN: "+token)
 
   if (token) {
     try {
@@ -127,13 +113,7 @@ io.use((socket, next) => {
 let onlineUsers = [];
 const addUser = (socket) =>{
 
-    // przetestować  
 
-
-    // if (!socket.userData || !socket.userData.id) {
-    //     console.warn(`[SOCKET] Odrzucono dodanie użytkownika (socket ID: ${socket.id}) - brak danych uwierzytelniających.`);
-    //     return; 
-    // }
 
 
 
@@ -150,7 +130,6 @@ const addUser = (socket) =>{
         status: "Aktywny"
       });
 
-  //  console.log(onlineUsers)
   io.emit("onlineUsers", onlineUsers);
 }
 
@@ -158,7 +137,6 @@ const addUser = (socket) =>{
 const removeUser = (socket) =>{
 
 onlineUsers = onlineUsers.filter(user => user.socketId != socket.id)
-      //  console.log(onlineUsers)
 }
 io.on("connection", (socket) => {
 
@@ -187,16 +165,11 @@ io.on("connection", (socket) => {
   } catch (err) {
     console.error("[SOCKET] Błąd podczas próby dodania użytkownika:", err);
   }
-  // addUser(socket) - zakomentowane 4-02-2026
-
-  // console.log(`IO. Zalogowany użytkownik ID: ${socket.userData.id}  ${socket.userData.imie} ${socket.userData.nazwisko} Połączony!`);
   
   socket.on("disconnect", () => {
-  // console.log(`User disconnected `, socket.id);
   removeUser(socket)
 io.emit("onlineUsers", onlineUsers);
   });
-  // console.log(new Date().toString()+ ` User Connected: ${socket.id}`);
 
 
   socket.on("send_mesage", (data) => {
