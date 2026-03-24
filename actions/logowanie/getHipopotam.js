@@ -1,4 +1,5 @@
-const { pool } = require("../mysql");
+
+
 
 const getHipopotam = (req, res) => {
   try {

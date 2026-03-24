@@ -278,5 +278,5 @@ const addNewUser = (data,onlineUsers) =>{
 
 
 module.exports = {
-  server,io
+  server
 };
