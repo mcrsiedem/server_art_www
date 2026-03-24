@@ -61,8 +61,10 @@ const { zamowienieOddaj } = require('./zamowienia/zamowienieOddaj');
 const { dodajProof } = require('./proofy/dodajProof');
 const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
 const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPobierz');
+const { getHipopotam } = require('./logowanie/getHipopotam');
 
         router.post('/version/', postVersion); 
+        router.get('/hip/', getHipopotam); 
         router.get('/version/', connections.getVersion); 
         router.get('/users/:login/:haslo/:hash',connections.getUser);
         router.get('/all_users/:token',verifyToken,connections.getAllUsers);
