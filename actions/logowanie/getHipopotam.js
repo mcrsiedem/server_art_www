@@ -1,14 +1,15 @@
 const { pool } = require("../mysql");
 
 const getHipopotam = (req, res) => {
-
-  const io = req.io;
-  io.emit("hipopotam", {
-    tresc: "OK"
-    
-  });
-
- res.status(201).json("ok");
+  try {
+    const io = req.io;
+    io.emit("hipopotam", {
+      tresc: "OK",
+    });
+  } catch (err) {
+  } finally {
+    res.status(201).json("ok");
+  }
 };
 
 module.exports = {
