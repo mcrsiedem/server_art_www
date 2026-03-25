@@ -28,10 +28,10 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  req.io = io; // Przypisujemy instancję io do obiektu request
-  next();
-});
+// app.use((req, res, next) => {
+//   req.io = io; // Przypisujemy instancję io do obiektu request
+//   next();
+// });
 
 app.use("/api_www", apiRouter);
 app.use(function (req, res, next) {
