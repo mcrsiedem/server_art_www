@@ -1,14 +1,8 @@
 
 
-// const { connection, pool } = require("./mysql");
 const { pool } = require("./mysql");
 const jwt = require("jsonwebtoken");
-// const { teraz } = require("./czas/teraz");
-// const { dodaj_minuty } = require("./czas/dodaj_minuty");
 const { ACCESS_TOKEN } = require("./logowanie/ACCESS_TOKEN");
-// const { DecodeToken } = require("./logowanie/DecodeToken");
-// const { nazwaEtapPlikow } = require("./nazwy/nazwaEtapPlikow");
-// const { nazwaElementu } = require("./nazwy/nazwaElementu");
 const { exec } = require('child_process');
 
 class Connections {
