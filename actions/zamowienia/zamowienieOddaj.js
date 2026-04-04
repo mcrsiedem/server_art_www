@@ -1,56 +1,41 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { SendMail } = require("../mail/SendMail");
-const { connection, pool } = require("../mysql");
-
-const zamowienieOddaj = async (req, res) => {
+const { pool } = require("../mysql"); // Używamy tylko pool
 
   // specjalny guzik w zamówieniu do sztucznego ODDANIA pracy dostępny tylko dla mnie w celu porządkowania
 
 
-  let data = req.body; // [text,global_id,zamowienie_id]
+const zamowienieOddaj = async (req, res) => {
+  const data = req.body;
+  const token = req.params['token'];
+  
+  // Zakładam, że id sprawcy jest potrzebne do logiki, którą dopiszesz, 
+  // bo w samym zapytaniu SQL go nie używasz.
+  const ID_SPRAWCY = DecodeToken(token).id;
+  const id = data.id;
 
+  try {
 
-const token = req.params['token']
+    // Korzystamy bezpośrednio z pool.query lub pool.execute.
+    // Jeśli używasz mysql2/promise, możesz to zapisać tak:
+    const sql = "UPDATE artdruk.zamowienia SET etap = 16 WHERE id = ?";
+    
+    // Wykonanie zapytania bezpośrednio przez pool
+    await pool.execute(sql, [id]);
 
-let ID_SPRAWCY =  DecodeToken(token).id;
-
-let etap = data.etap
-let id = data.id
-
-
-let Update =  () =>{ 
-    return  new Promise((resolve,reject)=>{
-      var sql =   "update artdruk.zamowienia set etap=16 where id =?"
-      connection.execute(sql, [id],function (err, result) {
-                if (err) {
-                  console.log(err)
-                          reject(err);
-                        } else resolve("OK"); 
-              });
-})
-}
-
-
-
-
-
-try {
-  // console.log("Próbuję wykonać Update...");
-let res1 = await  Update();  // wstaw wykonanie
-
-// console.log(id)
-
-res.status(200).json({ status: "ok"});
-    } catch (error) {
-      
-        SendMail(error)
-        console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
-        res.status(200).json({ status: error});
-    }
-
-      }
-
+    res.status(200).json({ status: "ok" });
+  } catch (error) {
+    // Warto wysłać maila, ale też zalogować co dokładnie poszło nie tak
+    SendMail(error);
+    console.error("Błąd podczas operacji na bazie danych:", error);
+    
+    // Zwracamy błąd, ale pamiętaj, że wysyłanie pełnego obiektu błędu 
+    // do klienta (res.json) może być ryzykowne ze względów bezpieczeństwa.
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
 
 module.exports = {
   zamowienieOddaj
 };
+
