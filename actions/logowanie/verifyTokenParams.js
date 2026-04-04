@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN } = require("./ACCESS_TOKEN");
-const { pool } = require("../mysql"); // pool zostaje, jeśli używasz go w innych miejscach pliku
 const dataStore = require('../uprawnienia/dataStore');
 
 function verifyTokenParams(uprawnienie) {
