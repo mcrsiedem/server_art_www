@@ -27,7 +27,6 @@ const { uprawnienia } = require('./uprawnienia/getUprawnienia');
 const { verifyTokenParams } = require('./logowanie/verifyTokenParams');
 const { updatePlikiEtapGrupyWykonan } = require('./pliki/updatePlikiEtapGrupyWykonan');
 const { updatePlikiEtapZamowienia } = require('./pliki/updatePlikiEtapZamowienia');
-const { zamowienieUpdate } = require('./zamowienia/zamowienieUpdate2');
 const { zamowienieInsertNumer } = require('./zamowienia/zamowienieInsertNumer');
 const { zamowienieInsert } = require('./zamowienia/zamowienieInsert2');
 const { zamowieniePobierzWszystkie } = require('./zamowienia/zamowieniePobierzWszystkie2');
