@@ -1,6 +1,6 @@
-const { pool } = require("../mysql"); // Używamy tylko pool
-const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
-const { DecodeToken } = require("../logowanie/DecodeToken");
+const { pool } = require("../../mysql"); // Używamy tylko pool
+const { ifNoDateSetNull_exec } = require("../../czas/ifNoDateSetNull_exec");
+const { DecodeToken } = require("../../logowanie/DecodeToken");
 
 // Zmieniamy funkcję na asynchroniczną, aby użyć await
 const zamowienieUpdatePool = async (req, res) => {

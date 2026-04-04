@@ -1,7 +1,7 @@
-const { pool } = require("../mysql");
-const { DecodeToken } = require("../logowanie/DecodeToken");
-const { ifNoDateSetNull_exec } = require("../czas/ifNoDateSetNull_exec");
-const { getShortYear } = require("../czas/getShortYear");
+const { pool } = require("../../mysql");
+const { DecodeToken } = require("../../logowanie/DecodeToken");
+const { ifNoDateSetNull_exec } = require("../../czas/ifNoDateSetNull_exec");
+const { getShortYear } = require("../../czas/getShortYear");
 
 const zamowienieInsert = async (req, res) => {
   const token = req.params['token'];
