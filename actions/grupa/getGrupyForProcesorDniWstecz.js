@@ -1,5 +1,5 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
-const { connection, pool } = require("../mysql");
+const {pool } = require("../mysql");
 
 const getGrupyForProcesorDniWstecz = async (req, res) => {
 

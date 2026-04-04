@@ -1,72 +1,54 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
-const { SendMail } = require("../mail/SendMail");
-const { connection, pool } = require("../mysql");
+const { pool } = require("../mysql");
 
 const aktualizujProof = async (req, res) => {
-  let data = req.body; // [text,global_id,zamowienie_id]
+  const data = req.body;
+  const token = req.params['token'];
 
-   let text = data[0]
-   let global_id = data[1]
-   let zamowienie_id = data[2]
-const token = req.params['token']
+  // Dekodujemy ID sprawcy
+  const ID_SPRAWCY = DecodeToken(token).id;
 
-let ID_SPRAWCY =  DecodeToken(token).id;
+  // Wyciągamy dane z body - jeśli czegoś brakuje, podstawiamy null
+  const {
+    id = null,
+    firma_id = null,
+    klient_id = null,
+    data_zamowienia = null,
+    uwagi = null,
+    status = null,
+    format = null,
+    ilosc = null,
+    faktura = null
+  } = data;
 
-let firma_id = data.firma_id || null;
-let klient_id = data.klient_id || null;
-let data_zamowienia = data.data_zamowienia || null;
-let uwagi = data.uwagi || null;
-let status = data.status || null;
-let format = data.format || null;
-let ilosc = data.ilosc|| null;
-let id = data.id || null;
-let faktura = data.faktura || null;
+  try {
+    // 1. Wykonujemy Update
 
+    const sqlUpdate = `
+      UPDATE artdruk.zamowienia_proofy 
+      SET firma_id=?, klient_id=?, data_zamowienia=?, uwagi=?, status=?, format=?, ilosc=?, faktura=? 
+      WHERE id = ?
+    `;
+    const updateValues = [firma_id, klient_id, data_zamowienia, uwagi, status, format, ilosc, faktura, id];
+    
+    await pool.execute(sqlUpdate, updateValues);
 
-let Update =  () =>{ 
-    return  new Promise((resolve,reject)=>{
-      var sql =   "update artdruk.zamowienia_proofy set firma_id=?,klient_id=?, data_zamowienia=?, uwagi=?, status=?, format=?, ilosc=?,faktura=? where id =?"
-      connection.execute(sql, [firma_id,klient_id,data_zamowienia,uwagi,status,format,ilosc,faktura,id],function (err, result) {
-                if (err) {
-                  console.log(err)
-                          reject(err);
-                        } else resolve("OK"); 
-              });
-})
-}
+    // 2. Dodajemy wpis do historii
+    const sqlHistory = "INSERT INTO artdruk.zamowienia_proof_historia (user_id, uwagi, proof_id) VALUES (?, ?, ?)";
+    const historyText = `Klient: ${klient_id} Data: ${data_zamowienia} Format: ${format} Ilość: ${ilosc} Uwagi: ${uwagi} Faktura: ${faktura}`;
+    
+    await pool.execute(sqlHistory, [ID_SPRAWCY, historyText, id]);
 
+    // Sukces
+    res.status(200).json({ status: "ok" });
 
-let Historia = () =>{ 
-    return  new Promise((resolve,reject)=>{
-    let data=[ID_SPRAWCY, `Klient: ${klient_id} Data: ${data_zamowienia} Format: ${format} Ilość: ${ilosc} Uwagi: ${uwagi} Faktura: ${faktura}` ,id]
-    var sql =   "INSERT INTO artdruk.zamowienia_proof_historia (user_id,uwagi,proof_id) values (?,?,?); ";
-    connection.execute(sql,data, function (err, result) {    
-          if (err) {
-                          reject(err);
-                        } else resolve("OK");
-        })
-})
-}
-
-
-
-try {
-  // console.log("Próbuję wykonać Update...");
-let res1 = await  Update();  // wstaw wykonanie
-// console.log("Wynik Update:", res1); // Teraz powinno się wyświetlić
-let res2 = await  Historia(); // dodaj do historii
-console.log(res1)
-
-res.status(200).json({ status: "ok"});
-    } catch (error) {
-      
-        // SendMail(error)
-        console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
-        res.status(200).json({ status: error});
-    }
-
-      }
-
+  } catch (error) {
+    console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
+    
+    // Warto wysłać SendMail(error) jeśli masz to odkomentowane w oryginale
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
 
 module.exports = {
   aktualizujProof

@@ -18,14 +18,14 @@ const updatePlikiEtapGrupyWykonan = async (req, res) => {
     let ID_SPRAWCY = DecodeToken(token).id;
     
     // Zmienna na połączenie, które pobierzemy z puli
-    let connection;
+    let conn;
 
     try {
         // 2. Pobranie połączenia z puli
-        connection = await pool.getConnection();
+        conn = await pool.getConnection();
 
         // 3. Rozpoczęcie transakcji
-        await connection.beginTransaction();
+        await conn.beginTransaction();
         
         // 4. Wykonanie operacji w ramach transakcji (save, save2)
 
@@ -37,19 +37,19 @@ const updatePlikiEtapGrupyWykonan = async (req, res) => {
             zamowienie_id
         ];
         var sql1 = "INSERT INTO artdruk.zamowienia_historia (user_id,kategoria,event,zamowienie_id) values (?,?,?,?);";
-        await connection.execute(sql1, data1);
+        await conn.execute(sql1, data1);
         // Po udanym wykonaniu, kontynuujemy
 
         // Operacja 2: Wywołanie procedury składowanej (save2)
-        // Uwaga: Użycie connection.query dla CALL i pool.execute dla INSERT/UPDATE/SELECT jest ok, ale 
-        // dla czystości kodu i bezpieczeństwa, można użyć connection.execute z placeholderami
-        // jeśli procedura składowana nie akceptuje, poniższe użycie connection.query jest poprawne.
+        // Uwaga: Użycie conn.query dla CALL i pool.execute dla INSERT/UPDATE/SELECT jest ok, ale 
+        // dla czystości kodu i bezpieczeństwa, można użyć conn.execute z placeholderami
+        // jeśli procedura składowana nie akceptuje, poniższe użycie conn.query jest poprawne.
         var sql2 = "call artdruk.update_pliki_etap_grupy_wykonan (?, ?, ?, ?)";
-        await connection.execute(sql2, [zamowienie_id, element_id, global_id_grupa_row, etap]);
+        await conn.execute(sql2, [zamowienie_id, element_id, global_id_grupa_row, etap]);
         // Po udanym wykonaniu, kontynuujemy
         
         var sql3 = "select etap from artdruk.view_zamowienia_pliki where zamowienie_id = ?";
-        const [rows] = await connection.execute(sql3, [zamowienie_id]);
+        const [rows] = await conn.execute(sql3, [zamowienie_id]);
         
         let min_etap;
         if (rows && rows.length > 0) {
@@ -64,19 +64,19 @@ const updatePlikiEtapGrupyWykonan = async (req, res) => {
 
         // Operacja 4: Aktualizacja etapu zamówienia (save4)
         var sql4 = "update artdruk.zamowienia set etap = ? where id = ?";
-        await connection.execute(sql4, [min_etap, zamowienie_id]);
+        await conn.execute(sql4, [min_etap, zamowienie_id]);
 
         // 6. Zatwierdzenie transakcji
-        await connection.commit();
+        await conn.commit();
 
         // 7. Zwrócenie odpowiedzi
         res.status(200).json('OK');
 
     } catch (error) {
         // 8. Wycofanie transakcji w przypadku błędu
-        if (connection) {
+        if (conn) {
             try {
-                await connection.rollback();
+                await conn.rollback();
             } catch (rollbackError) {
                 // Logowanie błędu wycofania transakcji
                 console.error("Błąd podczas rollbacku transakcji:", rollbackError);
@@ -91,8 +91,8 @@ const updatePlikiEtapGrupyWykonan = async (req, res) => {
 
     } finally {
         // 10. Zwolnienie połączenia z powrotem do puli
-        if (connection) {
-            connection.release();
+        if (conn) {
+            conn.release();
         }
     }
 }

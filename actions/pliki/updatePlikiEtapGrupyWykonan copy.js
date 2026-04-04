@@ -1,4 +1,4 @@
-const { connection, pool } = require("../mysql");
+const { pool } = require("../mysql");
 
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { nazwaElementu } = require("../nazwy/nazwaElementu");
