@@ -1,35 +1,30 @@
-const { connection, pool } = require("../mysql");
+const { pool } = require("../mysql");
 
-const ZamowieniaInfoGrupy = (req, res) => {
-  let grupy = req.body;
-  // sumuje przeloty druku i falocowania z przeslanej tablicy zamowień
-  // czyli np wszystkie wsipy
+const ZamowieniaInfoGrupy = async (req, res) => {
+  const grupy = req.body;
+  let suma_przelotow = 0;
 
-//   let technologia_id = wykonanieRow.technologia_id;
+  console.log(`info grupy`);
 
-let suma_przelotow =0;
+  try {
+    // Używamy pętli for...of z await, aby poczekać na każde zapytanie
+    for (let grupa of grupy) {
+      const sql = "SELECT sum(przeloty) as przeloty FROM artdruk.technologie_grupy_wykonan WHERE global_id = ?";
+      
+      // Wykonujemy zapytanie przy użyciu pool
+      const [rows] = await pool.query(sql, [grupa.global_id]);
+      
+      const przeloty = parseInt(rows[0].przeloty || 0);
+      suma_przelotow += przeloty;
+    }
 
-// console.log(grupy)
+    // Po zakończeniu pętli wysyłamy zsumowany wynik
+    res.status(200).json({ suma_przelotow: suma_przelotow });
 
-  for( let grupa of grupy){
-
-
- var sql = " SELECT sum(przeloty) as przeloty FROM artdruk.technologie_grupy_wykonan where global_id = "+ grupa.global_id
- connection.query(sql, function (err, result) {
-  suma_przelotow = suma_przelotow + parseInt(result[0].przeloty || 0)
-    if (err) console.log(err)
-    });
+  } catch (err) {
+    console.error("Błąd bazy danych:", err);
+    res.status(500).json({ error: "Błąd serwera podczas liczenia przelotów" });
   }
-
-
-    var sql = "commit"
-connection.query(sql, function (err, result) {
-    if (err) console.log(err)
-        res.status(200).json({suma_przelotow:suma_przelotow})  
-
- })
-
-  
 };
 
 module.exports = {

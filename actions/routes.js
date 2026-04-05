@@ -18,7 +18,7 @@ const { zapiszTechnologieInsertGrupyOprawa } = require("./zapis/ZapiszTechnologi
 const { zapiszTechnologieInsertWykonania } = require("./zapis/ZapiszTechnologieInsertWykonania");
 const { zapiszTechnologieInsertProcesyElementow } = require("./zapis/ZapiszTechnologieInsertProcesyElementow");
 const { zapiszTechnologieInsertGrupyOprawaHarmonogram } = require('./zapis/ZapiszTechnologieInsertGrupyOprawaHarmonogram');
-const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
+// const { ZmienEtapWydrukowane } = require('./wykonania/ZmienEtapWydrukowane');
 const { ZamowieniaInfo } = require('./wykonania/ZamowieniaInfo');
 const { SendMailPlaner } = require('./mail/SendMailPlaner');
 const { ZamowieniaInfoGrupy } = require('./wykonania/ZamowieniaInfoGrupy');
@@ -141,7 +141,7 @@ router.put('/updateWydaniePapieru_status/:token',verifyToken,connections.updateW
 router.post('/insertWydaniePapieru_status/:token',verifyToken,connections.insertWydaniePapieru_status);
 router.post('/insertWydaniePapieru_status_multiselect/:token',verifyToken,connections.insertWydaniePapieru_status_multiselect);
 router.put('/zmien_status_przerwy/:token',verifyToken,connections.zmien_status_przerwy);
-router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
+// router.put('/zmieni_etap_wydrukowane/:token',verifyToken,ZmienEtapWydrukowane);
 router.put('/zamowienie_oddaj/:token',verifyToken,zamowienieOddaj);
 router.put('/zamowieniaInfo/:token',verifyToken,ZamowieniaInfo);
 router.put('/zamowieniaInfoGrupy/:token',verifyToken,ZamowieniaInfoGrupy);
