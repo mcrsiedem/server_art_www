@@ -109,7 +109,7 @@ for (let grupa of posortowaneGrupy) {
     grupa.element_id, 
     grupa.przeloty, 
     grupa.status, 
-    grupa.stan, 
+    daneTech.stan, 
     grupa.uwagi
   ];
 
@@ -147,7 +147,7 @@ for (let grupaO of posortowaneGrupyOprawa) {
     grupaO.oprawa_id, grupaO.naklad, technologia_id, daneTech.zamowienie_id, 
     grupaO.mnoznik, czasO, startPointO, czasO, grupaO.narzad, grupaO.nazwa, 
     grupaO.predkosc, grupaO.proces_id, grupaO.procesor_id, grupaO.status, 
-    grupaO.stan, grupaO.uwagi
+    daneTech.stan, grupaO.uwagi
   ];
 
   await conn.query(sqlOprawa, paramsOprawa);
