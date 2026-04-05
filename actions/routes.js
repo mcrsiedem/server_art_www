@@ -60,6 +60,7 @@ const { zamowienieOddaj } = require('./zamowienia/zamowienieOddaj');
 const { dodajProof } = require('./proofy/dodajProof');
 const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
 const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPobierz');
+const { zapiszTechnologie } = require('./zapis/ZapiszTechnologie');
 // const { getHipopotam } = require('./logowanie/getHipopotam');
 
         router.post('/version/', postVersion); 
@@ -91,6 +92,7 @@ router.post('/dodaj_realizacje_oddania/:token',verifyTokenParams('mini_oprawa'),
 router.get('/oddania_wykonania/:grupa_global_id/:token',verifyToken,connections.getOddaniaWykonania);
 router.post('/usun_realizacje_oddania/:token',verifyToken, usunRealizacjeOddania); // try catch
 router.get('/technologie_parametry/:idTechnologii/:token',verifyToken,connections.getParametryTechnologii);
+router.post('/zapiszTechnologie/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologie); // zapisuje technologie nowa wersja useTechnologia
 router.post('/zapiszTechnologieInsertDane/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertDane); // zapisuje technologie
 router.post('/zapiszTechnologieInsertProdukty/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProdukty); 
 router.post('/zapiszTechnologieInsertElementy/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertElementy); 

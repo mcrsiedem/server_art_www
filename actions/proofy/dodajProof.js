@@ -1,33 +1,34 @@
 const { DecodeToken } = require("../logowanie/DecodeToken");
 const { SendMail } = require("../mail/SendMail");
-const { connection, pool } = require("../mysql");
+const { pool } = require("../mysql"); // używamy pool
 
 const dodajProof = async (req, res) => {
   const token = req.params["token"];
+  const decoded = DecodeToken(token);
+  const ID_SPRAWCY = decoded.id;
 
-  let ID_SPRAWCY = DecodeToken(token).id;
-
-  let Dodaj = () => {
-    return new Promise((resolve, reject) => {
-      let data = [ID_SPRAWCY];
-      var sql = "INSERT INTO artdruk.zamowienia_proofy (utworzyl_user_id) values (?); ";
-      connection.execute(sql, data, function (err, result) {
-        if (err) {
-          reject(err);
-        } else resolve(result.insertId);
-      });
-    });
-  };
+  console.log(`dodaj proofa`);
 
   try {
-    // console.log("Wynik Update:", res1); // Teraz powinno się wyświetlić
-    let res2 = await Dodaj(); // dodaj do historii
-    console.log(res2)
-    res.status(200).json({ status: "ok", id: res2 });
+    const sql = "INSERT INTO artdruk.zamowienia_proofy (utworzyl_user_id) VALUES (?)";
+    
+    // pool.execute zwraca tablicę [rows, fields], używamy destrukturyzacji
+    const [result] = await pool.execute(sql, [ID_SPRAWCY]);
+
+    console.log("Nowy ID:", result.insertId);
+    
+    res.status(200).json({ 
+      status: "ok", 
+      id: result.insertId 
+    });
+
   } catch (error) {
+    // Warto wysłać maila z informacją o błędzie
     SendMail(error);
     console.error("Wystąpił błąd podczas operacji na bazie danych:", error);
-    res.status(200).json({ status: error });
+    
+    // Zwracamy status 500 przy błędzie (zamiast 200), żeby frontend wiedział, że coś poszło nie tak
+    res.status(500).json({ status: "error", message: error.message });
   }
 };
 
