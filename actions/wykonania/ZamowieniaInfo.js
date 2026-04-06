@@ -37,12 +37,21 @@ const ZamowieniaInfo = async (req, res) => {
       WHERE zamowienie_id IN (?)
     `;
 
+        const sqlWartosc = `
+      SELECT 
+        SUM(wartosc_zamowienia) as wartosc_zamowienia
+      FROM artdruk.zamowienia 
+      WHERE id IN (?)
+    `;
+
     // Wykonujemy oba zapytania równolegle dla maksymalnej szybkości
     const [resPrzeloty] = await pool.query(sqlPrzeloty, [ids]);
     const [resNaklady] = await pool.query(sqlNaklady, [ids]);
+    const [resWartosc] = await pool.query(sqlWartosc, [ids]);
 
     const p = resPrzeloty[0];
     const n = resNaklady[0];
+    const w = resWartosc[0];
 
     res.status(200).json({
       przeloty_druk: Number(p.druk || 0),
@@ -51,7 +60,9 @@ const ZamowieniaInfo = async (req, res) => {
       przeloty_falc_zakonczone: Number(p.falc_zak || 0),
       naklad: Number(n.naklad || 0),
       naklad_zeszyt: Number(n.naklad_zeszyt || 0),
-      naklad_klejona: Number(n.naklad_klejona || 0)
+      naklad_klejona: Number(n.naklad_klejona || 0),
+      wartosc_zamowienia: Number(w.wartosc_zamowienia || 0)
+      // wartosc_zamowienia: w.wartosc_zamowienia || 0
     });
 
   } catch (error) {
