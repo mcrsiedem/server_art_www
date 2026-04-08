@@ -61,6 +61,7 @@ const { dodajProof } = require('./proofy/dodajProof');
 const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
 const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPobierz');
 const { zapiszTechnologie } = require('./zapis/ZapiszTechnologie');
+const { usunTechnologie } = require('./zapis/UsunTechnologie');
 // const { getHipopotam } = require('./logowanie/getHipopotam');
 
         router.post('/version/', postVersion); 
@@ -183,7 +184,8 @@ router.get('/zmienCzasTrwaniaGrupyOprawaPrzerwa/:drop_grupa_global_id/:nowy_koni
 router.get('/zmienCzasTrwaniaGrupyPrzerwa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyPrzerwa);
 router.get('/skasujGrupe/:global_id_grupa/:token',verifyTokenParams('technologia_zapis'),connections.skasujGrupe);
 router.get('/skasujGrupeOprawa/:global_id_grupa/:token',verifyTokenParams('technologia_zapis'),connections.skasujGrupeOprawa);
-router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),connections.skasujTechnologie);
+router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),connections.skasujTechnologie); //stare
+router.get('/usunTechnologie/:technologia_id/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),usunTechnologie); //nowe
 router.delete('/delete_zamowienie/:token',verifyTokenParams('zamowienie_skasuj'),connections.deleteZamowienie);
 router.delete('/odblokuj_zamowienie/:token',verifyToken,connections.odblokujZamowienie);
 router.get('/backup/:token',verifyTokenParams('technologia_zapis'),connections.backup);
