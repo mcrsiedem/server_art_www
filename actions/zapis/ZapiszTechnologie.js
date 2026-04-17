@@ -94,7 +94,7 @@ for (let grupa of posortowaneGrupy) {
     grupa.id, 
     grupa.indeks, 
     technologia_id,         // nowe ID z bazy
-    grupa.zamowienie_id, 
+    daneTech.zamowienie_id, 
     grupa.mnoznik, 
     czasMinuty,             // czas
     startPoint,             // dla DATE_ADD (koniec)
