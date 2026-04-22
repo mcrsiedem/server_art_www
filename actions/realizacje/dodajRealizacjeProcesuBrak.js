@@ -8,6 +8,8 @@ const dodajRealizacjeProcesuBrak = async (req, res) => {
     const wykonanie_global_id = row.global_id;
     const ID_SPRAWCY = DecodeToken(token).id;
     let insertId = null;
+    let proces_nazwa_id = row.proces_nazwa_id
+
 
     // Pobieramy połączenie z puli
     const conn = await pool.getConnection();
@@ -33,8 +35,8 @@ const dodajRealizacjeProcesuBrak = async (req, res) => {
 
         if (BRAKUJACE_PRZELOTY > 0) {
             // 2. Insert realizacji (tylko jeśli brakuje)
-            const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id) values (?,?,?,?,?,?);";
-            const [resInsert] = await conn.execute(sqlInsert, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 2,row.zamowienie_id]);
+            const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id,proces_nazwa_id) values (?,?,?,?,?,?,?);";
+            const [resInsert] = await conn.execute(sqlInsert, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 2,row.zamowienie_id,proces_nazwa_id]);
             insertId = resInsert.insertId;
 
             // 3. Historia

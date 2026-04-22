@@ -7,6 +7,7 @@ const dodajRealizacjeProcesu = async (req, res) => {
     const token = req.params['token'];
     const ID_SPRAWCY = DecodeToken(token).id;
     const wizytowka = `User: ${ID_SPRAWCY} Wykonanie global_id: ${row.global_id} Procesor: ${row.procesor_id}`;
+    let proces_nazwa_id = row.proces_nazwa_id
 
     // Pobieramy połączenie z puli do obsługi transakcji
     const conn = await pool.getConnection();
@@ -21,8 +22,8 @@ const dodajRealizacjeProcesu = async (req, res) => {
 
 
         // 1. Insert realizacji
-        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id) values (?,?,?,?,?,?);";
-        const [insertResult] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1,row.zamowienie_id]);
+        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id,proces_nazwa_id) values (?,?,?,?,?,?,?);";
+        const [insertResult] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1,row.zamowienie_id,proces_nazwa_id]);
         const insertId = insertResult.insertId;
 
         // 2. Historia

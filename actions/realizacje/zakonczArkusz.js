@@ -8,6 +8,8 @@ const zakonczArkusz = async (req, res) => {
     const wykonanie_global_id = row.global_id;
     const ID_SPRAWCY = DecodeToken(token).id;
 
+    let proces_nazwa_id = row.proces_nazwa_id
+
     let id = null;
     let idRozjazdu = null;
     let brakujace_przeloty_wynik = 0;
@@ -24,8 +26,8 @@ const zakonczArkusz = async (req, res) => {
 
 
         // 1. Insert podstawowej realizacji
-        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id) values (?,?,?,?,?,?);";
-        const [resInsert] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1,row.zamowienie_id]);
+        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id,proces_nazwa_id) values (?,?,?,?,?,?,?);";
+        const [resInsert] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1,row.zamowienie_id,proces_nazwa_id]);
         id = resInsert.insertId;
 
         // 2. Sprawdź ile brakuje (po dodaniu powyższej realizacji)
@@ -37,8 +39,8 @@ const zakonczArkusz = async (req, res) => {
         const BRAKUJACE_PRZELOTY = parseInt(row.przeloty) - parseInt(SUMA_REALIZACJI);
         
         if (BRAKUJACE_PRZELOTY > 0) {
-            const sqlInsertRozjazd = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id) values (?,?,?,?,?,?);";
-            const [resRozjazd] = await conn.execute(sqlInsertRozjazd, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 3,row.zamowienie_id]);
+            const sqlInsertRozjazd = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id,proces_nazwa_id) values (?,?,?,?,?,?,?);";
+            const [resRozjazd] = await conn.execute(sqlInsertRozjazd, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 3,row.zamowienie_id,proces_nazwa_id]);
             idRozjazdu = resRozjazd.insertId;
             brakujace_przeloty_wynik = BRAKUJACE_PRZELOTY;
         }
