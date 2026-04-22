@@ -33,8 +33,8 @@ const dodajRealizacjeProcesuBrak = async (req, res) => {
 
         if (BRAKUJACE_PRZELOTY > 0) {
             // 2. Insert realizacji (tylko jeśli brakuje)
-            const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
-            const [resInsert] = await conn.execute(sqlInsert, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 2]);
+            const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id) values (?,?,?,?,?,?);";
+            const [resInsert] = await conn.execute(sqlInsert, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 2,row.zamowienie_id]);
             insertId = resInsert.insertId;
 
             // 3. Historia

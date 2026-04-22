@@ -21,8 +21,8 @@ const dodajRealizacjeProcesu = async (req, res) => {
 
 
         // 1. Insert realizacji
-        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
-        const [insertResult] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1]);
+        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id) values (?,?,?,?,?,?);";
+        const [insertResult] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1,row.zamowienie_id]);
         const insertId = insertResult.insertId;
 
         // 2. Historia

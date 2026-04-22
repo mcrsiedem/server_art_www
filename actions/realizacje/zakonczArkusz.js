@@ -24,8 +24,8 @@ const zakonczArkusz = async (req, res) => {
 
 
         // 1. Insert podstawowej realizacji
-        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
-        const [resInsert] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1]);
+        const sqlInsert = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id) values (?,?,?,?,?,?);";
+        const [resInsert] = await conn.execute(sqlInsert, [row.global_id, row.zrealizowano, row.procesor_id, ID_SPRAWCY, 1,row.zamowienie_id]);
         id = resInsert.insertId;
 
         // 2. Sprawdź ile brakuje (po dodaniu powyższej realizacji)
@@ -37,8 +37,8 @@ const zakonczArkusz = async (req, res) => {
         const BRAKUJACE_PRZELOTY = parseInt(row.przeloty) - parseInt(SUMA_REALIZACJI);
         
         if (BRAKUJACE_PRZELOTY > 0) {
-            const sqlInsertRozjazd = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ) values (?,?,?,?,?);";
-            const [resRozjazd] = await conn.execute(sqlInsertRozjazd, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 3]);
+            const sqlInsertRozjazd = "INSERT INTO artdruk.technologie_realizacje (wykonanie_global_id, zrealizowano, procesor_id, dodal, typ,zamowienie_id) values (?,?,?,?,?,?);";
+            const [resRozjazd] = await conn.execute(sqlInsertRozjazd, [row.global_id, BRAKUJACE_PRZELOTY, row.procesor_id, ID_SPRAWCY, 3,row.zamowienie_id]);
             idRozjazdu = resRozjazd.insertId;
             brakujace_przeloty_wynik = BRAKUJACE_PRZELOTY;
         }
