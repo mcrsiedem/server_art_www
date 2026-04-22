@@ -35,6 +35,12 @@ const zamowienieInsert = async (req, res) => {
     const [mainResult] = await conn.execute(sqlMain, daneMain);
     const zamowienie_id = mainResult.insertId;
 
+
+    const sqlProgres = "INSERT INTO artdruk.zamowienia_progres (zamowienie_id) values (?);";
+    const daneProgres = [zamowienie_id];
+    await conn.execute(sqlProgres, daneProgres);
+    
+
     // Tablica na "wyniki", którą odeślemy na koniec (imitacja Promise.all)
     // Pierwszy element musi mieć zamowienie_id w [0][1]
     let resultsForFront = [
