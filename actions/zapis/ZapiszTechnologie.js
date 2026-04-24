@@ -159,6 +159,15 @@ for (let grupaO of posortowaneGrupyOprawa) {
     await massInsert('technologie_wykonania', wykonania, ['id', 'indeks', 'technologia_id', 'zamowienie_id', 'nazwa_wykonania', 'grupa_id', 'element_id', 'arkusz_id', 'lega_id', 'typ_elementu', 'nazwa', 'naklad', 'przeloty', 'poczatek', 'czas', 'koniec', 'narzad', 'predkosc', 'mnoznik', 'proces_id', 'procesor_id', 'status', 'stan', 'uwagi']);
     await massInsert('technologie_procesy_elementow', procesyElementowTech, ['id', 'indeks', 'technologia_id', 'zamowienie_id', 'produkt_id', 'element_id', 'ilosc_uzytkow', 'front_ilosc', 'front_kolor', 'back_ilosc', 'back_kolor', 'info', 'nazwa_id', 'proces_id']);
 
+
+    // zapis sumy przelotów drukui falcu do zamówienia_progress
+    let przeloty_druk_all = 0;
+    let przeloty_falc_all = 0;
+
+    await conn.query("UPDATE artdruk.zamowienia_progres SET przeloty_druk_all = ?, przeloty_falc_all = ? WHERE zamowienie_id = ?", [przeloty_druk_all,przeloty_falc_all, daneTech.zamowienie_id]);
+
+
+
     await conn.commit();
     res.status(201).json({ success: true, technologia_id });
 
