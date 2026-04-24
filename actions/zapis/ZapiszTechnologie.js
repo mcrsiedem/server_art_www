@@ -160,11 +160,31 @@ for (let grupaO of posortowaneGrupyOprawa) {
     await massInsert('technologie_procesy_elementow', procesyElementowTech, ['id', 'indeks', 'technologia_id', 'zamowienie_id', 'produkt_id', 'element_id', 'ilosc_uzytkow', 'front_ilosc', 'front_kolor', 'back_ilosc', 'back_kolor', 'info', 'nazwa_id', 'proces_id']);
 
 
-    // zapis sumy przelotów drukui falcu do zamówienia_progress
-    let przeloty_druk_all = 0;
-    let przeloty_falc_all = 0;
 
+
+let procesory_druk =[1,2,3]
+let procesory_falc =[14,15,16,17,18,19,20,21,35] // 35 worek
+// if (DecodeToken(sessionStorage.getItem("token")).manage_inne == 1 && inne_proces_list.includes(selectedProces)) {
+
+let przeloty_druk_all = posortowaneGrupy
+    // 1. Filtrujemy elementy, których procesor_id jest na liście
+    .filter(x => procesory_druk.includes(x.procesor_id))
+    // 2. Sumujemy pole 'przeloty'
+    .reduce((acc, curr) => acc + (Number(curr.przeloty) || 0), 0);
+
+    let przeloty_falc_all = posortowaneGrupy
+    // 1. Filtrujemy elementy, których procesor_id jest na liście
+    .filter(x => procesory_falc.includes(x.procesor_id))
+    // 2. Sumujemy pole 'przeloty'
+    .reduce((acc, curr) => acc + (Number(curr.przeloty) || 0), 0);
+
+    console.log("przeloty_druk_all : "+przeloty_druk_all)
+    console.log("przeloty_falc_all : "+przeloty_falc_all)
     await conn.query("UPDATE artdruk.zamowienia_progres SET przeloty_druk_all = ?, przeloty_falc_all = ? WHERE zamowienie_id = ?", [przeloty_druk_all,przeloty_falc_all, daneTech.zamowienie_id]);
+
+
+
+
 
 
 
