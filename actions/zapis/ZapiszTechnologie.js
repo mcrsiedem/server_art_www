@@ -161,7 +161,7 @@ for (let grupaO of posortowaneGrupyOprawa) {
 
     // łączymy grupyWykonan z procesyElemtow aby można było posortować grypy po nazwa_id czyli druk falc itp
     // dzięki temu jak przybędą nowe procesory w grupie, nic nie będzie trzeba tu już robić. Falc to falc, nieważne na ilu procesorach
-    
+
 const grupyPolaczoneZprocesyElementow = posortowaneGrupy.map(grupa => {
   const proces = procesyElementowTech.find(u => u.id === grupa.proces_id);
   return {
@@ -193,7 +193,7 @@ let przeloty_falc_all = grupyPolaczoneZprocesyElementow
     
     // console.log("przeloty_druk_all : "+przeloty_druk_all)
     // console.log("przeloty_falc_all : "+przeloty_falc_all)
-    await conn.query("UPDATE artdruk.zamowienia_progres SET przeloty_druk_all = ?, przeloty_falc_all = ? WHERE zamowienie_id = ?", [przeloty_druk_all,przeloty_falc_all, daneTech.zamowienie_id]);
+    await conn.query("UPDATE artdruk.zamowienia_progres SET przeloty_druk_all = ?, przeloty_druk_zostalo=?, przeloty_falc_all = ?,przeloty_falc_zostalo=? WHERE zamowienie_id = ?", [przeloty_druk_all,przeloty_druk_all,przeloty_falc_all,przeloty_falc_all, daneTech.zamowienie_id]);
 
 
 
