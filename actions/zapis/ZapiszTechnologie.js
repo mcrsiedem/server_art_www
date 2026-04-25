@@ -159,27 +159,40 @@ for (let grupaO of posortowaneGrupyOprawa) {
     await massInsert('technologie_wykonania', wykonania, ['id', 'indeks', 'technologia_id', 'zamowienie_id', 'nazwa_wykonania', 'grupa_id', 'element_id', 'arkusz_id', 'lega_id', 'typ_elementu', 'nazwa', 'naklad', 'przeloty', 'poczatek', 'czas', 'koniec', 'narzad', 'predkosc', 'mnoznik', 'proces_id', 'procesor_id', 'status', 'stan', 'uwagi']);
     await massInsert('technologie_procesy_elementow', procesyElementowTech, ['id', 'indeks', 'technologia_id', 'zamowienie_id', 'produkt_id', 'element_id', 'ilosc_uzytkow', 'front_ilosc', 'front_kolor', 'back_ilosc', 'back_kolor', 'info', 'nazwa_id', 'proces_id']);
 
+    // łączymy grupyWykonan z procesyElemtow aby można było posortować grypy po nazwa_id czyli druk falc itp
+    // dzięki temu jak przybędą nowe procesory w grupie, nic nie będzie trzeba tu już robić. Falc to falc, nieważne na ilu procesorach
+    
+const grupyPolaczoneZprocesyElementow = posortowaneGrupy.map(grupa => {
+  const proces = procesyElementowTech.find(u => u.id === grupa.proces_id);
+  return {
+    ...grupa,
+    nazwa_id: proces ? proces.nazwa_id : 0
+  };
+});
 
 
 
-let procesory_druk =[1,2,3]
-let procesory_falc =[14,15,16,17,18,19,20,21,35] // 35 worek
-// if (DecodeToken(sessionStorage.getItem("token")).manage_inne == 1 && inne_proces_list.includes(selectedProces)) {
-
-let przeloty_druk_all = posortowaneGrupy
+let przeloty_druk_all = grupyPolaczoneZprocesyElementow
     // 1. Filtrujemy elementy, których procesor_id jest na liście
-    .filter(x => procesory_druk.includes(x.procesor_id))
+    .filter(x => x.nazwa_id ==1)
     // 2. Sumujemy pole 'przeloty'
     .reduce((acc, curr) => acc + (Number(curr.przeloty) || 0), 0);
 
-    let przeloty_falc_all = posortowaneGrupy
+let przeloty_falc_all = grupyPolaczoneZprocesyElementow
     // 1. Filtrujemy elementy, których procesor_id jest na liście
-    .filter(x => procesory_falc.includes(x.procesor_id))
+    .filter(x => x.nazwa_id == 3 )
     // 2. Sumujemy pole 'przeloty'
     .reduce((acc, curr) => acc + (Number(curr.przeloty) || 0), 0);
 
-    console.log("przeloty_druk_all : "+przeloty_druk_all)
-    console.log("przeloty_falc_all : "+przeloty_falc_all)
+
+
+
+
+
+    // console.log("grupyPolaczoneZprocesyElementow : ",grupyPolaczoneZprocesyElementow)
+    
+    // console.log("przeloty_druk_all : "+przeloty_druk_all)
+    // console.log("przeloty_falc_all : "+przeloty_falc_all)
     await conn.query("UPDATE artdruk.zamowienia_progres SET przeloty_druk_all = ?, przeloty_falc_all = ? WHERE zamowienie_id = ?", [przeloty_druk_all,przeloty_falc_all, daneTech.zamowienie_id]);
 
 
