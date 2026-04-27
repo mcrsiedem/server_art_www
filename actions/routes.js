@@ -184,7 +184,8 @@ router.get('/zmienCzasTrwaniaGrupyOprawaPrzerwa/:drop_grupa_global_id/:nowy_koni
 router.get('/zmienCzasTrwaniaGrupyPrzerwa/:drop_grupa_global_id/:nowy_koniec',connections.zmienCzasTrwaniaGrupyPrzerwa);
 router.get('/skasujGrupe/:global_id_grupa/:token',verifyTokenParams('technologia_zapis'),connections.skasujGrupe);
 router.get('/skasujGrupeOprawa/:global_id_grupa/:token',verifyTokenParams('technologia_zapis'),connections.skasujGrupeOprawa);
-router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),connections.skasujTechnologie); //stare
+// router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),connections.skasujTechnologie); //stare
+router.get('/skasujTechnologie/:id_delete/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),usunTechnologie); //stare
 router.get('/usunTechnologie/:technologia_id/:zamowienie_id/:user_id/:token',verifyTokenParams('technologia_zapis'),usunTechnologie); //nowe
 router.delete('/delete_zamowienie/:token',verifyTokenParams('zamowienie_skasuj'),connections.deleteZamowienie);
 router.delete('/odblokuj_zamowienie/:token',verifyToken,connections.odblokujZamowienie);
