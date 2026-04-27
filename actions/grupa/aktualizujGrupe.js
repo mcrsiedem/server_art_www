@@ -15,7 +15,10 @@ const aktualizujGrupe = async (req, res) => {
     const info = data[0]; // Informacje o zmianie czasu
     const rowGrupa = data[1]; // Dane grupy
     const wykonania = data[2] || []; // Lista wykonan
+    const proces_nazwa_id = parseInt(data[3])
 
+    
+console.log(wykonania.filter(x => x.update === true && x.insert !== true))
     const {
       global_id: rowGrupa_global_id,
       predkosc: rowGrupa_predkosc,
@@ -51,7 +54,10 @@ const aktualizujGrupe = async (req, res) => {
     await conn.execute(sqlUpdateGrupa, daneGrupa);
 
     // 3. Obsługa wykonania (tylko jeśli info != null, zgodnie z Twoją logiką)
-    if (info != null) {
+
+    // if (info != null) {
+
+    console.log("info: "+info)
       
       // UPDATE - wykonania istniejące
       const toUpdate = wykonania.filter(x => x.update === true && x.insert !== true);
@@ -63,7 +69,7 @@ const aktualizujGrupe = async (req, res) => {
         `;
         const paramsUpdate = [
           row.indeks, row.nazwa_wykonania, row.nazwa, row.naklad, 
-          row.przeloty, row.czas, row.narzad, row.predkosc, row.global_id
+          parseInt(row.przeloty), row.czas, row.narzad, row.predkosc, row.global_id
         ];
         await conn.execute(sqlUpdateWyk, paramsUpdate);
       }
@@ -95,7 +101,15 @@ const aktualizujGrupe = async (req, res) => {
         const sqlDeleteWyk = "DELETE FROM artdruk.technologie_wykonania WHERE global_id = ?";
         await conn.execute(sqlDeleteWyk, [row.global_id]);
       }
-    }
+    // }
+
+
+
+
+        const sql = "CALL artdruk.sp_aktualizuj_progres_zamowienia(?,?)";
+        // console.log(`Wywołuję Magic Przerwę dla grupy ID: ${global_id_grupa}`);
+        // console.log("proces_nazwa_id: "+ typeof proces_nazwa_id)
+         await conn.execute(sql, [rowGrupa.zamowienie_id,proces_nazwa_id]);
 
     await conn.commit(); // Zatwierdzenie wszystkich zmian
     res.status(200).json("OK");
@@ -105,7 +119,7 @@ const aktualizujGrupe = async (req, res) => {
     console.error("Błąd podczas aktualizacji grupy:", error);
     res.status(500).json({ error: "Błąd bazy danych", details: error.message });
   } finally {
-    console.log("aktualizuj grupe to tu")
+    console.log("[0] Aktualizacja grupy ")
     conn.release(); // Zwolnienie połączenia z powrotem do puli
   }
 };
