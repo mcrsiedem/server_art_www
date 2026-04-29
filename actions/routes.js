@@ -81,6 +81,8 @@ const { usunTechnologie } = require('./zapis/UsunTechnologie');
     router.get('/zamowienia_proofy/:token',verifyToken,connections.getZamowieniaProofy); // pool
 router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
 router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
+router.get('/refreshProgres/:token',verifyToken,connections.getZamowieniaProgres);     
+
 router.get('/uprawnienia/:token',verifyTokenParams('uprawnienia_ustaw'),uprawnienia);     
 router.get('/zestawienie_user/:od/:do/:kto/:token',verifyTokenParams('zestawienia'),getZestawienieUser);     
 router.get('/zestawienie_grupa/:od/:do/:grupa/:token',verifyTokenParams('zestawienia'),getZestawienieGrupa);     

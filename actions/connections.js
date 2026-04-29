@@ -522,6 +522,32 @@ async getZamowieniaKalendarz(req, res) {
 }
 
 
+async getZamowieniaProgres(req, res) {
+    // Pobierasz procesor_id, ale obecnie nie jest używany w zapytaniu
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Zapytanie SQL
+        // Jeśli będziesz chciał filtrować po procesor_id, dodaj: AND procesor_id = ?
+        const sql = "SELECT * FROM artdruk.view_zamowienia_progres where data_spedycji> '2026-04-01'";
+
+        const [rows] = await conn.execute(sql);
+
+        // Zwracamy dane w tablicy (zachowując strukturę [doc] z oryginału)
+        return res.status(200).json([rows]);
+
+    } catch (err) {
+        console.error("Błąd w getZamowieniaProgres:", err);
+        // Zwracamy 203 zgodnie z Twoją konwencją dla błędów
+        return res.status(203).json(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+
 async getVersion(req, res) {
     // parametr orderby pobrany z URL, ale nieużyty w zapytaniu SQL
     let conn;
