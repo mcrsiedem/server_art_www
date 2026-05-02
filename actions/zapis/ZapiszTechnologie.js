@@ -202,14 +202,23 @@ let przeloty_zeszyt_all = posortowaneGrupyOprawa
     .filter(x => x.proces_id == 51)
     .reduce((acc, curr) => acc + (Number(curr.naklad) || 0), 0);
 
-        let przeloty_hotmelt_all = posortowaneGrupyOprawa
-    .filter(x => x.proces_id == 50 && x.proces_id==52)
+    //     let przeloty_hotmelt_all = posortowaneGrupyOprawa
+    // .filter(x => x.proces_id == 50 || x.proces_id==52)
+    // .reduce((acc, curr) => acc + (Number(curr.naklad) || 0), 0);
+
+    let przeloty_hotmelt_all = posortowaneGrupyOprawa
+    .filter(x => [50, 52].includes(x.proces_id))
     .reduce((acc, curr) => acc + (Number(curr.naklad) || 0), 0);
 
     // console.log("grupyPolaczoneZprocesyElementow : ",grupyPolaczoneZprocesyElementow)
     
     // console.log("przeloty_druk_all : "+przeloty_druk_all)
     // console.log("przeloty_falc_all : "+przeloty_falc_all)
+    console.log(`Druk: ${przeloty_druk_all}`)
+    console.log(`Druk: ${przeloty_falc_all}`)
+    console.log(`Pur: ${przeloty_pur_all}`)
+    console.log(`HotMelt: ${przeloty_hotmelt_all}`)
+    console.log(`Zeszyt: ${przeloty_zeszyt_all}`)
     await conn.query("UPDATE artdruk.zamowienia_progres SET przeloty_druk_all = ?, przeloty_druk_zostalo=?, przeloty_falc_all = ?,przeloty_falc_zostalo=?,przeloty_zeszyt_all=?,przeloty_zeszyt_zostalo=?,przeloty_pur_all=?, przeloty_pur_zostalo=?,przeloty_hotmelt_all=?,przeloty_hotmelt_zostalo=? WHERE zamowienie_id = ?", [przeloty_druk_all,przeloty_druk_all,przeloty_falc_all,przeloty_falc_all,przeloty_zeszyt_all,przeloty_zeszyt_all,przeloty_pur_all,przeloty_pur_all, przeloty_hotmelt_all,przeloty_hotmelt_all,daneTech.zamowienie_id]);
 
 
