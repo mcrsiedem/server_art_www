@@ -62,6 +62,7 @@ const { importKosztyDodatkowe } = require('./zapis/importKosztyDodatkowe');
 const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPobierz');
 const { zapiszTechnologie } = require('./zapis/ZapiszTechnologie');
 const { usunTechnologie } = require('./zapis/UsunTechnologie');
+const { zamowieniePobierzWszystkiePaginations } = require('./zamowienia/zamowieniePobierzWszystkiePaginations');
 // const { getHipopotam } = require('./logowanie/getHipopotam');
 
         router.post('/version/', postVersion); 
@@ -78,6 +79,7 @@ const { usunTechnologie } = require('./zapis/UsunTechnologie');
     router.get('/elementy/:nr/:rok/:token',verifyToken,zamowienieElementyPobierz); // pobiera elementy do kalkulatora
     router.get('/sprawdzNiezamknieteKoszty/:token',verifyToken,sprawdzNiezamknieteKoszty); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:zestaw/:token',verifyToken,zamowieniePobierzWszystkie); // pool
+    router.get('/zamowieniaPaginations/:orderby/:zestaw/:token',verifyToken,zamowieniePobierzWszystkiePaginations); // pool
     router.get('/zamowienia_proofy/:token',verifyToken,connections.getZamowieniaProofy); // pool
 router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
 router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
