@@ -72,9 +72,15 @@ const sqlIn = (id, zestaw, orderby, zamowienia_wszystkie, limit, offset, isCount
             filterParts.push(`(opiekun_id = ${parseInt(opiekun_id_param)} OR asystent1 = ${parseInt(opiekun_id_param)} OR asystent2 = ${parseInt(opiekun_id_param)})`);
         }
     } else {
-        // SCENARIUSZ: Brak uprawnień
-        // Wymuszamy tylko rekordy zalogowanego użytkownika
+    // SCENARIUSZ: Brak uprawnień (Zwykły użytkownik)
+        
+        // 1. Wymuszamy tylko rekordy zalogowanego użytkownika (Twoja obecna logika)
         filterParts.push(`(opiekun_id = ${parseInt(id)} OR asystent1 = ${parseInt(id)} OR asystent2 = ${parseInt(id)})`);
+
+        // 2. DODANE: Filtrowanie po Kliencie (w obrębie zamówień użytkownika)
+        if (klient_id && klient_id !== "0" && klient_id !== "Wszystkie") {
+            filterParts.push(`klient_id = ${parseInt(klient_id)}`);
+        }
     }
 
     // 3. Filtrowanie po Zestawie (Etapie)
