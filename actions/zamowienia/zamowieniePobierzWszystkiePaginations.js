@@ -7,12 +7,9 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     const token = req.params['token'];
     const orderby = req.params['orderby'];
     const zestaw = req.params['zestaw'];
-    const klient = req.params['klient'];
-    const opiekun = req.params['opiekun'];
+    const klient_id = req.params['klient'];
+    const opiekun_id_param = req.params['opiekun'];
 
-console.log(` Klient: ${klient}  Opiekun: ${opiekun}`)
-
-    // Parametry paginacji z query stringa (np. ?page=1&size=50)
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 50;
     const offset = (page - 1) * size;
@@ -20,7 +17,6 @@ console.log(` Klient: ${klient}  Opiekun: ${opiekun}`)
     let biala_lista = ["rok, nr asc", "naklad", "ilosc_stron", "data_przyjecia", "data_spedycji", "oprawa_id"];
     let biala_lista_zestaw = ["Bieżące", "Przed drukiem", "Harmonogram", "Wydrukowane", "Sfalcowane", "Oprawione", "Oddane", "Anulowane", "Wszystkie", "Gotowe do faktury", "Zafakturowane", "Brak faktury"];
 
-    // 1. Weryfikacja tokena (opakowana w Promise dla czytelności)
     let decoded;
     try {
         decoded = jwt.verify(token, ACCESS_TOKEN);
@@ -28,25 +24,23 @@ console.log(` Klient: ${klient}  Opiekun: ${opiekun}`)
         return res.status(401).json({ error: "Błąd autoryzacji / Token wygasł" });
     }
 
-    const id = decoded.id;
+    const id = decoded.id; 
     const zamowienia_wszystkie = dataStore.checkPrivileges(id, "zamowienia_wszystkie");
 
-    // 2. Walidacja parametrów sortowania i zestawu
     if (!biala_lista.includes(orderby) || !biala_lista_zestaw.includes(zestaw)) {
         return res.status(400).json({ error: "Nieprawidłowe parametry zapytania." });
     }
 
     try {
-        // 3. Pobranie danych z LIMIT i OFFSET
-        const sql = sqlIn(id, zestaw, orderby, zamowienia_wszystkie, size, offset);
+        // SQL dla danych
+        const sql = sqlIn(id, zestaw, orderby, zamowienia_wszystkie, size, offset, false, klient_id, opiekun_id_param);
         const [rows] = await pool.execute(sql);
 
-        // 4. Pobranie łącznej liczby rekordów (dla frontendu)
-        const sqlCount = sqlIn(id, zestaw, orderby, zamowienia_wszystkie, null, null, true);
+        // SQL dla licznika (musi mieć identyczne filtry WHERE, aby paginacja się zgadzała)
+        const sqlCount = sqlIn(id, zestaw, orderby, zamowienia_wszystkie, null, null, true, klient_id, opiekun_id_param);
         const [countRows] = await pool.execute(sqlCount);
         const totalRecords = countRows[0].total;
 
-        // 5. Zwrócenie wzbogaconego obiektu
         res.status(200).json({
             data: rows,
             pagination: {
@@ -58,47 +52,61 @@ console.log(` Klient: ${klient}  Opiekun: ${opiekun}`)
         });
 
     } catch (err) {
-        console.error("Błąd w Kontrolerze:", err);
+        console.error("Błąd serwera:", err);
         res.status(500).json({ error: "Błąd serwera podczas pobierania danych." });
     }
 };
 
-// Funkcja generująca SQL
-const sqlIn = (id, zestaw, orderby, zamowienia_wszystkie, limit, offset, isCount = false) => {
-    let opiekun = zamowienia_wszystkie 
-        ? " " 
-        : `(opiekun_id = ${id} or asystent1 = ${id} or asystent2 = ${id}) and `;
+const sqlIn = (id, zestaw, orderby, zamowienia_wszystkie, limit, offset, isCount = false, klient_id, opiekun_id_param) => {
+    
+    let filterParts = [];
 
-    let whereClause = "";
+    if (zamowienia_wszystkie) {
+        // SCENARIUSZ: Admin / Uprawnienia pełne
+        // 1. Filtrowanie po Kliencie (jeśli wybrano)
+        if (klient_id && klient_id !== "0" && klient_id !== "Wszystkie") {
+            filterParts.push(`klient_id = ${parseInt(klient_id)}`);
+        }
+        // 2. Filtrowanie po Opiekunie (jeśli wybrano konkretnego w selectcie)
+        if (opiekun_id_param && opiekun_id_param !== "0" && opiekun_id_param !== "Wszystkie") {
+            filterParts.push(`(opiekun_id = ${parseInt(opiekun_id_param)} OR asystent1 = ${parseInt(opiekun_id_param)} OR asystent2 = ${parseInt(opiekun_id_param)})`);
+        }
+    } else {
+        // SCENARIUSZ: Brak uprawnień
+        // Wymuszamy tylko rekordy zalogowanego użytkownika
+        filterParts.push(`(opiekun_id = ${parseInt(id)} OR asystent1 = ${parseInt(id)} OR asystent2 = ${parseInt(id)})`);
+    }
 
+    // 3. Filtrowanie po Zestawie (Etapie)
+    let setClause = "";
     switch (zestaw) {
-        case "Bieżące": whereClause = "(etap > 1 and etap < 16 and status != 7)"; break;
-        case "Przed drukiem": whereClause = "(etap > 1 and etap < 8 and status != 7)"; break;
-        case "Harmonogram": whereClause = "(etap = 1 and status != 7)"; break;
-        case "Wydrukowane": whereClause = "(etap = 8 and status != 7)"; break;
-        case "Sfalcowane": whereClause = "(etap = 10 and status != 7)"; break;
-        case "Oprawione": whereClause = "(etap = 11 and status != 7)"; break;
-        case "Oddane": whereClause = "(etap = 16 and status != 7)"; break;
-        case "Anulowane": whereClause = "(status = 7)"; break;
-        case "Wszystkie": whereClause = "id > 1"; break;
-        case "Gotowe do faktury": whereClause = "(koszty_status = 2 and faktury_status < 3 and status != 7)"; break;
-        case "Zafakturowane": whereClause = "(faktury_status = 3 and status != 7)"; break;
-        case "Brak faktury": whereClause = "((faktury_status < 3 or lista_faktur='') and status != 7)"; break;
-        default: whereClause = "(etap > 1 and etap < 16 and status != 7)";
+        case "Bieżące": setClause = "(etap > 1 AND etap < 16 AND status != 7)"; break;
+        case "Przed drukiem": setClause = "(etap > 1 AND etap < 8 AND status != 7)"; break;
+        case "Harmonogram": setClause = "(etap = 1 AND status != 7)"; break;
+        case "Wydrukowane": setClause = "(etap = 8 AND status != 7)"; break;
+        case "Sfalcowane": setClause = "(etap = 10 AND status != 7)"; break;
+        case "Oprawione": setClause = "(etap = 11 AND status != 7)"; break;
+        case "Oddane": setClause = "(etap = 16 AND status != 7)"; break;
+        case "Anulowane": setClause = "(status = 7)"; break;
+        case "Wszystkie": setClause = "(id > 1)"; break;
+        case "Gotowe do faktury": setClause = "(koszty_status = 2 AND faktury_status < 3 AND status != 7)"; break;
+        case "Zafakturowane": setClause = "(faktury_status = 3 AND status != 7)"; break;
+        case "Brak faktury": setClause = "((faktury_status < 3 OR lista_faktur = '') AND status != 7)"; break;
+        default: setClause = "(etap > 1 AND etap < 16 AND status != 7)";
     }
+    filterParts.push(setClause);
 
-    // Jeśli to tylko licznik, zwracamy prostsze zapytanie
+    // Łączymy wszystkie warunki w jeden ciąg WHERE part1 AND part2 AND part3
+    const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : "1=1";
+
     if (isCount) {
-        return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia WHERE ${opiekun} ${whereClause}`;
+        return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia WHERE ${finalWhere}`;
     }
 
-    // Zapytanie z paginacją
     return `SELECT * FROM artdruk.view_zamowienia 
-            WHERE ${opiekun} ${whereClause} 
+            WHERE ${finalWhere} 
             ORDER BY ${orderby} 
             LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
 };
 
-module.exports = {
-    zamowieniePobierzWszystkiePaginations
-};
+module.exports = { zamowieniePobierzWszystkiePaginations };
