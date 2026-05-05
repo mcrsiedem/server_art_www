@@ -7,6 +7,10 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     const token = req.params['token'];
     const orderby = req.params['orderby'];
     const zestaw = req.params['zestaw'];
+    const klient = req.params['klient'];
+    const opiekun = req.params['opiekun'];
+
+console.log(` Klient: ${klient}  Opiekun: ${opiekun}`)
 
     // Parametry paginacji z query stringa (np. ?page=1&size=50)
     const page = parseInt(req.query.page) || 1;
