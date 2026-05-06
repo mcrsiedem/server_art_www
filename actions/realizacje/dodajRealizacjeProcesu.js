@@ -9,6 +9,8 @@ const dodajRealizacjeProcesu = async (req, res) => {
     const wizytowka = `User: ${ID_SPRAWCY} Wykonanie global_id: ${row.global_id} Procesor: ${row.procesor_id}`;
     let proces_nazwa_id = row.proces_nazwa_id
 
+    console.log("proces_nazwa_id: " + proces_nazwa_id)
+
     // Pobieramy połączenie z puli do obsługi transakcji
     const conn = await pool.getConnection();
 

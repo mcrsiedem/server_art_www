@@ -10,8 +10,10 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     const klient_id = req.params['klient'];
     const opiekun_id_param = req.params['opiekun'];
 
-    const page = parseInt(req.query.page) || 1;
-    const size = parseInt(req.query.size) || 50;
+
+
+    const page = parseInt(req.params['page']) || 1;
+    const size = parseInt(req.params['size']) || 200;
     const offset = (page - 1) * size;
 
     let biala_lista = ["rok, nr asc", "naklad", "ilosc_stron", "data_przyjecia", "data_spedycji", "oprawa_id"];

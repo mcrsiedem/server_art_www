@@ -79,7 +79,7 @@ const { zamowieniePobierzWszystkiePaginations } = require('./zamowienia/zamowien
     router.get('/elementy/:nr/:rok/:token',verifyToken,zamowienieElementyPobierz); // pobiera elementy do kalkulatora
     router.get('/sprawdzNiezamknieteKoszty/:token',verifyToken,sprawdzNiezamknieteKoszty); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:zestaw/:token',verifyToken,zamowieniePobierzWszystkie); // pool
-    router.get('/zamowieniaPaginations/:orderby/:zestaw/:klient/:opiekun/:token',verifyToken,zamowieniePobierzWszystkiePaginations); // pool
+    router.get('/zamowieniaPaginations/:orderby/:zestaw/:klient/:opiekun/:page/:size/:token',verifyToken,zamowieniePobierzWszystkiePaginations); // pool
     router.get('/zamowienia_proofy/:token',verifyToken,connections.getZamowieniaProofy); // pool
 router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
 router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
