@@ -13,7 +13,7 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
 
 
     const page = parseInt(req.params['page']) || 1;
-    const size = parseInt(req.params['size']) || 200;
+    const size = parseInt(req.params['size']) || 50;
     const offset = (page - 1) * size;
 
     let biala_lista = ["rok, nr asc", "naklad", "ilosc_stron", "data_przyjecia", "data_spedycji", "oprawa_id"];
