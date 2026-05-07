@@ -1,72 +1,71 @@
+const { pool } = require("../mysql");
 
-const { connection, pool } = require("../mysql");
-const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
+const zapiszTechnologieUpdate_elementy = (elementyTechEdit, res) => {
 
+  console.log("zapisz elementy tu")
+  
+  // 1. UPDATE istniejących elementów
+  elementyTechEdit
+    .filter(x => x.update === true && x.insert !== true)
+    .forEach(row => {
+      const sql = `
+        UPDATE artdruk.technologie_elementy SET 
+          id = ?, zamowienie_id = ?, produkt_id = ?, nazwa = ?, typ = ?, 
+          ilosc_stron = ?, format_x = ?, format_y = ?, papier_id = ?, 
+          papier_postac_id = ?, naklad = ?, uwagi = ?, ilosc_leg = ?, 
+          lega = ?, stan = ?, status = ?, etap = ?, 
+          arkusz_szerokosc = ?, arkusz_wysokosc = ? 
+        WHERE global_id = ?`;
 
-const zapiszTechnologieUpdate_elementy=(elementyTechEdit,res) =>{
+      const values = [
+        row.id, row.zamowienie_id, row.produkt_id, row.nazwa, row.typ,
+        row.ilosc_stron, row.format_x, row.format_y, row.papier_id,
+        row.papier_postac_id, row.naklad, row.uwagi, row.ilosc_leg,
+        row.lega, row.stan, row.etap, row.etap, // stan, status, etap
+        row.arkusz_szerokosc, row.arkusz_wysokosc, row.global_id
+      ];
 
+      pool.query(sql, values, (err) => {
+        if (err) console.error("Błąd UPDATE:", err);
+      });
+    });
 
-for(let row of elementyTechEdit.filter(x => x.update == true && x.insert != true) ){
-  var sql =   "update  artdruk.technologie_elementy set  " +
-  "id = " + row.id+ 
-  ", zamowienie_id = " + row.zamowienie_id+ 
-  ", produkt_id = " + row.produkt_id+ 
-  ", nazwa = '" + row.nazwa+ 
-  "', typ = " + row.typ+ 
-  ", ilosc_stron = " + row.ilosc_stron+ 
-  ", format_x = '" + row.format_x+ 
-  "', format_y = '" + row.format_y+ 
-  "', papier_id = " + row.papier_id+ 
-  ", papier_postac_id = " + row.papier_postac_id+ 
-  ", naklad = " + row.naklad+ 
-  ", uwagi = '" + row.uwagi+ 
-  "', ilosc_leg = " + row.ilosc_leg+ 
-  ", lega = " + row.lega+ 
-  ", stan = " + row.stan+ 
-  ", status = " + row.etap+ 
-  ", etap = " + row.etap+ 
-  ", arkusz_szerokosc = '" + row.arkusz_szerokosc+ 
-  "', arkusz_wysokosc = '" + row.arkusz_wysokosc+ 
-  "' where global_id = " + row.global_id + ""
-  connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   console.log(err)     }});
-  }
+  // 2. INSERT nowych elementów
+  elementyTechEdit
+    .filter(x => x.insert === true && x.delete !== true)
+    .forEach(row => {
+      const sql = `
+        INSERT INTO artdruk.technologie_elementy 
+        (id, zamowienie_id, technologia_id, produkt_id, nazwa, typ, ilosc_stron, 
+        format_x, format_y, papier_id, papier_postac_id, ilosc_leg, lega, 
+        arkusz_szerokosc, arkusz_wysokosc, naklad, uwagi, stan, status, etap, indeks) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  for(let row of elementyTechEdit.filter(x => x.insert == true && x.delete != true) ){
-    var sql =   "INSERT INTO artdruk.technologie_elementy (id,zamowienie_id,technologia_id,produkt_id,nazwa,typ,ilosc_stron,format_x,format_y,papier_id,papier_postac_id,ilosc_leg,lega,arkusz_szerokosc,arkusz_wysokosc,naklad,uwagi,stan,status,etap,indeks) "+
-    "values (" 
-    + row.id + "," 
-    + row.zamowienie_id + "," 
-    + row.technologia_id + "," 
-    + row.produkt_id + ",'" 
-    + row.nazwa + "'," 
-    + row.typ + "," 
-    + row.ilosc_stron + "," 
-    + row.format_x + "," 
-    + row.format_y + "," 
-    + row.papier_id + "," 
-    + row.papier_postac_id + "," 
-    + row.ilosc_leg + "," 
-    + row.lega + ",'" 
-    + row.arkusz_szerokosc + "','" 
-    + row.arkusz_wysokosc + "'," 
-    + row.naklad + ",'" 
-    + row.uwagi + "'," 
-    + row.stan + "," 
-    + row.status + "," 
-    + row.etap + "," 
-    + row.indeks + "); ";
-    connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });    console.log(err)         }});
-    }
+      const values = [
+        row.id, row.zamowienie_id, row.technologia_id, row.produkt_id, row.nazwa,
+        row.typ, row.ilosc_stron, row.format_x, row.format_y, row.papier_id,
+        row.papier_postac_id, row.ilosc_leg, row.lega, row.arkusz_szerokosc,
+        row.arkusz_wysokosc, row.naklad, row.uwagi, row.stan, row.status,
+        row.etap, row.indeks
+      ];
 
-    for(let row of elementyTechEdit.filter(x => x.delete == true && x.insert != true) ){
-        var sql =   "DELETE from artdruk.technologie_elementy where global_id=" + row.global_id;
-        connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });  console.log(err)          }});
-        }
+      pool.query(sql, values, (err) => {
+        if (err) console.error("Błąd INSERT:", err);
+      });
+    });
 
-}
+  // 3. DELETE usuniętych elementów
+  elementyTechEdit
+    .filter(x => x.delete === true && x.insert !== true)
+    .forEach(row => {
+      const sql = "DELETE FROM artdruk.technologie_elementy WHERE global_id = ?";
+      
+      pool.query(sql, [row.global_id], (err) => {
+        if (err) console.error("Błąd DELETE:", err);
+      });
+    });
+};
 
 module.exports = {
   zapiszTechnologieUpdate_elementy
-    
-}
- 
+};
