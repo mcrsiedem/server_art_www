@@ -3,7 +3,6 @@ const { pool } = require("../mysql");
 const zapiszTechnologieUpdate_fragmenty = (fragmentyTechEdit, res) => {
 
 
-  console.log("zapisz fragmenty tu")
 
     // 1. UPDATE
     fragmentyTechEdit

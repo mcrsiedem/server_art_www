@@ -1,5 +1,5 @@
-const { connection, pool } = require("../mysql");
-const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
+// const { connection, pool } = require("../mysql");
+// const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
 const { zapiszTechnologieUpdate_dane } = require("./ZapiszTechnologieUpdate_dane");
 const { zapiszTechnologieUpdate_produkty } = require("./ZapiszTechnologieUpdate_produkty");
 const { zapiszTechnologieUpdate_elementy } = require("./ZapiszTechnologieUpdate_elementy");

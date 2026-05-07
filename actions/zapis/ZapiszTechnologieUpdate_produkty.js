@@ -1,37 +1,55 @@
+const { pool } = require("../mysql");
 
-const { connection, pool } = require("../mysql");
-const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
+const zapiszTechnologieUpdate_produkty = (produktyTechEdit, res) => {
 
+    // UPDATE istniejących produktów
+    produktyTechEdit
+        .filter(x => x.update === true && x.insert !== true)
+        .forEach(row => {
+            const sql = `
+                UPDATE artdruk.technologie_produkty SET 
+                    id = ?, 
+                    zamowienie_id = ?, 
+                    nazwa = ?, 
+                    uwagi = ?, 
+                    stan = ?, 
+                    status = ?, 
+                    etap = ?, 
+                    typ = ?, 
+                    ilosc_stron = ?, 
+                    format_x = ?, 
+                    format_y = ?, 
+                    oprawa = ?, 
+                    naklad = ?, 
+                    indeks = ? 
+                WHERE global_id = ?`;
 
-const zapiszTechnologieUpdate_produkty=(produktyTechEdit,res) =>{
+            const values = [
+                row.id,
+                row.zamowienie_id,
+                row.nazwa,
+                row.uwagi,
+                row.stan,
+                row.status,
+                row.etap,
+                row.typ,
+                row.ilosc_stron,
+                row.format_x,
+                row.format_y,
+                row.oprawa,
+                row.naklad,
+                row.indeks,
+                row.global_id
+            ];
 
-
-for(let row of produktyTechEdit.filter(x => x.update == true && x.insert != true) ){
-  var sql =   "update  artdruk.technologie_produkty set " +
-     "id = " + row.id+ 
-     ", zamowienie_id = " + row.zamowienie_id+
-     ", nazwa = '" + row.nazwa+
-     "', uwagi = '" + row.uwagi+ 
-     "', stan = " + row.stan+ 
-     ", status = " + row.status+ 
-     ", etap = " + row.etap+ 
-     ", typ = '" + row.typ+ 
-     "', ilosc_stron = " + row.ilosc_stron+ 
-     ", format_x = '" + row.format_x+ 
-     "', format_y = '" + row.format_y+ 
-     "', oprawa = '" + row.oprawa+ 
-     "', naklad = " + row.naklad+ 
-     ",  indeks = " + row.indeks+ 
-     " where global_id = " + row.global_id + ""
-     connection.query(sql, function (err, result) {      if (err)console.log(err)     });
-  }
-
-
-
-}
+            pool.query(sql, values, (err) => {
+                if (err) {
+                    console.error("Błąd UPDATE produkty:", err);
+                }
+            });
+        });
+};
 
 module.exports = {
     zapiszTechnologieUpdate_produkty
-    
-}
- 
+};

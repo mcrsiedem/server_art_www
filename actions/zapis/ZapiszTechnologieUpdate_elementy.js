@@ -2,7 +2,6 @@ const { pool } = require("../mysql");
 
 const zapiszTechnologieUpdate_elementy = (elementyTechEdit, res) => {
 
-  console.log("zapisz elementy tu")
   
   // 1. UPDATE istniejących elementów
   elementyTechEdit

@@ -1,67 +1,59 @@
+const { pool } = require("../mysql");
 
-const { connection, pool } = require("../mysql");
-const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
+const ZapiszTechnologieUpdate_restore = (req, res) => {
+    const zamowienie_id = req.params['zamowienie_id'];
 
-
-const ZapiszTechnologieUpdate_restore=(req,res) =>{
-
-    const zamowienie_id = req.params['zamowienie_id']
-    // usuwa niepotrzebne wpisy po nieudanym zapisie technologii
-
-
-
-
-
- var sql = " SELECT global_id FROM artdruk.technologie_grupy_wykonan where zamowienie_id="+ zamowienie_id
- connection.query(sql, function (err, result) {
-
-for(let re of result){
- console.log("global_id grupy: "+ re.global_id)
-            var sql = " select artdruk.delete_grupa_wykonan(" + re.global_id + ")"
-                connection.query(sql, function (err, result) {
-                if (err) console.log(err)
+    // 1. Usuwanie grup wykonań
+    const sqlGrupy = "SELECT global_id FROM artdruk.technologie_grupy_wykonan WHERE zamowienie_id = ?";
+    
+    pool.query(sqlGrupy, [zamowienie_id], (err, result) => {
+        if (err) {
+            console.error(err);
+        } else if (result) {
+            result.forEach(re => {
+                console.log("global_id grupy: " + re.global_id);
+                const sqlDel = "SELECT artdruk.delete_grupa_wykonan(?)";
+                pool.query(sqlDel, [re.global_id], (err) => {
+                    if (err) console.error("Błąd delete_grupa_wykonan:", err);
                 });
+            });
+        }
+    });
 
-    }
- if (err) console.log(err)
- });
-
-
- var sql = " SELECT global_id FROM artdruk.technologie_grupy_wykonan_oprawa where zamowienie_id="+ zamowienie_id
- connection.query(sql, function (err, result) {
-
-for(let re of result){
- console.log("global_id grupy oprawa: "+ re.global_id)
-            var sql = " select artdruk.delete_grupa_wykonan_oprawa(" + re.global_id + ")"
-                connection.query(sql, function (err, result) {
-                if (err) console.log(err)
+    // 2. Usuwanie grup wykonań oprawa
+    const sqlOprawa = "SELECT global_id FROM artdruk.technologie_grupy_wykonan_oprawa WHERE zamowienie_id = ?";
+    
+    pool.query(sqlOprawa, [zamowienie_id], (err, result) => {
+        if (err) {
+            console.error(err);
+        } else if (result) {
+            result.forEach(re => {
+                console.log("global_id grupy oprawa: " + re.global_id);
+                const sqlDelOp = "SELECT artdruk.delete_grupa_wykonan_oprawa(?)";
+                pool.query(sqlDelOp, [re.global_id], (err) => {
+                    if (err) console.error("Błąd delete_grupa_wykonan_oprawa:", err);
                 });
+            });
+        }
+    });
 
-    }
- if (err) console.log(err)
- });
+    // 3. Wywołanie procedury usuwającej technologię
+    const sqlCall = "CALL artdruk.delete_technologia_from_zamowienie_id(?)";
+    
+    pool.query(sqlCall, [zamowienie_id], (err) => {
+        if (err) {
+            console.error("Błąd procedury usuwającej:", err);
+            // Wykonujemy odpowiedź nawet przy błędzie, by nie zawiesić frontendu
+            return res.status(500).json("Error during restore");
+        }
 
-
-
-
-        var sql =   "call artdruk.delete_technologia_from_zamowienie_id(" + zamowienie_id + ")"
-connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) console.log(err);       }
-});
-
-
-    var sql = "commit"
-connection.query(sql, function (err, result) {
-    if (err) console.log(err)
-        res.status(200).json("OK")  
-
- })
-
-
-
-}
+        // 4. Finalizacja
+        // W puli nie musisz robić "commit", chyba że zacząłeś transakcję przez pool.getConnection.
+        // Wyślemy odpowiedź po zainicjowaniu ostatniego głównego zapytania.
+        res.status(200).json("OK");
+    });
+};
 
 module.exports = {
     ZapiszTechnologieUpdate_restore
-    
-}
- 
+};
