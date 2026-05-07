@@ -18,7 +18,6 @@ const fs = require('fs');
 const jwt = require("jsonwebtoken");
 const app = express();
 const {port} = require('../config');
-const connection = require('../actions/mysql');
 const apiRouter = require('../actions/routes');
 const bodyParser = require('body-parser');
 const cors = require('cors');

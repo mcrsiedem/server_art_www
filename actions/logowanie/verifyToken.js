@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN } = require("./ACCESS_TOKEN");
-const { connection, pool } = require("../mysql");
 
 
 const verifyToken=(req,res,next) =>{
@@ -18,10 +17,7 @@ const verifyToken=(req,res,next) =>{
             } else{
 
 
-                // var sql = "INSERT INTO artdruk.monitoring (user_id,imie,nazwisko) values ('" + decoded.id+ "','" + decoded.imie+ "','" + decoded.nazwisko+ "') ";
-                // connection.query(sql, function (err, result) {
-                //   if (err) console.log(err);
-                // })
+
 
               next();  
             }

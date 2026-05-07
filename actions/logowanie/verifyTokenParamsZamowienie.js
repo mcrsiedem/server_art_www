@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN } = require("./ACCESS_TOKEN");
-const { connection, pool } = require("../mysql");
 const dataStore = require('../uprawnienia/dataStore');
 
 
@@ -36,10 +35,7 @@ function  verifyTokenParamsZamowienie(uprawnienie){
                 
 
                 if( dataStore.checkPrivileges(decoded.id,uprawnienie)){
-                // var sql = "INSERT INTO artdruk.monitoring (user_id,imie,nazwisko) values ('" + decoded.id+ "','" + decoded.imie+ "','" + decoded.nazwisko+ "') ";
-                // connection.query(sql, function (err, result) {
-                //   if (err) console.log(err);
-                // })
+   
 
                 next();  
 

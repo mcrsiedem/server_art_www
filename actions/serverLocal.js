@@ -4,7 +4,6 @@ const app = express();
 const { port } = require("../config");
 const jwt = require("jsonwebtoken");
 
-const connection = require("../actions/mysql");
 const apiRouter = require("../actions/routes");
 const bodyParser = require("body-parser");
 const cors = require("cors");
