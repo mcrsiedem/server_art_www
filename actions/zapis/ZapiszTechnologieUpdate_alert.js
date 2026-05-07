@@ -1,26 +1,29 @@
+const { pool } = require("../mysql");
 
-const { connection, pool } = require("../mysql");
-const { ifNoDateSetNull } = require("../czas/ifNoDateSetNull");
+const zapiszTechnologieUpdate_alert = (daneTechEdit, res) => {
 
+    if (daneTechEdit.alert) {
+        
+        // 1. Wywołanie procedury resetującej alert
+        const sqlCall = "CALL artdruk.zamowienie_set_null_alert(?)";
+        
+        pool.query(sqlCall, [daneTechEdit.zamowienie_id], (err) => {
+            if (err) {
+                console.error("Błąd CALL zamowienie_set_null_alert:", err);
+            }
+        });
 
-const zapiszTechnologieUpdate_alert=(daneTechEdit,res) =>{
-
-
-if(daneTechEdit.alert){
-
-        var sql =   "call artdruk.zamowienie_set_null_alert(" + daneTechEdit.zamowienie_id + ")"
-connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) console.log(err);       }});
-
-var sql =   "update  artdruk.zamowienia set  status=2 where id = '" + daneTechEdit.zamowienie_id  + "'"
-connection.query(sql, function (err, result) {       if (err){connection.query("rollback ", function (err, result) {   });   if (err) console.log(err);       }});
-
-
-}
-
-}
+        // 2. Aktualizacja statusu zamówienia
+        const sqlUpdate = "UPDATE artdruk.zamowienia SET status = 2 WHERE id = ?";
+        
+        pool.query(sqlUpdate, [daneTechEdit.zamowienie_id], (err) => {
+            if (err) {
+                console.error("Błąd UPDATE status zamówienia:", err);
+            }
+        });
+    }
+};
 
 module.exports = {
     zapiszTechnologieUpdate_alert
-    
-}
- 
+};
