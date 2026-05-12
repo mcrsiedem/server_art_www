@@ -5,30 +5,20 @@ const dataStore = require('../uprawnienia/dataStore');
 
 const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     const token = req.params['token'];
-    const pagination = req.params['token'];
-
+    // const pagination = req.params['token'];
+    const pagination = req.body;
+    
     const {currentPage,pageSize,totalPages,total,kolumna,kierunek,widok,klientId,opiekunId} = pagination;
+    console.log(pagination)
 
     let biala_lista_kierunek = [ "asc", "desc"];
     let biala_lista_kolumna = ["nr", "rok", "technologia", "firma_nazwa", "tytul", "kod_pracy", "nr_zamowienia_klienta", "naklad", "oprawa", "ilosc_stron", "cena", "waluta_id", "wartosc_zamowienia", "data_materialow", "data_przyjecia", "data_spedycji", "utworzono", "nr_kalkulacji", "format_x", "opiekun", "firma", "status_nazwa", "stan", "etap", "lista_faktur", "koszty_status", "faktury_status"];
     let biala_lista_widok = ["Bieżące", "Przed drukiem", "Harmonogram", "Wydrukowane", "Sfalcowane", "Oprawione", "Oddane", "Anulowane", "Wszystkie", "Gotowe do faktury", "Zafakturowane", "Brak faktury"];
 
-
-    const orderby = req.params['orderby'];
-    const zestaw = req.params['zestaw'];
-    const klient_id = req.params['klient'];
-    const opiekun_id_param = req.params['opiekun'];
-
-
-
-    const page = parseInt(req.params['page']) || 1;
-    const size = parseInt(req.params['size']) || 50;
+    const page = currentPage || 1;
+    const size = pageSize|| 50;
     const offset = (page - 1) * size;
 
-    // let biala_lista_zestaw = ["Bieżące", "Przed drukiem", "Harmonogram", "Wydrukowane", "Sfalcowane", "Oprawione", "Oddane", "Anulowane", "Wszystkie", "Gotowe do faktury", "Zafakturowane", "Brak faktury"];
-
-    // let biala_lista = ["rok, nr asc", "naklad", "ilosc_stron", "data_przyjecia", "data_spedycji", "oprawa_id"];
-    // let biala_lista_zestaw = ["Bieżące", "Przed drukiem", "Harmonogram", "Wydrukowane", "Sfalcowane", "Oprawione", "Oddane", "Anulowane", "Wszystkie", "Gotowe do faktury", "Zafakturowane", "Brak faktury"];
 
     let decoded;
     try {
@@ -47,11 +37,11 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
 
     try {
         // SQL dla danych
-        const sql = sqlIn(id, zestaw, orderby, zamowienia_wszystkie, size, offset, false, klient_id, opiekun_id_param);
+        const sql = sqlIn(id, widok, kolumna, zamowienia_wszystkie, size, offset, false, klientId, opiekunId);
         const [rows] = await pool.execute(sql);
 
         // SQL dla licznika (musi mieć identyczne filtry WHERE, aby paginacja się zgadzała)
-        const sqlCount = sqlIn(id, zestaw, orderby, zamowienia_wszystkie, null, null, true, klient_id, opiekun_id_param);
+        const sqlCount = sqlIn(id, widok, kolumna, zamowienia_wszystkie, null, null, true, klientId, opiekunId);
         const [countRows] = await pool.execute(sqlCount);
         const totalRecords = countRows[0].total;
 
@@ -71,19 +61,19 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     }
 };
 
-const sqlIn = (id, zestaw, orderby, zamowienia_wszystkie, limit, offset, isCount = false, klient_id, opiekun_id_param) => {
+const sqlIn = (id, widok, kolumna, zamowienia_wszystkie, limit, offset, isCount = false, klientId, opiekunId) => {
     
     let filterParts = [];
 
     if (zamowienia_wszystkie) {
         // SCENARIUSZ: Admin / Uprawnienia pełne
         // 1. Filtrowanie po Kliencie (jeśli wybrano)
-        if (klient_id && klient_id !== "0" && klient_id !== "Wszystkie") {
-            filterParts.push(`klient_id = ${parseInt(klient_id)}`);
+        if (klientId && klientId !== "0" && klientId !== "Wszystkie") {
+            filterParts.push(`klient_id = ${parseInt(klientId)}`);
         }
         // 2. Filtrowanie po Opiekunie (jeśli wybrano konkretnego w selectcie)
-        if (opiekun_id_param && opiekun_id_param !== "0" && opiekun_id_param !== "Wszystkie") {
-            filterParts.push(`(opiekun_id = ${parseInt(opiekun_id_param)} OR asystent1 = ${parseInt(opiekun_id_param)} OR asystent2 = ${parseInt(opiekun_id_param)})`);
+        if (opiekunId && opiekunId !== "0" && opiekunId !== "Wszystkie") {
+            filterParts.push(`(opiekun_id = ${parseInt(opiekunId)} OR asystent1 = ${parseInt(opiekunId)} OR asystent2 = ${parseInt(opiekunId)})`);
         }
     } else {
     // SCENARIUSZ: Brak uprawnień (Zwykły użytkownik)
@@ -92,14 +82,14 @@ const sqlIn = (id, zestaw, orderby, zamowienia_wszystkie, limit, offset, isCount
         filterParts.push(`(opiekun_id = ${parseInt(id)} OR asystent1 = ${parseInt(id)} OR asystent2 = ${parseInt(id)})`);
 
         // 2. DODANE: Filtrowanie po Kliencie (w obrębie zamówień użytkownika)
-        if (klient_id && klient_id !== "0" && klient_id !== "Wszystkie") {
-            filterParts.push(`klient_id = ${parseInt(klient_id)}`);
+        if (klientId && klientId !== "0" && klientId !== "Wszystkie") {
+            filterParts.push(`klient_id = ${parseInt(klientId)}`);
         }
     }
 
     // 3. Filtrowanie po Zestawie (Etapie)
     let setClause = "";
-    switch (zestaw) {
+    switch (widok) {
         case "Bieżące": setClause = "(etap > 1 AND etap < 16 AND status != 7)"; break;
         case "Przed drukiem": setClause = "(etap > 1 AND etap < 8 AND status != 7)"; break;
         case "Harmonogram": setClause = "(etap = 1 AND status != 7)"; break;
@@ -125,7 +115,7 @@ const sqlIn = (id, zestaw, orderby, zamowienia_wszystkie, limit, offset, isCount
 
     return `SELECT * FROM artdruk.view_zamowienia 
             WHERE ${finalWhere} 
-            ORDER BY ${orderby} 
+            ORDER BY ${kolumna} 
             LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
 };
 
