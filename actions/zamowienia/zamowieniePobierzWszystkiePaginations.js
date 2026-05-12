@@ -5,6 +5,10 @@ const dataStore = require('../uprawnienia/dataStore');
 
 const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     const token = req.params['token'];
+    const pagination = req.params['token'];
+
+    const {currentPage,pageSize,totalPages,total,kolumna,kierunek,widok,klientId,opiekunId} = pagination;
+
     const orderby = req.params['orderby'];
     const zestaw = req.params['zestaw'];
     const klient_id = req.params['klient'];
