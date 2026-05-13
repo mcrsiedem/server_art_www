@@ -19,6 +19,7 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     const size = pageSize|| 50;
     const offset = (page - 1) * size;
 
+        console.log(`kierunek:  ${kierunek}`)
 
     let decoded;
     try {
@@ -37,11 +38,11 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
 
     try {
         // SQL dla danych
-        const sql = sqlIn(id, widok, kolumna, zamowienia_wszystkie, size, offset, false, klientId, opiekunId);
+        const sql = sqlIn(id, widok, kolumna,kierunek, zamowienia_wszystkie, size, offset, false, klientId, opiekunId);
         const [rows] = await pool.execute(sql);
 
         // SQL dla licznika (musi mieć identyczne filtry WHERE, aby paginacja się zgadzała)
-        const sqlCount = sqlIn(id, widok, kolumna, zamowienia_wszystkie, null, null, true, klientId, opiekunId);
+        const sqlCount = sqlIn(id, widok, kolumna, kierunek,zamowienia_wszystkie, null, null, true, klientId, opiekunId);
         const [countRows] = await pool.execute(sqlCount);
         const totalRecords = countRows[0].total;
 
@@ -61,7 +62,7 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     }
 };
 
-const sqlIn = (id, widok, kolumna, zamowienia_wszystkie, limit, offset, isCount = false, klientId, opiekunId) => {
+const sqlIn = (id, widok, kolumna, kierunek, zamowienia_wszystkie, limit, offset, isCount = false, klientId, opiekunId) => {
     
     let filterParts = [];
 
@@ -115,7 +116,7 @@ const sqlIn = (id, widok, kolumna, zamowienia_wszystkie, limit, offset, isCount 
 
     return `SELECT * FROM artdruk.view_zamowienia 
             WHERE ${finalWhere} 
-            ORDER BY ${kolumna} 
+            ORDER BY ${kolumna} ${kierunek}  
             LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
 };
 
