@@ -54,56 +54,56 @@ zamowienia_wszystkie ? opiekun = " " :  opiekun = "(opiekun_id = "+id+" or asyst
 
   switch (zestaw) {
   case "Bieżące":  // Od NOWE do ODDANE bez faktury
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
   break;
 
     case "Przed drukiem":  // Od NOWE do ODDANE bez faktury
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap > 1 and etap <8 and status != 7)  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (etap > 1 and etap <8 and status != 7)  ORDER BY " + orderby;
   break;
 
     case "Harmonogram":  
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =1 and status != 7)  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (etap =1 and status != 7)  ORDER BY " + orderby;
   break;
 
   case "Wydrukowane":  // wydrukowane i nie anulowane
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =8 and status != 7)  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (etap =8 and status != 7)  ORDER BY " + orderby;
   break;
 
  case "Sfalcowane":  // sfalcowane i nie anulowane
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =10 and status != 7)  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (etap =10 and status != 7)  ORDER BY " + orderby;
   break;
 
    case "Oprawione":  // oprawione i nie anulowane
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap =11 and status != 7)  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (etap =11 and status != 7)  ORDER BY " + orderby;
   break;
 
   case "Oddane":  // Oddane
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap = 16 and status != 7)  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (etap = 16 and status != 7)  ORDER BY " + orderby;
   break;
 
     case "Anulowane":  // Oddane
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (status = 7)  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (status = 7)  ORDER BY " + orderby;
   break;
 
   case "Wszystkie":  // wszystkie
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" id > 1  ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" id > 1  ORDER BY " + orderby;
   break;
 
     case "Gotowe do faktury":  // wszystkie
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (koszty_status = 2 and faktury_status <3 and status != 7)   ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (koszty_status = 2 and faktury_status <3 and status != 7)   ORDER BY " + orderby;
   break;
 
   
     case "Zafakturowane":  // wszystkie
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (faktury_status = 3  and status != 7)   ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (faktury_status = 3  and status != 7)   ORDER BY " + orderby;
   break;
 
       case "Brak faktury":  // wszystkie
-    sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" ((faktury_status <3  or lista_faktur='') and status != 7)   ORDER BY " + orderby;
+    sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" ((faktury_status <3  or lista_faktur='') and status != 7)   ORDER BY " + orderby;
   break;
 
   default: // Od NOWE do ODDANE bez faktury
-   sql = "SELECT * FROM artdruk.view_zamowienia where "+opiekun+" (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
+   sql = "SELECT * FROM artdruk.view_zamowienia_2 where "+opiekun+" (etap > 1 and etap <16 and status != 7)  ORDER BY " + orderby;
 }
 
   return sql 

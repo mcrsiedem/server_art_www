@@ -120,10 +120,10 @@ const sqlIn = (id, zestaw, orderby, zamowienia_wszystkie, limit, offset, isCount
     const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : "1=1";
 
     if (isCount) {
-        return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia WHERE ${finalWhere}`;
+        return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia_2 WHERE ${finalWhere}`;
     }
 
-    return `SELECT * FROM artdruk.view_zamowienia 
+    return `SELECT * FROM artdruk.view_zamowienia_2 
             WHERE ${finalWhere} 
             ORDER BY ${orderby} 
             LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;

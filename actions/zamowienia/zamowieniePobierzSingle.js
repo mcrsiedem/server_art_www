@@ -9,7 +9,7 @@ try {
         // Wykonujemy zapytania RÓWNOLEGLE na trzech wolnych połączeniach z puli
         const [daneZamowienia,produkty,elementy,fragmenty,oprawa,procesy_elementow,id,historia,pakowanie,koszty_dodatkowe,ksiegowosc,faktury,pliki,procesy_produktow
         ] = await Promise.all([
-            pool.execute("select * from artdruk.view_zamowienia where id = ?  ORDER BY id ASC", [idZamowienia]),
+            pool.execute("select * from artdruk.view_zamowienia_2 where id = ?  ORDER BY id ASC", [idZamowienia]),
             pool.execute("select * from artdruk.zamowienia_produkty where zamowienie_id = ?  ORDER BY id ASC", [idZamowienia]),
             pool.execute("select * from artdruk.zamowienia_elementy where zamowienie_id = ?  ORDER BY id ASC", [idZamowienia]),
             pool.execute("select * from artdruk.view_zamowienia_fragmenty where zamowienie_id = ?  ORDER BY id ASC", [idZamowienia]),

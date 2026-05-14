@@ -9,7 +9,7 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     const pagination = req.body;
     
     const {currentPage,pageSize,totalPages,total,kolumna,kierunek,widok,klientId,opiekunId} = pagination;
-    console.log(pagination)
+    // console.log(pagination)
 
     let biala_lista_kierunek = [ "asc", "desc"];
     let biala_lista_kolumna = ["nr", "rok", "technologia", "firma_nazwa", "tytul", "kod_pracy", "nr_zamowienia_klienta", "naklad", "oprawa", "ilosc_stron", "cena", "waluta_id", "wartosc_zamowienia", "data_materialow", "data_przyjecia", "data_spedycji", "utworzono", "nr_kalkulacji", "format_x", "opiekun", "firma", "status_nazwa", "stan", "etap", "lista_faktur", "koszty_status", "faktury_status"];
@@ -19,7 +19,7 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     const size = pageSize|| 300;
     const offset = (page - 1) * size;
 
-        console.log(`kierunek:  ${kierunek}`)
+        // console.log(`kierunek:  ${kierunek}`)
 
     let decoded;
     try {
@@ -111,10 +111,10 @@ const sqlIn = (id, widok, kolumna, kierunek, zamowienia_wszystkie, limit, offset
     const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : "1=1";
 
     if (isCount) {
-        return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia WHERE ${finalWhere}`;
+        return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia_2 WHERE ${finalWhere}`;
     }
 
-    return `SELECT * FROM artdruk.view_zamowienia 
+    return `SELECT * FROM artdruk.view_zamowienia_2 
             WHERE ${finalWhere} 
             ORDER BY ${kolumna} ${kierunek}  
             LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;

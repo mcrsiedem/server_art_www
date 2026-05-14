@@ -89,11 +89,11 @@ const sqlIn = (id, zestaw, orderby, zamowienia_wszystkie, limit, offset, isCount
 
     // Jeśli to tylko licznik, zwracamy prostsze zapytanie
     if (isCount) {
-        return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia WHERE ${opiekun} ${whereClause}`;
+        return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia_2 WHERE ${opiekun} ${whereClause}`;
     }
 
     // Zapytanie z paginacją
-    return `SELECT * FROM artdruk.view_zamowienia 
+    return `SELECT * FROM artdruk.view_zamowienia_2 
             WHERE ${opiekun} ${whereClause} 
             ORDER BY ${orderby} 
             LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;

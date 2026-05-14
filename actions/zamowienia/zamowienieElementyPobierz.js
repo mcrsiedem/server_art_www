@@ -9,7 +9,7 @@ try {
         const [elementy, nazwa
         ] = await Promise.all([
             pool.execute("select * from artdruk.view_technologie_elementy where nr = ? and rok=? ORDER BY id ASC", [nr,rok]),
-            pool.execute("select firma_nazwa, tytul from artdruk.view_zamowienia where nr = ? and rok=? ORDER BY id ASC", [nr,rok]),
+            pool.execute("select firma_nazwa, tytul from artdruk.view_zamowienia_2 where nr = ? and rok=? ORDER BY id ASC", [nr,rok]),
         ]).then(results => results.map(r => r[0]));
 
         const dane =[elementy,nazwa]
