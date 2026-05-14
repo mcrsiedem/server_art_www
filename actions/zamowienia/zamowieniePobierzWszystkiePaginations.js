@@ -16,7 +16,7 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
     let biala_lista_widok = ["Bieżące", "Przed drukiem", "Harmonogram", "Wydrukowane", "Sfalcowane", "Oprawione", "Oddane", "Anulowane", "Wszystkie", "Gotowe do faktury", "Zafakturowane", "Brak faktury"];
 
     const page = currentPage || 1;
-    const size = pageSize|| 50;
+    const size = pageSize|| 300;
     const offset = (page - 1) * size;
 
         console.log(`kierunek:  ${kierunek}`)
