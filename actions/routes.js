@@ -62,6 +62,7 @@ const { zamowienieElementyPobierz } = require('./zamowienia/zamowienieElementyPo
 const { zapiszTechnologie } = require('./zapis/ZapiszTechnologie');
 const { usunTechnologie } = require('./zapis/UsunTechnologie');
 const { zamowieniePobierzWszystkiePaginations } = require('./zamowienia/zamowieniePobierzWszystkiePaginations');
+const { zamowienieGlobalSearch } = require('./zamowienia/zamowienieGlobalSearch');
 // const { getHipopotam } = require('./logowanie/getHipopotam');
 
         router.post('/version/', postVersion); 
@@ -79,6 +80,7 @@ const { zamowieniePobierzWszystkiePaginations } = require('./zamowienia/zamowien
     router.get('/sprawdzNiezamknieteKoszty/:token',verifyToken,sprawdzNiezamknieteKoszty); // pojedyncze zamówienie do edycji
     router.get('/zamowienia/:orderby/:zestaw/:token',verifyToken,zamowieniePobierzWszystkie); // pool
     router.post('/zamowieniaPaginations/:token',verifyToken,zamowieniePobierzWszystkiePaginations); // pool
+    router.post('/zamowieniaGlobalSearch/:token',verifyToken,zamowienieGlobalSearch); // pool
     router.get('/zamowienia_proofy/:token',verifyToken,connections.getZamowieniaProofy); // pool
 router.get('/zamowieniapliki/:token',verifyToken,connections.getZamowieniaPliki);
 router.get('/zamowieniaKalendarz/:token',verifyToken,connections.getZamowieniaKalendarz);     
