@@ -5,21 +5,7 @@ const dataStore = require("../uprawnienia/dataStore");
 
 const zamowienieGlobalSearch = async (req, res) => {
   const token = req.params["token"];
-  // const pagination = req.params['token'];
-  const pagination = req.body;
   const dane = req.body;
-
-  const {
-    currentPage,
-    pageSize,
-    totalPages,
-    total,
-    kolumna,
-    kierunek,
-    widok,
-    klientId,
-    opiekunId,
-  } = pagination;
   const { nr, rok, praca, klient } = dane;
 
   let decoded;
@@ -30,19 +16,13 @@ const zamowienieGlobalSearch = async (req, res) => {
   }
 
   const id = decoded.id;
-  const zamowienia_wszystkie = dataStore.checkPrivileges(
-    id,
-    "zamowienia_wszystkie",
-  );
-
-  // if (!biala_lista_kierunek.includes(kierunek) || !biala_lista_kolumna.includes(kolumna) || !biala_lista_widok.includes(widok)) {
-  //     return res.status(400).json({ error: "Nieprawidłowe parametry zapytania." });
-  // }
+  const zamowienia_wszystkie = dataStore.checkPrivileges(id, "zamowienia_wszystkie");
 
   try {
-    // SQL dla danych
-    const sql = sqlIn(nr, rok, praca, klient);
-    const [rows] = await pool.execute(sql);
+    const { query, values } = sqlIn(nr, rok, praca, klient, zamowienia_wszystkie, id);
+    
+    // ZMIANA: Używamy .query zamiast .execute - jest odporniejsze na dynamiczne zapytania
+    const [rows] = await pool.query(query, values);
 
     res.status(200).json({
       data: rows,
@@ -53,100 +33,57 @@ const zamowienieGlobalSearch = async (req, res) => {
   }
 };
 
-const sqlIn = (nr, rok, praca, klient) => {
+const sqlIn = (nr, rok, praca, klient, zamowienia_wszystkie, id) => {
   let filterParts = [];
+  let values = [];
 
-
-      if (nr) {
-      const parsedNr = parseInt(nr, 10);
-      if (!isNaN(parsedNr)) {
-        filterParts.push(`nr = ${parsedNr}`);
-      }
+  if (nr) {
+    const parsedNr = parseInt(nr, 10);
+    if (!isNaN(parsedNr)) {
+      filterParts.push("nr = ?");
+      values.push(parsedNr);
     }
-
-    if (rok) {
-      const parsedRok = parseInt(rok, 10);
-      if (!isNaN(parsedRok)) {
-        filterParts.push(`rok = ${parsedRok}`);
-      }
-    }
-
-    if (klient) {
-      const parsedKlinet = parseInt(klient, 10);
-      if (!isNaN(parsedKlinet)) {
-        filterParts.push(`klient_id = ${parsedKlinet}`);
-      }
-    }
-
-    if (praca) {
-      filterParts.push(`tytul = ${praca}`);
-    }
-
-  if (zamowienia_wszystkie) {
-
-  } else {
-    // SCENARIUSZ: Brak uprawnień (Zwykły użytkownik)
-    // 1. Wymuszamy tylko rekordy zalogowanego użytkownika (Twoja obecna logika)
-    filterParts.push(`(opiekun_id = ${parseInt(id)}`);
   }
 
-
-
-  // 3. Filtrowanie po Zestawie (Etapie)
-  let setClause = "";
-  switch (widok) {
-    case "Bieżące":
-      setClause = "(etap > 1 AND etap < 16 AND status != 7)";
-      break;
-    case "Przed drukiem":
-      setClause = "(etap > 1 AND etap < 8 AND status != 7)";
-      break;
-    case "Harmonogram":
-      setClause = "(etap = 1 AND status != 7)";
-      break;
-    case "Wydrukowane":
-      setClause = "(etap = 8 AND status != 7)";
-      break;
-    case "Sfalcowane":
-      setClause = "(etap = 10 AND status != 7)";
-      break;
-    case "Oprawione":
-      setClause = "(etap = 11 AND status != 7)";
-      break;
-    case "Oddane":
-      setClause = "(etap = 16 AND status != 7)";
-      break;
-    case "Anulowane":
-      setClause = "(status = 7)";
-      break;
-    case "Wszystkie":
-      setClause = "(id > 1)";
-      break;
-    case "Gotowe do faktury":
-      setClause = "(koszty_status = 2 AND faktury_status < 3 AND status != 7)";
-      break;
-    case "Zafakturowane":
-      setClause = "(faktury_status = 3 AND status != 7)";
-      break;
-    case "Brak faktury":
-      setClause = "((faktury_status < 3 OR lista_faktur = '') AND status != 7)";
-      break;
-    default:
-      setClause = "(etap > 1 AND etap < 16 AND status != 7)";
+  if (rok) {
+    const parsedRok = parseInt(rok, 10);
+    if (!isNaN(parsedRok)) {
+      filterParts.push("rok = ?");
+      values.push(parsedRok);
+    }
   }
-  filterParts.push(setClause);
 
-  // Łączymy wszystkie warunki w jeden ciąg WHERE part1 AND part2 AND part3
+  if (klient) {
+    const parsedKlient = parseInt(klient, 10);
+    if (!isNaN(parsedKlient)) {
+      filterParts.push("klient_id = ?");
+      values.push(parsedKlient);
+    }
+  }
+
+  // Najbardziej podatne miejsce na SQL Injection - teraz w 100% bezpieczne
+  if (praca) {
+    filterParts.push("tytul LIKE ?");
+    values.push(`%${praca}%`); 
+  }
+
+  if (!zamowienia_wszystkie) {
+    const parsedId = parseInt(id, 10);
+    if (!isNaN(parsedId)) {
+      filterParts.push("(opiekun_id = ? OR asystent1 = ? OR asystent2 = ?)");
+      // Popychamy ID dokładnie 3 razy, bo mamy 3 znaki zapytania w tym jednym stringu
+      values.push(parsedId, parsedId, parsedId);
+    }
+  }
+
   const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : "1=1";
+  const query = `SELECT * FROM artdruk.view_zamowienia_2 WHERE ${finalWhere}`;
 
-  if (isCount) {
-    return `SELECT COUNT(*) as total FROM artdruk.view_zamowienia_2 WHERE ${finalWhere}`;
-  }
+  // Logi w konsoli - bardzo ważne do debugowania!
+  console.log("Wygenerowany SQL:", query);
+  console.log("Przekazane wartości:", values);
 
-  return `SELECT * FROM artdruk.view_zamowienia_2 
-            WHERE ${finalWhere} 
-            ORDER BY ${kolumna} ${kierunek}  
-            LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
+  return { query, values };
 };
 
 module.exports = { zamowienieGlobalSearch };
