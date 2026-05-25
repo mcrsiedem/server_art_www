@@ -53,7 +53,7 @@ const sqlIn = (nr, rok, praca, klient, zamowienia_wszystkie, id) => {
     }
   }
 
-  if (klient) {
+  if (klient && klient !=0) {
     const parsedKlient = parseInt(klient, 10);
     if (!isNaN(parsedKlient)) {
       filterParts.push("klient_id = ?");
