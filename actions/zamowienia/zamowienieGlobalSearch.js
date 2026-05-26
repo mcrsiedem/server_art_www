@@ -6,7 +6,7 @@ const dataStore = require("../uprawnienia/dataStore");
 const zamowienieGlobalSearch = async (req, res) => {
   const token = req.params["token"];
   const dane = req.body;
-  const { nr, rok, praca, klient } = dane;
+  const { nr, rok, praca, klient,isbn, kod_pracy,nr_zamowienia_klienta,nr_kalkulacji} = dane;
 
   let decoded;
   try {
@@ -19,7 +19,7 @@ const zamowienieGlobalSearch = async (req, res) => {
   const zamowienia_wszystkie = dataStore.checkPrivileges(id, "zamowienia_wszystkie");
 
   try {
-    const { query, values } = sqlIn(nr, rok, praca, klient, zamowienia_wszystkie, id);
+    const { query, values } = sqlIn(nr, rok, praca, klient,isbn,kod_pracy,nr_zamowienia_klienta,nr_kalkulacji, zamowienia_wszystkie, id);
     
     // ZMIANA: Używamy .query zamiast .execute - jest odporniejsze na dynamiczne zapytania
     const [rows] = await pool.query(query, values);
@@ -33,7 +33,7 @@ const zamowienieGlobalSearch = async (req, res) => {
   }
 };
 
-const sqlIn = (nr, rok, praca, klient, zamowienia_wszystkie, id) => {
+const sqlIn = (nr, rok, praca, klient, isbn,kod_pracy,nr_zamowienia_klienta,nr_kalkulacji,zamowienia_wszystkie, id) => {
   let filterParts = [];
   let values = [];
 
@@ -65,6 +65,28 @@ const sqlIn = (nr, rok, praca, klient, zamowienia_wszystkie, id) => {
   if (praca) {
     filterParts.push("tytul LIKE ?");
     values.push(`%${praca}%`); 
+  }
+
+
+  if (isbn) {
+    filterParts.push("isbn LIKE ?");
+    values.push(`%${isbn}%`); 
+  }
+
+ // kod_pracy,nr_zamowienia_klienta,nr_kalkulacji
+
+  if (kod_pracy) {
+    filterParts.push("kod_pracy LIKE ?");
+    values.push(`%${kod_pracy}%`); 
+  }
+  if (nr_zamowienia_klienta) {
+    filterParts.push("nr_zamowienia_klienta LIKE ?");
+    values.push(`%${nr_zamowienia_klienta}%`); 
+  }
+
+  if (nr_kalkulacji) {
+    filterParts.push("nr_kalkulacji LIKE ?");
+    values.push(`%${nr_kalkulacji}%`); 
   }
 
   if (!zamowienia_wszystkie) {
