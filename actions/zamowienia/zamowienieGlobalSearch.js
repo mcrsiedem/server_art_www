@@ -76,7 +76,11 @@ const sqlIn = (nr, rok, praca, klient, zamowienia_wszystkie, id) => {
     }
   }
 
-  const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : "1=1";
+  // const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : "1=1";
+  const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : " rok = YEAR(CURDATE())";
+
+
+  
   const query = `SELECT * FROM artdruk.view_zamowienia_2 WHERE ${finalWhere}`;
 
   // Logi w konsoli - bardzo ważne do debugowania!
