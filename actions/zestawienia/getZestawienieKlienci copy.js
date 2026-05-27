@@ -1,12 +1,10 @@
 const { DecodeToken } = require('../logowanie/DecodeToken');
 const { pool } = require("../mysql");
 
-// ładuje ponownie uprawnienia z bazy do serwera
-
      const getZestawienieKlienci = async (req,res) =>{
         const OD_KIEDY = req.params['od']
         const DO_KIEDY = req.params['do']
-
+ 
     
 const sql = `
 SELECT
