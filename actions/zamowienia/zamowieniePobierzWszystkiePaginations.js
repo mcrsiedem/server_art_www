@@ -13,7 +13,7 @@ const zamowieniePobierzWszystkiePaginations = async (req, res) => {
 
     let biala_lista_kierunek = [ "asc", "desc"];
     let biala_lista_kolumna = ["nr", "rok", "technologia", "firma_nazwa", "tytul", "kod_pracy", "nr_zamowienia_klienta", "naklad", "oprawa", "ilosc_stron", "cena", "waluta_id", "wartosc_zamowienia", "data_materialow", "data_przyjecia", "data_spedycji", "utworzono", "nr_kalkulacji", "format_x", "opiekun", "firma", "status_nazwa", "stan", "etap", "lista_faktur", "koszty_status", "faktury_status"];
-    let biala_lista_widok = ["Bieżące", "Przed drukiem", "Harmonogram", "Wydrukowane", "Sfalcowane", "Oprawione", "Oddane", "Anulowane", "Wszystkie", "Gotowe do faktury", "Zafakturowane", "Brak faktury"];
+    let biala_lista_widok = ["Bieżące", "Przed drukiem", "Harmonogram", "Wydrukowane", "Sfalcowane", "Oprawione", "Oddane", "Anulowane", "Wszystkie", "Gotowe do faktury", "Zafakturowane", "Brak faktury","Wydrukowane + Sfalcowane"];
 
     const page = currentPage || 1;
     const size = pageSize|| 300;
@@ -96,6 +96,7 @@ const sqlIn = (id, widok, kolumna, kierunek, zamowienia_wszystkie, limit, offset
         case "Harmonogram": setClause = "(etap = 1 AND status != 7)"; break;
         case "Wydrukowane": setClause = "(etap = 8 AND status != 7)"; break;
         case "Sfalcowane": setClause = "(etap = 10 AND status != 7)"; break;
+        case "Wydrukowane + Sfalcowane": setClause = "((etap = 10 or etap = 8) AND status != 7)"; break;
         case "Oprawione": setClause = "(etap = 11 AND status != 7)"; break;
         case "Oddane": setClause = "(etap = 16 AND status != 7)"; break;
         case "Anulowane": setClause = "(status = 7)"; break;
@@ -103,6 +104,7 @@ const sqlIn = (id, widok, kolumna, kierunek, zamowienia_wszystkie, limit, offset
         case "Gotowe do faktury": setClause = "(koszty_status = 2 AND faktury_status < 3 AND status != 7)"; break;
         case "Zafakturowane": setClause = "(faktury_status = 3 AND status != 7)"; break;
         case "Brak faktury": setClause = "((faktury_status < 3 OR lista_faktur = '') AND status != 7)"; break;
+
         default: setClause = "(etap > 1 AND etap < 16 AND status != 7)";
     }
     filterParts.push(setClause);
