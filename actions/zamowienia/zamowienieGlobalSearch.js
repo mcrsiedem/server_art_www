@@ -88,9 +88,7 @@ const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, n
     values.push(`%${nr_kalkulacji}%`); 
   }
 
-  // --- NOWY BLOK: Filtrowanie po papier_id za pomocą podzapytania ---
-  // Zakładam, że klucz główny w Twoim widoku 'view_zamowienia_2' nazywa się po prostu 'id'. 
-  // Jeśli nazywa się inaczej (np. 'id_zamowienia'), zmień 'id IN' na odpowiednią nazwę.
+
   if (papier_id && papier_id != 0) {
     const parsedPapier = parseInt(papier_id, 10);
     if (!isNaN(parsedPapier)) {
