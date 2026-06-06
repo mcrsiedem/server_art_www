@@ -6,7 +6,8 @@ const dataStore = require("../uprawnienia/dataStore");
 const zamowienieGlobalSearch = async (req, res) => {
   const token = req.params["token"];
   const dane = req.body;
-  const { nr, rok, praca, klient,isbn, kod_pracy,nr_zamowienia_klienta,nr_kalkulacji} = dane;
+  // papier_id jest już tutaj wyciągnięte, super!
+  const { nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id } = dane;
 
   let decoded;
   try {
@@ -19,9 +20,9 @@ const zamowienieGlobalSearch = async (req, res) => {
   const zamowienia_wszystkie = dataStore.checkPrivileges(id, "zamowienia_wszystkie");
 
   try {
-    const { query, values } = sqlIn(nr, rok, praca, klient,isbn,kod_pracy,nr_zamowienia_klienta,nr_kalkulacji, zamowienia_wszystkie, id);
+    // ZMIANA: Dodano papier_id do argumentów wywołania funkcji sqlIn
+    const { query, values } = sqlIn(nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id);
     
-    // ZMIANA: Używamy .query zamiast .execute - jest odporniejsze na dynamiczne zapytania
     const [rows] = await pool.query(query, values);
 
     res.status(200).json({
@@ -33,7 +34,8 @@ const zamowienieGlobalSearch = async (req, res) => {
   }
 };
 
-const sqlIn = (nr, rok, praca, klient, isbn,kod_pracy,nr_zamowienia_klienta,nr_kalkulacji,zamowienia_wszystkie, id) => {
+// ZMIANA: Dodano papier_id do listy przyjmowanych argumentów
+const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id) => {
   let filterParts = [];
   let values = [];
 
@@ -53,7 +55,7 @@ const sqlIn = (nr, rok, praca, klient, isbn,kod_pracy,nr_zamowienia_klienta,nr_k
     }
   }
 
-  if (klient && klient !=0) {
+  if (klient && klient != 0) {
     const parsedKlient = parseInt(klient, 10);
     if (!isNaN(parsedKlient)) {
       filterParts.push("klient_id = ?");
@@ -61,24 +63,21 @@ const sqlIn = (nr, rok, praca, klient, isbn,kod_pracy,nr_zamowienia_klienta,nr_k
     }
   }
 
-  // Najbardziej podatne miejsce na SQL Injection - teraz w 100% bezpieczne
   if (praca) {
     filterParts.push("tytul LIKE ?");
     values.push(`%${praca}%`); 
   }
-
 
   if (isbn) {
     filterParts.push("isbn LIKE ?");
     values.push(`%${isbn}%`); 
   }
 
- // kod_pracy,nr_zamowienia_klienta,nr_kalkulacji
-
   if (kod_pracy) {
     filterParts.push("kod_pracy LIKE ?");
     values.push(`%${kod_pracy}%`); 
   }
+
   if (nr_zamowienia_klienta) {
     filterParts.push("nr_zamowienia_klienta LIKE ?");
     values.push(`%${nr_zamowienia_klienta}%`); 
@@ -89,23 +88,30 @@ const sqlIn = (nr, rok, praca, klient, isbn,kod_pracy,nr_zamowienia_klienta,nr_k
     values.push(`%${nr_kalkulacji}%`); 
   }
 
+  // --- NOWY BLOK: Filtrowanie po papier_id za pomocą podzapytania ---
+  // Zakładam, że klucz główny w Twoim widoku 'view_zamowienia_2' nazywa się po prostu 'id'. 
+  // Jeśli nazywa się inaczej (np. 'id_zamowienia'), zmień 'id IN' na odpowiednią nazwę.
+  if (papier_id && papier_id != 0) {
+    const parsedPapier = parseInt(papier_id, 10);
+    if (!isNaN(parsedPapier)) {
+      filterParts.push("id IN (SELECT zamowienie_id FROM zamowienia_elementy WHERE papier_id = ?)");
+      values.push(parsedPapier);
+    }
+  }
+  // ----------------------------------------------------------------
+
   if (!zamowienia_wszystkie) {
     const parsedId = parseInt(id, 10);
     if (!isNaN(parsedId)) {
       filterParts.push("(opiekun_id = ? OR asystent1 = ? OR asystent2 = ?)");
-      // Popychamy ID dokładnie 3 razy, bo mamy 3 znaki zapytania w tym jednym stringu
       values.push(parsedId, parsedId, parsedId);
     }
   }
 
-  // const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : "1=1";
   const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : " rok = YEAR(CURDATE())";
-
-
   
   const query = `SELECT * FROM artdruk.view_zamowienia_2 WHERE ${finalWhere}`;
 
-  // Logi w konsoli - bardzo ważne do debugowania!
   console.log("Wygenerowany SQL:", query);
   console.log("Przekazane wartości:", values);
 
