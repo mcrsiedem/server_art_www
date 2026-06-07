@@ -7,7 +7,7 @@ const zamowienieGlobalSearch = async (req, res) => {
   const token = req.params["token"];
   const dane = req.body;
   // papier_id jest już tutaj wyciągnięte, super!
-  const { nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id } = dane;
+  const { nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id,format_x,format_y } = dane;
 
   let decoded;
   try {
@@ -21,7 +21,7 @@ const zamowienieGlobalSearch = async (req, res) => {
 
   try {
     // ZMIANA: Dodano papier_id do argumentów wywołania funkcji sqlIn
-    const { query, values } = sqlIn(nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id);
+    const { query, values } = sqlIn(nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id,format_x,format_y);
     
     const [rows] = await pool.query(query, values);
 
@@ -35,7 +35,7 @@ const zamowienieGlobalSearch = async (req, res) => {
 };
 
 // ZMIANA: Dodano papier_id do listy przyjmowanych argumentów
-const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id) => {
+const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id,format_x,format_y) => {
   let filterParts = [];
   let values = [];
 
@@ -62,6 +62,23 @@ const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, n
       values.push(parsedKlient);
     }
   }
+
+    if (format_x && format_x != 0) {
+    const parsedFormatX = parseInt(format_x, 10);
+    if (!isNaN(parsedFormatX)) {
+      filterParts.push("format_x = ?");
+      values.push(parsedFormatX);
+    }
+  }
+
+      if (format_y && format_y != 0) {
+    const parsedFormatY = parseInt(format_y, 10);
+    if (!isNaN(parsedFormatY)) {
+      filterParts.push("format_y = ?");
+      values.push(parsedFormatY);
+    }
+  }
+
 
   if (praca) {
     filterParts.push("tytul LIKE ?");
