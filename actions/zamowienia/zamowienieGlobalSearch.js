@@ -7,7 +7,7 @@ const zamowienieGlobalSearch = async (req, res) => {
   const token = req.params["token"];
   const dane = req.body;
   // papier_id jest już tutaj wyciągnięte, super!
-  const { nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id,format_x,format_y } = dane;
+  const { nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id,format_x,format_y,element_proces_id,arkusz_wysokosc,arkusz_szerokosc } = dane;
 
   let decoded;
   try {
@@ -21,7 +21,7 @@ const zamowienieGlobalSearch = async (req, res) => {
 
   try {
     // ZMIANA: Dodano papier_id do argumentów wywołania funkcji sqlIn
-    const { query, values } = sqlIn(nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id,format_x,format_y);
+    const { query, values } = sqlIn(nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id,format_x,format_y,element_proces_id,arkusz_wysokosc,arkusz_szerokosc);
     
     const [rows] = await pool.query(query, values);
 
@@ -35,7 +35,7 @@ const zamowienieGlobalSearch = async (req, res) => {
 };
 
 // ZMIANA: Dodano papier_id do listy przyjmowanych argumentów
-const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id,format_x,format_y) => {
+const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, nr_kalkulacji, papier_id, zamowienia_wszystkie, id,format_x,format_y,element_proces_id,arkusz_wysokosc,arkusz_szerokosc) => {
   let filterParts = [];
   let values = [];
 
@@ -105,12 +105,40 @@ const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, n
     values.push(`%${nr_kalkulacji}%`); 
   }
 
+  
 
   if (papier_id && papier_id != 0) {
     const parsedPapier = parseInt(papier_id, 10);
     if (!isNaN(parsedPapier)) {
       filterParts.push("id IN (SELECT zamowienie_id FROM zamowienia_elementy WHERE papier_id = ?)");
       values.push(parsedPapier);
+    }
+  }
+
+
+    if (element_proces_id && element_proces_id != 0) {
+    const parsedProcesIdElement = parseInt(element_proces_id, 10);
+    if (!isNaN(parsedProcesIdElement)) {
+      filterParts.push("id IN (SELECT zamowienie_id FROM zamowienia_procesy_elementow WHERE proces_id = ?) or id IN (SELECT zamowienie_id FROM zamowienia_procesy_produktow WHERE proces_id = ?)");
+      values.push(parsedProcesIdElement,parsedProcesIdElement);
+    }
+  }
+
+
+  if (arkusz_wysokosc && arkusz_wysokosc != 0) {
+    const parsedArkuszWysokosc = parseInt(arkusz_wysokosc, 10);
+    if (!isNaN(parsedArkuszWysokosc)) {
+      filterParts.push("id IN (SELECT zamowienie_id FROM technologie_elementy WHERE arkusz_wysokosc = ?)");
+      values.push(parsedArkuszWysokosc);
+    }
+  }
+
+
+  if (arkusz_szerokosc && arkusz_szerokosc != 0) {
+    const parsedArkuszSzerokosc = parseInt(arkusz_szerokosc, 10);
+    if (!isNaN(parsedArkuszSzerokosc)) {
+      filterParts.push("id IN (SELECT zamowienie_id FROM technologie_elementy WHERE arkusz_szerokosc = ?)");
+      values.push(parsedArkuszSzerokosc);
     }
   }
   // ----------------------------------------------------------------
@@ -123,7 +151,10 @@ const sqlIn = (nr, rok, praca, klient, isbn, kod_pracy, nr_zamowienia_klienta, n
     }
   }
 
-  const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : " rok = YEAR(CURDATE())";
+  // const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : " rok = YEAR(CURDATE())";
+  const finalWhere = filterParts.length > 0 ? filterParts.join(" AND ") : " etap > 1 AND etap < 16 AND status != 7";
+
+  
   
   const query = `SELECT * FROM artdruk.view_zamowienia_2 WHERE ${finalWhere}`;
 
