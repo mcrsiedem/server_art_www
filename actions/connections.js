@@ -1256,7 +1256,7 @@ async updatePrzeniesWykonanieDoInnejGrupy(req, res) {
         console.error("Błąd w updatePrzeniesWykonanieDoInnejGrupy:", err);
         return res.status(203).json({ error: err.message });
     } finally {
-        console.log("to tu dd")
+        // console.log("to tu dd")
         if (conn) conn.release();
     }
 }
