@@ -57,11 +57,12 @@ console.log(wykonania.filter(x => x.update === true && x.insert !== true))
 
     // if (info != null) {
 
-    console.log("info: "+info)
+   
       
       // UPDATE - wykonania istniejące
       const toUpdate = wykonania.filter(x => x.update === true && x.insert !== true);
       for (const row of toUpdate) {
+        //  console.log("row: "+row)
         const sqlUpdateWyk = `
           UPDATE artdruk.technologie_wykonania 
           SET indeks=?, nazwa_wykonania=?, nazwa=?, naklad=?, przeloty=?, czas=?, narzad=?, predkosc=? 
