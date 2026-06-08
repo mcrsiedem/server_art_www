@@ -64,6 +64,8 @@ const { usunTechnologie } = require('./zapis/UsunTechnologie');
 const { zamowieniePobierzWszystkiePaginations } = require('./zamowienia/zamowieniePobierzWszystkiePaginations');
 const { zamowienieGlobalSearch } = require('./zamowienia/zamowienieGlobalSearch');
 const { getZestawienieKlienciWartosc } = require('./zestawienia/getZestawienieKlienciWartosc');
+const { zapiszTechnologieInsertGrupyZamowienia } = require('./zapis/ZapiszTechnologieInsertGrupyZamowienia');
+const { zapiszTechnologieInsertWykonania } = require('./zapis/ZapiszTechnologieInsertWykonania');
 // const { getHipopotam } = require('./logowanie/getHipopotam');
 
         router.post('/version/', postVersion); 
@@ -109,11 +111,11 @@ router.post('/zapiszTechnologie/:token',verifyTokenParams('technologia_zapis'), 
 // router.post('/zapiszTechnologieInsertArkusze/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertArkusze); 
 // router.post('/zapiszTechnologieInsertLegi/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertLegi); 
 // router.post('/zapiszTechnologieInsertLegiFragmenty/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertLegiFragmenty);
-// router.post('/zapiszTechnologieInsertGrupyZammowienia/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyZamowienia); 
+router.post('/zapiszTechnologieInsertGrupyZammowienia/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyZamowienia); 
 // router.post('/zapiszTechnologieInsertGrupyHarmonogram/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyHarmonogram); 
 // router.post('/zapiszTechnologieInsertGrupyOprawa/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyOprawa); 
 // router.post('/zapiszTechnologieInsertGrupyOprawaHarmonogram/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertGrupyOprawaHarmonogram); 
-// router.post('/zapiszTechnologieInsertWykonania/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertWykonania); 
+router.post('/zapiszTechnologieInsertWykonania/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertWykonania); 
 // router.post('/zapiszTechnologieInsertProcesyElementow/:token',verifyTokenParams('technologia_zapis'), zapiszTechnologieInsertProcesyElementow); 
 router.get('/restoreTechnologia/:zamowienie_id/:token',verifyTokenParams('technologia_zapis'), ZapiszTechnologieUpdate_restore); 
     router.post('/aktualizuj_grupe_wykonan/:token',verifyTokenParams('manage_druk'), aktualizujGrupe);  // pool sprawdzone slect for update
